@@ -1,0 +1,12 @@
+body {
+    margin-top: 4em;
+}
+
+/* Keep items in the menu bar from wrapping */
+.nav-item {
+    white-space: nowrap;
+}
+
+.logout-username {
+    font-style: italic;
+}

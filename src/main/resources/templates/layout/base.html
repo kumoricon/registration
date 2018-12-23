@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
+        <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Registration</title>
+        <link rel="stylesheet" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div th:replace="layout/fragments :: contentmenu"></div>
+
+        <main role="main" class="container">
+            <div layout:fragment="content">
+                <h1>Static content for prototyping purposes only</h1>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+                    Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+                    Phasellus et placerat elit.
+                </p>
+            </div>
+        </main>
+
+
+        <footer th:replace="layout/fragments :: footer">&copy; 2018 Kumoricon</footer>
+
+        <script type="text/javascript" src="webjars/jquery/3.0.0/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    </body>
+</html>
