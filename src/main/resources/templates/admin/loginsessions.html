@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Active Logins</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    Login Sessions:
+    <table>
+        <tr th:each="usersession : ${activeusers}">
+            <td th:text="${usersession.username}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
