@@ -6,11 +6,26 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    Login Sessions:
-    <table>
-        <tr th:each="usersession : ${activeusers}">
-            <td th:text="${usersession.username}"></td>
-        </tr>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Username</th>
+                <th>Login Time</th>
+                <th>Last Access Time</th>
+                <th>Session Expires At</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${loginSessions.empty}">
+                <td colspan="4"> No Sessions Found </td>
+            </tr>
+            <tr th:each="s : ${loginSessions}">
+                <td th:text="${s.principalName}">Username</td>
+                <td th:text="${fmt.epochToDateString(s.getCreationTime())}">Creation Time</td>
+                <td th:text="${fmt.epochToDuration(s.getLastAccessTime())}">Last Access</td>
+                <td th:text="${fmt.epochToDateString(s.expiryTime)}">Expires</td>
+            </tr>
+        </tbody>
     </table>
 </div>
 

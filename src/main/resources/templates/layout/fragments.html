@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration/Check-In</a>
@@ -28,11 +28,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown02">
-                        <a class="dropdown-item" href="#">Users</a>
-                        <a class="dropdown-item" href="#">Groups</a>
+                        <a class="dropdown-item" href="/admin/users">Users</a>
+                        <a class="dropdown-item" href="#">Roles</a>
                         <a class="dropdown-item" href="#">Computers/Printers/Tills</a>
                         <a class="dropdown-item" href="#">Badge Types</a>
                         <a class="dropdown-item" href="#">Till Sessions</a>
+                        <a class="dropdown-item" href="/admin/loginsessions">Login Sessions</a>
                         <a class="dropdown-item" href="#">Import Attendees</a>
                     </div>
                 </li>
@@ -54,10 +55,10 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Till 1</a>
+                    <a class="nav-link" href="#">Till 1</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Printer 192.168.1.132</a>
+                    <a class="nav-link" href="#">Printer 192.168.1.132</a>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline mt-2 mt-md-0" action="/logout">
@@ -70,6 +71,15 @@
         </div>
     </nav>
 
+    <div th:fragment="message">
+        <div class="alert alert-success" th:if="${msg}" th:text="${msg}">
+            Message parameter
+        </div>
+        <div class="alert alert-danger" th:if="${err}" th:text="${err}">
+            Message parameter
+        </div>
+    </div>
+
     <main role="main" class="container">
         <div class="jumbotron">
             <h1>Example</h1>
@@ -79,9 +89,7 @@
 
 
     <footer class="page-footer fixed-bottom font-small blue" th:fragment="footer">
-        <div class="footer-copyright text-center py-3">&copy; 2018 Copyright:
-            <a href="http://kumoricon.org">Altoniumbus Entertainment</a>
-        </div>
+        <div class="footer-copyright text-center py-3">Version 0.0.1</div>
     </footer>
 
 </body>

@@ -13,6 +13,8 @@
         <div th:replace="layout/fragments :: contentmenu"></div>
 
         <main role="main" class="container">
+            <div th:replace="layout/fragments :: message"></div>
+
             <div layout:fragment="content">
                 <h1>Static content for prototyping purposes only</h1>
                 <p>
@@ -26,7 +28,7 @@
         </main>
 
 
-        <footer th:replace="layout/fragments :: footer">&copy; 2018 Kumoricon</footer>
+        <footer th:replace="layout/fragments :: footer">Version 0.0.1</footer>
 
         <script type="text/javascript" src="/webjars/jquery/3.0.0/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
