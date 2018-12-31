@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,7 +35,7 @@ public class Role extends Record implements Serializable {
 
     public void addRight(Right right) { rights.add(right); }
     public void addRights(Set<Right> rights) { this.rights.addAll(rights); }
-
+    public void addRights(List<Right> rights) { this.rights.addAll(rights); }
     /**
      * Removes the right with the given name. Name is not case sensitive
      * @param name Name of right

@@ -1,18 +1,14 @@
 package org.kumoricon.registration;
 
-import org.kumoricon.registration.model.role.Right;
-import org.kumoricon.registration.model.role.RightRepository;
-import org.kumoricon.registration.model.role.Role;
-import org.kumoricon.registration.model.role.RoleRepository;
-import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserRepository;
-import org.kumoricon.registration.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
 @SpringBootApplication
 public class RegistrationApplication {
@@ -23,36 +19,19 @@ public class RegistrationApplication {
     }
 
     @Bean
-    CommandLineRunner loadDefaultRole(RoleRepository roleRepository,
-                                      RightRepository rightRepository,
-                                      UserRepository userRepository,
-                                      UserService userService) {
+    CommandLineRunner loadDefaultData(BaseDataService baseDataService) {
         return (args) -> {
-            // If there are no roles defined, create the "Admin" role with global rights
-            Right adminRight = rightRepository.findByNameIgnoreCase("Admin");
-            if (adminRight == null && rightRepository.findAll().size() == 0) {
-                log.info("No rights found, creating 'admin' right");
-                adminRight = new Right("super_admin", "Override - can do everything");
-                adminRight = rightRepository.save(adminRight);
-                if (roleRepository.findAll().size() == 0) {
-                    log.info("Creating admin role");
-                    Role adminRole = new Role("Admin");
-                    adminRole.addRight(adminRight);
-                    adminRole = roleRepository.save(adminRole);
-                }
-            }
-
-            // If there are no users defined, create a user with the Admin role.
-            if (userRepository.findAll().size() == 0) {
-                log.info("No users found. Creating default user 'admin' with password 'password'");
-                User defaultUser = userService.newUser("Admin", "User");
-                Role adminRole = roleRepository.findByNameIgnoreCase("Admin");
-                defaultUser.setUsername("admin");
-                defaultUser.setRole(adminRole);
-                defaultUser = userRepository.save(defaultUser);
-            }
-
+            baseDataService.createDefaultData();
         };
+    }
+
+    @Configuration
+    @EnableGlobalMethodSecurity(
+            prePostEnabled = true,
+            securedEnabled = true,
+            jsr250Enabled = true)
+    public class MethodSecurityConfig
+            extends GlobalMethodSecurityConfiguration {
     }
 }
 

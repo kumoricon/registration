@@ -3,6 +3,7 @@ package org.kumoricon.registration.admin.user;
 import org.kumoricon.registration.model.role.RoleRepository;
 import org.kumoricon.registration.model.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class UserController {
      * "saved [username]". Those are set during the redirect on whatever page sends the browser here.
      */
     @RequestMapping(value = "/admin/users")
+    @PreAuthorize("hasAuthority('manage_users')")
     public String listUsers(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
         List<User> users = userRepository.findAll();
 
@@ -55,6 +57,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/admin/users/{userId}")
+    @PreAuthorize("hasAuthority('manage_users')")
     public String editUser(@PathVariable String userId, final Model model) {
         User user;
         if (userId.toLowerCase().equals("new")) {
@@ -83,6 +86,7 @@ public class UserController {
      * database constraint FK_1234SDKFJHSDKFAFDSAF" kind of message.
      */
     @RequestMapping("/admin/users/save")
+    @PreAuthorize("hasAuthority('manage_users')")
     public String saveUser(@ModelAttribute @Validated final User user,
                            @RequestParam(required=false , value = "action") String action,
                            final BindingResult bindingResult,

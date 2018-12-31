@@ -43,7 +43,6 @@ public class UserService {
             current = findById(updates.getId());
         }
         current.setUsername(updates.getUsername());
-        current.setBadgePrefix(updates.getBadgePrefix());
         current.setFirstName(updates.getFirstName());
         current.setLastName(updates.getLastName());
         current.setEnabled(updates.getEnabled());
@@ -63,7 +62,6 @@ public class UserService {
         user.setId(null);
         user.setEnabled(true);
         user.setPassword(passwordEncoder.encode(DEFFAULT_PASSWORD));
-        user.setBadgePrefix("AU");
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
@@ -83,7 +81,6 @@ public class UserService {
         User u = newUser();
         u.setFirstName(firstName);
         u.setLastName(lastName);
-        u.setBadgePrefix(firstName.substring(0, 1).toUpperCase() + lastName.substring(0, 1).toUpperCase());
         u.setUsername(generateUserName(firstName, lastName));
         return u;
     }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <a class="btn btn-secondary" data-toggle="collapse" href="#errorDetails" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Show Error Details</a>
+    <div class="collapse multi-collapse" id="errorDetails">
+        <ul>
+            <li th:utext="'Exception: ' + ${exception}" th:remove="tag"></li>
+            <li th:each="ste : ${exception.stackTrace}" th:remove="tag"><span
+                    th:utext="${ste}" th:remove="tag">${ste}</span></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

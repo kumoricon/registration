@@ -35,9 +35,6 @@ public class User extends Record implements UserDetails {
     private Role role;
 
     @NotNull
-    @Column(length = 10, unique = true)
-    private String badgePrefix;                 // User will generate badges with this prefix
-    @NotNull
     private Integer lastBadgeNumberCreated;
 
     /**
@@ -91,8 +88,22 @@ public class User extends Record implements UserDetails {
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
 
 
-    public String getBadgePrefix() { return badgePrefix; }
-    public void setBadgePrefix(String badgePrefix) { this.badgePrefix = badgePrefix; }
+    /**
+     * Get a string that can be used to prefix the badge number. This has to be unique to each user, and should
+     * generally be 2-3 characters. Other things to watch out for: inadvertant bad words. For example, giving
+     * someone a badge number "SEX001234" would be bad (if funny later).
+     *
+     * This used to be based on the user's initials, but there were a surprising number of collisions. So changed
+     * it to the database ID of the user in hex, plus 42 (So it doesn't start at "00").
+     *
+     * @return String
+     */
+    public String getBadgePrefix() {
+        if (id != null) {
+            return Integer.toHexString(id + 42).toUpperCase();
+        }
+        return "00";
+    }
 
     public Integer getLastBadgeNumberCreated() { return lastBadgeNumberCreated; }
     public void setLastBadgeNumberCreated(Integer lastBadgeNumberCreated) { this.lastBadgeNumberCreated = lastBadgeNumberCreated; }
