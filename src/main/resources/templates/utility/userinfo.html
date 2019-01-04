@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>User Session Information</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <table class="table table-bordered">
+        <tr>
+            <td>Username</td>
+            <td sec:authentication="name">Username</td>
+        </tr>
+        <tr>
+            <td>Remote Address</td>
+            <td sec:authentication="details.remoteAddress">Remote Address</td>
+        </tr>
+        <tr>
+            <td>Authorities</td>
+            <td sec:authentication="principal.authorities">Rights</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

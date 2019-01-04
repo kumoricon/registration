@@ -7,10 +7,39 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div class="alert alert-danger" th:if="${err==null}">
-        Error: Page not found
-    </div>
-
+    <div class="alert alert-danger">Error</div>
+    <table class="table table-bordered">
+        <tr>
+            <td>Date</td>
+            <td th:text="${timestamp}"/>
+        </tr>
+        <tr>
+            <td>Path</td>
+            <td th:text="${path}"/>
+        </tr>
+        <tr>
+            <td>Error</td>
+            <td th:text="${error}"/>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td th:text="${status}"/>
+        </tr>
+        <tr>
+            <td>Message</td>
+            <td th:text="${message}"/>
+        </tr>
+        <tr>
+            <td>Exception</td>
+            <td th:text="${exception}"/>
+        </tr>
+        <tr>
+            <td>Trace</td>
+            <td>
+                <pre th:text="${trace}"/>
+            </td>
+        </tr>
+    </table>
     <a class="btn btn-secondary" data-toggle="collapse" href="#errorDetails" role="button"
        aria-expanded="false" aria-controls="multiCollapseExample1" th:if="${exception!=null}">Show Error Details</a>
     <div class="collapse multi-collapse" id="errorDetails">

@@ -1,4 +1,4 @@
-package org.kumoricon.registration.utility;
+package org.kumoricon.registration.helpers;
 
 import org.springframework.stereotype.Service;
 

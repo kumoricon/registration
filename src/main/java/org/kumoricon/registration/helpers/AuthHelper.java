@@ -1,4 +1,4 @@
-package org.kumoricon.registration.utility;
+package org.kumoricon.registration.helpers;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

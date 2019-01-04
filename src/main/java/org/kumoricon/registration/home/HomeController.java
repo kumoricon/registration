@@ -2,7 +2,7 @@ package org.kumoricon.registration.home;
 
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeRepository;
-import org.kumoricon.registration.utility.AuthHelper;
+import org.kumoricon.registration.helpers.AuthHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
