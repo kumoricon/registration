@@ -8,7 +8,20 @@
 
 <div layout:fragment="content" class="container">
 
+    <div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
+        <div class="col-sm-8 mb-2">
+            <form class="form-inline justify-content-center" action="/attendees" method="get">
+                <input class="form-control mr-2" type="text" name="search" placeholder="Attendee Name" autofocus>
+                <input class="btn btn-primary" type="submit" value="Search">
+            </form>
+        </div>
+    </div>
+
     <div class="row">
+        <div class="col-sm-2 mr-4" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}">
+            <a href="/orders/new" class="btn btn-info">New At-Con Check In</a>
+        </div>
+
         <div class="col-sm-6">
             <table class="table table-bordered table-striped table-sm">
                 <thead class="thead-dark">

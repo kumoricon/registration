@@ -7,11 +7,16 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <a class="btn btn-secondary" data-toggle="collapse" href="#errorDetails" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Show Error Details</a>
+    <div class="alert alert-danger" th:if="${err==null}">
+        Error: Page not found
+    </div>
+
+    <a class="btn btn-secondary" data-toggle="collapse" href="#errorDetails" role="button"
+       aria-expanded="false" aria-controls="multiCollapseExample1" th:if="${exception!=null}">Show Error Details</a>
     <div class="collapse multi-collapse" id="errorDetails">
         <ul>
             <li th:utext="'Exception: ' + ${exception}" th:remove="tag"></li>
-            <li th:each="ste : ${exception.stackTrace}" th:remove="tag"><span
+            <li th:each="ste : ${exception?.stackTrace}" th:remove="tag"><span
                     th:utext="${ste}" th:remove="tag">${ste}</span></li>
         </ul>
     </div>
