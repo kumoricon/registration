@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.StringJoiner;
 
 
@@ -175,7 +177,7 @@ public class BaseDataService {
 
 
     private void createRoles() {
-        HashMap<String, String[]> roles = new HashMap<>();
+        Map<String, String[]> roles = new LinkedHashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
                 "badge_type_weekend", "badge_type_day", "attendee_add_note",
                 "attendee_edit_with_override", "reprint_badge_with_override", "menu_registration", "menu_utility"

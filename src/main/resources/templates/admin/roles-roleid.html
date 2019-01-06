@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <form action="#" th:action="@{/admin/roles/save}" th:object="${role}" th:if="${role!=null}" method="post">
+        <ul th:if="${#fields.hasErrors('*')}">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+        </ul>
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group row">
+            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{name}" th:errorclass="is-invalid" class="form-control" id="inputName" placeholder="Name" autofocus>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Rights</label>
+            <div class="col-sm-10">
+                <table class="table table-sm table-bordered table-striped">
+                    <tr th:each="thisRight : ${allRights}">
+                        <td>
+                            <input type="checkbox" name="rights" th:value="${thisRight.id}" th:checked="${role.hasRight(thisRight.name)}">
+                        </td>
+                        <td th:text="${thisRight.name}">Right Name</td>
+                        <td th:text="${thisRight.description}">Description</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <p>
+            <input class="btn btn-secondary" type="reset" value="Reset" />
+            <a href="/admin/roles" class="btn btn-secondary">Cancel</a>
+            <input class="btn btn-primary" name="action" type="submit" value="Save" />
+        </p>
+    </form>
+
+</div>
+
+</body>
+</html>
