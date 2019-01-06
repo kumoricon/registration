@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.StringJoiner;
 
 
 @Service
@@ -44,7 +45,7 @@ public class BaseDataService {
         this.badgeRepository = badgeRepository;
     }
 
-    public void createDefaultData() {
+    void createDefaultData() {
         if (tablesAreEmpty()) {
             createRights();
             createRoles();
@@ -88,6 +89,7 @@ public class BaseDataService {
     }
 
     private void createTrainingUsers() {
+        StringJoiner createdUsers = new StringJoiner(", ");
         String[][] users = {
                 {"Staff", "Staff"},
                 {"Coordinator", "Coordinator"},
@@ -98,7 +100,7 @@ public class BaseDataService {
         };
 
         for (String[] userData : users) {
-            log.info("Creating user {}", userData[0]);
+            createdUsers.add(userData[0]);
             User user = userService.newUser(userData[0], "User");
             user.setUsername(userData[0]);
             Role role = roleRepository.findByNameIgnoreCase(userData[1]);
@@ -106,6 +108,7 @@ public class BaseDataService {
             user.setRole(role);
             userRepository.save(user);
         }
+        log.info("Created training users {}", createdUsers);
     }
 
 
@@ -113,6 +116,7 @@ public class BaseDataService {
     private void createRights() {
         String[][] rights = {
                 {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
+                {"at_con_registration_set_fan_name", "Set fan name during at-con check in"},
                 {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
                 {"pre_reg_check_in", "Check in preregistered attendees"},
                 {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
@@ -157,15 +161,16 @@ public class BaseDataService {
                 {"manage_till_sessions", "View/Close Till Sessions for other users"},
                 {"import_pre_reg_data", "Import pre-registered attendees and orders"},
                 {"load_base_data", "Load default data (users, roles, rights)"},
-                {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"},
-                {"fan_name_at_con_checkin", "Set fan name during at-con check in"}
+                {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"}
         };
 
+        StringJoiner createdRights = new StringJoiner(", ");
         for (String[] rightInfo : rights) {
-            log.info("Creating right {}", rightInfo[0]);
+            createdRights.add(rightInfo[0]);
             Right right = new Right(rightInfo[0], rightInfo[1]);
             rightRepository.save(right);
         }
+        log.info("Created rights {}", createdRights);
     }
 
 
@@ -193,7 +198,7 @@ public class BaseDataService {
                 "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_panelist", "badge_type_industry",
                 "badge_type_small_press", "menu_registration", "menu_utility", "menu_report",
-                "pre_reg_check_in_edit", "fan_name_at_con_checkin"});
+                "pre_reg_check_in_edit", "at_con_registration_set_fan_name"});
         roles.put("MSO", new String[] {"pre_reg_check_in",
                 "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_staff_report",
@@ -207,7 +212,7 @@ public class BaseDataService {
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_users", "view_staff_report",
                 "view_attendance_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
                 "view_check_in_by_user_report", "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions",
-                "fan_name_at_con_checkin", "menu_registration", "menu_utility", "menu_report", "menu_administration"});
+                "at_con_registration_set_fan_name", "menu_registration", "menu_utility", "menu_report", "menu_administration"});
         roles.put("Director", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "attendee_override_price", "reprint_badge", "manage_users", "manage_pass_types",
@@ -218,14 +223,15 @@ public class BaseDataService {
                 "badge_type_staff", "view_role_report", "view_attendance_report", "view_attendance_report_revenue",
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
                 "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
-                "pre_print_badges", "fan_name_at_con_checkin", "menu_registration", "menu_utility", "menu_report",
+                "pre_print_badges", "at_con_registration_set_fan_name", "menu_registration", "menu_utility", "menu_report",
                 "menu_administration"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "menu_registration"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
 
+        StringJoiner createdRoles = new StringJoiner(", ");
         for (String roleName : roles.keySet()) {
-            log.info("Creating role {}", roleName);
+            createdRoles.add(roleName);
             Role role = new Role(roleName);
             for (String rightName : roles.get(roleName)) {
                 if (rightMap.containsKey(rightName)) {
@@ -239,8 +245,9 @@ public class BaseDataService {
 
         Role admin = new Role("Administrator");
         admin.addRights(rightRepository.findAll());
-        log.info("Creating role Administrator");
+        createdRoles.add("Administrator");
         roleRepository.save(admin);
+        log.info("Created roles {}", createdRoles);
     }
 
     private void createFullConAttendeeBadges() {
@@ -327,6 +334,7 @@ public class BaseDataService {
     }
 
 
+    @SuppressWarnings("unused")
     private void addLiteAttendeeBadges() {
         log.info("Creating badge Kumoricon Lite");
         Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Saturday", "#323E99", 15, 15, 15);
