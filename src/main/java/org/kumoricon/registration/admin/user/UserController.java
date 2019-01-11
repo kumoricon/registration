@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @InitBinder
-    private void initBinder(WebDataBinder binder) {
+    public void initBinder(WebDataBinder binder) {
         binder.setValidator(userValidator);
     }
 
@@ -90,8 +90,10 @@ public class UserController {
     public String saveUser(@ModelAttribute @Validated final User user,
                            @RequestParam(required=false , value = "action") String action,
                            final BindingResult bindingResult,
+                           final Model model,
                            HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleRepository.findAll());
             return "admin/users-userid";
         }
 
@@ -99,6 +101,7 @@ public class UserController {
             userService.updateUser(user);
         } catch (Exception ex) {
             bindingResult.addError(new ObjectError("User", ex.getMessage()));
+            model.addAttribute("roles", roleRepository.findAll());
             return "admin/users-userid";
         }
 

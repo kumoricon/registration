@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Roles</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <a href="/admin/roles/new">New Role</a>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tr th:if="${roles.empty}">
+            <td colspan="2"> No Roles Found </td>
+        </tr>
+        <tr th:each="r : ${roles}">
+            <td th:text="${r.name}">Name</td>
+            <td><a th:href="'/admin/roles/' + ${r.id}" href="#">Edit</a></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
