@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Blacklist</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <form action="#" th:action="@{/admin/blacklist/save}" th:object="${blacklistName}" th:if="${blacklistName!=null}" method="post">
+        <ul th:if="${#fields.hasErrors('*')}">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+        </ul>
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group row">
+            <label for="inputFirstName" class="col-sm-2 col-form-label">First Name</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{firstName}" th:errorclass="is-invalid" class="form-control" id="inputFirstName" placeholder="First Name" autofocus>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputLastName" class="col-sm-2 col-form-label">Last Name</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{lastName}" th:errorclass="is-invalid" class="form-control" id="inputLastName" placeholder="Last Name">
+            </div>
+        </div>
+
+        <p>
+            <input class="btn btn-danger" type="submit" name="action" value="Delete" />
+            <input class="btn btn-secondary" type="reset" value="Reset" />
+            <a href="/admin/users" class="btn btn-secondary">Cancel</a>
+            <input class="btn btn-primary" name="action" type="submit" value="Save" />
+        </p>
+    </form>
+</div>
+
+</body>
+</html>

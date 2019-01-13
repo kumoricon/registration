@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Blacklist</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <a href="/admin/blacklist/new">Add Name</a>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tr th:if="${names.empty}">
+            <td colspan="3"> No Names Found </td>
+        </tr>
+        <tr th:each="n : ${names}">
+            <td th:text="${n.firstName}">First Name</td>
+            <td th:text="${n.lastName}">Last Name</td>
+            <td><a th:href="'/admin/blacklist/' + ${n.id}" href="#">Edit</a></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

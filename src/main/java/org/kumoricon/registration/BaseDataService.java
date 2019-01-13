@@ -155,6 +155,7 @@ public class BaseDataService {
                 {"menu_administration", "Can see the Administration Menu"},
                 {"menu_report", "Can see the Reports Menu"},
                 {"menu_utility", "Can see the Utility Menu"},
+                {"manage_blacklist", "Add/edit blacklist entries"},
                 {"manage_users", "Add/edit users and reset passwords"},
                 {"manage_pass_types", "Add/edit badge types"},
                 {"manage_roles", "Add/edit security roles"},
@@ -226,7 +227,7 @@ public class BaseDataService {
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
                 "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
                 "pre_print_badges", "at_con_registration_set_fan_name", "menu_registration", "menu_utility", "menu_report",
-                "menu_administration"});
+                "menu_administration", "manage_blacklist"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "menu_registration"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();

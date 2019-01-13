@@ -33,6 +33,7 @@
                         <a class="dropdown-item" href="#">Badge Types</a>
                         <a class="dropdown-item" href="#">Till Sessions</a>
                         <a class="dropdown-item" href="/admin/loginsessions">Login Sessions</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_blacklist'')')}" href="/admin/blacklist">Blacklist</a>
                         <a class="dropdown-item" href="#">Import Attendees</a>
                     </div>
                 </li>
