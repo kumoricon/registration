@@ -42,7 +42,7 @@
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_report'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_attendance_report'')')}" href="#">Attendance</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_attendance_report'')')}" href="/reports/attendance">Attendance</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_hour_report'')')}" href="#">Check Ins by Hour</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_user_report'')')}" href="#">Check Ins by User</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_staff_report'')')}" href="#">Staff</a>
