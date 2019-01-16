@@ -56,6 +56,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_badge'')')}" href="#">Print Test Badge</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="#">Close Till Session</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''import_pre_reg_data'')')}" href="/utility/attendeeimport">Import PreReg Attendees</a>
                         <a class="dropdown-item" th:if="${#authentication.isAuthenticated()}" href="/utility/userinfo">Current User Info</a>
                     </div>
                 </li>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>User Session Information</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <p>Uploaded file <span th:text="${filename}">test.json</span> (<span th:text="${filesize}">42</span> bytes)</p>
+
+    <p th:text="${result}">53 records imported</p>
+
+    <a class="btn btn-primary" href="/">Ok</a>
+</div>
+
+</body>
+</html>
