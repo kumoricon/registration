@@ -17,10 +17,9 @@
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_registration'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration/Check-In</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" href="#">Preregistered Check In</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="#">New At-Con Check In</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="#">Search by Badge Type</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="#">Attendee Search</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="#"><s>New At-Con Check In</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="#"><s>Search by Badge Type</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="#"><s>Attendee Search</s></a>
                     </div>
                 </li>
 
@@ -29,13 +28,13 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown02">
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_users'')')}" href="/admin/users">Users</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_roles'')')}" href="/admin/roles">Roles</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="#">Orders</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_devices'')')}" href="#">Computers/Printers</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_pass_types'')')}" href="#">Badge Types</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_till_sessions'')')}" href="#">Till Sessions</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="#"><s>Orders</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_devices'')')}" href="#"><s>Computers/Printers</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_pass_types'')')}" href="#"><s>Badge Types</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_till_sessions'')')}" href="#"><s>Till Sessions</s></a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_active_sessions'')')}" href="/admin/loginsessions">Login Sessions</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_blacklist'')')}" href="/admin/blacklist">Blacklist</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''import_pre_reg_data'')')}" href="#">Import Attendees</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''import_pre_reg_data'')')}" href="/utility/attendeeimport">Import Attendees</a>
                     </div>
                 </li>
 
@@ -43,20 +42,19 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_attendance_report'')')}" href="/reports/attendance">Attendance</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_hour_report'')')}" href="#">Check Ins by Hour</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_user_report'')')}" href="#">Check Ins by User</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_staff_report'')')}" href="#">Staff</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_role_report'')')}" href="#">Roles</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_till_report'')')}" href="#">Tills</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_hour_report'')')}" href="#"><s>Check Ins by Hour</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_user_report'')')}" href="#"><s>Check Ins by User</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_staff_report'')')}" href="#"><s>Staff</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_role_report'')')}" href="#"><s>Roles</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_till_report'')')}" href="#"><s>Tills</s></a>
                     </div>
                 </li>
 
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_utility'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Utility</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_badge'')')}" href="#">Print Test Badge</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="#">Close Till Session</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''import_pre_reg_data'')')}" href="/utility/attendeeimport">Import PreReg Attendees</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_badge'')')}" href="#"><s>Print Test Badge</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="#"><s>Close Till Session</s></a>
                         <a class="dropdown-item" th:if="${#authentication.isAuthenticated()}" href="/utility/userinfo">Current User Info</a>
                     </div>
                 </li>
