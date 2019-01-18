@@ -37,7 +37,8 @@ public class AttendeeSearchRepository {
 
         Predicate allPredicates = builder.and(predicates.toArray(new Predicate[predicates.size()]));
         query.where(allPredicates);
-        return em.createQuery(query.select(root)).getResultList();
+
+        return em.createQuery(query.select(root)).setMaxResults(100).getResultList();
     }
 
     /**

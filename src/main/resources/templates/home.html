@@ -10,8 +10,8 @@
 
     <div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
         <div class="col-sm-8 mb-2">
-            <form class="form-inline justify-content-center" action="/attendees" method="get">
-                <input class="form-control mr-2" type="text" name="search" placeholder="Attendee Name" autofocus>
+            <form class="form-inline justify-content-center" action="/search" method="get">
+                <input class="form-control mr-2" type="text" name="q" placeholder="Attendee Name" autofocus>
                 <input class="btn btn-primary" type="submit" value="Search">
             </form>
         </div>
