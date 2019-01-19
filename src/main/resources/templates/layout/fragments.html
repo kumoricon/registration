@@ -18,8 +18,9 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration/Check-In</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="#"><s>New At-Con Check In</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/search">Attendee Search</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="#"><s>Search by Badge Type</s></a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/search"><s>Attendee Search</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="/orders">Orders</a>
                     </div>
                 </li>
 
@@ -28,7 +29,6 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown02">
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_users'')')}" href="/admin/users">Users</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_roles'')')}" href="/admin/roles">Roles</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="#"><s>Orders</s></a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_devices'')')}" href="#"><s>Computers/Printers</s></a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_pass_types'')')}" href="#"><s>Badge Types</s></a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_till_sessions'')')}" href="#"><s>Till Sessions</s></a>

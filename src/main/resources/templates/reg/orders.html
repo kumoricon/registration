@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Orders</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <a class="btn" th:if="${prevPage}!=null" th:href="'/orders?page=' + ${prevPage}">Previous</a>
+            <a class="btn" th:if="${nextPage}!=null" th:href="'/orders?page=' + ${nextPage}">Next</a>
+        </div>
+    </div>
+
+    <div class="row">
+            <table class="table table-bordered table-striped table-sm">
+                <thead class="thead-dark">
+                <tr>
+                    <th class="text-nowrap">Order ID</th>
+                    <th class="text-nowrap">Taken By</th>
+                    <th class="text-nowrap">Total Amount</th>
+                    <th class="text-nowrap">Paid</th>
+                    <th class="text-nowrap" th:text="${totalCount} + ' Found'"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${orders.empty}">
+                    <td colspan="4"> No Orders Found </td>
+                </tr>
+                <tr th:each="order : ${orders}">
+                    <td><a th:href="'/orders/' + ${order.id}" th:text="${order.orderId}">c4ca4238a0b923820dcc509a6f75849b</a></td>
+                    <td th:text="${order.orderTakenByUser?.username}">admin</td>
+                    <td class="text-right" th:text="'$' + ${order.getTotalAmount()}">$60.00</td>
+                    <td th:text="${order.paid}">True</td>
+                    <td><a class="btn btn-primary btn-sm" th:href="'/orders/' + ${order.id}">View</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+    </div>
+</div>
+
+</body>
+</html>
