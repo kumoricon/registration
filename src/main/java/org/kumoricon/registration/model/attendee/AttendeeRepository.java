@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, JpaSpecificationExecutor {
+    Attendee findOneById(Integer id);
 
     @Query(value = "select a from Attendee a where a.staffIDNumber = ?1")
     List<Attendee> findByStaffId(String staffId);

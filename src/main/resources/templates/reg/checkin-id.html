@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Verify Data</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-12">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+
+            <table class="table table-bordered table-striped table-sm">
+                <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td th:text="${attendee.firstName + ' ' + attendee.lastName}">Firstname Lastname</td>
+                </tr>
+                <tr th:if="${attendee.legalFirstName!=null || attendee.legalLastName!=null}">
+                    <td>Legal Name</td>
+                    <td th:text="${attendee.legalFirstName + ' ' + attendee.legalLastName}">Firstname Lastname</td>
+                </tr>
+                <tr>
+                    <td>Fan Name</td>
+                    <td th:text="${attendee.fanName}">Fan Name</td>
+                </tr>
+                <tr>
+                    <td>Date of Birth</td>
+                    <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1980 (39)</td>
+                </tr>
+                <tr>
+                    <td>Emergency Contact</td>
+                    <td th:text="${attendee.emergencyContactFullName + ' - ' + attendee.emergencyContactPhone}">Jane Doe - 123-555-1212</td>
+                </tr>
+                <tr th:if="${attendee.isMinor()}">
+                    <td>Parent Contact</td>
+                    <td th:text="${attendee.parentFullName + ' - ' + attendee.parentPhone}">Jane Doe - 123-555-1212</td>
+                </tr>
+                <tr th:if="${!history.empty}">
+                    <td>Notes</td>
+                    <td>
+                        <p th:each="note : ${history}" th:text="note">Note #1</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="form-inline">
+                            <a class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.order.id + '/' + attendee.id}">No, Edit Attendee</a>
+                            <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/checkin/' + ${attendee.id}">
+                                <input type="hidden" name="id" th:value="${attendee.id}">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Yes, Information is Correct">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
