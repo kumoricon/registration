@@ -23,7 +23,8 @@ public class AttendanceReportController {
     @RequestMapping(value = "/reports/attendance")
     @PreAuthorize("hasAuthority('view_attendance_report')")
     public String admin(Model model) {
-        model.addAttribute("byDate", attendeeRepository.findAtConCheckInCountsByDate());
+        model.addAttribute("atConByDate", attendeeRepository.findAtConCheckInCountsByDate());
+        model.addAttribute("preRegByDate", attendeeRepository.findPreRegCheckInCountsByDate());
         model.addAttribute("byBadgeType", attendeeRepository.findBadgeCounts());
         model.addAttribute("totalCount", attendeeRepository.findTotalAttendeeCount());
         model.addAttribute("warmBodyCount", attendeeRepository.findWarmBodyCount());

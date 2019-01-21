@@ -1,6 +1,7 @@
 package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,10 +15,12 @@ import java.util.List;
 @Controller
 public class SearchController {
     private final AttendeeSearchRepository attendeeSearchRepository;
+    private final AttendeeRepository attendeeRepository;
 
     @Autowired
-    public SearchController(AttendeeSearchRepository attendeeSearchRepository) {
+    public SearchController(AttendeeSearchRepository attendeeSearchRepository, AttendeeRepository attendeeRepository) {
         this.attendeeSearchRepository = attendeeSearchRepository;
+        this.attendeeRepository = attendeeRepository;
     }
 
     @RequestMapping(value = "/search")
@@ -32,6 +35,9 @@ public class SearchController {
         } else {
             model.addAttribute("query", q.trim());
             attendees = attendeeSearchRepository.searchFor(q.trim().split(" "));
+            if (attendees.size() ==0) {
+                attendees = attendeeRepository.findByOrderNumber(q);
+            }
         }
 
         model.addAttribute("attendees", attendees);

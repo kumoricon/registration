@@ -41,10 +41,10 @@
                 <td> <a th:href="'/orders/' + ${attendee.order.id} + '/' + ${attendee.id}" th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
                 <td th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
                 <td th:text="${attendee.getFanName()}">Fan Name</td>
-                <td th:text="${attendee.getBirthDate()} + ' (' + ${attendee.getAge() + ')'}">01/01/1990 (29)</td>
+                <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1990 (29)</td>
                 <td th:text="${attendee.badge?.name} + ' - ' + ${attendee.currentAgeRange?.name}"></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
+                    <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
                 </td>
             </tr>
             </tbody>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Print Badge</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-12">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+
+            <table class="table table-bordered table-striped table-sm">
+                <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td th:text="${attendee.firstName + ' ' + attendee.lastName}">Firstname Lastname</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="form-inline">
+                            <form th:if="${attendee.checkedIn}" method="post" th:action="'/reg/printbadge/' + ${attendee.id}">
+                                <input type="hidden" name="id" th:value="${attendee.id}">
+                                <input type="hidden" name="action" value="reprintDuringCheckin">
+                                <input class="btn btn-secondary btn-sm mr-2" type="submit" value="Reprint Badge">
+                            </form>
+                            <form th:if="${attendee.checkedIn}" method="post" th:action="'/reg/printbadge/' + ${attendee.id}">
+                                <input type="hidden" name="id" th:value="${attendee.id}">
+                                <input type="hidden" name="action" value="badgePrintedSuccessfully">
+                                <input class="btn btn-success btn-sm" type="submit" value="Badge Printed Successfully">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

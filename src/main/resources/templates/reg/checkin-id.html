@@ -54,7 +54,7 @@
                     <td>
                         <div class="form-inline">
                             <a class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.order.id + '/' + attendee.id}">No, Edit Attendee</a>
-                            <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/checkin/' + ${attendee.id}">
+                            <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/printbadge/' + ${attendee.id}">
                                 <input type="hidden" name="id" th:value="${attendee.id}">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Yes, Information is Correct">
                             </form>
