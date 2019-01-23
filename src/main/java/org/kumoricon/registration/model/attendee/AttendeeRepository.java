@@ -2,12 +2,14 @@ package org.kumoricon.registration.model.attendee;
 
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.order.Order;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
@@ -61,7 +63,7 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
     List<Attendee> findPanelists();
 
     @Query(value = "select a from Attendee a where a.badge = ?1")
-    List<Attendee> findByBadgeType(Badge badge);
+    List<Attendee> findByBadgeType(Badge badge, Pageable pageable);
 
     @Transactional
     @Modifying

@@ -38,7 +38,7 @@ public class OrderController {
         } else {
             prevPage = null;
         }
-        Pageable pageable = new PageRequest(page, 20);
+        Pageable pageable = PageRequest.of(page, 20);
         List<Order> orders = orderRepository.findAllBy(pageable);
 
         if (orders.size() == 20) {
