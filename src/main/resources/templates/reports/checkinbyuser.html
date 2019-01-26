@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Check Ins By User Name</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Check Ins by User Name In Last 15 minutes</h1>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${data.empty}">
+                <td colspan="3"> No Check In Records Found </td>
+            </tr>
+            <tr th:each="d : ${data}">
+                <td th:text="${d[0] + ' ' + d[1]}">Staff name</td>
+                <td class="text-right" th:text="${d[2]}">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

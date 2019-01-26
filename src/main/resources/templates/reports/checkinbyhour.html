@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Check Ins By Hour</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Check Ins by Hour</h1>
+
+    <table class="table table-bordered table-striped table-sm col-6">
+        <thead class="thead-dark">
+            <tr>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>At Con Checked In</th>
+                <th>PreReg Checked In</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${data.empty}">
+                <td colspan="5"> No Check In Records Found </td>
+            </tr>
+            <tr th:each="d : ${data}">
+                <td th:text="${d[0]}">2019-01-01</td>
+                <td class="text-right" th:text="${d[1]}">15</td>
+                <td class="text-right" th:text="${d[2]}">33</td>
+                <td class="text-right" th:text="${d[3]}">11</td>
+                <td class="text-right" th:text="${d[4]}">54</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
