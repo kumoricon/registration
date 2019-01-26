@@ -27,12 +27,12 @@
                     <td></td>
                     <td>
                         <div class="form-inline">
-                            <form th:if="${attendee.checkedIn}" method="post" th:action="'/reg/printbadge/' + ${attendee.id}">
+                            <form th:if="${attendee.checkedIn and attendee.badgePrinted}" method="post" th:action="'/reg/checkin/'+ ${attendee.id} + '/printbadge'">
                                 <input type="hidden" name="id" th:value="${attendee.id}">
                                 <input type="hidden" name="action" value="reprintDuringCheckin">
                                 <input class="btn btn-secondary btn-sm mr-2" type="submit" value="Reprint Badge">
                             </form>
-                            <form th:if="${attendee.checkedIn}" method="post" th:action="'/reg/printbadge/' + ${attendee.id}">
+                            <form th:if="${attendee.checkedIn}" method="post" th:action="'/reg/checkin/'+ ${attendee.id} + '/printbadge'">
                                 <input type="hidden" name="id" th:value="${attendee.id}">
                                 <input type="hidden" name="action" value="badgePrintedSuccessfully">
                                 <input class="btn btn-success btn-sm" type="submit" value="Badge Printed Successfully">

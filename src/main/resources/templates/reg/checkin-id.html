@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-10">
 
             <table class="table table-bordered table-striped table-sm">
                 <tbody>
@@ -42,10 +42,14 @@
                     <td>Parent Contact</td>
                     <td th:text="${attendee.parentFullName + ' - ' + attendee.parentPhone}">Jane Doe - 123-555-1212</td>
                 </tr>
-                <tr th:if="${!history.empty}">
+                <tr th:if="${!attendee.history.empty}">
                     <td>Notes</td>
                     <td>
-                        <p th:each="note : ${history}" th:text="note">Note #1</p>
+                        <p th:each="note : ${attendee.history}">
+                            <span th:text="${note.timestamp}">1/1/2019 5:33:01 PM</span> -
+                            <span th:text="${note.user?.username}">admin</span> <br>
+                            <span th:text="${note.message}">Test message</span>
+                        </p>
                     </td>
                 </tr>
 
@@ -54,7 +58,7 @@
                     <td>
                         <div class="form-inline">
                             <a class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.order.id + '/' + attendee.id}">No, Edit Attendee</a>
-                            <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/printbadge/' + ${attendee.id}">
+                            <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/checkin/' + ${attendee.id}">
                                 <input type="hidden" name="id" th:value="${attendee.id}">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Yes, Information is Correct">
                             </form>

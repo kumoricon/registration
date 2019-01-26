@@ -52,6 +52,7 @@ public class Attendee extends Record {
     private Set<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
+    private boolean badgePrinted;               // Has badge been printed before
     @Column(unique = true)
     private String staffIDNumber;               // May be a string in future, is int in 2017
     @Lob
@@ -70,6 +71,7 @@ public class Attendee extends Record {
         this.parentIsEmergencyContact = false;
         this.history = new HashSet<>();
         this.badgePrePrinted = false;
+        this.badgePrinted = false;
         this.nameIsLegalName = true;
     }
 
@@ -181,6 +183,14 @@ public class Attendee extends Record {
         this.badgePrePrinted = badgePrePrinted;
     }
 
+    public boolean isBadgePrinted() {
+        return badgePrinted;
+    }
+
+    public void setBadgePrinted(boolean badgePrinted) {
+        this.badgePrinted = badgePrinted;
+    }
+
     public Set<AttendeeHistory> getHistory() { return history; }
 
     public void setHistory(Set<AttendeeHistory> history) { this.history = history; }
@@ -273,6 +283,7 @@ public class Attendee extends Record {
 
         if (preRegistered != attendee.preRegistered) return false;
         if (badgePrePrinted != attendee.badgePrePrinted) return false;
+        if (badgePrinted != attendee.badgePrinted) return false;
         if (firstName != null ? !firstName.equals(attendee.firstName) : attendee.firstName != null) return false;
         if (lastName != null ? !lastName.equals(attendee.lastName) : attendee.lastName != null) return false;
         if (legalFirstName != null ? !legalFirstName.equals(attendee.legalFirstName) : attendee.legalFirstName != null)
