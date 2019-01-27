@@ -21,7 +21,7 @@ public class ErrorController {
                 request.getUserPrincipal().getName(),
                 request.getRemoteAddr(),
                 request.getRequestURI(),
-                throwable.getMessage());
+                throwable);
 
         String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");
         model.addAttribute("err", errorMessage);
