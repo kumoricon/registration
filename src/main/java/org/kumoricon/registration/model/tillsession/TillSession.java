@@ -12,8 +12,8 @@ import java.time.Instant;
 @Entity
 @Table(name = "sessions")
 public class TillSession extends Record {
-    private Instant start;
-    private Instant end;
+    private Instant startTime;
+    private Instant endTime;
     @NotNull
     @ManyToOne
     private User user;
@@ -27,21 +27,21 @@ public class TillSession extends Record {
      */
     public TillSession(User user) {
         setUser(user);
-        setStart(Instant.now());
+        setStartTime(Instant.now());
         setOpen(true);
     }
 
-    public Instant getStart() { return start; }
-    public void setStart(Instant start) {
-        if (this.start == null) {
-            this.start = start;
+    public Instant getStartTime() { return startTime; }
+    public void setStartTime(Instant startTime) {
+        if (this.startTime == null) {
+            this.startTime = startTime;
         }
     }
 
-    public Instant getEnd() { return end; }
-    public void setEnd(Instant end) {
-        if (this.end == null) {
-            this.end = end;
+    public Instant getEndTime() { return endTime; }
+    public void setEndTime(Instant endTime) {
+        if (this.endTime == null) {
+            this.endTime = endTime;
         }
     }
 

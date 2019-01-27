@@ -21,7 +21,7 @@ public abstract class Record {
      * UUID is used for object identity, but relations are still handled using the "id" property
      * for JOIN speed and readability.
      */
-    @Column(name = "uuid", nullable = false, updatable = false, columnDefinition = "char(36)")
+    @Column(name = "uuid", nullable = false, updatable = false)
     private String uuid = UUID.randomUUID().toString();
 
     // Todo: enable version field for optimistic locking. Not enabled yet because the rest of

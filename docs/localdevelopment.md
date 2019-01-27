@@ -10,19 +10,32 @@ Service built on:
 
 Local Development
 -----------------
+Install Postgresql Server (commands vary)
 
-Create a MySQL/MariaDB database user and database after installing server:
+Create a Postgresql database user "kumoreg" and database "registration" after installing server:
 
-```mysql
-$ sudo mysql
-create database registration character set utf8mb4;
-create user kumoreg identified by 'password';
-grant all on registration.* to 'kumoreg'@'localhost' identified by 'password';
+```
+root@www0:~# su - postgres 
+postgres@www0:~$ createuser --interactive -P kumoreg
+    Enter password for new role:
+    Enter it again:
+    Shall the new role be a superuser? (y/n) n
+    Shall the new role be allowed to create databases? (y/n) n
+    Shall the new role be allowed to create more new roles? (y/n) n
+
+    postgres@www0:~$ createdb -O someuser registration
 ```
 
 Build and run the server with maven:
 ```
 mvn spring-boot:run
+```
+
+Handy Postgres Commands
+-----------------------
+```
+# Connect with command line SQL client:
+psql -h 127.0.0.1 -U kumoreg registration
 ```
 
 Architecture Notes

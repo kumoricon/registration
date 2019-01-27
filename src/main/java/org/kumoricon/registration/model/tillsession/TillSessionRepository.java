@@ -19,7 +19,7 @@ interface TillSessionRepository extends JpaRepository<TillSession, Integer> {
     @Query(value = "select s from TillSession s where s.open = true")
     List<TillSession> findAllOpenSessions();
 
-    @Query(value = "select s from TillSession s ORDER BY s.end desc")
+    @Query(value = "select s from TillSession s ORDER BY s.endTime desc")
     List<TillSession> findAllOrderByEnd();
 
     @Query(value = "select s from TillSession s WHERE s.id = ?1")

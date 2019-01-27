@@ -65,7 +65,7 @@
 			<version>2.8.1</version>
 		</dependency>
 
-		<!-- Front end dependencies (JS, CSS, etc) -->
+		<!-- Front endTime dependencies (JS, CSS, etc) -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
@@ -77,6 +77,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>

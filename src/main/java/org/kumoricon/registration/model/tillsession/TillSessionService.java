@@ -60,7 +60,7 @@ public class TillSessionService {
     public TillSession closeSession(TillSession session) {
         if (session != null) {
             if (session.isOpen()) {
-                session.setEnd(Instant.now());
+                session.setEndTime(Instant.now());
                 session.setOpen(false);
                 session = repository.save(session);
             } else {
@@ -229,10 +229,10 @@ public class TillSessionService {
                 .append(session.getId())
                 .append(": ");
         // Date range
-        output.append(session.getStart().atZone(zoneId).format(DATE_TIME_FORMATTER));
+        output.append(session.getStartTime().atZone(zoneId).format(DATE_TIME_FORMATTER));
         output.append(" -\n");
-        if (session.getEnd() != null) {
-            output.append(session.getEnd().atZone(zoneId).format(DATE_TIME_FORMATTER));
+        if (session.getEndTime() != null) {
+            output.append(session.getEndTime().atZone(zoneId).format(DATE_TIME_FORMATTER));
         } else {
             output.append("now");
         }
