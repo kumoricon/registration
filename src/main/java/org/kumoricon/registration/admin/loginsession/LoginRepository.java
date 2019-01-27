@@ -31,12 +31,7 @@ public class LoginRepository {
                 .getResultList();
 
         for (Object[] row : rows) {
-            sessions.add(new SessionInfoDTO(row[0].toString(),
-                    row[1].toString(),
-                    Long.parseLong(row[2].toString()),
-                    Long.parseLong(row[3].toString()),
-                    Long.parseLong(row[4].toString())
-            ));
+            sessions.add(new SessionInfoDTO(row[0], row[1], row[2], row[3], row[4]));
         }
 
         return sessions;

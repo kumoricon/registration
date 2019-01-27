@@ -12,6 +12,33 @@ public class SessionInfoDTO {
     private Long lastAccessTime;
     private Long expiryTime;
 
+    /**
+     * Constructor that takes raw Objects from database and converts them to the proper types
+     * @param primaryId String, not null
+     * @param principalName String, may be null
+     * @param creationTime, Long, not null
+     * @param lastAccessTime Long, not null
+     * @param expiryTime Long, not null
+     */
+    public SessionInfoDTO(Object primaryId, Object principalName, Object creationTime, Object lastAccessTime, Object expiryTime) {
+        assert (primaryId != null && creationTime != null && lastAccessTime != null && expiryTime != null);
+        this.primaryId = primaryId.toString();
+
+        if (principalName != null) {
+            this.principalName = principalName.toString();
+        } else {
+            this.principalName = "Not logged in yet";
+        }
+
+        try {
+            this.creationTime = Long.parseLong(creationTime.toString());
+            this.lastAccessTime = Long.parseLong(lastAccessTime.toString());
+            this.expiryTime = Long.parseLong(expiryTime.toString());
+        } catch (NumberFormatException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public SessionInfoDTO(String primaryId, String principalName, Long creationTime, Long lastAccessTime, Long expiryTime) {
         this.primaryId = primaryId;
         this.principalName = principalName;
