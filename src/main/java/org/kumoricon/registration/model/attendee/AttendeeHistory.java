@@ -19,6 +19,7 @@ public class AttendeeHistory extends Record {
     private User user;
     @ManyToOne
     private Attendee attendee;
+    @Column(columnDefinition = "citext")
     private String message;
 
     public AttendeeHistory() {}

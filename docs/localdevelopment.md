@@ -12,6 +12,9 @@ Local Development
 -----------------
 Install Postgresql Server (commands vary)
 
+By default, Postgres does not include case-insensitive searching. The commands below add the
+citext extension, which will enable that. Note that columns have to have the `citext` type.
+
 Create a Postgresql database user "kumoreg" and database "registration" after installing server:
 
 ```
@@ -23,7 +26,8 @@ postgres@www0:~$ createuser --interactive -P kumoreg
     Shall the new role be allowed to create databases? (y/n) n
     Shall the new role be allowed to create more new roles? (y/n) n
 
-    postgres@www0:~$ createdb -O someuser registration
+postgres@www0:~$ createdb -O kumoreg registration
+postgres@www0:~$ psql registration -c "CREATE EXTENSION citext;"
 ```
 
 Build and run the server with maven:
@@ -37,6 +41,10 @@ Handy Postgres Commands
 # Connect with command line SQL client:
 psql -h 127.0.0.1 -U kumoreg registration
 ```
+- \d - List tables
+- \d <tablename> - Describe a table
+- \l - List databases
+- \q - Quit
 
 Architecture Notes
 ------------------

@@ -1,6 +1,8 @@
 package org.kumoricon.registration.model.badge;
 
 import org.kumoricon.registration.model.Record;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 @Table(name = "ageranges")
 public class AgeRange extends Record {
     @NotNull
+    @Column(columnDefinition = "citext")
     private String name;
     @Min(0)
     @Max(255)
@@ -20,6 +23,7 @@ public class AgeRange extends Record {
     @Max(255)
     private int maxAge;
     private String stripeColor;
+    @Column(columnDefinition = "citext")
     private String stripeText;
     @Min(0)
     private BigDecimal cost;

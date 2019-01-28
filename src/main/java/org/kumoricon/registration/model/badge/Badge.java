@@ -12,8 +12,9 @@ import java.util.List;
 @Table(name = "badges")
 public class Badge extends Record {
     @NotNull
-    @Column(unique=true)
+    @Column(unique = true, columnDefinition = "citext")
     private String name;
+    @Column(columnDefinition = "citext")
     private String badgeTypeText;     // Friday/Saturday/Sunday/Weekend/VIP
     private String badgeTypeBackgroundColor;   // Background color for the day text
     private String warningMessage;

@@ -17,11 +17,16 @@ import java.util.*;
 @Entity
 @Table(name = "attendees")
 public class Attendee extends Record {
+    @Column(columnDefinition = "citext")
     private String firstName;
+    @Column(columnDefinition = "citext")
     private String lastName;
+    @Column(columnDefinition = "citext")
     private String legalFirstName;
+    @Column(columnDefinition = "citext")
     private String legalLastName;
     private Boolean nameIsLegalName;
+    @Column(columnDefinition = "citext")
     private String fanName;                   // Fan Name (optional)
     @Column(unique=true)
     private String badgeNumber;

@@ -2,6 +2,7 @@ package org.kumoricon.registration.model.blacklist;
 
 import org.kumoricon.registration.model.Record;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -10,8 +11,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "blacklist")
 public class BlacklistName extends Record {
     @NotNull
+    @Column(columnDefinition = "citext")
     private String firstName;
     @NotNull
+    @Column(columnDefinition = "citext")
     private String lastName;
 
     public BlacklistName() {}
