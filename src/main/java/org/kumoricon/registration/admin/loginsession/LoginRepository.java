@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * I found it easier to just query the database for active seesions instead of trying to read from the Spring
+ * I found it easier to just query the database for active sessions instead of trying to read from the Spring
  * Session objects. This also means that it would show all sessions, not just sessions ONLY on this server, which
  * means the list will be more consistent.
  */

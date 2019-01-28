@@ -2,10 +2,11 @@
 Technologies
 ------------
 Service built on:
-  - [Spring Framework](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/)
+  - [Spring Framework](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/) Server framework
   - [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html) Templating language
-  - [CSS Bootstrap](https://getbootstrap.com/docs/3.4/css/)
-  - [MariaDB/MySQL](https://mariadb.com/kb/en/library/documentation/)
+  - [CSS Bootstrap](https://getbootstrap.com/docs/3.4/css/) Front end formatting
+  - [PostgreSQL](https://www.postgresql.org/) Database
+  - [Maven](https://maven.apache.org/index.html) Build/dependency management
   
 
 Local Development
@@ -30,11 +31,6 @@ postgres@www0:~$ createdb -O kumoreg registration
 postgres@www0:~$ psql registration -c "CREATE EXTENSION citext;"
 ```
 
-Build and run the server with maven:
-```
-mvn spring-boot:run
-```
-
 Handy Postgres Commands
 -----------------------
 ```
@@ -45,6 +41,14 @@ psql -h 127.0.0.1 -U kumoreg registration
 - \d <tablename> - Describe a table
 - \l - List databases
 - \q - Quit
+
+
+Build and Run the Server with Maven:
+------------------------------------
+```
+mvn spring-boot:run
+```
+
 
 Architecture Notes
 ------------------
