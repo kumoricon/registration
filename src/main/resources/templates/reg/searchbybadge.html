@@ -10,7 +10,9 @@
 
     <div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
         <div class="col-sm-4">
+            <a class="btn disabled" th:if="${prevPage}==null">Previous</a>
             <a class="btn" th:if="${prevPage}!=null" th:href="'/searchbybadge?page=' + ${prevPage} + '&badgeName=' + ${badgeName}">Previous</a>
+            <a class="btn disabled" th:if="${nextPage}==null">Next</a>
             <a class="btn" th:if="${nextPage}!=null" th:href="'/searchbybadge?page=' + ${nextPage} + '&badgeName=' + ${badgeName}">Next</a>
         </div>
         <div class="col-sm-8 mb-2">

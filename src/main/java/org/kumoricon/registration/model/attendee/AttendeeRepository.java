@@ -62,7 +62,7 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
     @Query(value = "select a from Attendee a where a.badge in (select b from Badge b where b.name like '%Panelist%')")
     List<Attendee> findPanelists();
 
-    @Query(value = "select a from Attendee a where a.badge = ?1")
+    @Query(value = "select a from Attendee a where a.badge = ?1 ORDER BY a.lastName, a.firstName")
     List<Attendee> findByBadgeType(Badge badge, Pageable pageable);
 
     @Transactional

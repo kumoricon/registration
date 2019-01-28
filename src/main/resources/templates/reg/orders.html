@@ -9,7 +9,9 @@
 <div layout:fragment="content" class="container">
     <div class="row">
         <div class="col-sm-12">
+            <a class="btn disabled" th:if="${prevPage}==null">Previous</a>
             <a class="btn" th:if="${prevPage}!=null" th:href="'/orders?page=' + ${prevPage}">Previous</a>
+            <a class="btn disabled" th:if="${nextPage}==null">Next</a>
             <a class="btn" th:if="${nextPage}!=null" th:href="'/orders?page=' + ${nextPage}">Next</a>
         </div>
     </div>
