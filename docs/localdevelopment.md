@@ -13,22 +13,43 @@ Local Development
 -----------------
 Install Postgresql Server (commands vary)
 
+**Fedora Linux 29:**
+```
+$ sudo dnf install postgresql postgresql-contrib postgresql-server     # Install packages
+$ sudo postgresql-setup --initdb                # Initialize database
+```
+
+On Fedora 29, enable passwords for local connections by editing the /var/lib/pgsql/data/pg_hba.conf file:
+```
+Change the line:
+host    all             all             127.0.0.1/32            ident
+To:
+host    all             all             127.0.0.1/32            md5
+
+```
+Then start and enable the service:
+```
+$ sudo systemctl enable postgresql              # Enable service
+$ sudo systemctl start postgresql               # Start service
+```
+
+
 By default, Postgres does not include case-insensitive searching. The commands below add the
 citext extension, which will enable that. Note that columns have to have the `citext` type.
 
 Create a Postgresql database user "kumoreg" and database "registration" after installing server:
 
 ```
-root@www0:~# su - postgres 
-postgres@www0:~$ createuser --interactive -P kumoreg
+$ su - postgres 
+$ createuser --interactive -P kumoreg
     Enter password for new role:
     Enter it again:
     Shall the new role be a superuser? (y/n) n
     Shall the new role be allowed to create databases? (y/n) n
     Shall the new role be allowed to create more new roles? (y/n) n
 
-postgres@www0:~$ createdb -O kumoreg registration
-postgres@www0:~$ psql registration -c "CREATE EXTENSION citext;"
+$ createdb -O kumoreg registration
+$ psql registration -c "CREATE EXTENSION citext;"
 ```
 
 Handy Postgres Commands
