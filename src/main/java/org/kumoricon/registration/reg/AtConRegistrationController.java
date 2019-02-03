@@ -106,12 +106,23 @@ public class AtConRegistrationController {
                                 @RequestParam(required=false) String msg) {
 
         Order order = orderRepository.getOne(getIdFromParamter(orderId));
-        Integer thing = order.getId();
-        System.out.println(thing);
         model.addAttribute("order", order);
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
         return "reg/atcon-order";
+    }
+
+    @RequestMapping(value = "/reg/atconorder/{orderId}/payment")
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String atConOrderPayment(Model model,
+                             @PathVariable String orderId,
+                             @RequestParam(required = false) String err,
+                             @RequestParam(required=false) String msg) {
+        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        model.addAttribute("msg", msg);
+        model.addAttribute("err", err);
+        model.addAttribute("order", order);
+        return "reg/atcon-order-payment";
     }
 
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Payment</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-8 text-center">
+
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/card'">Take Credit/Debit Card</a>
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/cash'">Take Cash</a>
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/check'">Take Check</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <table class="table table-borderless table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Payment Type</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${order.payments.empty}">
+                    <td colspan="2"> No Payments Found </td>
+                </tr>
+                <tr th:each="p : ${order.payments}">
+                    <td th:text="${p.paymentType}">Cash</td>
+                    <td class="text-right" th:text="'$' + ${p.amount}"></td>
+                    <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/payment/' + ${p.id}" href="#">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
