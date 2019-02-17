@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Active Logins</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Staff</h1>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="thead-dark">
+        <tr>
+            <th>Badge Type</th>
+            <th>At-Con Checked In</th>
+            <th>At-Con Not Checked In</th>
+            <th>Pre-Reg Checked In</th>
+            <th>Pre-Reg Not Checked In</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${byBadgeType.empty}">
+            <td colspan="3"> No Attendees Found </td>
+        </tr>
+        <tr th:each="b : ${byBadgeType}">
+            <td th:text="${b[0]}">Badge Type</td>
+            <td class="text-right" th:text="${b[1]}">0</td>
+            <td class="text-right" th:text="${b[2]}">0</td>
+            <td class="text-right" th:text="${b[3]}">0</td>
+            <td class="text-right" th:text="${b[4]}">0</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h1>Check Ins by Day</h1>
+
+    <table class="table table-bordered table-striped table-sm col-4">
+        <thead class="thead-dark">
+        <tr>
+            <th>Date</th>
+            <th>At-Con Check Ins</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${atConByDate.empty}">
+            <td colspan="2"> No At Con Check Ins Found </td>
+        </tr>
+        <tr th:each="d : ${atConByDate}">
+            <td th:text="${d[0]}">Date</td>
+            <td class="text-right"  th:text="${d[1])}">1</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sm col-4">
+        <thead class="thead-dark">
+        <tr>
+            <th>Date</th>
+            <th>Pre-Reg Check Ins</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${preRegByDate.empty}">
+            <td colspan="2"> No PreReg Check Ins Found </td>
+        </tr>
+        <tr th:each="e : ${preRegByDate}">
+            <td th:text="${e[0]}">Date</td>
+            <td class="text-right"  th:text="${e[1]}">1</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h1>Total Attendance Counts</h1>
+    <i>(Attendees ONLY)</i>
+    <table class="table table-bordered table-sm">
+        <tr>
+            <td class="text-nowrap">Total Attendance:</td>
+            <td class="text-right" th:text="${totalCount}">123</td>
+            <td>Unique, paid attendees who checked in. This means that weekend badges are counted only once, and the count is a number of unique individual attendees who registered in a given year. Attendance figures count paid membership purchases at standard or VIP rates (staff, exhibitors, artists, guests, industry, press, and complimentary badges are not counted).</td>
+        </tr>
+        <tr>
+            <td class="text-nowrap">Warm Body Count:</td>
+            <td class="text-right" th:text="${warmBodyCount}">123</td>
+            <td>All attendees (paid and gratis) who checked in</td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                Attendees with multiple single day badges are counted as a single attendee based on first name, last name,
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
