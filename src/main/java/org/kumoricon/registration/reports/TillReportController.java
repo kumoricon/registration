@@ -1,13 +1,12 @@
 package org.kumoricon.registration.reports;
 
-import org.kumoricon.registration.helpers.DateTimeService;
 import org.kumoricon.registration.model.tillsession.TillSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TillReportController {
@@ -19,9 +18,13 @@ public class TillReportController {
     }
 
     @RequestMapping(value = "/reports/tillsessions")
-    @PreAuthorize("hasAuthority('view_attendance_report')")
-    public String admin(Model model) {
+    @PreAuthorize("hasAuthority('view_till_report')")
+    public String till(Model model,
+                        @RequestParam(required=false) String err,
+                        @RequestParam(required=false) String msg) {
         model.addAttribute("data", tillSessionRepository.findAllOrderByEnd());
+        model.addAttribute("msg", msg);
+        model.addAttribute("err", err);
         return "reports/tillsessions";
     }
 }
