@@ -22,13 +22,12 @@ public class StaffReportController {
     }
 
     @RequestMapping(value = "/reports/staff")
-    @PreAuthorize("hasAuthority('manage_users')")
-    public String listUsers(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
+    @PreAuthorize("hasAuthority('view_staff_report')")
+    public String staff(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
         List<User> users = staffRepository.findAll();
-
         model.addAttribute("users", users);
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
-        return "admin/users";
+        return "reports/staff";
     }
 }
