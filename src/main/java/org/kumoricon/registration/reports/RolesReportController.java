@@ -18,9 +18,9 @@ public class RolesReportController {
     }
 
     @RequestMapping(value = "/reports/roles")
-    @PreAuthorize("hasAuthority('view_check_in_by_hour_report')")
+    @PreAuthorize("hasAuthority('view_role_report')")
     public String listRoles(Model model) {
-        model.addAttribute("data", roleRepository.listRoles());
+        model.addAttribute("data", roleRepository.findAllRoles());
         return "reports/roles";
     }
 
