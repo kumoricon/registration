@@ -17,9 +17,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="d : ${data}">
-            <td class="text-right" th:text="${d[0]}">Role</td>
-            <td class="text-right" th:text="${d[1]}">Rights</td>
+        <tr th:each="r : ${roles}">
+            <td class="text-left" th:text="${r[0]}">Role</td>
+            <td class="text-left" th:text="${r[1]}">Rights</td>
         </tr>
         </tbody>
     </table>

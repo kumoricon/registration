@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class RolesReportController {
@@ -19,8 +19,18 @@ public class RolesReportController {
 
     @RequestMapping(value = "/reports/roles")
     @PreAuthorize("hasAuthority('view_role_report')")
-    public String listRoles(Model model) {
-        model.addAttribute("data", roleRepository.findAllRoles());
+    public String roles(Model model,
+                        @RequestParam(required = false) String err,
+                        @RequestParam(required=false) String msg) {
+        try {
+            model.addAttribute("roles", roleRepository.findAllRoles());
+            model.addAttribute("err", err);
+        } catch (NumberFormatException ex) {
+            model.addAttribute("err", ex.getMessage());
+        }
+
+        model.addAttribute("msg", msg);
+
         return "reports/roles";
     }
 
