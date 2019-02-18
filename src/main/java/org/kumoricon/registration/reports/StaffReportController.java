@@ -23,9 +23,16 @@ public class StaffReportController {
 
     @RequestMapping(value = "/reports/staff")
     @PreAuthorize("hasAuthority('view_staff_report')")
-    public String staff(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
-        List<User> users = staffRepository.findAll();
-        model.addAttribute("users", users);
+    public String staff(Model model,
+                        @RequestParam(required=false) String err,
+                        @RequestParam(required=false) String msg) {
+        try {
+            List<Object> users = staffRepository.findAllStaff();
+            model.addAttribute("users", users);
+        } catch (NumberFormatException ex) {
+            model.addAttribute("err", ex.getMessage());
+        }
+
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
         return "reports/staff";
