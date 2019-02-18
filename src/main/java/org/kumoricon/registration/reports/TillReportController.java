@@ -30,7 +30,7 @@ public class TillReportController {
         }
 
         model.addAttribute("msg", msg);
-        
+
         return "reports/tillsessions";
     }
 }
