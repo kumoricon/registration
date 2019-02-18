@@ -28,13 +28,14 @@ public class StaffReportController {
                         @RequestParam(required=false) String msg) {
         try {
             List<Object> users = staffRepository.findAllStaff();
-            model.addAttribute("users", users);
+            model.addAttribute("staff", users);
+            model.addAttribute("err", err);
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
 
         model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
+
         return "reports/staff";
     }
 }

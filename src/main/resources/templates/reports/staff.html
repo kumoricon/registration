@@ -20,15 +20,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${users.empty}">
-            <td colspan="3"> No Users Found </td>
+        <tr th:if="${staff.empty}">
+            <td colspan="3"> No Staff Members Found </td>
         </tr>
-        <tr th:each="b : ${users}">
-            <td class="text-left" th:text="${b[0]}">0</td>
-            <td class="text-left" th:text="${b[1]}">0</td>
-            <td class="text-left" th:text="${b[2]}">0</td>
-            <td class="text-left" th:text="${b[3]}">0</td>
-            <td class="text-left" th:text="${b[4]}">0</td>
+        <tr th:each="s : ${staff}">
+            <td class="text-left" th:text="${s[0]}">0</td>
+            <td class="text-left" th:text="${s[1]}">0</td>
+            <td class="text-left" th:text="${s[2]}">0</td>
+            <td class="text-left" th:text="${s[3]}">0</td>
+            <td class="text-left" th:text="${s[4]}">0</td>
         </tr>
         </tbody>
     </table>
