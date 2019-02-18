@@ -22,9 +22,15 @@ public class TillReportController {
     public String till(Model model,
                         @RequestParam(required=false) String err,
                         @RequestParam(required=false) String msg) {
-        model.addAttribute("data", tillSessionRepository.findAllOrderByEnd());
+        try {
+            model.addAttribute("tills", tillSessionRepository.findAllOrderByEnd());
+            model.addAttribute("err", err);
+        } catch (NumberFormatException ex) {
+            model.addAttribute("err", ex.getMessage());
+        }
+
         model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
+        
         return "reports/tillsessions";
     }
 }

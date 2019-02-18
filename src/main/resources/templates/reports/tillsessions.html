@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
 <head>
-    <title>Active Logins</title>
+    <title>Till Sessions</title>
 </head>
 <body>
 
@@ -21,16 +21,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${data.empty}">
+        <tr th:if="${tills.empty}">
             <td colspan="3"> No Till Sessions Found </td>
         </tr>
-        <tr th:each="b : ${data}">
-            <td class="text-right" th:text="${b[0]}"></td>
-            <td class="text-right" th:text="${b[1]}"></td>
-            <td class="text-right" th:text="${b[2]}"></td>
-            <td class="text-right" th:text="${b[3]}"></td>
-            <td class="text-right" th:text="${b[4]}"></td>
-            <td class="text-right" th:text="${b[5]}}"></td>
+        <tr th:each="t : ${tills}">
+            <td class="text-left" th:text="${t[0]}"></td>
+            <td class="text-left" th:text="${t[1]}"></td>
+            <td class="text-left" th:text="${t[2]}"></td>
+            <td class="text-left" th:text="${t[3]}"></td>
+            <td class="text-left" th:text="${t[4]}"></td>
+            <td class="text-left" th:text="${t[5]}}"></td>
         </tr>
         </tbody>
     </table>
