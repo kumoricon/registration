@@ -17,6 +17,9 @@
         </tr>
         </thead>
         <tbody>
+        <tr th:if="${roles.empty}">
+            <td colspan="2"> No Roles Found </td>
+        </tr>
         <tr th:each="r : ${roles}">
             <td class="text-left" th:text="${r[0]}">Role</td>
             <td class="text-left" th:text="${r[1]}">Rights</td>
