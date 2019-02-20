@@ -1,6 +1,5 @@
 package org.kumoricon.registration.reports;
 
-import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

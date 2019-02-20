@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
 <head>
-    <title>Staff</title>
+    <title>Staff Report</title>
 </head>
 <body>
 
@@ -14,7 +14,7 @@
         <tr>
             <th>Last Name</th>
             <th>First Name</th>
-            <th>User Name</th>
+            <th>Username</th>
             <th>Phone Number</th>
             <th>Role</th>
         </tr>
@@ -24,11 +24,11 @@
             <td colspan="3"> No Staff Members Found </td>
         </tr>
         <tr th:each="s : ${staff}">
-            <td class="text-left" th:text="${s[0]}">0</td>
-            <td class="text-left" th:text="${s[1]}">0</td>
-            <td class="text-left" th:text="${s[2]}">0</td>
-            <td class="text-left" th:text="${s[3]}">0</td>
-            <td class="text-left" th:text="${s[4]}">0</td>
+            <td class="text-left" th:text="${s[0]}"></td>
+            <td class="text-left" th:text="${s[1]}"></td>
+            <td class="text-left" th:text="${s[2]}"></td>
+            <td class="text-left" th:text="${s[3]}"></td>
+            <td class="text-left" th:text="${s[4]}"></td>
         </tr>
         </tbody>
     </table>

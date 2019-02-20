@@ -12,7 +12,7 @@ public interface StaffRepository extends JpaRepository<User, Integer> {
     User findOneById(Integer id);
     User findOneByUuid(String uuid);
 
-    @Query(value = "SELECT first_name, last_name, username, id, (SELECT roles.name FROM roles WHERE roles.id = role_id) AS Role FROM users",
+    @Query(value = "SELECT last_name, first_name, username, id, (SELECT roles.name FROM roles WHERE roles.id = role_id) AS Role FROM users ORDER BY last_name",
     nativeQuery = true)
     List<Object> findAllStaff();
 }
