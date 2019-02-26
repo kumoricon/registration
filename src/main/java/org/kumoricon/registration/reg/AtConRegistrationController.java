@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 
-/**
- * This controller handles the pre-reg checkin flow, verifying attendee information and
- * printing a badge
- */
 @Controller
 public class AtConRegistrationController {
     private final AttendeeRepository attendeeRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final BadgeRepository badgeRepository;
+    private final String[] PAYMENT_TYPES = {"cash", "card", "checkormoneyorder"};
 
     @Autowired
     public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository, UserRepository userRepository, BadgeRepository badgeRepository) {
@@ -112,22 +109,6 @@ public class AtConRegistrationController {
         return "reg/atcon-order";
     }
 
-    @RequestMapping(value = "/reg/atconorder/{orderId}/payment")
-    @PreAuthorize("hasAuthority('at_con_registration')")
-    public String atConOrderPayment(Model model,
-                             @PathVariable String orderId,
-                             @RequestParam(required = false) String err,
-                             @RequestParam(required=false) String msg) {
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
-        model.addAttribute("order", order);
-        return "reg/atcon-order-payment";
-    }
-
-
-
-
     @RequestMapping(value = "/reg/atconorder/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String newOrder(Model model, Principal principal) {
@@ -148,6 +129,15 @@ public class AtConRegistrationController {
         } catch (NumberFormatException ex) {
             throw new RuntimeException("Bad parameter: " + parameter + " is not an integer");
         }
+    }
+
+    private boolean isValidPaymentType(String paymentType) {
+        for (String type : PAYMENT_TYPES) {
+            if (paymentType.toLowerCase().equals(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

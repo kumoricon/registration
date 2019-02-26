@@ -7,14 +7,33 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div class="row">
+    <div class="row"  th:if="${paymentType == null}">
         <div class="col-8 text-center">
 
             <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/card'">Take Credit/Debit Card</a>
             <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/cash'">Take Cash</a>
-            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/check'">Take Check</a>
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/checkormoneyorder'">Take Check</a>
         </div>
     </div>
+
+    <div class="row" th:if="${paymentType == 'cash'}">
+        <div class="col-8 text-center">
+            Cash
+        </div>
+    </div>
+
+    <div class="row" th:if="${paymentType == 'card'}">
+        <div class="col-8 text-center">
+            Card
+        </div>
+    </div>
+
+    <div class="row" th:if="${paymentType == 'checkormoneyorder'}">
+        <div class="col-8 text-center">
+            Check or Money Order
+        </div>
+    </div>
+
 
     <div class="row">
         <table class="table table-borderless table-condensed table-hover">
