@@ -45,7 +45,7 @@
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_hour_report'')')}" href="/reports/checkinbyhour">Check Ins by Hour</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_user_report'')')}" href="/reports/checkinbyuser">Check Ins by User</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_staff_report'')')}" href="/reports/staff">Staff</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_role_report'')')}" href="#"><s>Roles</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_role_report'')')}" href="/reports/roles">Roles</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_till_report'')')}" href="/reports/tillsessions">Tills</a>
                     </div>
                 </li>
