@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Staff Report</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Staff</h1>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="thead-dark">
+        <tr>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Username</th>
+            <th>Phone Number</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${staff.empty}">
+            <td colspan="3"> No Staff Members Found </td>
+        </tr>
+        <tr th:each="s : ${staff}">
+            <td class="text-left" th:text="${s[0]}"></td>
+            <td class="text-left" th:text="${s[1]}"></td>
+            <td class="text-left" th:text="${s[2]}"></td>
+            <td class="text-left" th:text="${s[3]}"></td>
+            <td class="text-left" th:text="${s[4]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
