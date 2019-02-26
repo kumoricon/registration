@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Till Report</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Till Sessions</h1>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="thead-dark">
+        <tr>
+            <th>User</th>
+            <th>Session</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Total</th>
+            <th>Payments</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${tills.empty}">
+            <td colspan="3"> No Till Sessions Found </td>
+        </tr>
+        <tr th:each="t : ${tills}">
+            <td class="text-left" th:text="${t[0]}"></td>
+            <td class="text-left" th:text="${t[1]}"></td>
+            <td class="text-left" th:text="${t[2]}"></td>
+            <td class="text-left" th:text="${t[3]}"></td>
+            <td class="text-left" th:text="${t[4]}"></td>
+            <td class="text-left" th:text="${t[5]}}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

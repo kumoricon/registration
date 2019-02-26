@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 @Service
-interface TillSessionRepository extends JpaRepository<TillSession, Integer> {
+public interface TillSessionRepository extends JpaRepository<TillSession, Integer> {
     @Query(value = "select s from TillSession s where s.user = ?1 AND s.open = true")
     TillSession getOpenSessionForUser(User user);
 
