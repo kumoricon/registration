@@ -1,0 +1,1 @@
+insert into test(id, name, email) values(1,'Siva','siva@gmail.com');
