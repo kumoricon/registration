@@ -27,9 +27,7 @@ public class Payment extends Record {
     @ManyToOne
     private Order order;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private User paymentTakenBy;
+    private Integer paymentTakenBy;
 
     @NotNull
     private PaymentType paymentType;
@@ -92,11 +90,14 @@ public class Payment extends Record {
         this.order = order;
     }
 
-    public User getPaymentTakenBy() {
+    public Integer getPaymentTakenBy() {
         return paymentTakenBy;
     }
     public void setPaymentTakenBy(User paymentTakenBy) {
-        this.paymentTakenBy = paymentTakenBy;
+        this.paymentTakenBy = paymentTakenBy.getId();
+    }
+    public void setPaymentTakenBy(Integer userId) {
+        this.paymentTakenBy = userId;
     }
 
     public PaymentType getPaymentType() {

@@ -14,9 +14,8 @@ import java.time.Instant;
 public class TillSession extends Record {
     private Instant startTime;
     private Instant endTime;
-    @NotNull
-    @ManyToOne
     private User user;
+    private Integer userId;
     private boolean open;
 
     public TillSession() {}
@@ -51,6 +50,9 @@ public class TillSession extends Record {
             this.user = user;
         }
     }
+
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
 
     public boolean isOpen() { return open; }
     public void setOpen(boolean open) { this.open = open; }

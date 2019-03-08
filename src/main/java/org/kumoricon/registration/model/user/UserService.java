@@ -35,7 +35,7 @@ public class UserService {
         return u;
     }
 
-    public User updateUser(User updates) {
+    public void updateUser(User updates) {
         User current;
         if (updates.getId() == null) {
             current = newUser();
@@ -46,10 +46,9 @@ public class UserService {
         current.setFirstName(updates.getFirstName());
         current.setLastName(updates.getLastName());
         current.setEnabled(updates.getEnabled());
-        current.setRole(updates.getRole());
+        current.setRoleId(updates.getRoleId());
 
-        return userRepository.save(current);
-
+        userRepository.save(current);
     }
 
     /**

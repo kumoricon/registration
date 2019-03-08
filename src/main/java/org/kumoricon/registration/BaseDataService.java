@@ -86,7 +86,7 @@ public class BaseDataService {
         User defaultUser = userService.newUser("Admin", "User");
         Role adminRole = roleRepository.findByNameIgnoreCase("Administrator");
         defaultUser.setUsername("admin");
-        defaultUser.setRole(adminRole);
+        defaultUser.setRoleId(adminRole.getId());
         userRepository.save(defaultUser);
     }
 
@@ -107,7 +107,7 @@ public class BaseDataService {
             user.setUsername(userData[0]);
             Role role = roleRepository.findByNameIgnoreCase(userData[1]);
             if (role == null) log.error("Couldn't find role {} when creating user {}", userData[1], userData[0]);
-            user.setRole(role);
+            user.setRoleId(role.getId());
             userRepository.save(user);
         }
         log.info("Created training users {}", createdUsers);

@@ -37,8 +37,8 @@
         <div class="form-group row">
             <label for="inputRole" class="col-sm-2 col-form-label">Role</label>
             <div class="col-sm-10">
-                <select name="role" class="form-control" id="inputRole" th:errorclass="is-invalid">
-                    <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}" th:selected="${r.id==user.role?.id}"></option>
+                <select name="roleId" class="form-control" id="inputRole" th:errorclass="is-invalid">
+                    <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}" th:selected="${r.id==user.roleId}"></option>
                 </select>
             </div>
         </div>

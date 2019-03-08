@@ -15,8 +15,7 @@ import java.util.Date;
 public class AttendeeHistory extends Record {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
-    @ManyToOne
-    private User user;
+    private Integer userId;
     @ManyToOne
     private Attendee attendee;
     @Column(columnDefinition = "citext")
@@ -25,7 +24,7 @@ public class AttendeeHistory extends Record {
     public AttendeeHistory() {}
 
     public AttendeeHistory(User user, Attendee attendee, String message) {
-        this.user = user;
+        this.userId = user.getId();
         this.message = message;
         this.attendee = attendee;
         this.timestamp = new Date();
@@ -40,8 +39,9 @@ public class AttendeeHistory extends Record {
         else this.timestamp = new Date(timestamp.getTime());
     }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public Integer getUserId() { return userId; }
+    public void setUser(User user) { this.userId = user.getId(); }
+    public void setUserId(Integer userId) { this.userId = userId; }
 
     public Attendee getAttendee() { return attendee; }
     public void setAttendee(Attendee attendee) { this.attendee = attendee; }

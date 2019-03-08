@@ -9,13 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name = "roles")
+
 public class Role extends Record implements Serializable {
-    @NotNull
-    @Column(length = 200, unique = true)
     private String name;
-    @ManyToMany(fetch = FetchType.EAGER)
+
     private Set<Right> rights;
 
     public Role() {
