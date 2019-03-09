@@ -98,7 +98,7 @@ public class PaymentController {
         TillSession currentTillSession = tillSessionService.getCurrentSessionForUser(currentUser);
         payment.setPaymentTakenBy(currentUser);
         payment.setPaymentTakenAt(Instant.now());
-        payment.setSession(currentTillSession);
+        payment.setTillSession(currentTillSession);
 
         order.addPayment(payment);
         orderRepository.save(order);

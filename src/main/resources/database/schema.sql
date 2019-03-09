@@ -72,3 +72,19 @@ create index blacklist_lastname_index
   on blacklist (last_name);
 
 
+create table tillsessions
+(
+  id serial not null
+    constraint tillsessions_pkey
+      primary key,
+  end_time timestamp,
+  open boolean not null,
+  start_time timestamp,
+  user_id integer not null
+    constraint fkruie73rneumyyd1bgo6qw8vjt
+      references users
+);
+
+create index tillsessions_open_index
+  on tillsessions (open);
+

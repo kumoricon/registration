@@ -1,17 +1,11 @@
 package org.kumoricon.registration.model.tillsession;
 
-import org.kumoricon.registration.model.Record;
 import org.kumoricon.registration.model.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-@Entity
-@Table(name = "sessions")
-public class TillSession extends Record {
+public class TillSession {
+    private Integer id;
     private Instant startTime;
     private Instant endTime;
     private User user;
@@ -29,6 +23,9 @@ public class TillSession extends Record {
         setStartTime(Instant.now());
         setOpen(true);
     }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public Instant getStartTime() { return startTime; }
     public void setStartTime(Instant startTime) {

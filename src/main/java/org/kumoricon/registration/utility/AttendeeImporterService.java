@@ -193,7 +193,7 @@ class AttendeeImporterService {
                     p.setPaymentTakenAt(Instant.now());
                     p.setPaymentLocation("kumoricon.org");
                     p.setPaymentTakenBy(currentUser);
-                    p.setSession(session);
+                    p.setTillSession(session);
                     p.setOrder(o);
                     o.addPayment(p);
                 }

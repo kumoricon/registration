@@ -1,14 +1,11 @@
 package org.kumoricon.registration.model.order;
 
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.kumoricon.registration.model.Record;
 import org.kumoricon.registration.model.tillsession.TillSession;
 import org.kumoricon.registration.model.user.User;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -35,9 +32,7 @@ public class Payment extends Record {
     private String paymentLocation;
     private String authNumber;
 
-    @NotNull
-    @ManyToOne
-    private TillSession session;
+    private Integer tillSessionId;
 
     public enum PaymentType {
         CASH(0) {
@@ -124,8 +119,9 @@ public class Payment extends Record {
     public String getAuthNumber() { return authNumber; }
     public void setAuthNumber(String authNumber) { this.authNumber = authNumber; }
 
-    public TillSession getSession() { return session; }
-    public void setSession(TillSession session) { this.session = session; }
+    public Integer getTillSessionId() { return tillSessionId; }
+    public void setTillSessionId(Integer tillSessionId) { this.tillSessionId = tillSessionId; }
+    public void setTillSession(TillSession tillSession) { this.tillSessionId = tillSession.getId(); }
 
     public String toString() {
         if (id != null) {

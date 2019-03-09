@@ -150,7 +150,7 @@ public class TillSessionService {
     private String buildHTMLDetailsForSession(TillSession session, Payment.PaymentType paymentType) {
         StringBuilder output = new StringBuilder();
 
-        List<Payment> payments = paymentRepository.findBySessionAndPaymentType(session, paymentType);
+        List<Payment> payments = paymentRepository.findByTillSessionIdAndPaymentType(session.getId(), paymentType);
 
         if (payments.size() > 0) {
             output.append(String.format("<b>%s Transactions:</b><br>\n", paymentType));
@@ -180,7 +180,7 @@ public class TillSessionService {
     private String buildTextDetailsForSession(TillSession session, Payment.PaymentType paymentType) {
         StringBuilder output = new StringBuilder();
 
-        List<Payment> payments = paymentRepository.findBySessionAndPaymentType(session, paymentType);
+        List<Payment> payments = paymentRepository.findByTillSessionIdAndPaymentType(session.getId(), paymentType);
 
         if (payments.size() > 0) {
             output.append(String.format("%s Transactions:\n", paymentType));
