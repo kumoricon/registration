@@ -19,6 +19,7 @@ public class User implements UserDetails {
     private Boolean credentialsNonExpired;              // On login, prompt to reset password
     private Boolean accountNonLocked;
     private Integer roleId;
+    private String roleName;            // Gotten from roles table, not saved as part of this record
     private Integer lastBadgeNumberCreated;
     private Set<Right> rights;
 
@@ -38,6 +39,9 @@ public class User implements UserDetails {
     public void setRights(Set<Right> rights) { this.rights = rights; }
 
     public String getUsername() { return username; }
+
+    public String getRoleName() { return roleName; }
+    public void setRoleName(String roleName) { this.roleName = roleName; }
 
     @Override
     public boolean isAccountNonExpired() {

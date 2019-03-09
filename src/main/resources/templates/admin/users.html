@@ -26,7 +26,7 @@
         <tr th:each="u : ${users}">
             <td th:text="${u.username}">Username</td>
             <td th:text="${u.firstName} + ' ' + ${u.lastName}">Name</td>
-            <td th:text="${u.roleId}">Role</td>
+            <td th:text="${u.roleName}">Role</td>
             <td th:text="${u.badgePrefix}">Prefix</td>
             <td th:text="${u.enabled}">Enabled</td>
             <td><a th:href="'/admin/users/' + ${u.id}" href="#">Edit</a></td>

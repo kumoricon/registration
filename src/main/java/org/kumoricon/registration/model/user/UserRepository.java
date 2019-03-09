@@ -25,7 +25,7 @@ public class UserRepository {
     public User findOneByUsernameIgnoreCase(String username) {
         try {
             return jdbcTemplate.queryForObject(
-                    "select * from users where username=?",
+                    "SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id WHERE users.username=?",
                     new Object[]{username}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -36,7 +36,7 @@ public class UserRepository {
     User findOneById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
-                    "select * from users where id=?",
+                    "SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id where users.id=?",
                     new Object[]{id}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -52,13 +52,13 @@ public class UserRepository {
                     user.getAccountNonExpired(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId());
         } else {
             jdbcTemplate.update("UPDATE users SET account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ?, enabled = ?, first_name = ?, last_name = ?, last_badge_number_created = ?, password = ?, username = ?, role_id = ? WHERE id = ?",
-                    user.getAccountNonExpired(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId());
+                    user.getAccountNonExpired(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId(), user.getId());
         }
     }
 
     @Transactional(readOnly=true)
     public List<User> findAll() {
-        return jdbcTemplate.query("select * from users",
+        return jdbcTemplate.query("SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id;",
                 new UserRowMapper());
     }
 
@@ -83,6 +83,7 @@ public class UserRepository {
             user.setEnabled(rs.getBoolean("enabled"));
             user.setLastBadgeNumberCreated(rs.getInt("last_badge_number_created"));
             user.setRoleId(rs.getInt("role_id"));
+            user.setRoleName(rs.getString("rolename"));
             return user;
         }
     }
