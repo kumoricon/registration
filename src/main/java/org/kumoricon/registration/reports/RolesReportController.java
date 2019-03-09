@@ -23,7 +23,7 @@ public class RolesReportController {
                         @RequestParam(required = false) String err,
                         @RequestParam(required=false) String msg) {
         try {
-            model.addAttribute("roles", roleRepository.findAllRoles());
+            model.addAttribute("roles", roleRepository.findAll());
             model.addAttribute("err", err);
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());

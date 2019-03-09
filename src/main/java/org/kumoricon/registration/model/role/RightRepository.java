@@ -1,8 +1,6 @@
 package org.kumoricon.registration.model.role;
 
 
-import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RightRepository {
@@ -74,6 +69,17 @@ public class RightRepository {
     public Integer count() {
         String sql = "select count(*) from rights";
         return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    @Transactional
+    public void saveRightsForRole(Role role) {
+        List<Object[]> data = new ArrayList<>();
+        for (Integer rightId : role.getRightIds()) {
+            data.add(new Integer[]{role.getId(), rightId});
+        }
+
+        jdbcTemplate.update("DELETE from roles_rights WHERE role_id = ?", role.getId());
+        jdbcTemplate.batchUpdate("INSERT INTO roles_rights (role_id, rights_id) VALUES (?, ?)", data);
     }
 
     class RightRowMapper implements RowMapper<Right>

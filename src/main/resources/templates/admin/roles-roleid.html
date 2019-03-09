@@ -26,7 +26,7 @@
                 <table class="table table-sm table-bordered table-striped">
                     <tr th:each="thisRight : ${allRights}">
                         <td>
-                            <input type="checkbox" name="rights" th:value="${thisRight.id}" th:checked="${role.hasRight(thisRight.name)}">
+                            <input type="checkbox" name="rights" th:value="${thisRight.id}" th:checked="${role.hasRight(thisRight.id)}">
                         </td>
                         <td th:text="${thisRight.name}">Right Name</td>
                         <td th:text="${thisRight.description}">Description</td>

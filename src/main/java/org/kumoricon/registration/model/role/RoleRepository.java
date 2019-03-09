@@ -1,19 +1,19 @@
 package org.kumoricon.registration.model.role;
 
-import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RoleRepository {
@@ -25,19 +25,14 @@ public class RoleRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
-//    @Query(value = "SELECT roles.name as Role, rights.name as Rights FROM roles JOIN roles_rights ON roles.id = roles_rights.role_id JOIN rights ON rights.id = roles_rights.rights_id ORDER BY Role, Rights",
-//            nativeQuery = true)
-    public List<Object> findAllRoles() {
-        return new ArrayList<>();
-    }
-
     @Transactional(readOnly=true)
     public Role findByNameIgnoreCase(String name) {
         try {
-            return jdbcTemplate.queryForObject(
+            Role result = jdbcTemplate.queryForObject(
                     "select * from roles where name=?",
                     new Object[]{name}, new RoleRepository.RoleRowMapper());
+            result.setRights(getRightIdsForRole(result.getId()));
+            return result;
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -46,9 +41,11 @@ public class RoleRepository {
     @Transactional(readOnly=true)
     public Role findById(Integer id) {
         try {
-            return jdbcTemplate.queryForObject(
+            Role result = jdbcTemplate.queryForObject(
                     "select * from roles where id=?",
                     new Object[]{id}, new RoleRepository.RoleRowMapper());
+            result.setRights(getRightIdsForRole(result.getId()));
+            return result;
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -68,20 +65,35 @@ public class RoleRepository {
     }
 
     @Transactional
-    public void save(Role role) {
+    public Integer save(Role role) {
         if (role.getId() == null) {
-            jdbcTemplate.update("INSERT INTO roles " +
-                            "(name) " +
-                            "VALUES(?)",
-                    role.getName());
+            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+            jdbcInsert.withTableName("roles").usingGeneratedKeyColumns("id");
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("name", role.getName());
+            Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+            return (key).intValue();
+
+
         } else {
             jdbcTemplate.update("UPDATE roles SET name = ? WHERE id = ?",
                     role.getName(), role.getId());
+            return role.getId();
         }
     }
 
-    class RoleRowMapper implements RowMapper<Role>
-    {
+    private Set<Integer> getRightIdsForRole(Integer roleId) {
+        try {
+            List<Integer> data = jdbcTemplate.queryForList(
+                    "select roles_rights.rights_id from roles_rights where role_id = ?",
+                    new Object[]{roleId}, Integer.class);
+            return new HashSet<>(data);
+        } catch (EmptyResultDataAccessException e) {
+            return new HashSet<>();
+        }
+    }
+
+    class RoleRowMapper implements RowMapper<Role> {
         @Override
         public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
             Role role = new Role();
@@ -90,5 +102,4 @@ public class RoleRepository {
             return role;
         }
     }
-
 }

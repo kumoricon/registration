@@ -76,7 +76,8 @@ public class RolesController {
         }
 
         try {
-            roleRepository.save(role);
+            role.setId(roleRepository.save(role));
+            rightRepository.saveRightsForRole(role);
         } catch (Exception ex) {
             bindingResult.addError(new ObjectError("Role", ex.getMessage()));
             model.addAttribute("allRights", rightRepository.findAll());
