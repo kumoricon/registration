@@ -240,13 +240,15 @@ public class BaseDataService {
                     log.error("Error creating role {}: Right {} not found", roleName, rightName);
                 }
             }
-            roleRepository.save(role);
+            role.setId(roleRepository.save(role));
+            rightRepository.saveRightsForRole(role);
         }
 
         Role admin = new Role("Administrator");
         admin.addRights(rightRepository.findAll());
         createdRoles.add("Administrator");
-        roleRepository.save(admin);
+        admin.setId(roleRepository.save(admin));
+        rightRepository.saveRightsForRole(admin);
         log.info("Created roles {}", createdRoles);
     }
 

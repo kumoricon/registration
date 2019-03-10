@@ -52,7 +52,7 @@ class BadgeRepository {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
             jdbcInsert.withTableName("badges").usingGeneratedKeyColumns("id");
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("badge_type", badge.getBadgeType());
+            parameters.put("badge_type", badge.getBadgeType().ordinal());
             parameters.put("badge_type_background_color", badge.getBadgeTypeBackgroundColor());
             parameters.put("badge_type_text", badge.getBadgeTypeText());
             parameters.put("name", badge.getName());

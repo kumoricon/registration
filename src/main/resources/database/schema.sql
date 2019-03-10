@@ -20,7 +20,7 @@ create table if not exists roles
       unique
 );
 
-create table roles_rights
+create table if not exists roles_rights
 (
   role_id integer not null
     constraint fk_role_id
@@ -65,14 +65,14 @@ create table if not exists blacklist
   last_name citext not null
 );
 
-create index blacklist_firstname_index
+create index if not exists blacklist_firstname_index
   on blacklist (first_name);
 
-create index blacklist_lastname_index
+create index if not exists blacklist_lastname_index
   on blacklist (last_name);
 
 
-create table tillsessions
+create table if not exists tillsessions
 (
   id serial not null
     constraint tillsessions_pkey
@@ -85,11 +85,28 @@ create table tillsessions
       references users
 );
 
-create index tillsessions_open_index
+create index if not exists tillsessions_open_index
   on tillsessions (open);
 
 
-create table ageranges
+
+create table if not exists badges
+(
+  id serial not null
+    constraint badges_pkey
+      primary key,
+  badge_type integer not null,
+  badge_type_background_color varchar(255),
+  badge_type_text varchar(255),
+  name varchar(255) not null
+    constraint uk_cuebofvgkgi4g9fxde2kmpr1h
+      unique,
+  required_right varchar(255),
+  visible boolean not null,
+  warning_message varchar(255)
+);
+
+create table if not exists ageranges
 (
   id serial not null
     constraint ageranges_pkey
@@ -111,23 +128,3 @@ create table ageranges
       references badges
       on delete cascade
 );
-
-
-
-create table badges
-(
-  id serial not null
-    constraint badges_pkey
-      primary key,
-  uuid varchar(255) not null,
-  badge_type integer not null,
-  badge_type_background_color varchar(255),
-  badge_type_text varchar(255),
-  name varchar(255) not null
-    constraint uk_cuebofvgkgi4g9fxde2kmpr1h
-      unique,
-  required_right varchar(255),
-  visible boolean not null,
-  warning_message varchar(255)
-);
-

@@ -35,7 +35,7 @@ class AgeRangeRepository {
         for (AgeRange ageRange : ageRanges) {
             if (ageRange.getId() == null) {
                 jdbcTemplate.update("INSERT INTO ageranges(cost, max_age, min_age, name, stripe_color, stripe_text, badge_id)" +
-                        " VALUES(?,?,?,?,?,?)",
+                        " VALUES(?,?,?,?,?,?,?)",
                         ageRange.getCost(), ageRange.getMaxAge(), ageRange.getMinAge(), ageRange.getName(),
                         ageRange.getStripeColor(), ageRange.getStripeText(), badgeId);
             } else {
