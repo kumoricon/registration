@@ -2,9 +2,8 @@ package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
-import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.badge.Badge;
-import org.kumoricon.registration.model.badge.BadgeRepository;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +18,12 @@ import java.util.List;
 
 @Controller
 public class SearchByBadgeController {
-    private final BadgeRepository badgeRepository;
+    private final BadgeService badgeService;
     private final AttendeeRepository attendeeRepository;
 
     @Autowired
-    public SearchByBadgeController(BadgeRepository badgeRepository, AttendeeRepository attendeeRepository) {
-        this.badgeRepository = badgeRepository;
+    public SearchByBadgeController(BadgeService badgeService, AttendeeRepository attendeeRepository) {
+        this.badgeService = badgeService;
         this.attendeeRepository = attendeeRepository;
     }
 
@@ -45,7 +44,7 @@ public class SearchByBadgeController {
         }
         Pageable pageable = PageRequest.of(page, 20);
 
-        List<Badge> badgeTypes = badgeRepository.findAll();
+        List<Badge> badgeTypes = badgeService.findAll();
 
         // There should be a small number of badge types -- faster to search through the
         // whole list than make another database query
@@ -64,18 +63,18 @@ public class SearchByBadgeController {
             attendees = new ArrayList<>();
         } else {
             model.addAttribute("badgeName", badgeName.trim().toLowerCase());
-            attendees = attendeeRepository.findByBadgeType(selected, pageable);
+//            attendees = attendeeRepository.findByBadgeType(selected, pageable);
         }
-        if (attendees.size() == 20) {
-            nextPage = page + 1;
-        } else {
-            nextPage = null;
-        }
+//        if (attendees.size() == 20) {
+//            nextPage = page + 1;
+//        } else {
+//            nextPage = null;
+//        }
         model.addAttribute("badgeTypes", badgeTypes);
         model.addAttribute("selected", selected);
-        model.addAttribute("attendees", attendees);
+//        model.addAttribute("attendees", attendees);
         model.addAttribute("page", page);
-        model.addAttribute("nextPage", nextPage);
+//        model.addAttribute("nextPage", nextPage);
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);

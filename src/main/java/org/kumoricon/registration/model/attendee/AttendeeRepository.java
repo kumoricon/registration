@@ -33,8 +33,8 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
     @Query(value = "select a from Attendee a inner join a.order as order where order.orderId like ?1")
     List<Attendee> findByOrderNumber(String searchString);
 
-    @Query(value = "SELECT cast(badges.name as varchar) as Badge, coalesce(atConCheckedIn.cnt, 0) AS AtConCheckedIn, COALESCE (atConNotCheckedIn.cnt, 0) as AtConNotCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, COALESCE(preRegNotCheckedIn.cnt, 0) as PreRegNotCheckedIn FROM badges LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.checked_in) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = TRUE AND attendees.pre_registered = FALSE GROUP BY badges.id) as atConCheckedIn ON badges.id = atConCheckedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.id) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = FALSE AND attendees.pre_registered = FALSE GROUP BY badges.id) as atConNotCheckedIn ON badges.id = atConNotCheckedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.checked_in) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = TRUE AND attendees.pre_registered = TRUE GROUP BY badges.id) as preRegCheckedIn ON badges.id = preRegCheckedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.id) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = FALSE AND attendees.pre_registered = TRUE GROUP BY badges.id) as preRegNotCheckedIn ON badges.id = preRegNotCheckedIn.subid;", nativeQuery = true)
-    List<Object[]> findBadgeCounts();
+//    @Query(value = "SELECT cast(badges.name as varchar) as Badge, coalesce(atConCheckedIn.cnt, 0) AS AtConCheckedIn, COALESCE (atConNotCheckedIn.cnt, 0) as AtConNotCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, COALESCE(preRegNotCheckedIn.cnt, 0) as PreRegNotCheckedIn FROM badges LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.checked_in) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = TRUE AND attendees.pre_registered = FALSE GROUP BY badges.id) as atConCheckedIn ON badges.id = atConCheckedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.id) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = FALSE AND attendees.pre_registered = FALSE GROUP BY badges.id) as atConNotCheckedIn ON badges.id = atConNotCheckedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.checked_in) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = TRUE AND attendees.pre_registered = TRUE GROUP BY badges.id) as preRegCheckedIn ON badges.id = preRegCheckedIn.subid LEFT OUTER JOIN (SELECT badges.id as subid, COUNT(attendees.id) as cnt FROM badges JOIN attendees ON badges.id = attendees.badge_id WHERE attendees.checked_in = FALSE AND attendees.pre_registered = TRUE GROUP BY badges.id) as preRegNotCheckedIn ON badges.id = preRegNotCheckedIn.subid;", nativeQuery = true)
+//    List<Object[]> findBadgeCounts();
 
     @Query(value = "SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as CheckInDate, COUNT(id) AS cnt, SUM(paid_amount) as Amount FROM attendees WHERE checked_in = TRUE AND pre_registered = FALSE GROUP BY CheckInDate ORDER BY CheckInDate;", nativeQuery = true)
     List<Object[]> findAtConCheckInCountsByDate();
@@ -59,19 +59,19 @@ public interface AttendeeRepository extends JpaRepository<Attendee, Integer>, Jp
     @Query(value = "SELECT COUNT(*) FROM (SELECT DISTINCT first_name, last_name, zip, birth_date FROM attendees WHERE checked_in=TRUE AND paid_amount > 0) as t", nativeQuery = true)
     Integer findTotalAttendeeCount();
 
-    @Query(value = "select a from Attendee a where a.badge in (select b from Badge b where b.name like '%Panelist%')")
-    List<Attendee> findPanelists();
+//    @Query(value = "select a from Attendee a where a.badge in (select b from Badge b where b.name like '%Panelist%')")
+//    List<Attendee> findPanelists();
 
-    @Query(value = "select a from Attendee a where a.badge = ?1 ORDER BY a.lastName, a.firstName")
-    List<Attendee> findByBadgeType(Badge badge, Pageable pageable);
+//    @Query(value = "select a from Attendee a where a.badge = ?1 ORDER BY a.lastName, a.firstName")
+//    List<Attendee> findByBadgeType(Badge badge, Pageable pageable);
 
     @Transactional
     @Modifying
     @Query(value = "delete from Attendee a where a.id = ?1")
     void deleteById(Integer id);
 
-    @Transactional
-    @Modifying
-    @Query(value = "update Attendee a set a.badgePrePrinted = true where a.badge = ?1")
-    void setAttendeesPrePrinted(Badge badge);
+//    @Transactional
+//    @Modifying
+//    @Query(value = "update Attendee a set a.badgePrePrinted = true where a.badge = ?1")
+//    void setAttendeesPrePrinted(Badge badge);
 }

@@ -45,8 +45,8 @@ public class Attendee extends Record {
     private BigDecimal paidAmount;              // Amount paid - not necessarily the same as the badge cost, but
                                                 // usually should be
     private Boolean compedBadge;                // True if the badge has been comped -- IE, is free
-    @ManyToOne
-    private Badge badge;                        // Badge type
+    private Integer badgeId;
+//    private Badge badge;                        // Badge type
     @ManyToOne
     private Order order;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
@@ -168,8 +168,11 @@ public class Attendee extends Record {
     public Boolean getCompedBadge() { return compedBadge; }
     public void setCompedBadge(Boolean compedBadge) { this.compedBadge = compedBadge; }
 
-    public Badge getBadge() { return badge; }
-    public void setBadge(Badge badge) { this.badge = badge; }
+    public Integer getBadgeId() { return badgeId; }
+    public void setBadgeId(Integer badgeId) { this.badgeId = badgeId; }
+
+    public Badge getBadge() { return null; }
+    public void setBadge(Badge badge) {  }
 
     public Order getOrder() { return order; }
     public void setOrder(Order order) { this.order = order; }
@@ -237,13 +240,13 @@ public class Attendee extends Record {
     }
 
     public AgeRange getCurrentAgeRange() {
-        if (birthDate != null && badge != null) {
-            for (AgeRange ageRange : getBadge().getAgeRanges()) {
-                if (ageRange.isValidForAge(getAge())) {
-                    return ageRange;
-                }
-            }
-        }
+//        if (birthDate != null && badge != null) {
+//            for (AgeRange ageRange : getBadge().getAgeRanges()) {
+//                if (ageRange.isValidForAge(getAge())) {
+//                    return ageRange;
+//                }
+//            }
+//        }
         return null;
     }
 
@@ -322,7 +325,7 @@ public class Attendee extends Record {
         if (paidAmount != null ? !paidAmount.equals(attendee.paidAmount) : attendee.paidAmount != null) return false;
         if (compedBadge != null ? !compedBadge.equals(attendee.compedBadge) : attendee.compedBadge != null)
             return false;
-        if (badge != null ? !badge.equals(attendee.badge) : attendee.badge != null) return false;
+//        if (badge != null ? !badge.equals(attendee.badge) : attendee.badge != null) return false;
         if (order != null ? !order.equals(attendee.order) : attendee.order != null) return false;
         if (checkedIn != null ? !checkedIn.equals(attendee.checkedIn) : attendee.checkedIn != null) return false;
         if (checkInTime != null ? !checkInTime.equals(attendee.checkInTime) : attendee.checkInTime != null)

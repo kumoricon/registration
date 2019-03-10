@@ -5,7 +5,7 @@ import com.google.gson.*;
 import org.kumoricon.registration.helpers.FieldCleaner;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.badge.Badge;
-import org.kumoricon.registration.model.badge.BadgeRepository;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.Payment;
@@ -32,23 +32,23 @@ class AttendeeImporterService {
 
     private final OrderRepository orderRepository;
 
-    private final BadgeRepository badgeRepository;
+    private final BadgeService badgeService;
 
     private final UserRepository userRepository;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);
 
-    AttendeeImporterService(TillSessionService sessionService, OrderRepository orderRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
+    AttendeeImporterService(TillSessionService sessionService, OrderRepository orderRepository, BadgeService badgeService, UserRepository userRepository) {
         this.sessionService = sessionService;
         this.orderRepository = orderRepository;
-        this.badgeRepository = badgeRepository;
+        this.badgeService = badgeService;
         this.userRepository = userRepository;
     }
 
     private HashMap<String, Badge> getBadgeHashMap() {
         HashMap<String, Badge> badges = new HashMap<>();
-        for (Badge b : badgeRepository.findAll()) {
+        for (Badge b : badgeService.findAll()) {
             badges.put(b.getName(), b);
         }
         return badges;

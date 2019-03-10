@@ -2,7 +2,7 @@ package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
-import org.kumoricon.registration.model.badge.BadgeRepository;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.user.User;
@@ -22,15 +22,15 @@ public class AtConRegistrationController {
     private final AttendeeRepository attendeeRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final BadgeRepository badgeRepository;
+    private final BadgeService badgeService;
     private final String[] PAYMENT_TYPES = {"cash", "card", "checkormoneyorder"};
 
     @Autowired
-    public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository, UserRepository userRepository, BadgeRepository badgeRepository) {
+    public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository, UserRepository userRepository, BadgeService badgeService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
-        this.badgeRepository = badgeRepository;
+        this.badgeService = badgeService;
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}")
@@ -60,7 +60,7 @@ public class AtConRegistrationController {
 
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
-        model.addAttribute("badgelist", badgeRepository.findByVisibleTrue());
+        model.addAttribute("badgelist", badgeService.findByVisibleTrue());
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
         return "reg/atcon-order-attendee";
@@ -79,7 +79,7 @@ public class AtConRegistrationController {
         Order order = orderRepository.getOne(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
-        model.addAttribute("badgelist", badgeRepository.findByVisibleTrue());
+        model.addAttribute("badgelist", badgeService.findByVisibleTrue());
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
 

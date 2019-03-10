@@ -25,7 +25,7 @@ public class AttendanceReportController {
     public String admin(Model model) {
         model.addAttribute("atConByDate", attendeeRepository.findAtConCheckInCountsByDate());
         model.addAttribute("preRegByDate", attendeeRepository.findPreRegCheckInCountsByDate());
-        model.addAttribute("byBadgeType", attendeeRepository.findBadgeCounts());
+//        model.addAttribute("byBadgeType", attendeeRepository.findBadgeCounts());
         model.addAttribute("totalCount", attendeeRepository.findTotalAttendeeCount());
         model.addAttribute("warmBodyCount", attendeeRepository.findWarmBodyCount());
         model.addAttribute("fmt", dateTimeService);

@@ -88,3 +88,46 @@ create table tillsessions
 create index tillsessions_open_index
   on tillsessions (open);
 
+
+create table ageranges
+(
+  id serial not null
+    constraint ageranges_pkey
+      primary key,
+  cost numeric(19,2)
+    constraint ageranges_cost_check
+      check (cost >= (0)::numeric),
+  max_age integer not null
+    constraint ageranges_max_age_check
+      check ((max_age >= 0) AND (max_age <= 255)),
+  min_age integer not null
+    constraint ageranges_min_age_check
+      check ((min_age >= 0) AND (min_age <= 255)),
+  name varchar(255) not null,
+  stripe_color varchar(255),
+  stripe_text varchar(255),
+  badge_id integer
+    constraint fk_ageranges_badge_id
+      references badges
+      on delete cascade
+);
+
+
+
+create table badges
+(
+  id serial not null
+    constraint badges_pkey
+      primary key,
+  uuid varchar(255) not null,
+  badge_type integer not null,
+  badge_type_background_color varchar(255),
+  badge_type_text varchar(255),
+  name varchar(255) not null
+    constraint uk_cuebofvgkgi4g9fxde2kmpr1h
+      unique,
+  required_right varchar(255),
+  visible boolean not null,
+  warning_message varchar(255)
+);
+

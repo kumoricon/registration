@@ -1,9 +1,6 @@
 package org.kumoricon.registration;
 
-import org.kumoricon.registration.model.badge.Badge;
-import org.kumoricon.registration.model.badge.BadgeFactory;
-import org.kumoricon.registration.model.badge.BadgeRepository;
-import org.kumoricon.registration.model.badge.BadgeType;
+import org.kumoricon.registration.model.badge.*;
 import org.kumoricon.registration.model.role.Right;
 import org.kumoricon.registration.model.role.RightRepository;
 import org.kumoricon.registration.model.role.Role;
@@ -28,7 +25,7 @@ public class BaseDataService {
     private final RightRepository rightRepository;
     private final UserRepository userRepository;
     private final UserService userService;
-    private final BadgeRepository badgeRepository;
+    private final BadgeService badgeService;
     private static final Logger log = LoggerFactory.getLogger(BaseDataService.class);
 
     @Value("${kumoreg.trainingMode}")
@@ -39,12 +36,12 @@ public class BaseDataService {
                            RightRepository rightRepository,
                            UserRepository userRepository,
                            UserService userService,
-                           BadgeRepository badgeRepository) {
+                           BadgeService badgeService) {
         this.roleRepository = roleRepository;
         this.rightRepository = rightRepository;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.badgeRepository = badgeRepository;
+        this.badgeService = badgeService;
     }
 
     void createDefaultData() {
@@ -73,7 +70,7 @@ public class BaseDataService {
             log.info("Users table not empty, skipping default data creation");
             return false;
         }
-        if (badgeRepository.count() > 0) {
+        if (badgeService.count() > 0) {
             log.error("badges table is not empty");
             return false;
         }
@@ -258,7 +255,7 @@ public class BaseDataService {
         Badge weekend = BadgeFactory.createBadge("Weekend", BadgeType.ATTENDEE, "Weekend", "#000000", 65, 65, 45);
         weekend.setRequiredRight("badge_type_weekend");
         weekend.setWarningMessage("Attendee check in. See your coordinator!");
-        badgeRepository.save(weekend);
+        badgeService.save(weekend);
 
         String[][] badgeList = {
                 {"Friday", "#81f983", "50", "50", "30"},
@@ -274,7 +271,7 @@ public class BaseDataService {
                     Float.parseFloat(currentBadge[4]));
             badge.setRequiredRight("badge_type_day");
             badge.setWarningMessage("Attendee check in. See your coordinator!");
-            badgeRepository.save(badge);
+            badgeService.save(badge);
         }
 
         // Create badge types with security restrictions below
@@ -283,7 +280,7 @@ public class BaseDataService {
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         vip.setBadgeTypeText("VIP");
-        badgeRepository.save(vip);
+        badgeService.save(vip);
     }
 
     private void createSpecialtyBadges() {
@@ -291,49 +288,49 @@ public class BaseDataService {
         Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", "#800080", 75f, 75f, 75f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
-        badgeRepository.save(artist);
+        badgeService.save(artist);
 
         log.info("Creating badge Exhibitor");
         Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00597c", 250f, 250f, 250f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
-        badgeRepository.save(exhibitor);
+        badgeService.save(exhibitor);
 
         log.info("Creating badge Guest");
         Badge guest = BadgeFactory.createBadge("Guest", BadgeType.OTHER,"Guest", "#62F442", 0f, 0f, 0f);
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
-        badgeRepository.save(guest);
+        badgeService.save(guest);
 
         log.info("Creating badge Small Press");
         Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.OTHER,"Small Press", "#007c5f", 0f, 0f, 0f);
         smallPress.setRequiredRight("badge_type_small_press");
         smallPress.setWarningMessage("Press check in. See your coordinator!");
-        badgeRepository.save(smallPress);
+        badgeService.save(smallPress);
 
         log.info("Creating badge Emerging Press");
         Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.OTHER,"E Press", "#1DE5D1", 0f, 0f, 0f);
         ePress.setRequiredRight("badge_type_emerging_press");
         ePress.setWarningMessage("Press check in. See your coordinator!");
-        badgeRepository.save(ePress);
+        badgeService.save(ePress);
 
         log.info("Creating badge Standard Press");
         Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", "#16b7a7", 0f, 0f, 0f);
         sPress.setRequiredRight("badge_type_standard_press");
         sPress.setWarningMessage("Press check in. See your coordinator!");
-        badgeRepository.save(sPress);
+        badgeService.save(sPress);
 
         log.info("Creating badge Industry");
         Badge industry = BadgeFactory.createBadge("Industry", BadgeType.OTHER,"Industry", "#FF00FC", 0f, 0f, 0f);
         industry.setRequiredRight("badge_type_industry");
         industry.setWarningMessage("Industry check in. See your coordinator!");
-        badgeRepository.save(industry);
+        badgeService.save(industry);
 
         log.info("Creating badge Panelist");
         Badge panelist = BadgeFactory.createBadge("Panelist", BadgeType.OTHER,"Panelist", "#FFA500", 0f, 0f, 0f);
         panelist.setRequiredRight("badge_type_panelist");
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
-        badgeRepository.save(panelist);
+        badgeService.save(panelist);
     }
 
 
@@ -341,7 +338,7 @@ public class BaseDataService {
     private void addLiteAttendeeBadges() {
         log.info("Creating badge Kumoricon Lite");
         Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Saturday", "#323E99", 15, 15, 15);
-        badgeRepository.save(lite);
+        badgeService.save(lite);
     }
 
 
