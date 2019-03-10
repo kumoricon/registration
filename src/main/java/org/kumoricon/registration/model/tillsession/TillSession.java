@@ -20,6 +20,7 @@ public class TillSession {
      */
     public TillSession(User user) {
         setUser(user);
+        setUserId(user.getId());
         setStartTime(Instant.now());
         setOpen(true);
     }

@@ -172,7 +172,9 @@ public class Attendee extends Record {
     public void setBadgeId(Integer badgeId) { this.badgeId = badgeId; }
 
     public Badge getBadge() { return null; }
-    public void setBadge(Badge badge) {  }
+    public void setBadge(Badge badge) {
+        this.badgeId = badge.getId();
+    }
 
     public Order getOrder() { return order; }
     public void setOrder(Order order) { this.order = order; }

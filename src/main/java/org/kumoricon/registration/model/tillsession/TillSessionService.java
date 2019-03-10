@@ -62,7 +62,7 @@ public class TillSessionService {
             if (session.isOpen()) {
                 session.setEndTime(Instant.now());
                 session.setOpen(false);
-                session = repository.save(session);
+                repository.save(session);
             } else {
                 throw new RuntimeException(String.format("Session %s is already closed", session));
             }
@@ -71,7 +71,6 @@ public class TillSessionService {
     }
 
     public TillSession closeSession(Integer id) {
-//        Session session = repository.findOne(id);
         TillSession session = repository.findOneById(id);
         return closeSession(session);
     }

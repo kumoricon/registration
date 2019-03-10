@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +39,9 @@ public class TillSessionRepository {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
             jdbcInsert.withTableName("tillsessions").usingGeneratedKeyColumns("id");
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("end_time", tillSession.getEndTime());
+            parameters.put("end_time", translate(tillSession.getEndTime()));
             parameters.put("open", tillSession.isOpen());
-            parameters.put("start_time", tillSession.getStartTime());
+            parameters.put("start_time", translate(tillSession.getStartTime()));
             parameters.put("user_id", tillSession.getUserId());
             Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
             tillSession.setId(key.intValue());
@@ -47,9 +49,14 @@ public class TillSessionRepository {
 
         } else {
             jdbcTemplate.update("UPDATE tillsessions SET end_time = ?, open = ?, start_time = ?, user_id = ? WHERE id = ?",
-                    tillSession.getEndTime(), tillSession.isOpen(), tillSession.getStartTime(), tillSession.getUserId(), tillSession.getId());
+                    translate(tillSession.getEndTime()), tillSession.isOpen(), translate(tillSession.getStartTime()), tillSession.getUserId(), tillSession.getId());
             return tillSession;
         }
+    }
+
+    private static Timestamp translate(Instant instant) {
+        if (instant == null) return null;
+        return Timestamp.from(instant);
     }
 
     @Transactional(readOnly=true)
@@ -104,9 +111,19 @@ public class TillSessionRepository {
         public TillSession mapRow(ResultSet rs, int rowNum) throws SQLException {
             TillSession tillSession = new TillSession();
             tillSession.setId(rs.getInt("id"));
-            tillSession.setStartTime(rs.getTimestamp("start_time").toInstant());
+            Timestamp start = rs.getTimestamp("start_time");
+            if (start != null) {
+                tillSession.setStartTime(start.toInstant());
+            } else {
+                tillSession.setStartTime(null);
+            }
             tillSession.setOpen(rs.getBoolean("open"));
-            tillSession.setEndTime(rs.getTimestamp("end_time").toInstant());
+            Timestamp end = rs.getTimestamp("end_time");
+            if (end != null) {
+                tillSession.setEndTime(end.toInstant());
+            } else {
+                tillSession.setEndTime(null);
+            }
             tillSession.setUserId(rs.getInt("user_id"));
             return tillSession;
         }

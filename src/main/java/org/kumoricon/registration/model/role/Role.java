@@ -27,7 +27,9 @@ public class Role implements Serializable {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public void addRight(Right right) { rights.add(right.getId()); }
+    public void addRight(Right right) {
+        rights.add(right.getId());
+    }
     public void addRights(List<Right> rights) {
         for (Right right : rights) {
             this.rights.add(right.getId());

@@ -14,6 +14,7 @@
         <tr>
             <th>User</th>
             <th>Session</th>
+            <th>Open</th>
             <th>Start</th>
             <th>End</th>
             <th>Total</th>
@@ -25,12 +26,11 @@
             <td colspan="3"> No Till Sessions Found </td>
         </tr>
         <tr th:each="t : ${tills}">
-            <td class="text-left" th:text="${t[0]}"></td>
-            <td class="text-left" th:text="${t[1]}"></td>
-            <td class="text-left" th:text="${t[2]}"></td>
-            <td class="text-left" th:text="${t[3]}"></td>
-            <td class="text-left" th:text="${t[4]}"></td>
-            <td class="text-left" th:text="${t[5]}}"></td>
+            <td class="text-left" th:text="${t.getUserId()}"></td>
+            <td class="text-left" th:text="${t.getId()}"></td>
+            <td class="text-left" th:text="${t.isOpen()}"></td>
+            <td class="text-left" th:text="${t.getStartTime()}"></td>
+            <td class="text-left" th:text="${t.getEndTime()}"></td>
         </tr>
         </tbody>
     </table>

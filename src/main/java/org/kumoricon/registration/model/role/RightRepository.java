@@ -32,6 +32,28 @@ public class RightRepository {
         }
     }
 
+    @Transactional(readOnly=true)
+    public Map<Integer, Set<Integer>> findAllRightsByRoleId() {
+        try {
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                    "select roles_rights.* FROM roles_rights");
+
+            Map<Integer, Set<Integer>> data = new HashMap<>();
+            for (Map<String, Object> row : rows) {
+                Integer roleId = (Integer)row.get("role_id");
+                if (!data.containsKey(roleId)) {
+                    data.put(roleId, new HashSet<>());
+                }
+                data.get(roleId).add((Integer)row.get("rights_id"));
+            }
+            return data;
+
+        } catch (EmptyResultDataAccessException e) {
+            return new HashMap<>();
+        }
+    }
+
+
     @Transactional(readOnly = true)
     public Set<Right> findAllRightsByUserId(Integer id) {
         try {
@@ -43,7 +65,6 @@ public class RightRepository {
         } catch (EmptyResultDataAccessException e) {
             return new HashSet<>();
         }
-
     }
 
     @Transactional
