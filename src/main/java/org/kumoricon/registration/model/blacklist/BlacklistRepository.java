@@ -61,8 +61,8 @@ public class BlacklistRepository {
 
     @Transactional(readOnly = true)
     public Integer numberOfMatches(String firstName, String lastName) {
-//     @Query(value = "SELECT COUNT(id) as cnt FROM blacklist WHERE first_name = ?1 AND last_name = ?2 ", nativeQuery = true)
-        return 0;
+        String sql = "select count(*) from blacklist WHERE first_name = ? and last_name = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
     class BlacklistRowMapper implements RowMapper<BlacklistName>
