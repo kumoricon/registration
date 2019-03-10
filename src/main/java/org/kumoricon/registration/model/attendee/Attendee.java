@@ -52,9 +52,6 @@ public class Attendee extends Record {
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkInTime;                    // Timestamp when checked in
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attendee")
-    @OrderBy("timestamp desc")
-    private Set<AttendeeHistory> history;
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
@@ -74,7 +71,6 @@ public class Attendee extends Record {
         this.preRegistered = false;
         this.compedBadge = false;
         this.parentIsEmergencyContact = false;
-        this.history = new HashSet<>();
         this.badgePrePrinted = false;
         this.badgePrinted = false;
         this.nameIsLegalName = true;
@@ -201,17 +197,6 @@ public class Attendee extends Record {
         this.badgePrinted = badgePrinted;
     }
 
-    public Set<AttendeeHistory> getHistory() { return history; }
-
-    public void setHistory(Set<AttendeeHistory> history) { this.history = history; }
-
-    public void addHistoryEntry(User user, String message) {
-        if (message != null && !message.trim().equals("")) {
-            if (history == null) { history = new HashSet<>(); }
-            history.add(new AttendeeHistory(user, this, message.trim()));
-        }
-    }
-
     public Boolean getCheckedIn() { return checkedIn; }
     public void setCheckedIn(Boolean checkedIn) {
         this.checkedIn = checkedIn;
@@ -332,7 +317,6 @@ public class Attendee extends Record {
         if (checkedIn != null ? !checkedIn.equals(attendee.checkedIn) : attendee.checkedIn != null) return false;
         if (checkInTime != null ? !checkInTime.equals(attendee.checkInTime) : attendee.checkInTime != null)
             return false;
-        if (history != null ? !history.equals(attendee.history) : attendee.history != null) return false;
         if (staffIDNumber != null ? !staffIDNumber.equals(attendee.staffIDNumber) : attendee.staffIDNumber != null)
             return false;
         if (staffPositions != null ? !staffPositions.equals(attendee.staffPositions) : attendee.staffPositions != null)

@@ -128,3 +128,24 @@ create table if not exists ageranges
       references badges
       on delete cascade
 );
+
+
+
+
+create table attendeehistory
+(
+  id serial not null
+    constraint attendeehistory_pkey
+      primary key,
+  message citext,
+  timestamp timestamp,
+  user_id integer
+    constraint fk_attendeehistory_userid_users
+      references users,
+  attendee_id integer
+    constraint fk_attendeehisotry_attendeeid_attendees
+      references attendees
+);
+
+alter table attendeehistory owner to kumoreg;
+

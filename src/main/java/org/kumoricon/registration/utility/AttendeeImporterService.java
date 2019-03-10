@@ -167,10 +167,10 @@ class AttendeeImporterService {
                     attendee.setOrder(o);
                 }
                 if (!record.notes.isEmpty() && !record.notes.trim().isEmpty()) {
-                    attendee.addHistoryEntry(currentUser, record.notes);
+//                    attendee.addHistoryEntry(currentUser, record.notes);
                 }
                 if (!record.vipTShirtSize.trim().isEmpty()) {
-                    attendee.addHistoryEntry(currentUser, "VIP T-Shirt size: " + record.vipTShirtSize);
+//                    attendee.addHistoryEntry(currentUser, "VIP T-Shirt size: " + record.vipTShirtSize);
                 }
                 attendee.setPreRegistered(true);
                 attendeesToAdd.add(attendee);

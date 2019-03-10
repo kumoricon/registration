@@ -135,7 +135,7 @@ public class Order extends Record {
                 if (!attendee.getCheckedIn()) {
                     attendee.setCheckedIn(true);
                     attendee.setPaid(true);
-                    attendee.addHistoryEntry(currentUser, "Attendee checked in");
+//                    attendee.addHistoryEntry(currentUser, "Attendee checked in");
                 }
             }
         }

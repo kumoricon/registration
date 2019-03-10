@@ -59,7 +59,7 @@ public class CheckinController {
         Attendee attendee = findAttendee(id);
         attendee.setCheckedIn(true);
         User currentUser = userRepository.findOneByUsernameIgnoreCase(principal.getName());
-        attendee.addHistoryEntry(currentUser, "Attendee Checked In");
+//        attendee.addHistoryEntry(currentUser, "Attendee Checked In");
         attendee.setBadgePrinted(true);
         attendee = attendeeRepository.save(attendee);
         model.addAttribute("attendee", attendee);
