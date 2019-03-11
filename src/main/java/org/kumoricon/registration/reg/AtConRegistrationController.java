@@ -5,6 +5,7 @@ import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
+import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -23,12 +25,15 @@ public class AtConRegistrationController {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final BadgeService badgeService;
+    private final PaymentRepository paymentRepository;
     private final String[] PAYMENT_TYPES = {"cash", "card", "checkormoneyorder"};
 
     @Autowired
-    public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository, UserRepository userRepository, BadgeService badgeService) {
+    public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository,
+                                       PaymentRepository paymentRepository, UserRepository userRepository, BadgeService badgeService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
+        this.paymentRepository = paymentRepository;
         this.userRepository = userRepository;
         this.badgeService = badgeService;
     }
@@ -40,12 +45,13 @@ public class AtConRegistrationController {
                          @PathVariable String attendeeId,
                          @RequestParam(required = false) String err,
                          @RequestParam(required=false) String msg) {
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(getIdFromParamter(orderId));
+        List<Attendee> orderAttendees = attendeeRepository.findAllByOrderId(getIdFromParamter(orderId));
         Attendee attendee = null;
         if (attendeeId.equals("new")) {
             attendee = new Attendee();
-            if (order.getAttendees().size() > 0) {
-                Attendee prevAttendee = order.getAttendees().get(0);
+            if (orderAttendees.size() > 0) {
+                Attendee prevAttendee = orderAttendees.get(0);
                 attendee.setEmergencyContactFullName(prevAttendee.getEmergencyContactFullName());
                 attendee.setEmergencyContactPhone(prevAttendee.getEmergencyContactPhone());
                 if (prevAttendee.isMinor()) {
@@ -55,7 +61,7 @@ public class AtConRegistrationController {
                 }
             }
         } else {
-            attendee = order.getAttendeeById(getIdFromParamter(attendeeId));
+            attendee = attendeeRepository.findById(getIdFromParamter(attendeeId));
         }
 
         model.addAttribute("order", order);
@@ -76,7 +82,7 @@ public class AtConRegistrationController {
                                 @RequestParam(required = false) String err,
                                 @RequestParam(required=false) String msg) {
 
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findByVisibleTrue());
@@ -87,9 +93,11 @@ public class AtConRegistrationController {
             return "reg/atcon-order-attendee";
         }
 
-        order.addAttendee(attendee);
-        attendee.setOrder(order);
+        order.addToTotalAmount(attendee.getPaidAmount());
         orderRepository.save(order);
+        attendee.setOrder(order);
+        attendeeRepository.save(attendee);
+
 
         return "redirect:/reg/atconorder/" + order.getId() + "?msg=Added+" + attendee.getFirstName();
     }
@@ -102,8 +110,10 @@ public class AtConRegistrationController {
                                 @RequestParam(required = false) String err,
                                 @RequestParam(required=false) String msg) {
 
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
+        model.addAttribute("attendees", attendeeRepository.findAllByOrderId(getIdFromParamter(orderId)));
+        model.addAttribute("payments", paymentRepository.findByOrderId(getIdFromParamter(orderId)));
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
         return "reg/atcon-order";
@@ -116,10 +126,10 @@ public class AtConRegistrationController {
         Order order = new Order();
         order.setOrderTakenByUser(user);
         order.setOrderId(Order.generateOrderId());
-        order = orderRepository.save(order);
+        Integer newId = orderRepository.save(order);
 
 
-        return "redirect:/reg/atconorder/" + order.getId() + "/attendee/new";
+        return "redirect:/reg/atconorder/" + newId + "/attendee/new";
     }
 
 

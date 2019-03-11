@@ -27,10 +27,10 @@
                     <td>Attendees</td>
                     <td>
                         <table class="table table-borderless table-condensed table-hover">
-                            <tr th:if="${order.attendeeList.empty}">
+                            <tr th:if="${attendees.empty}">
                                 <td colspan="3"> No Attendees Found </td>
                             </tr>
-                            <tr th:each="a : ${order.attendeeList}">
+                            <tr th:each="a : ${attendees}">
                                 <td th:text="${a.firstName} + ' ' + ${a.lastName}">Attendee Name</td>
                                 <td th:text="${a.badge?.name}">Weekend</td>
                                 <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/attendee/' + ${a.id}" href="#">Edit</a></td>
@@ -43,10 +43,10 @@
                     <td>Payments</td>
                     <td>
                         <table class="table table-borderless table-condensed table-hover">
-                            <tr th:if="${order.payments.empty}">
+                            <tr th:if="${payments.empty}">
                                 <td colspan="2"> No Payments Found </td>
                             </tr>
-                            <tr th:each="p : ${order.payments}">
+                            <tr th:each="p : ${payments}">
                                 <td th:text="${p.paymentType}">Cash</td>
                                 <td class="text-right" th:text="'$' + ${p.amount}"></td>
                                 <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/payment/' + ${p.id}" href="#">Edit</a></td>

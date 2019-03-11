@@ -32,11 +32,8 @@ public class AttendeeFactory {
         attendee.setEmergencyContactPhone("321-321-4321");
         attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(30L));
         attendee.setPaid(true);
-        attendee.setStaffDepartment("Membership");
         List<String> positions = new ArrayList<>();
         positions.addAll(Arrays.asList("Position 1", "Position 2", "Position 3"));
-        attendee.setStaffPositions(positions);
-        attendee.setStaffDepartmentColor("#FFDDDD");
         try {
             attendee.setPaidAmount(attendee.getBadge().getCostForAge(attendee.getAge()));
         } catch (ServiceException e) {

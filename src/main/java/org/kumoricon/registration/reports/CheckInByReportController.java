@@ -31,7 +31,7 @@ public class CheckInByReportController {
     @RequestMapping(value = "/reports/checkinbyhour")
     @PreAuthorize("hasAuthority('view_check_in_by_hour_report')")
     public String checkInByHour(Model model) {
-        model.addAttribute("data", attendeeRepository.findCheckInCountsByHour());
+//        model.addAttribute("data", attendeeRepository.findCheckInCountsByHour());
         return "reports/checkinbyhour";
     }
 

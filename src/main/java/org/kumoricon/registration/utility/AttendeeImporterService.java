@@ -4,6 +4,7 @@ import com.google.gson.*;
 
 import org.kumoricon.registration.helpers.FieldCleaner;
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
@@ -31,7 +32,7 @@ class AttendeeImporterService {
     private final TillSessionService sessionService;
 
     private final OrderRepository orderRepository;
-
+    private final AttendeeRepository attendeeRepository;
     private final BadgeService badgeService;
 
     private final UserRepository userRepository;
@@ -39,9 +40,10 @@ class AttendeeImporterService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);
 
-    AttendeeImporterService(TillSessionService sessionService, OrderRepository orderRepository, BadgeService badgeService, UserRepository userRepository) {
+    AttendeeImporterService(TillSessionService sessionService, OrderRepository orderRepository, AttendeeRepository attendeeRepository, BadgeService badgeService, UserRepository userRepository) {
         this.sessionService = sessionService;
         this.orderRepository = orderRepository;
+        this.attendeeRepository = attendeeRepository;
         this.badgeService = badgeService;
         this.userRepository = userRepository;
     }
@@ -60,30 +62,6 @@ class AttendeeImporterService {
             orders.put(o.getOrderId(), o);
         }
         return orders;
-    }
-
-    /**
-     * Validate and set paid status. Modifies items in place.
-     * Makes sure that all attendees in the order have paid, or all have not paid, and sets the
-     * order as paid accordingly.
-     * @param order Orders with attendees to validate
-     * @throws Exception Raises exception if any order has no attendees in it.
-     */
-    static void validatePaidStatus(Order order) throws Exception {
-        if (order == null) { return; }
-        Set<Attendee> attendees = order.getAttendeeList();
-        if (attendees.size() == 0) {
-            log.error("Error: Order {} has 0 attendees. This shouldn't happen!", order);
-            throw new Exception("Error: Order " + order + " has 0 attendees. This shouldn't happen!");
-        }
-        Boolean isPaid = attendees.iterator().next().getPaid();
-        for (Attendee a : attendees) {
-            if (a.getPaid() != isPaid) {
-                log.error("Error: Order {} has both paid and unpaid. This shouldn't happen!", order);
-                throw new Exception("Error: Order " + order + " has both paid and unpaid attendees");
-            }
-        }
-        order.setPaid(isPaid);
     }
 
     private String generateBadgeNumber(Integer badgeNumber) {
@@ -107,8 +85,8 @@ class AttendeeImporterService {
             List<Attendee> attendeesToAdd = new ArrayList<>();
             List<Order> ordersToAdd = new ArrayList<>();
 
-            HashMap<String, Badge> badges = getBadgeHashMap();
-            HashMap<String, Order> orders = getOrderHashMap();
+            Map<String, Badge> badges = getBadgeHashMap();
+            Map<String, Order> orders = getOrderHashMap();
             User currentUser = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
 
             int count = 0;
@@ -156,15 +134,15 @@ class AttendeeImporterService {
                 if (orders.containsKey(record.orderId)) {
                     Order currentOrder = orders.get(record.orderId);
                     attendee.setOrder(currentOrder);
-                    currentOrder.addAttendee(attendee);
+                    currentOrder.addToTotalAmount(attendee.getPaidAmount());
                 } else {
                     Order o = new Order();
                     o.setOrderTakenByUser(currentUser);
                     o.setOrderId(record.orderId);
-                    o.addAttendee(attendee);
                     orders.put(o.getOrderId(), o);
                     ordersToAdd.add(o);
                     attendee.setOrder(o);
+                    o.addToTotalAmount(attendee.getPaidAmount());
                 }
                 if (!record.notes.isEmpty() && !record.notes.trim().isEmpty()) {
 //                    attendee.addHistoryEntry(currentUser, record.notes);
@@ -185,7 +163,6 @@ class AttendeeImporterService {
             }
             TillSession session = sessionService.getNewSessionForUser(currentUser);
             for (Order o : ordersToAdd) {
-                validatePaidStatus(o);
                 if (o.getPaid()) {
                     Payment p = new Payment();
                     p.setAmount(o.getTotalAmount());
@@ -195,7 +172,6 @@ class AttendeeImporterService {
                     p.setPaymentTakenBy(currentUser);
                     p.setTillSession(session);
                     p.setOrder(o);
-                    o.addPayment(p);
                 }
             }
 

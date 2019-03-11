@@ -40,7 +40,7 @@ public class PaymentController {
                              @PathVariable String orderId,
                              @RequestParam(required = false) String err,
                              @RequestParam(required=false) String msg) {
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);
         model.addAttribute("order", order);
@@ -58,7 +58,7 @@ public class PaymentController {
         if (!isValidPaymentType(paymentType)) {
             throw new RuntimeException("Invalid payment type " + paymentType);
         }
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(getIdFromParamter(orderId));
 
         Payment p = new Payment();
         p.setOrder(order);
@@ -83,7 +83,7 @@ public class PaymentController {
                                         @RequestParam(required = false) String err,
                                         @RequestParam(required=false) String msg) {
 
-        Order order = orderRepository.getOne(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("payment", payment);
         model.addAttribute("paymentType", paymentType);
@@ -100,12 +100,11 @@ public class PaymentController {
         payment.setPaymentTakenAt(Instant.now());
         payment.setTillSession(currentTillSession);
 
-        order.addPayment(payment);
         orderRepository.save(order);
 
-        if (order.getTotalAmount().equals(order.getTotalPaid())) {
-            return "redirect:/reg/atconorder/" + order.getId() + "/payment?msg=Added+" + payment.getPaymentType();
-        }
+//        if (order.getTotalAmount().equals(order.getTotalPaid())) {
+//            return "redirect:/reg/atconorder/" + order.getId() + "/payment?msg=Added+" + payment.getPaymentType();
+//        }
 
         return "redirect:/reg/atconorder/" + order.getId() + "/payment?msg=Added+" + payment.getPaymentType();
 

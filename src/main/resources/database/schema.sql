@@ -130,9 +130,86 @@ create table if not exists ageranges
 );
 
 
+create table if not exists orders
+(
+  id serial not null
+    constraint orders_pkey
+      primary key,
+  notes varchar(255),
+  order_id varchar(32) not null,
+  order_taken_by_user integer
+    constraint fk_orders_ordertakenbyuser_users
+      references users,
+  paid boolean not null
+);
 
 
-create table attendeehistory
+create table if not exists payments
+(
+  id serial not null
+    constraint payments_pkey
+      primary key,
+  amount numeric(19,2) not null
+    constraint payments_amount_check
+      check (amount >= (0)::numeric),
+  auth_number varchar(255),
+  payment_location varchar(255),
+  payment_taken_at timestamp,
+  payment_taken_by integer
+    constraint fk_payments_paymentakenby_users
+      references users,
+  payment_type integer not null,
+  till_session_id integer,
+  order_id integer not null
+    constraint fk_payments_orderid_orders
+      references orders
+);
+
+
+create table if not exists attendees
+(
+  id serial not null
+    constraint attendees_pkey
+      primary key,
+  badge_id integer not null
+    constraint fk_attendee_badgeid_badges
+      references badges,
+  badge_number varchar(255)
+    constraint uk_badge_number
+      unique,
+  badge_pre_printed boolean not null,
+  badge_printed boolean not null,
+  birth_date date,
+  check_in_time timestamp,
+  checked_in boolean,
+  comped_badge boolean,
+  country varchar(255),
+  email varchar(255),
+  emergency_contact_full_name varchar(255),
+  emergency_contact_phone varchar(255),
+  fan_name citext,
+  first_name citext,
+  last_name citext,
+  legal_first_name citext,
+  legal_last_name citext,
+  name_is_legal_name boolean,
+  paid boolean,
+  paid_amount numeric(19,2),
+  parent_form_received boolean,
+  parent_full_name varchar(255),
+  parent_is_emergency_contact boolean,
+  parent_phone varchar(255),
+  phone_number varchar(255),
+  pre_registered boolean not null,
+  zip varchar(255),
+  order_id integer
+    constraint fk_attendee_orderid_orders
+      references orders
+);
+
+
+
+create table if not exists attendeehistory
 (
   id serial not null
     constraint attendeehistory_pkey
@@ -146,6 +223,4 @@ create table attendeehistory
     constraint fk_attendeehisotry_attendeeid_attendees
       references attendees
 );
-
-alter table attendeehistory owner to kumoreg;
 

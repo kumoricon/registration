@@ -167,7 +167,7 @@ public class TillSessionService {
                         .append("</td>");
                 output.append(String.format("<td>%s</td><td>%s</td><td>%s</td><td align=\"right\">$%s</td></tr>",
                         payment.getPaymentLocation(),
-                        payment.getOrder(),
+                        payment.getOrderId(),
                         payment.getAuthNumber(),
                         payment.getAmount()));
             }
@@ -194,7 +194,7 @@ public class TillSessionService {
                         .append("\t");
                 output.append(String.format("%s\t%s\t%s\t$%s\n",
                         payment.getPaymentLocation(),
-                        payment.getOrder(),
+                        payment.getOrderId(),
                         payment.getAuthNumber(),
                         payment.getAmount()));
             }

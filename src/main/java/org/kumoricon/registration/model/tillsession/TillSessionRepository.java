@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.kumoricon.registration.model.SqlHelper.translate;
+
 /**
  * Unlike most repositories, Session access should only happen through SessionService
  */
@@ -54,10 +56,6 @@ public class TillSessionRepository {
         }
     }
 
-    private static Timestamp translate(Instant instant) {
-        if (instant == null) return null;
-        return Timestamp.from(instant);
-    }
 
     @Transactional(readOnly=true)
     TillSession findOneById(Integer id) {

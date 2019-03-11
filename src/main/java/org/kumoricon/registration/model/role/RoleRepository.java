@@ -73,8 +73,6 @@ public class RoleRepository {
             parameters.put("name", role.getName());
             Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
             return (key).intValue();
-
-
         } else {
             jdbcTemplate.update("UPDATE roles SET name = ? WHERE id = ?",
                     role.getName(), role.getId());

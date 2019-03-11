@@ -38,7 +38,7 @@ public class CheckinController {
                          @RequestParam(required = false) String err,
                          @RequestParam(required=false) String msg) {
         try {
-            Attendee attendee = attendeeRepository.findOneById(Integer.parseInt(id));
+            Attendee attendee = attendeeRepository.findById(Integer.parseInt(id));
             model.addAttribute("attendee", attendee);
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
@@ -61,7 +61,8 @@ public class CheckinController {
         User currentUser = userRepository.findOneByUsernameIgnoreCase(principal.getName());
 //        attendee.addHistoryEntry(currentUser, "Attendee Checked In");
         attendee.setBadgePrinted(true);
-        attendee = attendeeRepository.save(attendee);
+        attendeeRepository.save(attendee);
+        //attendee = attendeeRepository.findById(attendee.getId());
         model.addAttribute("attendee", attendee);
 
         // TODO: Print badge here
@@ -97,7 +98,7 @@ public class CheckinController {
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
-            return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&q=" + attendee.getOrder().getOrderId();
+            return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&q=" + attendee.getOrderId();
         } else if (action != null && action.equals("reprintDuringCheckin")) {
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=Reprinting+Badge";
         } else {
@@ -108,7 +109,7 @@ public class CheckinController {
     private Attendee findAttendee(String id) {
         Attendee attendee;
         try {
-            attendee = attendeeRepository.findOneById(Integer.parseInt(id));
+            attendee = attendeeRepository.findById(Integer.parseInt(id));
             if (attendee == null) {
                 throw new RuntimeException("Attendee " + id + " not found");
             }

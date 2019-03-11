@@ -36,7 +36,6 @@ public class BlacklistRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-
     }
 
     @Transactional
