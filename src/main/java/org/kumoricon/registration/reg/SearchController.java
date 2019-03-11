@@ -34,7 +34,8 @@ public class SearchController {
             attendees = new ArrayList<>();
         } else {
             model.addAttribute("query", q.trim());
-            attendees = attendeeSearchRepository.searchFor(q.trim().split(" "));
+//            attendees = attendeeSearchRepository.searchFor(q.trim().split(" "));
+            attendees = new ArrayList<>();
             if (attendees.size() ==0) {
                 attendees = attendeeRepository.findByOrderNumber(q);
             }

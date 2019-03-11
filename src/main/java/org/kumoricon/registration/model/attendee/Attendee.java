@@ -1,7 +1,6 @@
 package org.kumoricon.registration.model.attendee;
 
 
-import org.kumoricon.registration.model.Record;
 import org.kumoricon.registration.model.badge.AgeRange;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.order.Order;
@@ -11,7 +10,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
-public class Attendee extends Record {
+public class Attendee {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String legalFirstName;
@@ -65,6 +65,9 @@ public class Attendee extends Record {
         LocalDate now = LocalDate.now(ZoneId.of("America/Los_Angeles"));
         return birthDate == null || birthDate.isAfter(now.minusYears(18));
     }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }

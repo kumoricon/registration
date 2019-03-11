@@ -5,8 +5,6 @@ import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +40,6 @@ public class SearchByBadgeController {
         } else {
             prevPage = null;
         }
-        Pageable pageable = PageRequest.of(page, 20);
 
         List<Badge> badgeTypes = badgeService.findAll();
 
@@ -63,18 +60,18 @@ public class SearchByBadgeController {
             attendees = new ArrayList<>();
         } else {
             model.addAttribute("badgeName", badgeName.trim().toLowerCase());
-//            attendees = attendeeRepository.findByBadgeType(selected, pageable);
+            attendees = attendeeRepository.findByBadgeType(selected.getId(), page);
         }
-//        if (attendees.size() == 20) {
-//            nextPage = page + 1;
-//        } else {
-//            nextPage = null;
-//        }
+        if (attendees.size() == 20) {
+            nextPage = page + 1;
+        } else {
+            nextPage = null;
+        }
         model.addAttribute("badgeTypes", badgeTypes);
         model.addAttribute("selected", selected);
-//        model.addAttribute("attendees", attendees);
+        model.addAttribute("attendees", attendees);
         model.addAttribute("page", page);
-//        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("nextPage", nextPage);
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);

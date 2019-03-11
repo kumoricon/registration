@@ -1,7 +1,13 @@
 package org.kumoricon.registration.admin.loginsession;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import javax.persistence.EntityManager;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,29 +18,40 @@ import java.util.List;
  */
 @Repository
 public class LoginRepository {
-    private final EntityManager entityManager;
+    private final JdbcTemplate jdbcTemplate;
 
-    public LoginRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public LoginRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Transactional(readOnly=true)
     public List<SessionInfoDTO> findAll() {
-        List<SessionInfoDTO> sessions = new ArrayList<>();
-        List<Object[]> rows = entityManager.createNativeQuery(
-                        "select " +
-                                "       s.PRIMARY_ID as \"primaryId\", " +
-                                "       s.PRINCIPAL_NAME as \"principalName\"," +
-                                "       s.CREATION_TIME as \"creationTime\"," +
-                                "       s.LAST_ACCESS_TIME as \"lastAccessTime\", " +
-                                "       s.EXPIRY_TIME as \"expiryTime\" " +
-                                "from SPRING_SESSION s ")
-                .getResultList();
-
-        for (Object[] row : rows) {
-            sessions.add(new SessionInfoDTO(row[0], row[1], row[2], row[3], row[4]));
+        try {
+            return jdbcTemplate.query(
+                    "select " +
+                            "       s.PRIMARY_ID as \"primaryId\", " +
+                            "       s.PRINCIPAL_NAME as \"principalName\"," +
+                            "       s.CREATION_TIME as \"creationTime\"," +
+                            "       s.LAST_ACCESS_TIME as \"lastAccessTime\", " +
+                            "       s.EXPIRY_TIME as \"expiryTime\" " +
+                            "from SPRING_SESSION s ",
+                    new SessionInfoDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
         }
-
-        return sessions;
     }
+
+    private class SessionInfoDTORowMapper implements RowMapper<SessionInfoDTO> {
+        @Override
+        public SessionInfoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            SessionInfoDTO s = new SessionInfoDTO(rs.getString("primaryId"),
+                    rs.getString("principalName"),
+                    rs.getLong("creationTime"),
+                    rs.getLong("lastAccessTime"),
+                    rs.getLong("expiryTime"));
+            return s;
+        }
+    }
+
 
 }

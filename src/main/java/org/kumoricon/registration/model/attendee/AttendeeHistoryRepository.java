@@ -1,14 +1,9 @@
 package org.kumoricon.registration.model.attendee;
 
-import org.kumoricon.registration.model.blacklist.BlacklistName;
-import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -16,8 +11,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public class AttendeeHistoryRepository {

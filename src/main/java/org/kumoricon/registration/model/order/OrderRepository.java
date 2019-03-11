@@ -1,7 +1,6 @@
 package org.kumoricon.registration.model.order;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -48,9 +47,9 @@ public class OrderRepository {
     }
 
     @Transactional(readOnly=true)
-    public List<Order> findAllBy(Pageable pageable) {
+    public List<Order> findAllBy(Integer page) {
         return jdbcTemplate.query("select * from orders ORDER BY id desc LIMIT ? OFFSET ?",
-                new Object[]{pageable.getPageSize(), pageable.getOffset()},
+                new Object[]{20, 20*page},
                 new OrderRowMapper());
     }
 

@@ -1,8 +1,6 @@
 package org.kumoricon.registration.model.attendee;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -150,11 +148,22 @@ public class AttendeeRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Attendee> findAll() {
         try {
             return jdbcTemplate.query(
                     "select * from attendees", new AttendeeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Attendee> findByBadgeType(Integer badgeId, Integer page) {
+        try {
+            return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY id desc LIMIT ? OFFSET ?",
+                    new Object[]{badgeId, 20, 20*page},
+                    new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }

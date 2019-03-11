@@ -1,11 +1,7 @@
 package org.kumoricon.registration.model.order;
 
-import org.hibernate.validator.constraints.Length;
-import org.kumoricon.registration.model.Record;
 import org.kumoricon.registration.model.user.User;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
 

@@ -1,21 +1,16 @@
 package org.kumoricon.registration.reg;
 
-import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
-import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -44,8 +39,7 @@ public class OrderController {
         } else {
             prevPage = null;
         }
-        Pageable pageable = PageRequest.of(page, 20);
-        List<Order> orders = orderRepository.findAllBy(pageable);
+        List<Order> orders = orderRepository.findAllBy(page);
 
         if (orders.size() == 20) {
             nextPage = page + 1;
