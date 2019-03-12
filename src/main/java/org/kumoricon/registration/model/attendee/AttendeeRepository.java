@@ -31,10 +31,10 @@ public class AttendeeRepository {
     public List<Attendee> findByOrderNumber(String orderNumber) {
         try {
             return jdbcTemplate.query(
-                    "select * from attendees join orders on attendee.order_id = orders.id where orders.order_id = ? order by timestamp desc",
+                    "select * from attendees join orders on attendees.order_id = orders.id where orders.order_id = ? order by attendees.id desc",
                     new Object[]{orderNumber}, new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -46,7 +46,7 @@ public class AttendeeRepository {
                     "select * from attendees where order_id = ? order by id desc",
                     new Object[]{id}, new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -198,7 +198,7 @@ public class AttendeeRepository {
         }
     }
 
-    class AttendeeRowMapper implements RowMapper<Attendee>
+    private class AttendeeRowMapper implements RowMapper<Attendee>
     {
         @Override
         public Attendee mapRow(ResultSet rs, int rowNum) throws SQLException {

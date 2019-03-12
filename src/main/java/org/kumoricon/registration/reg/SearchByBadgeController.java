@@ -1,7 +1,9 @@
 package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,12 @@ import java.util.List;
 @Controller
 public class SearchByBadgeController {
     private final BadgeService badgeService;
-    private final AttendeeRepository attendeeRepository;
+    private final AttendeeSearchRepository attendeeSearchRepository;
 
     @Autowired
-    public SearchByBadgeController(BadgeService badgeService, AttendeeRepository attendeeRepository) {
+    public SearchByBadgeController(BadgeService badgeService, AttendeeSearchRepository attendeeSearchRepository) {
         this.badgeService = badgeService;
-        this.attendeeRepository = attendeeRepository;
+        this.attendeeSearchRepository = attendeeSearchRepository;
     }
 
     @RequestMapping(value = "/searchbybadge")
@@ -55,12 +57,12 @@ public class SearchByBadgeController {
             }
         }
 
-        List<Attendee> attendees;
+        List<AttendeeListDTO> attendees;
         if (selected == null) {
             attendees = new ArrayList<>();
         } else {
             model.addAttribute("badgeName", badgeName.trim().toLowerCase());
-            attendees = attendeeRepository.findByBadgeType(selected.getId(), page);
+            attendees = attendeeSearchRepository.searchByBadgeType(selected.getId(), page);
         }
         if (attendees.size() == 20) {
             nextPage = page + 1;
