@@ -21,13 +21,13 @@ public class BlacklistRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<BlacklistName> findAll() {
         return jdbcTemplate.query("select * from blacklist",
                 new BlacklistRowMapper());
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Optional<BlacklistName> findById(int id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(

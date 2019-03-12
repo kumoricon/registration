@@ -11,8 +11,10 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.kumoricon.registration.model.SqlHelper.translate;
 
@@ -24,7 +26,7 @@ public class AttendeeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Attendee> findByOrderNumber(String orderNumber) {
         try {
             return jdbcTemplate.query(
@@ -36,7 +38,7 @@ public class AttendeeRepository {
     }
 
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Attendee> findAllByOrderId(int id) {
         try {
             return jdbcTemplate.query(
@@ -52,11 +54,25 @@ public class AttendeeRepository {
 //
 //    @Query(value = "SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as CheckInDate, COUNT(id) AS cnt, SUM(paid_amount) as Amount FROM attendees WHERE checked_in = TRUE AND pre_registered = TRUE GROUP BY CheckInDate ORDER BY CheckInDate;", nativeQuery = true)
 //    List<Object[]> findPreRegCheckInCountsByDate();
-//
-//    @Query(value = "SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as checkInDate, EXTRACT(HOUR from check_in_time at time zone 'America/Los_Angeles') as checkInHour, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, COUNT(checked_in) as Total FROM attendees LEFT OUTER JOIN (SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as aCheckInDate, EXTRACT(HOUR from check_in_time at time zone 'America/Los_Angeles') as aCheckInHour, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = TRUE GROUP BY aCheckInDate, aCheckInHour) as preRegCheckedIn ON DATE(check_in_time at time zone 'America/Los_Angeles') = preRegCheckedIn.aCheckInDate AND EXTRACT(HOUR from check_in_time at time zone 'America/Los_Angeles') = preRegCheckedIn.aCheckInHour LEFT OUTER JOIN (SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as aCheckInDate, EXTRACT(HOUR from check_in_time at time zone 'America/Los_Angeles') as aCheckInHour, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = FALSE GROUP BY aCheckInDate, aCheckInHour) as atConCheckedIn ON DATE(check_in_time at time zone 'America/Los_Angeles') = atConCheckedIn.aCheckInDate AND EXTRACT(HOUR from check_in_time at time zone 'America/Los_Angeles') = atConCheckedIn.aCheckInHour WHERE checked_in = TRUE GROUP BY checkInDate, checkInHour, atConCheckedIn.cnt, preRegCheckedIn.cnt ORDER BY checkInDate DESC, checkInHour;", nativeQuery = true)
-//    List<Object[]> findCheckInCountsByHour();
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
+    public List<CheckInByHourDTO> findCheckInCountsByHour() {
+        String sql = "SELECT DATE(check_in_time) as checkInDate, EXTRACT(HOUR from check_in_time) as checkInHour, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, COUNT(checked_in) as Total FROM attendees LEFT OUTER JOIN (SELECT DATE(check_in_time) as aCheckInDate, EXTRACT(HOUR from check_in_time) as aCheckInHour, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = TRUE GROUP BY aCheckInDate, aCheckInHour) as preRegCheckedIn ON DATE(check_in_time) = preRegCheckedIn.aCheckInDate AND EXTRACT(HOUR from check_in_time) = preRegCheckedIn.aCheckInHour LEFT OUTER JOIN (SELECT DATE(check_in_time) as aCheckInDate, EXTRACT(HOUR from check_in_time) as aCheckInHour, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = FALSE GROUP BY aCheckInDate, aCheckInHour) as atConCheckedIn ON DATE(check_in_time) = atConCheckedIn.aCheckInDate AND EXTRACT(HOUR from check_in_time) = atConCheckedIn.aCheckInHour WHERE checked_in = TRUE GROUP BY checkInDate, checkInHour, atConCheckedIn.cnt, preRegCheckedIn.cnt ORDER BY checkInDate DESC, checkInHour;";
+
+        List<CheckInByHourDTO> data = new ArrayList<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map row : rows) {
+            data.add(new CheckInByHourDTO(
+                    Timestamp.valueOf(row.get("checkindate").toString()).toInstant(),
+                    (Integer)row.get("preregcheckedin"),
+                    (Integer)row.get("atconcheckedin")));
+        }
+
+        return data;
+    }
+
+    @Transactional(readOnly = true)
     public Integer findWarmBodyCount() {
         try {
             return jdbcTemplate.queryForObject(
@@ -74,7 +90,7 @@ public class AttendeeRepository {
     // guests, industry, press, and complimentary badges are not counted). Prior to 2014, multiple single-day badges
     // were double-counted (for example, a person purchases Saturday, then Sunday the next day); for 2014 and after,
     // only one is counted (this is an estimated less than 2% discrepancy).
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Integer findTotalAttendeeCount() {
         try {
             return jdbcTemplate.queryForObject(
@@ -91,7 +107,7 @@ public class AttendeeRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Attendee findByOrderId(int orderId) {
         try {
             return jdbcTemplate.queryForObject(
@@ -103,7 +119,7 @@ public class AttendeeRepository {
     }
 
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Attendee findById(int id) {
         try {
             return jdbcTemplate.queryForObject(

@@ -19,7 +19,7 @@ class AgeRangeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<AgeRange> findAgeRangesForBadgeId(Integer id) {
         try {
             return jdbcTemplate.query(

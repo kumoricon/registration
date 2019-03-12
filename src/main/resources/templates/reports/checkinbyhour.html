@@ -9,11 +9,10 @@
 
     <h1>Check Ins by Hour</h1>
 
-    <table class="table table-bordered table-striped table-sm col-6">
+    <table class="table table-bordered table-striped table-sm col-7">
         <thead class="thead-dark">
             <tr>
                 <th>Date</th>
-                <th>Hour</th>
                 <th>At Con Checked In</th>
                 <th>PreReg Checked In</th>
                 <th>Total</th>
@@ -24,11 +23,10 @@
                 <td colspan="5"> No Check In Records Found </td>
             </tr>
             <tr th:each="d : ${data}">
-                <td th:text="${d[0]}">2019-01-01</td>
-                <td class="text-right" th:text="${#numbers.formatInteger(d[1], 2)}">15</td>
-                <td class="text-right" th:text="${d[2]}">33</td>
-                <td class="text-right" th:text="${d[3]}">11</td>
-                <td class="text-right" th:text="${d[4]}">54</td>
+                <td class="text-nowrap" th:text="${d.start} ? ${#dates.format(d.start, 'dd/MM/yyyy h:mm a zzz')} : ''">2019-01-01</td>
+                <td class="text-right" th:text="${d.preregCheckIn}">33</td>
+                <td class="text-right" th:text="${d.atConCheckIn}">11</td>
+                <td class="text-right" th:text="${d.total}">54</td>
             </tr>
         </tbody>
     </table>

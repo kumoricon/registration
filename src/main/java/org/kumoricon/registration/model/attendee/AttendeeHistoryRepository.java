@@ -21,7 +21,7 @@ public class AttendeeHistoryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public AttendeeHistory findById(int id) {
         try {
             return jdbcTemplate.queryForObject(
@@ -32,7 +32,7 @@ public class AttendeeHistoryRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<AttendeeHistory> findAllByAttendeeId(int id) {
         try {
             return jdbcTemplate.query(

@@ -21,7 +21,7 @@ public class RightRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Right findByNameIgnoreCase(String name) {
         try {
             return jdbcTemplate.queryForObject(
@@ -32,7 +32,7 @@ public class RightRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Map<Integer, Set<Integer>> findAllRightsByRoleId() {
         try {
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(
@@ -80,7 +80,7 @@ public class RightRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Right> findAll() {
         return jdbcTemplate.query("select * from rights",
                 new RightRowMapper());

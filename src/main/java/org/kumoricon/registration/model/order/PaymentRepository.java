@@ -20,7 +20,7 @@ public class PaymentRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Payment> findByTillSessionIdAndPaymentType(Integer tillSessionId, Payment.PaymentType paymentType) {
         return jdbcTemplate.query("select * from payments where till_session_id = ? and payment_type = ?",
                 new Object[]{tillSessionId, paymentType.getValue()},

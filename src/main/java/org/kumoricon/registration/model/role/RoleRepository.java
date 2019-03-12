@@ -25,7 +25,7 @@ public class RoleRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Role findByNameIgnoreCase(String name) {
         try {
             Role result = jdbcTemplate.queryForObject(
@@ -38,7 +38,7 @@ public class RoleRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Role findById(Integer id) {
         try {
             Role result = jdbcTemplate.queryForObject(
@@ -52,7 +52,7 @@ public class RoleRepository {
     }
 
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Role> findAll() {
         return jdbcTemplate.query("select * from roles",
                 new RoleRowMapper());

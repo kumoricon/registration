@@ -54,7 +54,7 @@ public class TillSessionRepository {
     }
 
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     TillSession findOneById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
@@ -65,7 +65,7 @@ public class TillSessionRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     TillSession getOpenSessionForUser(User user) {
         try {
             return jdbcTemplate.queryForObject(
@@ -76,7 +76,7 @@ public class TillSessionRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     List<TillSession> findAllOpenSessions() {
         try {
             return jdbcTemplate.query(
@@ -88,7 +88,7 @@ public class TillSessionRepository {
     }
 
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     List<TillSession> findAllOrderByEnd() {
         try {
             return jdbcTemplate.query(

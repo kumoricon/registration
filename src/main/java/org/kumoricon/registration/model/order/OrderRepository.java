@@ -23,7 +23,7 @@ public class OrderRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Order findById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
@@ -35,7 +35,7 @@ public class OrderRepository {
     }
 
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Order findByOrderNumber(String orderId) {
         try {
             return jdbcTemplate.queryForObject(
@@ -46,14 +46,14 @@ public class OrderRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Order> findAllBy(Integer page) {
         return jdbcTemplate.query("select * from orders ORDER BY id desc LIMIT ? OFFSET ?",
                 new Object[]{20, 20*page},
                 new OrderRowMapper());
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Order> findAll() {
         try {
             return jdbcTemplate.query("select * from orders",

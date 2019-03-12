@@ -21,7 +21,7 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public User findOneByUsernameIgnoreCase(String username) {
         try {
             return jdbcTemplate.queryForObject(
@@ -32,7 +32,7 @@ public class UserRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     User findOneById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
@@ -56,7 +56,7 @@ public class UserRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return jdbcTemplate.query("SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id;",
                 new UserRowMapper());

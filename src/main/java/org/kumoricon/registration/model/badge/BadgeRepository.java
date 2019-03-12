@@ -24,7 +24,7 @@ class BadgeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     List<Badge> findByVisibleTrue() {
         try {
             return jdbcTemplate.query(
@@ -35,7 +35,7 @@ class BadgeRepository {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     List<Badge> findAll() {
         try {
             return jdbcTemplate.query(

@@ -24,7 +24,7 @@ public class LoginRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<SessionInfoDTO> findAll() {
         try {
             return jdbcTemplate.query(
