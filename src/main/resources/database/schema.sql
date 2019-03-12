@@ -136,7 +136,9 @@ create table if not exists orders
     constraint orders_pkey
       primary key,
   notes varchar(255),
-  order_id varchar(32) not null,
+  order_id varchar(32) not null
+    constraint uk_orders_order_id
+    unique,
   order_taken_by_user integer
     constraint fk_orders_ordertakenbyuser_users
       references users,
