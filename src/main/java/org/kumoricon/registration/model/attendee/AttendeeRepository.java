@@ -11,7 +11,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,10 +64,15 @@ public class AttendeeRepository {
 
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
         for (Map row : rows) {
+            // Todo: Replace this with building the exact instant of the period start in SQL?
+            // Basically just need to FLOOR() to the nearest hour.
+            Date date = (Date)row.get("checkindate");
+            Long hour = ((Double) row.get("checkinhour")).longValue();
+            Instant periodStart = date.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant();
             data.add(new CheckInByHourDTO(
-                    Timestamp.valueOf(row.get("checkindate").toString()).toInstant(),
-                    (Integer)row.get("preregcheckedin"),
-                    (Integer)row.get("atconcheckedin")));
+                    periodStart.plus(hour, ChronoUnit.HOURS),
+                    ((Long)row.get("preregcheckedin")).intValue(),
+                    ((Long)row.get("atconcheckedin")).intValue()));
         }
 
         return data;
@@ -182,6 +188,13 @@ public class AttendeeRepository {
                     new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
+        }
+    }
+
+    public void saveAll(List<Attendee> attendeesToAdd) {
+        // TOOD: Replace with batch insert
+        for (Attendee a : attendeesToAdd) {
+            save(a);
         }
     }
 

@@ -179,6 +179,7 @@ class AttendeeImporterService {
             log.info("{} saving {} orders and {} attendees to database", user, ordersToAdd.size(), attendeesToAdd.size());
             orderRepository.saveAll(ordersToAdd);
 
+            attendeeRepository.saveAll(attendeesToAdd);
             userRepository.save(currentUser);
 
             log.info("{} closing session used during import");
