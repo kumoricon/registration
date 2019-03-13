@@ -70,6 +70,13 @@ public class AttendeeHistoryRepository {
 //        }
     }
 
+    @Transactional
+    public void saveAll(List<AttendeeHistory> notes) {
+        for (AttendeeHistory ah : notes) {
+            save(ah);
+        }
+    }
+
     class AttendeeHistoryRowMapper implements RowMapper<AttendeeHistory>
     {
         @Override

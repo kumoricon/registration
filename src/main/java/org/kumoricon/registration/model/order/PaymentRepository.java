@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.order;
 
+import org.kumoricon.registration.model.SqlHelper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -54,12 +55,12 @@ public class PaymentRepository {
     public void save(Payment payment) {
         if (payment.getId() == null) {
             jdbcTemplate.update("INSERT INTO payments (amount, auth_number, payment_location, payment_taken_at, payment_taken_by, payment_type, till_session_id, order_id) VALUES(?,?,?,?,?,?,?,?)",
-                    payment.getAmount(), payment.getAuthNumber(), payment.getPaymentLocation(), payment.getPaymentTakenAt(),
-                    payment.getPaymentTakenBy(), payment.getPaymentType(), payment.getTillSessionId(), payment.getOrderId());
+                    payment.getAmount(), payment.getAuthNumber(), payment.getPaymentLocation(), SqlHelper.translate(payment.getPaymentTakenAt()),
+                    payment.getPaymentTakenBy(), payment.getPaymentType().getValue(), payment.getTillSessionId(), payment.getOrderId());
         } else {
             jdbcTemplate.update("UPDATE payments SET amount = ?, auth_number = ?, payment_location = ?, payment_taken_at = ?, payment_taken_by = ?, payment_type = ?, till_session_id = ?, order_id = ? WHERE id = ?",
-                    payment.getAmount(), payment.getAuthNumber(), payment.getPaymentLocation(), payment.getPaymentTakenAt(),
-                    payment.getPaymentTakenBy(), payment.getPaymentType(), payment.getTillSessionId(), payment.getOrderId(),
+                    payment.getAmount(), payment.getAuthNumber(), payment.getPaymentLocation(), SqlHelper.translate(payment.getPaymentTakenAt()),
+                    payment.getPaymentTakenBy(), payment.getPaymentType().getValue(), payment.getTillSessionId(), payment.getOrderId(),
                     payment.getId());
         }
     }
@@ -75,6 +76,12 @@ public class PaymentRepository {
         }
     }
 
+    public void saveAll(List<Payment> payments) {
+        for (Payment payment : payments) {
+            save(payment);
+        }
+    }
+
     private class PaymentRowMapper implements RowMapper<Payment>
     {
         @Override
@@ -83,6 +90,7 @@ public class PaymentRepository {
             p.setId(rs.getInt("id"));
             p.setAmount(rs.getBigDecimal("amount"));
             p.setAuthNumber(rs.getString("auth_number"));
+            p.setPaymentType(Payment.PaymentType.fromInteger(rs.getInt("payment_type")));
             p.setPaymentLocation(rs.getString("payment_location"));
             p.setPaymentTakenAt(rs.getTimestamp("payment_taken_at").toInstant());
             p.setPaymentTakenBy(rs.getInt("payment_taken_by"));

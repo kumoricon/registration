@@ -49,7 +49,7 @@ create table if not exists users
   username varchar(200) not null
     constraint uk_username
       unique,
-  role_id integer
+  role_id integer not null
     constraint fk_role_id
       references roles
 );
@@ -123,7 +123,7 @@ create table if not exists ageranges
   name varchar(255) not null,
   stripe_color varchar(255),
   stripe_text varchar(255),
-  badge_id integer
+  badge_id integer not null
     constraint fk_ageranges_badge_id
       references badges
       on delete cascade
@@ -161,7 +161,7 @@ create table if not exists payments
     constraint fk_payments_paymentakenby_users
       references users,
   payment_type integer not null,
-  till_session_id integer,
+  till_session_id integer not null ,
   order_id integer not null
     constraint fk_payments_orderid_orders
       references orders
@@ -204,7 +204,7 @@ create table if not exists attendees
   phone_number varchar(255),
   pre_registered boolean not null,
   zip varchar(255),
-  order_id integer
+  order_id integer not null
     constraint fk_attendee_orderid_orders
       references orders
 );
@@ -218,10 +218,10 @@ create table if not exists attendeehistory
       primary key,
   message citext,
   timestamp timestamp,
-  user_id integer
+  user_id integer not null
     constraint fk_attendeehistory_userid_users
       references users,
-  attendee_id integer
+  attendee_id integer not null
     constraint fk_attendeehisotry_attendeeid_attendees
       references attendees
 );

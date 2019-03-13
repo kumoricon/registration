@@ -181,6 +181,18 @@ public class AttendeeRepository {
     }
 
     @Transactional(readOnly = true)
+    public List<AttendeeOrderDTO> findAllAttendeeOrderDTO() {
+        try {
+            return jdbcTemplate.query(
+                    "select attendees.id, attendees.first_name, attendees.last_name, attendees.order_id, orders.order_id as order_number from attendees join orders on attendees.order_id = orders.id",
+                    new AttendeeOrderDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
+    @Transactional(readOnly = true)
     public List<Attendee> findByBadgeType(Integer badgeId, Integer page) {
         try {
             return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY id desc LIMIT ? OFFSET ?",
@@ -248,4 +260,18 @@ public class AttendeeRepository {
         }
     }
 
-}
+    private class AttendeeOrderDTORowMapper implements RowMapper<AttendeeOrderDTO> {
+        @Override
+        public AttendeeOrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AttendeeOrderDTO a = new AttendeeOrderDTO();
+            a.setAttendeeId(rs.getInt("id"));
+            a.setFirstName(rs.getString("first_name"));
+            a.setLastName(rs.getString("last_name"));
+            a.setOrderId(rs.getInt("order_id"));
+            a.setOrderNumber(rs.getString("order_number"));
+            return a;
+        }
+    }
+
+
+        }

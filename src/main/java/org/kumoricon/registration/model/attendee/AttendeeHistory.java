@@ -18,10 +18,10 @@ public class AttendeeHistory {
 
     public AttendeeHistory() {}
 
-    public AttendeeHistory(User user, Attendee attendee, String message) {
+    public AttendeeHistory(User user, Integer attendeeId, String message) {
         this.userId = user.getId();
+        this.attendeeId = attendeeId;
         this.message = message;
-        this.attendeeId = attendee.getId();
         this.timestamp = Instant.now();
     }
 
