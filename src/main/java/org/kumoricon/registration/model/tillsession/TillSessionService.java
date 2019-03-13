@@ -79,6 +79,7 @@ public class TillSessionService {
         return repository.findAllOpenSessions();
     }
     public List<TillSession> getAllSessions() { return repository.findAllOrderByEnd(); }
+    public List<TillSessionDTO> getAllTillSessionDTOs() { return repository.findAllTillSessionDTO(); }
 
     public BigDecimal getTotalForSession(TillSession s) {
         return paymentRepository.getTotalForSessionId(s.getId());

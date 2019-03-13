@@ -23,7 +23,7 @@ public class TillReportController {
                         @RequestParam(required=false) String err,
                         @RequestParam(required=false) String msg) {
         try {
-            model.addAttribute("tills", tillSessionService.getAllSessions());
+            model.addAttribute("tills", tillSessionService.getAllTillSessionDTOs());
             model.addAttribute("err", err);
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());

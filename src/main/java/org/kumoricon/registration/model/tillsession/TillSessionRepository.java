@@ -99,6 +99,18 @@ public class TillSessionRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    List<TillSessionDTO> findAllTillSessionDTO() {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT tillsessions.*, users.username, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id GROUP BY tillsessions.id, users.username order by tillsessions.end_time",
+                    new TillSessionDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
 
     class TillSessionRowMapper implements RowMapper<TillSession>
     {
@@ -123,4 +135,21 @@ public class TillSessionRepository {
             return tillSession;
         }
     }
+
+    class TillSessionDTORowMapper implements RowMapper<TillSessionDTO>
+    {
+        @Override
+        public TillSessionDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            TillSessionDTO t = new TillSessionDTO();
+            t.setId(rs.getInt("id"));
+            t.setStartTime(rs.getTimestamp("start_time"));
+            t.setOpen(rs.getBoolean("open"));
+            t.setEndTime(rs.getTimestamp("end_time"));
+            t.setUserId(rs.getInt("user_id"));
+            t.setUsername(rs.getString("username"));
+            t.setTotal(rs.getBigDecimal("total"));
+            return t;
+        }
+    }
+
 }
