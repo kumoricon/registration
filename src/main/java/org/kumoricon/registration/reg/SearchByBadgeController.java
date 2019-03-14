@@ -1,13 +1,12 @@
 package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.badge.Badge;
-import org.kumoricon.registration.model.badge.BadgeRepository;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +18,13 @@ import java.util.List;
 
 @Controller
 public class SearchByBadgeController {
-    private final BadgeRepository badgeRepository;
-    private final AttendeeRepository attendeeRepository;
+    private final BadgeService badgeService;
+    private final AttendeeSearchRepository attendeeSearchRepository;
 
     @Autowired
-    public SearchByBadgeController(BadgeRepository badgeRepository, AttendeeRepository attendeeRepository) {
-        this.badgeRepository = badgeRepository;
-        this.attendeeRepository = attendeeRepository;
+    public SearchByBadgeController(BadgeService badgeService, AttendeeSearchRepository attendeeSearchRepository) {
+        this.badgeService = badgeService;
+        this.attendeeSearchRepository = attendeeSearchRepository;
     }
 
     @RequestMapping(value = "/searchbybadge")
@@ -43,9 +42,8 @@ public class SearchByBadgeController {
         } else {
             prevPage = null;
         }
-        Pageable pageable = PageRequest.of(page, 20);
 
-        List<Badge> badgeTypes = badgeRepository.findAll();
+        List<Badge> badgeTypes = badgeService.findAll();
 
         // There should be a small number of badge types -- faster to search through the
         // whole list than make another database query
@@ -59,12 +57,12 @@ public class SearchByBadgeController {
             }
         }
 
-        List<Attendee> attendees;
+        List<AttendeeListDTO> attendees;
         if (selected == null) {
             attendees = new ArrayList<>();
         } else {
             model.addAttribute("badgeName", badgeName.trim().toLowerCase());
-            attendees = attendeeRepository.findByBadgeType(selected, pageable);
+            attendees = attendeeSearchRepository.searchByBadgeType(selected.getId(), page);
         }
         if (attendees.size() == 20) {
             nextPage = page + 1;

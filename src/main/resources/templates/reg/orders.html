@@ -33,10 +33,10 @@
                 </tr>
                 <tr th:each="order : ${orders}">
                     <td><a th:href="'/orders/' + ${order.id}" th:text="${order.orderId}">c4ca4238a0b923820dcc509a6f75849b</a></td>
-                    <td th:text="${order.orderTakenByUser?.username}">admin</td>
+                    <td th:text="${order.orderTakenByUser}">admin</td>
                     <td class="text-right" th:text="'$' + ${order.getTotalAmount()}">$60.00</td>
                     <td th:text="${order.paid}">True</td>
-                    <td><a class="btn btn-primary btn-sm" th:href="'/orders/' + ${order.id}">View</a></td>
+                    <td></td>
                 </tr>
                 </tbody>
             </table>

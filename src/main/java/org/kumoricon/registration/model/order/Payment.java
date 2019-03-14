@@ -1,45 +1,22 @@
 package org.kumoricon.registration.model.order;
 
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.kumoricon.registration.model.Record;
 import org.kumoricon.registration.model.tillsession.TillSession;
 import org.kumoricon.registration.model.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Entity
-@Table(name="payments")
-public class Payment extends Record {
-    @NotNull
-    @Min(0)
+public class Payment {
+    private Integer id;
     private BigDecimal amount;
+    private Integer orderId;
 
-    @NotNull
-    @ManyToOne
-    private Order order;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private User paymentTakenBy;
-
-    @NotNull
+    private Integer paymentTakenBy;
     private PaymentType paymentType;
     private Instant paymentTakenAt;
     private String paymentLocation;
     private String authNumber;
-
-    @NotNull
-    @ManyToOne
-    private TillSession session;
+    private Integer tillSessionId;
 
     public enum PaymentType {
         CASH(0) {
@@ -78,6 +55,15 @@ public class Payment extends Record {
         }
     }
 
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public Integer getOrderId() { return orderId; }
+    public void setOrderId(Integer orderId) { this.orderId = orderId; }
+    public void setOrder(Order order) {
+        this.orderId = order.getId();
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }
@@ -85,18 +71,14 @@ public class Payment extends Record {
         this.amount = amount;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public User getPaymentTakenBy() {
+    public Integer getPaymentTakenBy() {
         return paymentTakenBy;
     }
     public void setPaymentTakenBy(User paymentTakenBy) {
-        this.paymentTakenBy = paymentTakenBy;
+        this.paymentTakenBy = paymentTakenBy.getId();
+    }
+    public void setPaymentTakenBy(Integer userId) {
+        this.paymentTakenBy = userId;
     }
 
     public PaymentType getPaymentType() {
@@ -123,8 +105,9 @@ public class Payment extends Record {
     public String getAuthNumber() { return authNumber; }
     public void setAuthNumber(String authNumber) { this.authNumber = authNumber; }
 
-    public TillSession getSession() { return session; }
-    public void setSession(TillSession session) { this.session = session; }
+    public Integer getTillSessionId() { return tillSessionId; }
+    public void setTillSessionId(Integer tillSessionId) { this.tillSessionId = tillSessionId; }
+    public void setTillSession(TillSession tillSession) { this.tillSessionId = tillSession.getId(); }
 
     public String toString() {
         if (id != null) {

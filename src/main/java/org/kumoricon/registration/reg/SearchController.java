@@ -1,7 +1,6 @@
 package org.kumoricon.registration.reg;
 
-import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,31 +14,35 @@ import java.util.List;
 @Controller
 public class SearchController {
     private final AttendeeSearchRepository attendeeSearchRepository;
-    private final AttendeeRepository attendeeRepository;
 
     @Autowired
-    public SearchController(AttendeeSearchRepository attendeeSearchRepository, AttendeeRepository attendeeRepository) {
+    public SearchController(AttendeeSearchRepository attendeeSearchRepository) {
         this.attendeeSearchRepository = attendeeSearchRepository;
-        this.attendeeRepository = attendeeRepository;
     }
 
     @RequestMapping(value = "/search")
     @PreAuthorize("hasAuthority('attendee_search')")
     public String search(Model model,
-                                     @RequestParam(required = false) String q,
-                                     @RequestParam(required = false) String err,
-                                     @RequestParam(required=false) String msg) {
-        List<Attendee> attendees;
-        if (q == null || q.trim().isEmpty()) {
-            attendees = new ArrayList<>();
+                         @RequestParam(required = false) String q,
+                         @RequestParam(required = false) String err,
+                         @RequestParam(required=false) String msg,
+                         @RequestParam(required = false) Integer orderId) {
+        List<AttendeeListDTO> attendees = new ArrayList<>();
+
+
+        if (orderId != null) {
+            q = orderId.toString();
+            attendees = attendeeSearchRepository.findAllByOrderId(orderId);
         } else {
-            model.addAttribute("query", q.trim());
-            attendees = attendeeSearchRepository.searchFor(q.trim().split(" "));
-            if (attendees.size() ==0) {
-                attendees = attendeeRepository.findByOrderNumber(q);
+            if (q != null) {
+                attendees = attendeeSearchRepository.searchFor(q.trim().split(" "));
             }
         }
+        if (attendees.size() ==0) {
+            attendees = attendeeSearchRepository.searchByOrderNumber(q);
+        }
 
+        if (q != null) model.addAttribute("query", q.trim());
         model.addAttribute("attendees", attendees);
         model.addAttribute("msg", msg);
         model.addAttribute("err", err);

@@ -107,6 +107,7 @@ public class UserController {
 
         if ("Reset Password".equals(action)) {
             userService.resetPassword(user.getId());
+            return "redirect:/admin/users?msg=Reset%20password%20for%20" + user.getUsername();
         }
 
         return "redirect:/admin/users?msg=Saved%20" + user.getUsername();

@@ -1,23 +1,15 @@
 package org.kumoricon.registration.model.role;
 
-import org.kumoricon.registration.model.Record;
 import org.springframework.security.core.GrantedAuthority;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * A "right" is the power to do a specific thing. For example, check in an at-con attendee or view a
  * specific report. In the Spring world, that is called an Authority, which is why this class
  * implements the GrantedAuthority interface.
  */
-@Entity
-@Table(name = "rights")
-public class Right extends Record implements Comparable, GrantedAuthority {
-    @NotNull
-    @Column(length = 200, unique = true)
+
+public class Right implements Comparable, GrantedAuthority {
+    private Integer id;
     private String name;
     private String description;
 

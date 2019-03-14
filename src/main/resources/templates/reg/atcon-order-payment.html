@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Payment</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row"  th:if="${payment == null}">
+        <div class="col-8 text-center">
+
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/credit'">Take Credit/Debit Card</a>
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/cash'">Take Cash</a>
+            <a class="btn btn-primary" th:href="'/reg/atconorder/' + ${order.id} + '/payment/check'">Take Check/Money Order</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">Order Total:</div>
+        <div class="col-1 text-right" th:text="'$' + *{order.getTotalAmount()}">$51.00</div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">Paid so far:</div>
+        <div class="col-1 text-right" th:text="'$' + *{order.getTotalPaid()}">$13.00</div>
+    </div>
+
+
+    <div class="row" th:if="${payment != null}">
+        <div class="col-8 text-center">
+            <form th:object="${payment}" method="post">
+                <ul th:if="${#fields.hasErrors('*')}">
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{paymentType}" />
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="form-group row">
+                    <label for="inputAmount" class="col-2 col-form-label">Amount</label>
+                    <div class="col-3">
+                        <input type="text" th:field="*{amount}" th:errorclass="is-invalid" class="form-control text-right" id="inputAmount" placeholder="0.00" autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group row" th:if="${paymentType == 'cash'}">
+                    <label for="inputChange" class="col-2 col-form-label">Change</label>
+                    <div class="col-3">
+                        <input type="text" class="form-control disabled" id="inputChange" placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="form-group row" th:if="${paymentType == 'card'}">
+                    <label for="inputAuthNumber" class="col-2 col-form-label">Auth Number</label>
+                    <div class="col-5">
+                        <input type="text" class="form-control" id="inputAuthNumber" placeholder="123456">
+                    </div>
+                </div>
+
+                <div class="form-group row" th:if="${paymentType == 'check'}">
+                    <label for="inputCheckAuth" class="col-2 col-form-label">Drivers Lic. Number</label>
+                    <div class="col-5">
+                        <input type="text" class="form-control" id="inputCheckAuth" placeholder="123456">
+                    </div>
+                </div>
+
+                <p>
+                    <input class="btn btn-danger" type="submit" name="action" value="Delete" />
+                    <input class="btn btn-secondary" type="reset" value="Reset" />
+                    <a th:href="" href="#" class="btn btn-secondary">Cancel</a>
+                    <input class="btn btn-primary" name="action" type="submit" value="Save" />
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div class="row" th:if="${paymentType == 'card'}">
+        <div class="col-8 text-center">
+            Card
+        </div>
+    </div>
+
+    <div class="row" th:if="${paymentType == 'checkormoneyorder'}">
+        <div class="col-8 text-center">
+            Check or Money Order
+        </div>
+    </div>
+
+
+    <div class="row">
+        <table class="table table-borderless table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Payment Type</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${order.payments.empty}">
+                    <td colspan="2"> No Payments Found </td>
+                </tr>
+                <tr th:each="p : ${order.payments}">
+                    <td th:text="${p.paymentType}">Cash</td>
+                    <td class="text-right" th:text="'$' + ${p.amount}"></td>
+                    <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/payment/' + ${p.id}" href="#">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

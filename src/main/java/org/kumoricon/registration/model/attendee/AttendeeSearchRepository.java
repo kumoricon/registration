@@ -1,21 +1,27 @@
 package org.kumoricon.registration.model.attendee;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class AttendeeSearchRepository {
+    private final JdbcTemplate jdbcTemplate;
 
-    @PersistenceContext
-    private EntityManager em;
+    private static final String SELECT_COLUMNS = "select attendees.id, attendees.order_id, first_name, last_name, legal_first_name, legal_last_name, fan_name, birth_date, checked_in, check_in_time, badges.name as badge_type ";
+
+    public AttendeeSearchRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     /**
      * Searches for Attendees that contain all the given words in the firstName,
@@ -23,37 +29,109 @@ public class AttendeeSearchRepository {
      * @param searchWords Words to search for
      * @return Matching Attendees
      */
-    public List<Attendee> searchFor(String[] searchWords) {
+    @Transactional(readOnly = true)
+    public List<AttendeeListDTO> searchFor(String[] searchWords) {
+        String searchString = buildSearchString(searchWords);
+        String sqlMulti = SELECT_COLUMNS + "from attendees " +
+                "join badges on attendees.badge_id = badges.id where " +
+                "(first_name similar to ? and last_name similar to ?) or " +
+                "(legal_first_name similar to ? and legal_last_name similar to ?) or " +
+                "fan_name similar to ? ";
+        String sqlSingle = SELECT_COLUMNS + "from attendees " +
+                "join badges on attendees.badge_id = badges.id where " +
+                "first_name similar to ? or last_name similar to ? or " +
+                "legal_first_name similar to ? or legal_last_name similar to ? or " +
+                "fan_name similar to ? ";
 
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Attendee> query = builder.createQuery(Attendee.class);
-        Root<Attendee> root = query.from(Attendee.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        for (String word : searchWords) {
-            predicates.add(buildOrPredicatesForWord(builder, root, word));
+        try {
+            String sql = searchWords.length == 1 ? sqlSingle : sqlMulti;
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[]{searchString, searchString, searchString, searchString, searchString}, new AttendeeListDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
         }
-
-        Predicate allPredicates = builder.and(predicates.toArray(new Predicate[predicates.size()]));
-        query.where(allPredicates);
-
-        return em.createQuery(query.select(root)).setMaxResults(100).getResultList();
     }
 
-    /**
-     * Creates a query predicate to search for the given word
-     * @param builder Current CriteriaBuilder
-     * @param root Root Attendee class
-     * @param word Word to search for
-     * @return Predicate word in firstName OR lastName OR fanName
-     */
-    private Predicate buildOrPredicatesForWord(CriteriaBuilder builder, Root<Attendee> root, String word) {
-        Predicate hasFirstName = builder.like(root.get("firstName"), "%" + word + "%");
-        Predicate hasLastName = builder.like(root.get("lastName"), "%" + word + "%");
-        Predicate hasFanName = builder.like(root.get("fanName"), "%" + word + "%");
-        Predicate hasLegalFirstName = builder.like(root.get("legalFirstName"), "%" + word + "%");
-        Predicate hasLegalLastName = builder.like(root.get("legalLastName"), "%" + word + "%");
-        return builder.or(hasFirstName, hasLastName, hasFanName, hasLegalFirstName, hasLegalLastName);
+    @Transactional(readOnly = true)
+    public List<AttendeeListDTO> searchByOrderNumber(String orderId) {
+        String sql = SELECT_COLUMNS + ", orders.order_id from attendees " +
+                "join orders on attendees.order_id = orders.id " +
+                "join badges on attendees.badge_id = badges.id " +
+                "where orders.order_id = ?";
+
+        try {
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[]{orderId}, new AttendeeListDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendeeListDTO> searchByBadgeType(Integer badgeId, Integer page) {
+        try {
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE badge_id = ? ORDER BY id desc LIMIT ? OFFSET ?",
+                    new Object[]{badgeId, 20, 20*page},
+                    new AttendeeListDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendeeListDTO> findAllByOrderId(Integer orderId) {
+        try {
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE order_id = ? ORDER BY id desc",
+                    new Object[]{orderId},
+                    new AttendeeListDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private String buildSearchString(String[] words) {
+        List<String> tmpWords = new ArrayList<>();
+        for (String word : words) {
+            tmpWords.add("(" + word + ")");
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        sb.append(String.join("|", tmpWords));
+        sb.append(")%");
+
+        return sb.toString();
+    }
+
+    @SuppressWarnings("Duplicates")
+    private class AttendeeListDTORowMapper implements RowMapper<AttendeeListDTO> {
+        @Override
+        public AttendeeListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AttendeeListDTO a = new AttendeeListDTO();
+            a.setId(rs.getInt("id"));
+            Date birthDate = rs.getDate("birth_date");
+            if (birthDate != null) {
+                a.setBirthDate(birthDate.toLocalDate());
+            } else {
+                a.setBirthDate(null);
+            }
+            Timestamp checkInTime = rs.getTimestamp("check_in_time");
+            if (checkInTime != null) {
+                a.setCheckInTime(checkInTime.toInstant());
+            } else {
+                a.setCheckInTime(null);
+            }
+
+            a.setCheckedIn(rs.getBoolean("checked_in"));
+            a.setFanName(rs.getString("fan_name"));
+            a.setFirstName(rs.getString("first_name"));
+            a.setLastName(rs.getString("last_name"));
+            a.setLegalFirstName(rs.getString("legal_first_name"));
+            a.setLegalLastName(rs.getString("legal_last_name"));
+            a.setOrderId(rs.getInt("order_id"));
+            a.setBadgeType(rs.getString("badge_type"));
+            return a;
+        }
     }
 }

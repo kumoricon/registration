@@ -1,18 +1,93 @@
 package org.kumoricon.registration.model.attendee;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-@Service
-public interface AttendeeHistoryRepository extends JpaRepository<AttendeeHistory, Integer> {
+@Repository
+public class AttendeeHistoryRepository {
 
-    @Query(value = "SELECT ah from AttendeeHistory ah where ah.attendee = ?1 ORDER BY ah.timestamp ASC")
-    List<AttendeeHistory> findByAttendee(Attendee attendee);
+    private final JdbcTemplate jdbcTemplate;
 
-    @Query(value = "SELECT users.first_name, users.last_name, COUNT(attendeehistory.id) FROM attendeehistory JOIN users ON attendeehistory.user_id = users.id WHERE attendeehistory.message='Attendee Checked In' AND timestamp >= (NOW() - (15 * interval '1 minute')) AND attendeehistory.timestamp <= NOW() GROUP BY user_id, first_name, last_name", nativeQuery = true)
-    List<Object[]> checkInCountByUsers();
+    public AttendeeHistoryRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Transactional(readOnly = true)
+    public AttendeeHistory findById(int id) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "select * from attendeehistory where id=? order by timestamp desc",
+                    new Object[]{id}, new AttendeeHistoryRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendeeHistory> findAllByAttendeeId(int id) {
+        try {
+            return jdbcTemplate.query(
+                    "select * from attendeehistory where attendee_id = ? order by timestamp desc",
+                    new Object[]{id}, new AttendeeHistoryRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+
+    @Transactional
+    public void save(AttendeeHistory attendeeHistory) {
+        if (attendeeHistory.getId() == null) {
+            jdbcTemplate.update("INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) VALUES(?,?,?,?)",
+                    attendeeHistory.getMessage(), Timestamp.from(attendeeHistory.getTimestamp()), attendeeHistory.getUserId(), attendeeHistory.getAttendeeId());
+        } else {
+            jdbcTemplate.update("UPDATE attendeehistory SET message = ?, timestamp = ?, user_id = ?, attendee_id = ? WHERE id = ?",
+                    attendeeHistory.getMessage(),
+                    Timestamp.from(attendeeHistory.getTimestamp()),
+                    attendeeHistory.getUserId(),
+                    attendeeHistory.getAttendeeId(),
+                    attendeeHistory.getId());
+        }
+    }
+
+
+    public List<Object[]> checkInCountByUsers() {
+        return new ArrayList<>();
+//        try {
+//            return jdbcTemplate.query(
+//                    "SELECT users.first_name, users.last_name, COUNT(attendeehistory.id) FROM attendeehistory JOIN users ON attendeehistory.user_id = users.id WHERE attendeehistory.message='Attendee Checked In' AND timestamp >= (NOW() - (15 * interval '1 minute')) AND attendeehistory.timestamp <= NOW() GROUP BY user_id, first_name, last_name");
+//        } catch (EmptyResultDataAccessException e) {
+//            return null;
+//        }
+    }
+
+    @Transactional
+    public void saveAll(List<AttendeeHistory> notes) {
+        for (AttendeeHistory ah : notes) {
+            save(ah);
+        }
+    }
+
+    class AttendeeHistoryRowMapper implements RowMapper<AttendeeHistory>
+    {
+        @Override
+        public AttendeeHistory mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AttendeeHistory ah = new AttendeeHistory();
+            ah.setId(rs.getInt("id"));
+            ah.setMessage(rs.getString("message"));
+            ah.setTimestamp(rs.getTimestamp("timestamp"));
+            ah.setUserId(rs.getInt("user_id"));
+            ah.setAttendeeId(rs.getInt("attendee_id"));
+            return ah;
+        }
+    }
 }

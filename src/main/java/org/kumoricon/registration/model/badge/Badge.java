@@ -1,29 +1,18 @@
 package org.kumoricon.registration.model.badge;
 
-import org.kumoricon.registration.model.Record;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "badges")
-public class Badge extends Record {
-    @NotNull
-    @Column(unique = true, columnDefinition = "citext")
+public class Badge {
+    private Integer id;
     private String name;
-    @Column(columnDefinition = "citext")
     private String badgeTypeText;     // Friday/Saturday/Sunday/Weekend/VIP
     private String badgeTypeBackgroundColor;   // Background color for the day text
     private String warningMessage;
-    @NotNull
     private boolean visible;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AgeRange> ageRanges;
     private String requiredRight;       // Only show to users who have this right, or all if null
-    @NotNull
     private BadgeType badgeType;
 
     public Badge() {
@@ -40,6 +29,9 @@ public class Badge extends Record {
         this(name);
         setBadgeType(badgeType);
     }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -62,12 +54,8 @@ public class Badge extends Record {
 
     public List<AgeRange> getAgeRanges() { return ageRanges; }
     public void addAgeRange(AgeRange ageRange) { ageRanges.add(ageRange); }
-    public void addAgeRange(String name, int minAge, int maxAge, BigDecimal cost, String stripeColor, String stripeText) {
-        AgeRange a = new AgeRange(name, minAge, maxAge, cost, stripeColor, stripeText);
-        ageRanges.add(a);
-    }
     public void addAgeRange(String name, int minAge, int maxAge, double cost, String stripeColor, String stripeText) {
-        AgeRange a = new AgeRange(name, minAge, maxAge, cost, stripeColor, stripeText);
+        AgeRange a = new AgeRange(name, minAge, maxAge, cost, stripeColor, stripeText, this.id);
         ageRanges.add(a);
     }
 

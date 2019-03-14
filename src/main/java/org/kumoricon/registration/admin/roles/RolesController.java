@@ -53,10 +53,8 @@ public class RolesController {
         if (roleId.toLowerCase().equals("new")) {
             role = new Role();
         } else {
-            Optional<Role> fromDb = roleRepository.findById(Integer.parseInt(roleId));
-            if (fromDb.isPresent()) {
-                role = fromDb.get();
-            } else {
+            role = roleRepository.findById(Integer.parseInt(roleId));
+            if (role == null) {
                 model.addAttribute("err", "Error: Role " + roleId + " not found");
             }
         }
@@ -78,7 +76,8 @@ public class RolesController {
         }
 
         try {
-            roleRepository.save(role);
+            role.setId(roleRepository.save(role));
+            rightRepository.saveRightsForRole(role);
         } catch (Exception ex) {
             bindingResult.addError(new ObjectError("Role", ex.getMessage()));
             model.addAttribute("allRights", rightRepository.findAll());

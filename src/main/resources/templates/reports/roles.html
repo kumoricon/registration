@@ -12,17 +12,15 @@
     <table class="table table-bordered table-striped table-sm">
         <thead class="thead-dark">
         <tr>
-            <th>Role</th>
-            <th>Rights</th>
+            <th class="text-nowrap" th:each="hdr : ${columns}" th:text="${hdr}">Column</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${roles.empty}">
+        <tr th:if="${rows.empty || columns.empty}">
             <td colspan="2"> No Roles Found </td>
         </tr>
-        <tr th:each="r : ${roles}">
-            <td class="text-left" th:text="${r[0]}">Role</td>
-            <td class="text-left" th:text="${r[1]}">Rights</td>
+        <tr th:each="row : ${rows}">
+            <td th:each="col : ${row}" class="text-center" th:text="${col}">Text</td>
         </tr>
         </tbody>
     </table>

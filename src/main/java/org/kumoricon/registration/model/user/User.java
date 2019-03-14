@@ -1,48 +1,47 @@
 package org.kumoricon.registration.model.user;
 
-
-
-import org.kumoricon.registration.model.Record;
-import org.kumoricon.registration.model.role.Role;
+import org.kumoricon.registration.model.role.Right;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Set;
 
 
-@Entity
-@Table(name = "users")
-public class User extends Record implements UserDetails {
-    @NotNull
-    @Column(length = 200, unique = true)
+public class User implements UserDetails {
+    private Integer id;
     private String username;
-    @NotNull
     private String password;
     private String firstName;
     private String lastName;
-    @NotNull
     private Boolean enabled;
-
-    @NotNull
     private Boolean accountNonExpired;
-    @NotNull
     private Boolean credentialsNonExpired;              // On login, prompt to reset password
-    @NotNull
     private Boolean accountNonLocked;
-    @ManyToOne(cascade= CascadeType.MERGE)
-    private Role role;
-
-    @NotNull
+    private Integer roleId;
+    private String roleName;            // Gotten from roles table, not saved as part of this record
     private Integer lastBadgeNumberCreated;
+    private Set<Right> rights;
 
     /**
      * Creating a new user? Use UserFactory instead of creating the user object directly
      */
     public User() {}
 
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public Integer getRoleId() { return roleId; }
+
+    public void setRoleId(Integer roleId) { this.roleId = roleId; }
+
+    public Set<Right> getRights() { return rights; }
+    public void setRights(Set<Right> rights) { this.rights = rights; }
+
     public String getUsername() { return username; }
+
+    public String getRoleName() { return roleName; }
+    public void setRoleName(String roleName) { this.roleName = roleName; }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -70,10 +69,7 @@ public class User extends Record implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == null) {
-            return null;
-        }
-        return role.getRights();
+        return rights;
     }
 
     public String getPassword() { return password; }
@@ -152,15 +148,15 @@ public class User extends Record implements UserDetails {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public boolean hasRight(String right) {
-        return role != null && role.hasRight(right);
+        if (rights != null) {
+            return rights.contains(right);
+        } else {
+            return false;
+        }
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 }

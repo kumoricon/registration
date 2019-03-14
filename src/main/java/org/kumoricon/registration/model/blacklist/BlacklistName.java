@@ -1,20 +1,8 @@
 package org.kumoricon.registration.model.blacklist;
 
-import org.kumoricon.registration.model.Record;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-@Entity
-@Table(name = "blacklist")
-public class BlacklistName extends Record {
-    @NotNull
-    @Column(columnDefinition = "citext")
+public class BlacklistName {
+    private Integer id;
     private String firstName;
-    @NotNull
-    @Column(columnDefinition = "citext")
     private String lastName;
 
     public BlacklistName() {}

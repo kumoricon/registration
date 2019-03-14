@@ -62,7 +62,7 @@ public class TillSessionService {
             if (session.isOpen()) {
                 session.setEndTime(Instant.now());
                 session.setOpen(false);
-                session = repository.save(session);
+                repository.save(session);
             } else {
                 throw new RuntimeException(String.format("Session %s is already closed", session));
             }
@@ -71,7 +71,6 @@ public class TillSessionService {
     }
 
     public TillSession closeSession(Integer id) {
-//        Session session = repository.findOne(id);
         TillSession session = repository.findOneById(id);
         return closeSession(session);
     }
@@ -80,6 +79,7 @@ public class TillSessionService {
         return repository.findAllOpenSessions();
     }
     public List<TillSession> getAllSessions() { return repository.findAllOrderByEnd(); }
+    public List<TillSessionDTO> getAllTillSessionDTOs() { return repository.findAllTillSessionDTO(); }
 
     public BigDecimal getTotalForSession(TillSession s) {
         return paymentRepository.getTotalForSessionId(s.getId());
@@ -150,7 +150,7 @@ public class TillSessionService {
     private String buildHTMLDetailsForSession(TillSession session, Payment.PaymentType paymentType) {
         StringBuilder output = new StringBuilder();
 
-        List<Payment> payments = paymentRepository.findBySessionAndPaymentType(session, paymentType);
+        List<Payment> payments = paymentRepository.findByTillSessionIdAndPaymentType(session.getId(), paymentType);
 
         if (payments.size() > 0) {
             output.append(String.format("<b>%s Transactions:</b><br>\n", paymentType));
@@ -168,7 +168,7 @@ public class TillSessionService {
                         .append("</td>");
                 output.append(String.format("<td>%s</td><td>%s</td><td>%s</td><td align=\"right\">$%s</td></tr>",
                         payment.getPaymentLocation(),
-                        payment.getOrder(),
+                        payment.getOrderId(),
                         payment.getAuthNumber(),
                         payment.getAmount()));
             }
@@ -180,7 +180,7 @@ public class TillSessionService {
     private String buildTextDetailsForSession(TillSession session, Payment.PaymentType paymentType) {
         StringBuilder output = new StringBuilder();
 
-        List<Payment> payments = paymentRepository.findBySessionAndPaymentType(session, paymentType);
+        List<Payment> payments = paymentRepository.findByTillSessionIdAndPaymentType(session.getId(), paymentType);
 
         if (payments.size() > 0) {
             output.append(String.format("%s Transactions:\n", paymentType));
@@ -195,7 +195,7 @@ public class TillSessionService {
                         .append("\t");
                 output.append(String.format("%s\t%s\t%s\t$%s\n",
                         payment.getPaymentLocation(),
-                        payment.getOrder(),
+                        payment.getOrderId(),
                         payment.getAuthNumber(),
                         payment.getAmount()));
             }

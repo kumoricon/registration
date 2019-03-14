@@ -15,8 +15,8 @@
             <th>Last Name</th>
             <th>First Name</th>
             <th>Username</th>
-            <th>Phone Number</th>
             <th>Role</th>
+            <th>Last Badge Number Created</th>
         </tr>
         </thead>
         <tbody>
@@ -24,11 +24,11 @@
             <td colspan="3"> No Staff Members Found </td>
         </tr>
         <tr th:each="s : ${staff}">
-            <td class="text-left" th:text="${s[0]}"></td>
-            <td class="text-left" th:text="${s[1]}"></td>
-            <td class="text-left" th:text="${s[2]}"></td>
-            <td class="text-left" th:text="${s[3]}"></td>
-            <td class="text-left" th:text="${s[4]}"></td>
+            <td class="text-left" th:text="${s.lastName}"></td>
+            <td class="text-left" th:text="${s.firstName}"></td>
+            <td class="text-left" th:text="${s.username}"></td>
+            <td class="text-left" th:text="${s.roleName}"></td>
+            <td class="text-right" th:text="${s.lastBadgeNumberCreated}"></td>
         </tr>
         </tbody>
     </table>

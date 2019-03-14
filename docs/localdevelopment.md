@@ -5,7 +5,7 @@ Service built on:
   - [Spring Framework](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/) Server framework
   - [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html) Templating language
   - [CSS Bootstrap](https://getbootstrap.com/docs/3.4/css/) Front end formatting
-  - [PostgreSQL](https://www.postgresql.org/) Database
+  - [PostgreSQL](https://www.postgresql.org/) Database (developed on 10.7)
   - [Maven](https://maven.apache.org/index.html) Build/dependency management
 
 
