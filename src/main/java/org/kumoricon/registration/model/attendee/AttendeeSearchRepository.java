@@ -80,6 +80,17 @@ public class AttendeeSearchRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<AttendeeListDTO> findAllByOrderId(Integer orderId) {
+        try {
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE order_id = ? ORDER BY id desc",
+                    new Object[]{orderId},
+                    new AttendeeListDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
     private String buildSearchString(String[] words) {
         List<String> tmpWords = new ArrayList<>();
         for (String word : words) {

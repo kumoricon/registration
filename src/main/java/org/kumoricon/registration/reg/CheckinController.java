@@ -1,6 +1,7 @@
 package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
@@ -23,12 +24,14 @@ import java.security.Principal;
 @Controller
 public class CheckinController {
     private final AttendeeRepository attendeeRepository;
+    private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public CheckinController(AttendeeRepository attendeeRepository, UserRepository userRepository) {
+    public CheckinController(AttendeeRepository attendeeRepository, AttendeeHistoryRepository attendeeHistoryRepository, UserRepository userRepository) {
         this.attendeeRepository = attendeeRepository;
         this.userRepository = userRepository;
+        this.attendeeHistoryRepository = attendeeHistoryRepository;
     }
 
     @RequestMapping(value = "/reg/checkin/{id}")
@@ -40,6 +43,7 @@ public class CheckinController {
         try {
             Attendee attendee = attendeeRepository.findById(Integer.parseInt(id));
             model.addAttribute("attendee", attendee);
+            model.addAttribute("history", attendeeHistoryRepository.findAllByAttendeeId(Integer.parseInt(id)));
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
@@ -98,7 +102,7 @@ public class CheckinController {
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
-            return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&q=" + attendee.getOrderId();
+            return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&orderId=" + attendee.getOrderId();
         } else if (action != null && action.equals("reprintDuringCheckin")) {
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=Reprinting+Badge";
         } else {

@@ -23,7 +23,7 @@
                 <td colspan="5"> No Check In Records Found </td>
             </tr>
             <tr th:each="d : ${data}">
-                <td class="text-nowrap" th:text="${d.start} ? ${#dates.format(d.start, 'dd/MM/yyyy h:mm a zzz')} : ''">2019-01-01</td>
+                <td class="text-nowrap" th:text="${d.start} ? ${#dates.format(d.start, 'MM/dd/yyyy h:mm a zzz')} : ''">2019-01-01</td>
                 <td class="text-right" th:text="${d.preregCheckIn}">33</td>
                 <td class="text-right" th:text="${d.atConCheckIn}">11</td>
                 <td class="text-right" th:text="${d.total}">54</td>

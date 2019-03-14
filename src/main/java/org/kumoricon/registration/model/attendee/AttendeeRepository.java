@@ -157,6 +157,7 @@ public class AttendeeRepository {
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
                     attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId());
         } else {
+
             jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_number = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, pre_registered=?, zip=?, order_id=? WHERE id = ?",
                     attendee.getBadgeId(), attendee.getBadgeNumber(), attendee.isBadgePrePrinted(),
                     attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
