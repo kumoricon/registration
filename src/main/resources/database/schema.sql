@@ -77,9 +77,9 @@ create table if not exists tillsessions
   id serial not null
     constraint tillsessions_pkey
       primary key,
-  end_time timestamp,
+  end_time timestamp with time zone,
   open boolean not null,
-  start_time timestamp,
+  start_time timestamp with time zone,
   user_id integer not null
     constraint fkruie73rneumyyd1bgo6qw8vjt
       references users
@@ -156,7 +156,7 @@ create table if not exists payments
       check (amount >= (0)::numeric),
   auth_number varchar(255),
   payment_location varchar(255),
-  payment_taken_at timestamp,
+  payment_taken_at timestamp with time zone,
   payment_taken_by integer
     constraint fk_payments_paymentakenby_users
       references users,
@@ -182,7 +182,7 @@ create table if not exists attendees
   badge_pre_printed boolean not null,
   badge_printed boolean not null,
   birth_date date,
-  check_in_time timestamp,
+  check_in_time timestamp with time zone,
   checked_in boolean,
   comped_badge boolean,
   country varchar(255),
@@ -217,7 +217,7 @@ create table if not exists attendeehistory
     constraint attendeehistory_pkey
       primary key,
   message citext,
-  timestamp timestamp,
+  timestamp timestamp with time zone,
   user_id integer not null
     constraint fk_attendeehistory_userid_users
       references users,
@@ -225,4 +225,5 @@ create table if not exists attendeehistory
     constraint fk_attendeehisotry_attendeeid_attendees
       references attendees
 );
+
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.xml.transform.Result;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,24 +59,13 @@ public class AttendeeRepository {
 
     @Transactional(readOnly = true)
     public List<CheckInByHourDTO> findCheckInCountsByHour() {
-        String sql = "SELECT DATE(check_in_time) as checkInDate, EXTRACT(HOUR from check_in_time) as checkInHour, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, COUNT(checked_in) as Total FROM attendees LEFT OUTER JOIN (SELECT DATE(check_in_time) as aCheckInDate, EXTRACT(HOUR from check_in_time) as aCheckInHour, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = TRUE GROUP BY aCheckInDate, aCheckInHour) as preRegCheckedIn ON DATE(check_in_time) = preRegCheckedIn.aCheckInDate AND EXTRACT(HOUR from check_in_time) = preRegCheckedIn.aCheckInHour LEFT OUTER JOIN (SELECT DATE(check_in_time) as aCheckInDate, EXTRACT(HOUR from check_in_time) as aCheckInHour, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = FALSE GROUP BY aCheckInDate, aCheckInHour) as atConCheckedIn ON DATE(check_in_time) = atConCheckedIn.aCheckInDate AND EXTRACT(HOUR from check_in_time) = atConCheckedIn.aCheckInHour WHERE checked_in = TRUE GROUP BY checkInDate, checkInHour, atConCheckedIn.cnt, preRegCheckedIn.cnt ORDER BY checkInDate DESC, checkInHour;";
+        String sql = "SELECT date_trunc('hour', check_in_time) at time zone 'utc' as checkInDate, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, COUNT(checked_in) as Total FROM attendees LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt FROM attendees  WHERE attendees.checked_in = TRUE AND attendees.pre_registered = TRUE GROUP BY aCheckInDate) as preRegCheckedIn ON date_trunc('hour', check_in_time) = preRegCheckedIn.aCheckInDate LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt FROM attendees WHERE attendees.checked_in = TRUE AND attendees.pre_registered = FALSE GROUP BY aCheckInDate) as atConCheckedIn ON date_trunc('hour', check_in_time) = atConCheckedIn.aCheckInDate WHERE checked_in = TRUE GROUP BY date_trunc('hour', check_in_time), checkInDate, atConCheckedIn.cnt, preRegCheckedIn.cnt ORDER BY checkInDate DESC;";
 
-        List<CheckInByHourDTO> data = new ArrayList<>();
-
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows) {
-            // Todo: Replace this with building the exact instant of the period start in SQL?
-            // Basically just need to FLOOR() to the nearest hour.
-            Date date = (Date)row.get("checkindate");
-            Long hour = ((Double) row.get("checkinhour")).longValue();
-            Instant periodStart = date.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant();
-            data.add(new CheckInByHourDTO(
-                    periodStart.plus(hour, ChronoUnit.HOURS),
-                    ((Long)row.get("preregcheckedin")).intValue(),
-                    ((Long)row.get("atconcheckedin")).intValue()));
+        try {
+            return jdbcTemplate.query(sql, new CheckInByHourDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
         }
-
-        return data;
     }
 
     @Transactional(readOnly = true)
@@ -274,5 +264,13 @@ public class AttendeeRepository {
         }
     }
 
-
+    private class CheckInByHourDTORowMapper implements RowMapper<CheckInByHourDTO> {
+        @Override
+        public CheckInByHourDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Timestamp ts = rs.getTimestamp("checkindate");
+            Instant start = ts == null ? null : ts.toInstant();
+            return new CheckInByHourDTO(start, rs.getInt("atconcheckedin"), rs.getInt("preregcheckedin"));
         }
+    }
+
+}
