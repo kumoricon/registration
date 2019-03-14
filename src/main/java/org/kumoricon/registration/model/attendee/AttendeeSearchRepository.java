@@ -32,13 +32,19 @@ public class AttendeeSearchRepository {
     @Transactional(readOnly = true)
     public List<AttendeeListDTO> searchFor(String[] searchWords) {
         String searchString = buildSearchString(searchWords);
-        String sql = SELECT_COLUMNS + "from attendees " +
+        String sqlMulti = SELECT_COLUMNS + "from attendees " +
                 "join badges on attendees.badge_id = badges.id where " +
                 "(first_name similar to ? and last_name similar to ?) or " +
                 "(legal_first_name similar to ? and legal_last_name similar to ?) or " +
                 "fan_name similar to ? ";
+        String sqlSingle = SELECT_COLUMNS + "from attendees " +
+                "join badges on attendees.badge_id = badges.id where " +
+                "first_name similar to ? or last_name similar to ? or " +
+                "legal_first_name similar to ? or legal_last_name similar to ? or " +
+                "fan_name similar to ? ";
 
         try {
+            String sql = searchWords.length == 1 ? sqlSingle : sqlMulti;
             return jdbcTemplate.query(
                     sql,
                     new Object[]{searchString, searchString, searchString, searchString, searchString}, new AttendeeListDTORowMapper());
