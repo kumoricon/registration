@@ -35,12 +35,10 @@ public class BlacklistController {
 
     @RequestMapping(value = "/admin/blacklist")
     @PreAuthorize("hasAuthority('manage_blacklist')")
-    public String listBlacklistNames(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
+    public String listBlacklistNames(Model model) {
         List<BlacklistName> names = blacklistRepository.findAll();
 
         model.addAttribute("names", names);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "admin/blacklist";
     }
 

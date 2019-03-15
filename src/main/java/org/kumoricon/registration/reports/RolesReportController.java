@@ -24,9 +24,7 @@ public class RolesReportController {
 
     @RequestMapping(value = "/reports/roles")
     @PreAuthorize("hasAuthority('view_role_report')")
-    public String roles(Model model,
-                        @RequestParam(required = false) String err,
-                        @RequestParam(required=false) String msg) {
+    public String roles(Model model) {
         try {
             List<RoleDTO> roles = roleService.findAll();
             List<String> columns = new ArrayList<>();
@@ -51,12 +49,9 @@ public class RolesReportController {
 
             model.addAttribute("columns", columns);
             model.addAttribute("rows", rows);
-            model.addAttribute("err", err);
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
-
-        model.addAttribute("msg", msg);
 
         return "reports/roles";
     }

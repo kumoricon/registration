@@ -37,12 +37,10 @@ public class RolesController {
 
     @RequestMapping(value = "/admin/roles")
     @PreAuthorize("hasAuthority('manage_roles')")
-    public String listRoles(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
+    public String listRoles(Model model) {
         List<Role> roles = roleRepository.findAll();
 
         model.addAttribute("roles", roles);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "admin/roles";
     }
 

@@ -1,7 +1,7 @@
 package org.kumoricon.registration.utility;
 
 
-import org.kumoricon.registration.CookieControllerAdvice;
+import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +24,8 @@ public class PrinterController {
 
     @RequestMapping(value = "/utility/printer")
     public String printer(Model model,
-                          @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerName,
-                          @RequestParam(required = false) String msg) {
+                          @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerName) {
         model.addAttribute("printer", printerName);
-        model.addAttribute("msg", msg);
         return "utility/printer";
     }
 

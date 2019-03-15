@@ -23,13 +23,9 @@ public class StaffReportController {
 
     @RequestMapping(value = "/reports/staff")
     @PreAuthorize("hasAuthority('view_staff_report')")
-    public String staff(Model model,
-                        @RequestParam(required=false) String err,
-                        @RequestParam(required=false) String msg) {
+    public String staff(Model model) {
         List<User> users = userRepository.findAll();
         model.addAttribute("staff", users);
-        model.addAttribute("err", err);
-        model.addAttribute("msg", msg);
         return "reports/staff";
     }
 }

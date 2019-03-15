@@ -41,12 +41,10 @@ public class UserController {
      */
     @RequestMapping(value = "/admin/users")
     @PreAuthorize("hasAuthority('manage_users')")
-    public String listUsers(Model model, @RequestParam(required = false) String err, @RequestParam(required=false) String msg) {
+    public String listUsers(Model model) {
         List<User> users = userRepository.findAll();
 
         model.addAttribute("users", users);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "admin/users";
     }
 

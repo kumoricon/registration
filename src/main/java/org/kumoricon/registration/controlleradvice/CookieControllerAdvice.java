@@ -1,4 +1,4 @@
-package org.kumoricon.registration;
+package org.kumoricon.registration.controlleradvice;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;

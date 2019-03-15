@@ -42,9 +42,7 @@ public class AtConRegistrationController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConAttendee(Model model,
                          @PathVariable String orderId,
-                         @PathVariable String attendeeId,
-                         @RequestParam(required = false) String err,
-                         @RequestParam(required=false) String msg) {
+                         @PathVariable String attendeeId) {
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         List<Attendee> orderAttendees = attendeeRepository.findAllByOrderId(getIdFromParamter(orderId));
         Attendee attendee = null;
@@ -67,8 +65,6 @@ public class AtConRegistrationController {
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findByVisibleTrue());
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/atcon-order-attendee";
     }
 
@@ -78,16 +74,12 @@ public class AtConRegistrationController {
                                 @ModelAttribute final Attendee attendee,
                                 final BindingResult bindingResult,
                                 @PathVariable String orderId,
-                                @PathVariable String attendeeId,
-                                @RequestParam(required = false) String err,
-                                @RequestParam(required=false) String msg) {
+                                @PathVariable String attendeeId) {
 
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findByVisibleTrue());
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
 
         if (bindingResult.hasErrors()) {
             return "reg/atcon-order-attendee";
@@ -105,17 +97,12 @@ public class AtConRegistrationController {
 
     @RequestMapping(value = "/reg/atconorder/{orderId}")
     @PreAuthorize("hasAuthority('at_con_registration')")
-    public String atConOrder(Model model,
-                                @PathVariable String orderId,
-                                @RequestParam(required = false) String err,
-                                @RequestParam(required=false) String msg) {
+    public String atConOrder(Model model, @PathVariable String orderId) {
 
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("attendees", attendeeRepository.findAllByOrderId(getIdFromParamter(orderId)));
         model.addAttribute("payments", paymentRepository.findByOrderId(getIdFromParamter(orderId)));
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/atcon-order";
     }
 
@@ -127,7 +114,6 @@ public class AtConRegistrationController {
         order.setOrderTakenByUser(user);
         order.setOrderId(Order.generateOrderId());
         Integer newId = orderRepository.save(order);
-
 
         return "redirect:/reg/atconorder/" + newId + "/attendee/new";
     }

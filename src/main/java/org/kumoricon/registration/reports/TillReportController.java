@@ -19,17 +19,12 @@ public class TillReportController {
 
     @RequestMapping(value = "/reports/tillsessions")
     @PreAuthorize("hasAuthority('view_till_report')")
-    public String till(Model model,
-                        @RequestParam(required=false) String err,
-                        @RequestParam(required=false) String msg) {
+    public String till(Model model) {
         try {
             model.addAttribute("tills", tillSessionService.getAllTillSessionDTOs());
-            model.addAttribute("err", err);
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
-
-        model.addAttribute("msg", msg);
 
         return "reports/tillsessions";
     }

@@ -37,9 +37,7 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}")
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String verifyData(Model model,
-                         @PathVariable String id,
-                         @RequestParam(required = false) String err,
-                         @RequestParam(required=false) String msg) {
+                         @PathVariable String id) {
         try {
             Attendee attendee = attendeeRepository.findById(Integer.parseInt(id));
             model.addAttribute("attendee", attendee);
@@ -48,8 +46,6 @@ public class CheckinController {
             model.addAttribute("err", ex.getMessage());
         }
 
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/checkin-id";
     }
 
@@ -57,9 +53,7 @@ public class CheckinController {
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String checkIn(Model model,
                              @PathVariable String id,
-                             Principal principal,
-                             @RequestParam(required = false) String err,
-                             @RequestParam(required=false) String msg) {
+                             Principal principal) {
         Attendee attendee = findAttendee(id);
         attendee.setCheckedIn(true);
         User currentUser = userRepository.findOneByUsernameIgnoreCase(principal.getName());
@@ -71,8 +65,6 @@ public class CheckinController {
 
         // TODO: Print badge here
 
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/checkin-id-printbadge";
     }
 
@@ -80,13 +72,9 @@ public class CheckinController {
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadge(Model model,
                              @PathVariable String id,
-                             @RequestParam(required=false , value = "action") String action,
-                             @RequestParam(required = false) String err,
-                             @RequestParam(required=false) String msg) {
+                             @RequestParam(required=false , value = "action") String action) {
         Attendee attendee = findAttendee(id);
         model.addAttribute("attendee", attendee);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/checkin-id-printbadge";
     }
 
@@ -94,9 +82,7 @@ public class CheckinController {
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadgeAction(Model model,
                                    @PathVariable String id,
-                                   @RequestParam(required=false , value = "action") String action,
-                                   @RequestParam(required = false) String err,
-                                   @RequestParam(required=false) String msg) {
+                                   @RequestParam(required=false , value = "action") String action) {
         Attendee attendee = findAttendee(id);
 
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {

@@ -31,9 +31,7 @@ public class SearchByBadgeController {
     @PreAuthorize("hasAuthority('attendee_search')")
     public String search(Model model,
                          @RequestParam(required = false) String badgeName,
-                         @RequestParam(required = false) Integer page,
-                         @RequestParam(required = false) String err,
-                         @RequestParam(required=false) String msg) {
+                         @RequestParam(required = false) Integer page) {
 
         Integer nextPage, prevPage;
         if (page == null) { page = 0; }
@@ -75,8 +73,6 @@ public class SearchByBadgeController {
         model.addAttribute("page", page);
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("prevPage", prevPage);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/searchbybadge";
     }
 }

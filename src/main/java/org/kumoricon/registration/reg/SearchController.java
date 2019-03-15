@@ -24,8 +24,6 @@ public class SearchController {
     @PreAuthorize("hasAuthority('attendee_search')")
     public String search(Model model,
                          @RequestParam(required = false) String q,
-                         @RequestParam(required = false) String err,
-                         @RequestParam(required=false) String msg,
                          @RequestParam(required = false) Integer orderId) {
         List<AttendeeListDTO> attendees = new ArrayList<>();
 
@@ -44,8 +42,6 @@ public class SearchController {
 
         if (q != null) model.addAttribute("query", q.trim());
         model.addAttribute("attendees", attendees);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/search";
     }
 }

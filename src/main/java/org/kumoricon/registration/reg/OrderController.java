@@ -28,10 +28,7 @@ public class OrderController {
 
     @RequestMapping(value = "/orders")
     @PreAuthorize("hasAuthority('manage_orders')")
-    public String listOrders(Model model,
-                                     @RequestParam(required = false) Integer page,
-                                     @RequestParam(required = false) String err,
-                                     @RequestParam(required=false) String msg) {
+    public String listOrders(Model model, @RequestParam(required = false) Integer page) {
         Integer nextPage, prevPage;
         if (page == null) { page = 0; }
         if (page > 0) {
@@ -52,8 +49,6 @@ public class OrderController {
         model.addAttribute("page", page);
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("prevPage", prevPage);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "reg/orders";
     }
 }

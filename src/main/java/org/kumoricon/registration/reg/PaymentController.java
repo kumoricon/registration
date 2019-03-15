@@ -37,12 +37,8 @@ public class PaymentController {
     @RequestMapping(value = "/reg/atconorder/{orderId}/payment")
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrderPayment(Model model,
-                             @PathVariable String orderId,
-                             @RequestParam(required = false) String err,
-                             @RequestParam(required=false) String msg) {
+                             @PathVariable String orderId) {
         Order order = orderRepository.findById(getIdFromParamter(orderId));
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         model.addAttribute("order", order);
         return "reg/atcon-order-payment";
     }
@@ -51,9 +47,7 @@ public class PaymentController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrderPaymentType(Model model,
                                     @PathVariable String orderId,
-                                    @PathVariable String paymentType,
-                                    @RequestParam(required = false) String err,
-                                    @RequestParam(required=false) String msg) {
+                                    @PathVariable String paymentType) {
 
         if (!isValidPaymentType(paymentType)) {
             throw new RuntimeException("Invalid payment type " + paymentType);
@@ -66,8 +60,6 @@ public class PaymentController {
 
         model.addAttribute("paymentType", paymentType);
         model.addAttribute("payment", p);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         model.addAttribute("order", order);
         return "reg/atcon-order-payment";
     }
@@ -79,16 +71,12 @@ public class PaymentController {
                                         final BindingResult bindingResult,
                                         @PathVariable String orderId,
                                         @PathVariable String paymentType,
-                                        Authentication auth,
-                                        @RequestParam(required = false) String err,
-                                        @RequestParam(required=false) String msg) {
+                                        Authentication auth) {
 
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("payment", payment);
         model.addAttribute("paymentType", paymentType);
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
 
         if (bindingResult.hasErrors()) {
             return "reg/atcon-order-payment";
