@@ -32,7 +32,7 @@
                 <th class="text-nowrap">Name</th>
                 <th class="text-nowrap">Legal Name</th>
                 <th class="text-nowrap">Fan Name</th>
-                <th class="text-nowrap">Birthday</th>
+                <th class="text-nowrap">Birthdate</th>
                 <th class="text-nowrap">Badge Type</th>
                 <th class="text-nowrap"></th>
             </tr>
@@ -42,11 +42,11 @@
                 <td colspan="6"> No Attendeess Found </td>
             </tr>
             <tr th:each="attendee : ${attendees}">
-                <td> <a th:href="'/orders/' + ${attendee.order.id} + '/' + ${attendee.id}" th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
-                <td th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
-                <td th:text="${attendee.getFanName()}">Fan Name</td>
+                <td><a th:href="'/orders/' + ${attendee.orderId} + '/' + ${attendee.id}" th:text="${attendee.firstName} + ' ' + ${attendee.lastName}">John Doe</a></td>
+                <td th:text="${attendee.legalFirstName} + ' ' + ${attendee.legalLastName}">John Doe</td>
+                <td th:text="${attendee.fanName}">Fan Name</td>
                 <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1990 (29)</td>
-                <td th:text="${attendee.badge?.name} + ' - ' + ${attendee.currentAgeRange?.name}"></td>
+                <td th:text="${attendee.badgeType}"></td>
                 <td>
                     <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
                 </td>
