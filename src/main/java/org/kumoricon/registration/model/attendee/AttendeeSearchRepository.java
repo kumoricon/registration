@@ -36,12 +36,12 @@ public class AttendeeSearchRepository {
                 "join badges on attendees.badge_id = badges.id where " +
                 "(first_name similar to ? and last_name similar to ?) or " +
                 "(legal_first_name similar to ? and legal_last_name similar to ?) or " +
-                "fan_name similar to ? ";
+                "fan_name similar to ? order by attendees.first_name, attendees.last_name";
         String sqlSingle = SELECT_COLUMNS + "from attendees " +
                 "join badges on attendees.badge_id = badges.id where " +
                 "first_name similar to ? or last_name similar to ? or " +
                 "legal_first_name similar to ? or legal_last_name similar to ? or " +
-                "fan_name similar to ? ";
+                "fan_name similar to ? order by attendees.first_name, attendees.last_name";
 
         try {
             String sql = searchWords.length == 1 ? sqlSingle : sqlMulti;
@@ -58,7 +58,7 @@ public class AttendeeSearchRepository {
         String sql = SELECT_COLUMNS + ", orders.order_id from attendees " +
                 "join orders on attendees.order_id = orders.id " +
                 "join badges on attendees.badge_id = badges.id " +
-                "where orders.order_id = ?";
+                "where orders.order_id = ? order by attendees.first_name, attendees.last_name";
 
         try {
             return jdbcTemplate.query(
@@ -72,7 +72,7 @@ public class AttendeeSearchRepository {
     @Transactional(readOnly = true)
     public List<AttendeeListDTO> searchByBadgeType(Integer badgeId, Integer page) {
         try {
-            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE badge_id = ? ORDER BY id desc LIMIT ? OFFSET ?",
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE badge_id = ? order by attendees.first_name, attendees.last_name LIMIT ? OFFSET ?",
                     new Object[]{badgeId, 20, 20*page},
                     new AttendeeListDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -83,7 +83,7 @@ public class AttendeeSearchRepository {
     @Transactional(readOnly = true)
     public List<AttendeeListDTO> findAllByOrderId(Integer orderId) {
         try {
-            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE order_id = ? ORDER BY id desc",
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE order_id = ? order by attendees.first_name, attendees.last_name",
                     new Object[]{orderId},
                     new AttendeeListDTORowMapper());
         } catch (EmptyResultDataAccessException e) {

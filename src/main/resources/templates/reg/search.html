@@ -17,11 +17,11 @@
         </div>
     </div>
 
-    <div class="row text-center m-2 p-2" th:if="${attendees.size() == 100}">
+    <div class="row text-center m-2 p-2" th:if="${attendees.size() >= 100}">
         <span class="alert-warning">Maximum 100 results returned. Try a more specific search!</span>
     </div>
 
-    <div class="row" th:if="${query!=null} and ${query!=''}">
+    <div class="row" th:if="(${query!=null} and ${query!=''}) or ${orderId!=null}">
         <table class="table table-bordered table-striped table-sm">
             <thead class="thead-dark">
             <tr>

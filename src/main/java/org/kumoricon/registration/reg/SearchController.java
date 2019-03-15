@@ -27,20 +27,19 @@ public class SearchController {
                          @RequestParam(required = false) Integer orderId) {
         List<AttendeeListDTO> attendees = new ArrayList<>();
 
-
         if (orderId != null) {
-            q = orderId.toString();
             attendees = attendeeSearchRepository.findAllByOrderId(orderId);
         } else {
             if (q != null) {
                 attendees = attendeeSearchRepository.searchFor(q.trim().split(" "));
+                if (attendees.size() ==0) {
+                    attendees = attendeeSearchRepository.searchByOrderNumber(q);
+                }
             }
-        }
-        if (attendees.size() ==0) {
-            attendees = attendeeSearchRepository.searchByOrderNumber(q);
         }
 
         if (q != null) model.addAttribute("query", q.trim());
+        if (orderId != null) model.addAttribute("orderId", orderId);
         model.addAttribute("attendees", attendees);
         return "reg/search";
     }
