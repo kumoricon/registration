@@ -227,3 +227,18 @@ create table if not exists attendeehistory
 );
 
 
+create table loginsessions
+(
+  start timestamp with time zone not null,
+  users_id integer not null
+    constraint fk_loginsessions_usersid_users
+      references users,
+  constraint loginsessions_pk
+    unique (start, users_id)
+);
+
+create index loginsessions_start_index
+  on loginsessions (start);
+
+
+

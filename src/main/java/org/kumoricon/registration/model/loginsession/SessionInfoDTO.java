@@ -1,4 +1,4 @@
-package org.kumoricon.registration.admin.loginsession;
+package org.kumoricon.registration.model.loginsession;
 
 /**
  * This is a more limited view of the sessions stored in the database, just used for showing the session list. Note

@@ -1,6 +1,8 @@
 package org.kumoricon.registration.admin.loginsession;
 
 import org.kumoricon.registration.helpers.DateTimeService;
+import org.kumoricon.registration.model.loginsession.LoginRepository;
+import org.kumoricon.registration.model.loginsession.SessionInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Login History Report</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <div class="row mb-3">
+        <a class="btn mr-3" th:each="d : ${availableDays}"
+           th:classappend="${selectedDate == d ? 'btn-dark' : 'btn-light'}"
+           th:href="'?date=' + ${d.toString()}"
+           th:text="${#strings.capitalize(#strings.toLowerCase(d.dayOfWeek))} + ' ' + ${d.monthValue} + '/' + ${d.dayOfMonth} + '/' + ${d.year}">3/1/2019</a>
+    </div>
+
+    <div class="row">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th colspan="4" class="am-header">AM 12</th>
+                <th colspan="4" class="am-header">1</th>
+                <th colspan="4" class="am-header">2</th>
+                <th colspan="4" class="am-header">3</th>
+                <th colspan="4" class="am-header">4</th>
+                <th colspan="4" class="am-header">5</th>
+                <th colspan="4" class="am-header">6</th>
+                <th colspan="4" class="am-header">7</th>
+                <th colspan="4" class="am-header">8</th>
+                <th colspan="4" class="am-header">9</th>
+                <th colspan="4" class="am-header">10</th>
+                <th colspan="4" class="am-header">11</th>
+                <th colspan="4" class="pm-header">PM 12</th>
+                <th colspan="4" class="pm-header">1</th>
+                <th colspan="4" class="pm-header">2</th>
+                <th colspan="4" class="pm-header">3</th>
+                <th colspan="4" class="pm-header">4</th>
+                <th colspan="4" class="pm-header">5</th>
+                <th colspan="4" class="pm-header">6</th>
+                <th colspan="4" class="pm-header">7</th>
+                <th colspan="4" class="pm-header">8</th>
+                <th colspan="4" class="pm-header">9</th>
+                <th colspan="4" class="pm-header">10</th>
+                <th colspan="4" class="pm-header">11</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${history.empty}">
+                <td th:colspan="${periods.size()}">No Login Sessions Found </td>
+            </tr>
+            <tr th:each="row : ${history}">
+                <td  style="min-width: 200px;" class="text-nowrap" th:text="${row.get(0)}">Firstname Lastname</td>
+                <td th:each="col : ${row.subList(1, 97)}" th:style="${col}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
