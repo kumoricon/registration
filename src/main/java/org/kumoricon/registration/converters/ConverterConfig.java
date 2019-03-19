@@ -9,6 +9,6 @@ public class ConverterConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new StringToLocalDateConverter());
+        registry.addFormatter(new LocalDateToStringFormatter());
     }
 }

@@ -2,6 +2,7 @@ package org.kumoricon.registration.model.user;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -23,6 +24,14 @@ public class UserService {
         return user;
     }
 
+    public User findByUsername(String username) {
+        User user = userRepository.findOneByUsernameIgnoreCase(username);
+        if (user == null) {
+            throw new UserIdNotFoundException(null);
+        }
+        return user;
+    }
+
     public User resetPassword(Integer userId) {
         User u = findById(userId);
         if (u == null) {
@@ -33,6 +42,14 @@ public class UserService {
         u.setCredentialsNonExpired(false);
         userRepository.save(u);
         return u;
+    }
+
+    @Transactional
+    public String getNextBadgeNumber(String username) {
+        User user = userRepository.findOneByUsernameIgnoreCase(username);
+        userRepository.incrementBadgeNumberForUser(username);
+
+        return String.format("%s%5d", user.getBadgePrefix(), user.getLastBadgeNumberCreated());
     }
 
     public void updateUser(User updates) {

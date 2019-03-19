@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Active Logins</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Check Ins by Badge Type</h1>
+
+    <table class="table table-bordered table-striped table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Badge Type</th>
+                <th>At-Con Checked In</th>
+                <th>At-Con Not Checked In</th>
+                <th>Pre-Reg Checked In</th>
+                <th>Pre-Reg Not Checked In</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${byBadgeType.empty}">
+                <td colspan="3"> No check ins found </td>
+            </tr>
+            <tr th:each="b : ${byBadgeType}">
+                <td th:text="${b.badgeName}">Badge Type</td>
+                <td class="text-right" th:text="${b.checkedInAtCon}">0</td>
+                <td class="text-right" th:text="${b.notCheckedInAtCon}">0</td>
+                <td class="text-right" th:text="${b.checkedInPreReg}">0</td>
+                <td class="text-right" th:text="${b.notCheckedInPreReg}">0</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -7,14 +7,16 @@ import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserRepository;
+import org.kumoricon.registration.model.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -23,18 +25,19 @@ import java.util.List;
 public class AtConRegistrationController {
     private final AttendeeRepository attendeeRepository;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final BadgeService badgeService;
     private final PaymentRepository paymentRepository;
     private final String[] PAYMENT_TYPES = {"cash", "card", "checkormoneyorder"};
 
     @Autowired
     public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository,
-                                       PaymentRepository paymentRepository, UserRepository userRepository, BadgeService badgeService) {
+                                       PaymentRepository paymentRepository, UserService userService, BadgeService badgeService,
+                                       OrderService orderService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.badgeService = badgeService;
     }
 
@@ -74,7 +77,8 @@ public class AtConRegistrationController {
                                 @ModelAttribute final Attendee attendee,
                                 final BindingResult bindingResult,
                                 @PathVariable String orderId,
-                                @PathVariable String attendeeId) {
+                                @PathVariable String attendeeId,
+                                Principal principal) {
 
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
@@ -88,6 +92,12 @@ public class AtConRegistrationController {
         order.addToTotalAmount(attendee.getPaidAmount());
         orderRepository.save(order);
         attendee.setOrder(order);
+        if (attendee.getBadgeNumber() == null) {
+            String badgeNumber = userService.getNextBadgeNumber(principal.getName());
+            attendee.setBadgeNumber(badgeNumber);
+        }
+        attendee.setPaidAmount(badgeService.getCostForBadgeType(attendee.getBadgeId(), attendee.getAge()));
+
         attendeeRepository.save(attendee);
 
 
@@ -97,19 +107,26 @@ public class AtConRegistrationController {
 
     @RequestMapping(value = "/reg/atconorder/{orderId}")
     @PreAuthorize("hasAuthority('at_con_registration')")
-    public String atConOrder(Model model, @PathVariable String orderId) {
+    public String atConOrder(Model model, @PathVariable Integer orderId) {
 
-        Order order = orderRepository.findById(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(orderId);
+
+        BigDecimal totalDue = orderRepository.getTotalByOrderId(orderId);
+        BigDecimal totalPaid = paymentRepository.getTotalPaidForOrder(orderId);
+        Boolean canComplete = totalDue.equals(totalPaid) && !order.getPaid();
+
         model.addAttribute("order", order);
-        model.addAttribute("attendees", attendeeRepository.findAllByOrderId(getIdFromParamter(orderId)));
-        model.addAttribute("payments", paymentRepository.findByOrderId(getIdFromParamter(orderId)));
+        model.addAttribute("attendees", attendeeRepository.findAllByOrderId(orderId));
+        model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
+        model.addAttribute("canComplete", canComplete);
+
         return "reg/atcon-order";
     }
 
     @RequestMapping(value = "/reg/atconorder/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String newOrder(Model model, Principal principal) {
-        User user = userRepository.findOneByUsernameIgnoreCase(principal.getName());
+        User user = userService.findByUsername(principal.getName());
         Order order = new Order();
         order.setOrderTakenByUser(user);
         order.setOrderId(Order.generateOrderId());
@@ -117,6 +134,61 @@ public class AtConRegistrationController {
 
         return "redirect:/reg/atconorder/" + newId + "/attendee/new";
     }
+
+    @RequestMapping(value = "/reg/atconorder/{orderId}/complete", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    @Transactional
+    public String orderComplete(Model model,
+                                Principal principal,
+                                @PathVariable Integer orderId) {
+        User user = userService.findByUsername(principal.getName());
+        Order order = orderRepository.findById(orderId);
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+
+        order.setPaid(true);
+        orderRepository.save(order);
+        for (Attendee a : attendees) {
+            a.setPaid(true);
+            a.setCheckedIn(true);
+        }
+
+        // TODO: print badges
+        // TODD: Save checkin to attendee history
+        attendeeRepository.saveAll(attendees);
+
+        return "redirect:/reg/atconorder/" + orderId + "/printbadges";
+    }
+
+    @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String printBadges(Model model,
+                              Principal principal,
+                              @PathVariable Integer orderId) {
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("attendees", attendees);
+        model.addAttribute("orderId", orderId);
+
+        return "reg/atcon-order-printbadges";
+    }
+
+
+    @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String printBadgesAction(Model model,
+                                Principal principal,
+                                @PathVariable Integer orderId) {
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+        User user = userService.findByUsername(principal.getName());
+
+        for (Attendee a : attendees) {
+            a.setBadgePrinted(true);
+        }
+        attendeeRepository.saveAll(attendees);
+
+        return "redirect:/?msg=Order%20Complete";
+    }
+
 
 
     private Integer getIdFromParamter(String parameter) {

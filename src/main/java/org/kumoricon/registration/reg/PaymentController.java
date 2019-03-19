@@ -1,10 +1,10 @@
 package org.kumoricon.registration.reg;
 
-
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 
 import org.kumoricon.registration.model.order.Payment;
+import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.tillsession.TillSession;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
@@ -15,9 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 
 @Controller
@@ -25,58 +30,130 @@ public class PaymentController {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final TillSessionService tillSessionService;
-    private final String[] PAYMENT_TYPES = {"cash", "credit", "check"};
+    private final PaymentRepository paymentRepository;
+    private final String[] PAYMENT_TYPES = {"cash", "card", "check"};
 
     @Autowired
-    public PaymentController(OrderRepository orderRepository, UserRepository userRepository, TillSessionService tillSessionService) {
+    public PaymentController(OrderRepository orderRepository, UserRepository userRepository,
+                             PaymentRepository paymentRepository, TillSessionService tillSessionService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.tillSessionService = tillSessionService;
+        this.paymentRepository = paymentRepository;
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/payment")
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrderPayment(Model model,
-                             @PathVariable String orderId) {
-        Order order = orderRepository.findById(getIdFromParamter(orderId));
+                             @PathVariable Integer orderId) {
+        Order order = orderRepository.findById(orderId);
+        List<Payment> payments = paymentRepository.findByOrderId(orderId);
+        BigDecimal totalPaid = BigDecimal.ZERO;
+        for (Payment p : payments) {
+            totalPaid = totalPaid.add(p.getAmount());
+        }
         model.addAttribute("order", order);
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("totalDue", orderRepository.getTotalByOrderId(orderId));
+        model.addAttribute("payments", payments);
+        model.addAttribute("totalPaid", totalPaid);
         return "reg/atcon-order-payment";
     }
 
-    @RequestMapping(value = "/reg/atconorder/{orderId}/payment/{paymentType}")
+    @RequestMapping(value = "/reg/atconorder/{orderId}/payment/{paymentId}")
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String atConOrderPaymentId(Model model,
+                                     @PathVariable Integer orderId,
+                                      @PathVariable Integer paymentId) {
+
+        model.addAttribute("order", orderRepository.findById(orderId));
+        model.addAttribute("payment", paymentRepository.findById(paymentId));
+        model.addAttribute("orderId", orderId);
+        return "reg/atcon-order-payment-id";
+    }
+
+    @RequestMapping(value = "/reg/atconorder/{orderId}/payment/{paymentId}", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String savePayment(@ModelAttribute @Validated final PaymentFormDTO payment,
+                           final BindingResult bindingResult,
+                           @PathVariable Integer orderId,
+                           @RequestParam(required=false , value = "action") String action,
+                           final Model model,
+                           final Authentication authentication,
+                           HttpServletRequest request) {
+        if ("Delete".equals(action) && payment.getId() != null) {
+            paymentRepository.deleteById(payment.getId());
+            return "redirect:/reg/atconorder/" + orderId + "/payment?msg=Deleted%20payment%20" + payment.getId();
+        }
+        model.addAttribute("payment", payment);
+        if (bindingResult.hasErrors()) {
+            return "reg/atcon-order-payment-id";
+        }
+
+        Payment paymentData;
+        if (payment.getId() != null) {
+            paymentData = paymentRepository.findById(payment.getId());
+        } else {
+            throw new RuntimeException("Error: attempting to save payment with null id");
+        }
+
+        paymentData.setAmount(payment.getAmount());
+        paymentData.setAuthNumber(payment.getAuthNumber());
+
+
+        try {
+            paymentRepository.save(paymentData);
+        } catch (Exception ex) {
+            bindingResult.addError(new ObjectError("payment", ex.getMessage()));
+            return "reg/atcon-order-payment-id";
+        }
+
+        return "redirect:/reg/atconorder/" + orderId + "/payment?msg=Saved%20payment%20" + payment.getId();
+    }
+
+
+    @RequestMapping(value = "/reg/atconorder/{orderId}/payment/new")
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrderPaymentType(Model model,
-                                    @PathVariable String orderId,
-                                    @PathVariable String paymentType) {
+                                    @RequestParam(value="type") String paymentType,
+                                    @PathVariable Integer orderId) {
 
         if (!isValidPaymentType(paymentType)) {
             throw new RuntimeException("Invalid payment type " + paymentType);
         }
-        Order order = orderRepository.findById(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(orderId);
+        if (order == null) { throw new RuntimeException("Order " + orderId + " not found"); }
 
-        Payment p = new Payment();
-        p.setOrder(order);
-        p.setPaymentType(Payment.PaymentType.valueOf(paymentType.toUpperCase()));
+        PaymentFormDTO p = new PaymentFormDTO();
+        p.setPaymentType(paymentType);
 
         model.addAttribute("paymentType", paymentType);
         model.addAttribute("payment", p);
         model.addAttribute("order", order);
+        model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
+        model.addAttribute("totalPaid", paymentRepository.getTotalPaidForOrder(orderId));
+        model.addAttribute("totalDue", orderRepository.getTotalByOrderId(orderId));
+        model.addAttribute("order", order);
         return "reg/atcon-order-payment";
     }
 
-    @RequestMapping(value = "/reg/atconorder/{orderId}/payment/{paymentType}", method = RequestMethod.POST)
+    @RequestMapping(value = "/reg/atconorder/{orderId}/payment/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrderTakePayment(Model model,
-                                        @ModelAttribute final Payment payment,
+                                        @ModelAttribute @Validated final PaymentFormDTO payment,
                                         final BindingResult bindingResult,
-                                        @PathVariable String orderId,
-                                        @PathVariable String paymentType,
-                                        Authentication auth) {
+                                        @PathVariable Integer orderId,
+                                        Authentication auth,
+                                        HttpServletRequest request) {
 
-        Order order = orderRepository.findById(getIdFromParamter(orderId));
+        Order order = orderRepository.findById(orderId);
         model.addAttribute("order", order);
         model.addAttribute("payment", payment);
-        model.addAttribute("paymentType", paymentType);
+        model.addAttribute("paymentType", payment.getPaymentType());
+        model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
+        model.addAttribute("totalPaid", paymentRepository.getTotalPaidForOrder(orderId));
+        model.addAttribute("totalDue", orderRepository.getTotalByOrderId(orderId));
+        model.addAttribute("order", order);
 
         if (bindingResult.hasErrors()) {
             return "reg/atcon-order-payment";
@@ -84,28 +161,40 @@ public class PaymentController {
 
         User currentUser = userRepository.findOneByUsernameIgnoreCase(auth.getName());
         TillSession currentTillSession = tillSessionService.getCurrentSessionForUser(currentUser);
-        payment.setPaymentTakenBy(currentUser);
-        payment.setPaymentTakenAt(Instant.now());
-        payment.setTillSession(currentTillSession);
+        Payment paymentData = new Payment();
 
-        orderRepository.save(order);
+        paymentData.setOrderId(orderId);
+        paymentData.setPaymentTakenBy(currentUser.getId());
+        paymentData.setPaymentTakenAt(Instant.now());
+        paymentData.setPaymentLocation(request.getRemoteAddr());
+        paymentData.setTillSessionId(currentTillSession.getId());
+        paymentData.setAmount(payment.getAmount());
+        paymentData.setAuthNumber(payment.getAuthNumber());
 
-//        if (order.getTotalAmount().equals(order.getTotalPaid())) {
-//            return "redirect:/reg/atconorder/" + order.getId() + "/payment?msg=Added+" + payment.getPaymentType();
-//        }
+        switch (payment.getPaymentType()) {
+            case "cash":
+                paymentData.setPaymentType(Payment.PaymentType.CASH);
+                break;
+            case "card":
+                paymentData.setPaymentType(Payment.PaymentType.CREDIT);
+                break;
+            case "check":
+                paymentData.setPaymentType(Payment.PaymentType.CHECK);
+                break;
+            default:
+                throw new RuntimeException("Invalid payment type: " + payment.getPaymentType());
+        }
+
+        paymentRepository.save(paymentData);
+
+        if (orderRepository.getTotalByOrderId(orderId).equals(paymentRepository.getTotalPaidForOrder(orderId))) {
+            return "redirect:/reg/atconorder/" + order.getId() + "/?msg=Payments%20complete";
+        }
 
         return "redirect:/reg/atconorder/" + order.getId() + "/payment?msg=Added+" + payment.getPaymentType();
 
     }
 
-
-    private Integer getIdFromParamter(String parameter) {
-        try {
-            return Integer.parseInt(parameter);
-        } catch (NumberFormatException ex) {
-            throw new RuntimeException("Bad parameter: " + parameter + " is not an integer");
-        }
-    }
 
     private boolean isValidPaymentType(String paymentType) {
         for (String type : PAYMENT_TYPES) {

@@ -67,6 +67,12 @@ public class UserRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
+    @Transactional
+    public void incrementBadgeNumberForUser(String username) {
+        final String sql = "update users set last_badge_number_created = last_badge_number_created + 1 where users.username=?";
+        jdbcTemplate.update(sql, username);
+    }
+
     class UserRowMapper implements RowMapper<User>
     {
         @Override

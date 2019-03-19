@@ -3,6 +3,7 @@ package org.kumoricon.registration.model.badge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -43,5 +44,11 @@ public class BadgeService {
     @Transactional(readOnly = true)
     public int count() {
         return badgeRepository.count();
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal getCostForBadgeType(Integer badgeId, Long age) {
+        AgeRange ageRange = ageRangeRepository.findAgeRangeForBadgeIdAndAge(badgeId, age);
+        return ageRange.getCost();
     }
 }

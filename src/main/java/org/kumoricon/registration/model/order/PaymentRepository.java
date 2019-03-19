@@ -42,7 +42,12 @@ public class PaymentRepository {
                 new Object[]{id, paymentType}, BigDecimal.class);
     }
 
-
+    @Transactional(readOnly = true)
+    public BigDecimal getTotalPaidForOrder(Integer orderId) {
+        String sql = "select sum(amount) from payments WHERE order_id = ?";
+        BigDecimal result = jdbcTemplate.queryForObject(sql, new Object[]{orderId}, BigDecimal.class);
+        return result == null ? BigDecimal.ZERO : result;
+    }
 
     @Transactional
     public void deleteById(Integer id) {
@@ -80,6 +85,12 @@ public class PaymentRepository {
         for (Payment payment : payments) {
             save(payment);
         }
+    }
+
+    public Payment findById(Integer paymentId) {
+        return jdbcTemplate.queryForObject("select * from payments where id = ?",
+                new Object[]{paymentId},
+                new PaymentRowMapper());
     }
 
     private class PaymentRowMapper implements RowMapper<Payment>

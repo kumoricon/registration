@@ -6,33 +6,6 @@
 <body>
 
 <div layout:fragment="content" class="container">
-
-    <h1>Check Ins by Badge Type</h1>
-
-    <table class="table table-bordered table-striped table-sm">
-        <thead class="thead-dark">
-            <tr>
-                <th>Badge Type</th>
-                <th>At-Con Checked In</th>
-                <th>At-Con Not Checked In</th>
-                <th>Pre-Reg Checked In</th>
-                <th>Pre-Reg Not Checked In</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:if="${byBadgeType.empty}">
-                <td colspan="3"> No Attendees Found </td>
-            </tr>
-            <tr th:each="b : ${byBadgeType}">
-                <td th:text="${b[0]}">Badge Type</td>
-                <td class="text-right" th:text="${b[1]}">0</td>
-                <td class="text-right" th:text="${b[2]}">0</td>
-                <td class="text-right" th:text="${b[3]}">0</td>
-                <td class="text-right" th:text="${b[4]}">0</td>
-            </tr>
-        </tbody>
-    </table>
-
     <h1>Check Ins by Day</h1>
 
     <table class="table table-bordered table-striped table-sm col-4">

@@ -41,7 +41,7 @@
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_report'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_attendance_report'')')}" href="/reports/attendance">Attendance</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_badge_type_report'')')}" href="/reports/checkinbybadgetype">Check Ins by Badge Type</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_hour_report'')')}" href="/reports/checkinbyhour">Check Ins by Hour</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_user_report'')')}" href="/reports/checkinbyuser">Check Ins by User</a>
                         <div class="dropdown-divider"></div>

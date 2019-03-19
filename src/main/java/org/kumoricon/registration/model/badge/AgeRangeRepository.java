@@ -30,6 +30,15 @@ class AgeRangeRepository {
         }
     }
 
+
+    @Transactional(readOnly = true)
+    public AgeRange findAgeRangeForBadgeIdAndAge(Integer badgeId, Long age) {
+        return jdbcTemplate.queryForObject(
+                "select * from ageranges where badge_id = ? and ? >= min_age and ? <= max_age",
+                new Object[]{badgeId, age, age}, new AgeRangeRowMapper());
+    }
+
+
     @Transactional
     public void save(List<AgeRange> ageRanges, Integer badgeId) {
         for (AgeRange ageRange : ageRanges) {

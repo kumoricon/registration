@@ -47,6 +47,18 @@ public class OrderRepository {
         }
     }
 
+
+    @Transactional(readOnly = true)
+    public BigDecimal getTotalByOrderId(Integer orderId) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "select sum(attendees.paid_amount) from attendees where attendees.order_id = ?",
+                    new Object[]{orderId}, BigDecimal.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     @Transactional(readOnly = true)
     public BigDecimal getTotalByOrderNumber(String orderId) {
         try {
