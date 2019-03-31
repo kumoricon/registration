@@ -22,6 +22,5 @@ public class LoginTrackerTask {
     @Scheduled(cron = "0 * * * * *")
     public void saveCurrentLoginSessions() {
         loginRepository.updateLoginRecords();
-        log.info("Saved active sessions");
     }
 }
