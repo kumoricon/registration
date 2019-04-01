@@ -1,13 +1,12 @@
 package org.kumoricon.registration.reg;
 
-import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeHistoryRepository;
-import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +25,14 @@ public class CheckinController {
     private final AttendeeRepository attendeeRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final UserRepository userRepository;
+    private final AttendeeService attendeeService;
 
     @Autowired
-    public CheckinController(AttendeeRepository attendeeRepository, AttendeeHistoryRepository attendeeHistoryRepository, UserRepository userRepository) {
+    public CheckinController(AttendeeRepository attendeeRepository, AttendeeHistoryRepository attendeeHistoryRepository, UserRepository userRepository, AttendeeService attendeeService) {
         this.attendeeRepository = attendeeRepository;
         this.userRepository = userRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;
+        this.attendeeService = attendeeService;
     }
 
     @RequestMapping(value = "/reg/checkin/{id}")
@@ -51,16 +52,12 @@ public class CheckinController {
 
     @RequestMapping(value = "/reg/checkin/{id}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
+    @Transactional
     public String checkIn(Model model,
-                             @PathVariable String id,
+                             @PathVariable Integer id,
                              Principal principal) {
-        Attendee attendee = findAttendee(id);
-        attendee.setCheckedIn(true);
         User currentUser = userRepository.findOneByUsernameIgnoreCase(principal.getName());
-//        attendee.addHistoryEntry(currentUser, "Attendee Checked In");
-        attendee.setBadgePrinted(true);
-        attendeeRepository.save(attendee);
-        //attendee = attendeeRepository.findById(attendee.getId());
+        Attendee attendee = attendeeService.checkInAttendee(id, currentUser);
         model.addAttribute("attendee", attendee);
 
         // TODO: Print badge here

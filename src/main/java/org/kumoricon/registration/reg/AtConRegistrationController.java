@@ -32,8 +32,7 @@ public class AtConRegistrationController {
 
     @Autowired
     public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository,
-                                       PaymentRepository paymentRepository, UserService userService, BadgeService badgeService,
-                                       OrderService orderService) {
+                                       PaymentRepository paymentRepository, UserService userService, BadgeService badgeService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
