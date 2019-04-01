@@ -1,8 +1,6 @@
 package org.kumoricon.registration.reg;
 
-import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeListDTO;
-import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;

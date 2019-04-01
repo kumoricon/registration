@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class AttendeeFactory {
@@ -31,8 +28,6 @@ public class AttendeeFactory {
         attendee.setEmergencyContactPhone("321-321-4321");
         attendee.setBirthDate(LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(30L));
         attendee.setPaid(true);
-        List<String> positions = new ArrayList<>();
-        positions.addAll(Arrays.asList("Position 1", "Position 2", "Position 3"));
         attendee.setPaidAmount(attendee.getBadge().getCostForAge(attendee.getAge()));
         return attendee;
     }

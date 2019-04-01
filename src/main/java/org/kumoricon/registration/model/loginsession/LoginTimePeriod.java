@@ -1,9 +1,6 @@
 package org.kumoricon.registration.model.loginsession;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class LoginTimePeriod {
     private Instant startTime;
