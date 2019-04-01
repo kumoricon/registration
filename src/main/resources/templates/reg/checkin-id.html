@@ -7,16 +7,15 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div class="row">
-        <div class="col-sm-12">
 
-        </div>
+    <div class="row alert alert-warning" th:if="${attendee.checkedIn}">
+        Attendee is already checked in
     </div>
 
     <div class="row">
-        <div class="col-10">
+        <div class="col-7">
 
-            <table class="table table-bordered table-striped table-sm">
+            <table class="table table-bordered table-striped table-fit table-sm">
                 <tbody>
                 <tr>
                     <td>Name</td>
@@ -42,31 +41,26 @@
                     <td>Parent Contact</td>
                     <td th:text="${attendee.parentFullName + ' - ' + attendee.parentPhone}">Jane Doe - 123-555-1212</td>
                 </tr>
-                <tr th:if="${!history.empty}">
+                <tr>
                     <td>Notes</td>
                     <td>
                         <p th:each="note : ${history}">
-                            <span th:text="${note.timestamp}">1/1/2019 5:33:01 PM</span> -
+                            <span th:text="${#temporals.format(note.timestamp, 'MM/dd/yyyy HH:mm:ss')}">1/1/2019 5:33:01 PM</span>
                             <span th:text="${note.userId}">admin</span> <br>
                             <span th:text="${note.message}">Test message</span>
                         </p>
                     </td>
                 </tr>
-
-                <tr>
-                    <td></td>
-                    <td>
-                        <div class="form-inline">
-                            <a class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.orderId + '/' + attendee.id}">No, Edit Attendee</a>
-                            <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/checkin/' + ${attendee.id}">
-                                <input type="hidden" name="id" th:value="${attendee.id}">
-                                <input class="btn btn-primary btn-sm" type="submit" value="Yes, Information is Correct">
-                            </form>
-                        </div>
-                    </td>
-                </tr>
                 </tbody>
             </table>
+
+            <div class="row form-inline">
+                <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/checkin/' + ${attendee.id}">
+                    <input type="hidden" name="id" th:value="${attendee.id}">
+                    <input class="btn btn-primary btn-sm mr-2" type="submit" value="Yes, Information is Correct">
+                </form>
+                <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.orderId + '/' + attendee.id}">No, Edit Attendee</a>
+            </div>
         </div>
 
     </div>

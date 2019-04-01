@@ -38,11 +38,11 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}")
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String verifyData(Model model,
-                         @PathVariable String id) {
+                         @PathVariable Integer id) {
         try {
-            Attendee attendee = attendeeRepository.findById(Integer.parseInt(id));
+            Attendee attendee = attendeeRepository.findById(id);
             model.addAttribute("attendee", attendee);
-            model.addAttribute("history", attendeeHistoryRepository.findAllByAttendeeId(Integer.parseInt(id)));
+            model.addAttribute("history", attendeeHistoryRepository.findAllByAttendeeId(id));
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
@@ -68,9 +68,9 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}/printbadge")
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadge(Model model,
-                             @PathVariable String id,
+                             @PathVariable Integer id,
                              @RequestParam(required=false , value = "action") String action) {
-        Attendee attendee = findAttendee(id);
+        Attendee attendee = attendeeRepository.findById(id);
         model.addAttribute("attendee", attendee);
         return "reg/checkin-id-printbadge";
     }
@@ -78,9 +78,9 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}/printbadge", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadgeAction(Model model,
-                                   @PathVariable String id,
+                                   @PathVariable Integer id,
                                    @RequestParam(required=false , value = "action") String action) {
-        Attendee attendee = findAttendee(id);
+        Attendee attendee = attendeeRepository.findById(id);
 
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
             attendee.setBadgePrinted(true);
