@@ -39,8 +39,8 @@
             </tr>
             <tr th:each="attendee : ${attendees}">
                 <td> <a th:href="'/orders/' + ${attendee.orderId} + '/' + ${attendee.id}" th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
-                <td th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
-                <td th:text="${attendee.getFanName()}">Fan Name</td>
+                <td th:text="${attendee.legalFirstName} + ' ' + ${attendee.legalLastName}">John Doe</td>
+                <td th:text="${attendee.fanName}">Fan Name</td>
                 <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1990 (29)</td>
                 <td th:text="${attendee.badgeType}"></td>
                 <td>
