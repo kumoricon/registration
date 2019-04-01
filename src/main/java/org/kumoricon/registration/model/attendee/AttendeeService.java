@@ -28,7 +28,6 @@ public class AttendeeService {
         }
 
         attendee.setCheckedIn(true);
-        attendee.setBadgePrinted(true);
         attendeeRepository.save(attendee);
 
         AttendeeHistory ah = new AttendeeHistory(user, attendee.getId(),"Attendee Checked In");
