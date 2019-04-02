@@ -10,8 +10,14 @@
 
     <form method="POST" action="/utility/attendeeimport/upload" enctype="multipart/form-data" >
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <input type="file" name="file" id="file" /> <br/>
-        <input type="submit" value="Upload" name="upload" id="upload" />
+
+        <div class="row">
+            <input type="file" class="form-control-file" name="file" id="file" /> <br/>
+        </div>
+
+        <div class="row mt-2">
+            <input class="btn btn-primary" type="submit" value="Upload" name="upload" id="upload" />
+        </div>
     </form>
 
 </div>
