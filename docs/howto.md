@@ -30,3 +30,22 @@ For example:
 </div>
 
 ```
+
+
+
+Handle Dates, Times, and Timestamps
+-----------------------------------
+
+Dates and times that represent a specific instant in time should be stored in the database in UTC, but should 
+generally be shown to the user in the user's time zone (currently PST is hardcoded).
+
+The only notable exception is the attendee's date of birth, which is actually a LocalDate (stored without timezone
+information). Though technically not true, we generally want to assume that someone born on April 3rd at 1:00 AM on
+the east coast treats their birthday as April 3rd, even though they were actually born on April 2nd at 10:00 PM in
+the pacific time zone.
+
+More than you ever wanted to know about time:
+
+- [Choosing the right object](http://mattgreencroft.blogspot.com/2014/12/java-8-time-choosing-right-object.html)
+- [What's the difference between Instant and LocalDateTime](https://stackoverflow.com/questions/32437550/whats-the-difference-between-instant-and-localdatetime/32443004)
+
