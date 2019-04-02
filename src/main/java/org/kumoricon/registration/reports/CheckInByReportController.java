@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+
 
 @Controller
 public class CheckInByReportController {
@@ -25,6 +29,7 @@ public class CheckInByReportController {
     @PreAuthorize("hasAuthority('view_check_in_by_user_report')")
     public String checkInByUser(Model model) {
         model.addAttribute("data", attendeeHistoryRepository.checkInCountByUsers());
+        model.addAttribute("since", Instant.now().minus(15, ChronoUnit.MINUTES).atZone(ZoneId.of("America/Los_Angeles")));
         return "reports/checkinbyuser";
     }
 

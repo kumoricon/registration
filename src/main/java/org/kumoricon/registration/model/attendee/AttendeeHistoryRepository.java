@@ -59,15 +59,15 @@ public class AttendeeHistoryRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<CheckInByUserDTO> checkInCountByUsers() {
+        String sql = "SELECT users.first_name, users.last_name, COUNT(attendeehistory.id) as count FROM attendeehistory JOIN users ON attendeehistory.user_id = users.id WHERE attendeehistory.message='Attendee Checked In' AND timestamp >= (NOW() - (15 * interval '1 minute')) AND attendeehistory.timestamp <= NOW() GROUP BY user_id, first_name, last_name";
 
-    public List<Object[]> checkInCountByUsers() {
-        return new ArrayList<>();
-//        try {
-//            return jdbcTemplate.query(
-//                    "SELECT users.first_name, users.last_name, COUNT(attendeehistory.id) FROM attendeehistory JOIN users ON attendeehistory.user_id = users.id WHERE attendeehistory.message='Attendee Checked In' AND timestamp >= (NOW() - (15 * interval '1 minute')) AND attendeehistory.timestamp <= NOW() GROUP BY user_id, first_name, last_name");
-//        } catch (EmptyResultDataAccessException e) {
-//            return null;
-//        }
+        try {
+            return jdbcTemplate.query(sql, new CheckInByUserDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
     }
 
     @Transactional
@@ -90,4 +90,15 @@ public class AttendeeHistoryRepository {
             return ah;
         }
     }
+
+
+    private class CheckInByUserDTORowMapper implements RowMapper<CheckInByUserDTO> {
+        @Override
+        public CheckInByUserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new CheckInByUserDTO(
+                    rs.getString("first_name") + " " + rs.getString("last_name"),
+                    rs.getInt("count"));
+        }
+    }
+
 }
