@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,9 +143,13 @@ public class TillSessionRepository {
         public TillSessionDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             TillSessionDTO t = new TillSessionDTO();
             t.setId(rs.getInt("id"));
-            t.setStartTime(rs.getTimestamp("start_time"));
+
+            Timestamp start = rs.getTimestamp("start_time");
+            Timestamp end = rs.getTimestamp("end_time");
+            t.setStartTime(start == null ? null: start.toInstant().atZone(ZoneId.of("America/Los_Angeles")));
+            t.setEndTime(end == null ? null: end.toInstant().atZone(ZoneId.of("America/Los_Angeles")));
+
             t.setOpen(rs.getBoolean("open"));
-            t.setEndTime(rs.getTimestamp("end_time"));
             t.setUserId(rs.getInt("user_id"));
             t.setUsername(rs.getString("username"));
             t.setTotal(rs.getBigDecimal("total"));
