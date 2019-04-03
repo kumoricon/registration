@@ -45,7 +45,7 @@
                     <td>Notes</td>
                     <td>
                         <p th:each="note : ${history}">
-                            <span th:text="${#temporals.format(note.timestamp, 'MM/dd/yyyy hh:mm:ss a')}">1/1/2019 5:33:01 PM</span>
+                            <span th:text="${#temporals.format(note.timestamp, 'EEE MM/dd/yyyy h:mm:ss a')}">1/1/2019 5:33:01 PM</span>
                             <span th:text="${note.username}">admin</span> <br>
                             <span th:text="${note.message}">Test message</span>
                         </p>
