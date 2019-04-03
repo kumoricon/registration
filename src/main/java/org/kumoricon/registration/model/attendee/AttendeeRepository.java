@@ -285,7 +285,7 @@ public class AttendeeRepository {
             Timestamp ts = rs.getTimestamp("checkindate");
             ZonedDateTime start = ts == null ? null : ts.toInstant().atZone(ZoneId.of("America/Los_Angeles"));
 
-            return new CheckInByHourDTO(start, rs.getInt("atconcheckedin"), rs.getInt("preregcheckedin"));
+            return new CheckInByHourDTO(start, rs.getInt("preregcheckedin"), rs.getInt("atconcheckedin"));
         }
     }
 
