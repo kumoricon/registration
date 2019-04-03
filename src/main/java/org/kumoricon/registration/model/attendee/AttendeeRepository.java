@@ -283,7 +283,8 @@ public class AttendeeRepository {
         @Override
         public CheckInByHourDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             Timestamp ts = rs.getTimestamp("checkindate");
-            Instant start = ts == null ? null : ts.toInstant();
+            ZonedDateTime start = ts == null ? null : ts.toInstant().atZone(ZoneId.of("America/Los_Angeles"));
+
             return new CheckInByHourDTO(start, rs.getInt("atconcheckedin"), rs.getInt("preregcheckedin"));
         }
     }

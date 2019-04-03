@@ -1,19 +1,19 @@
 package org.kumoricon.registration.model.attendee;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 
 public class CheckInByHourDTO {
-    private Instant start;
+    private ZonedDateTime start;
     private Integer preregCheckIn;
     private Integer atConCheckIn;
 
-    public CheckInByHourDTO(Instant start, Integer preregCheckIn, Integer atConCheckIn) {
+    public CheckInByHourDTO(ZonedDateTime start, Integer preregCheckIn, Integer atConCheckIn) {
         this.start = start;
         this.preregCheckIn = preregCheckIn;
         this.atConCheckIn = atConCheckIn;
     }
 
-    public Instant getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 

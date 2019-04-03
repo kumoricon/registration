@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,11 @@ public class AttendeeHistoryRepository {
     }
 
     @Transactional(readOnly = true)
-    public List<AttendeeHistory> findAllByAttendeeId(int id) {
+    public List<AttendeeHistoryDTO> findAllDTObyAttendeeId(int id) {
         try {
             return jdbcTemplate.query(
-                    "select * from attendeehistory where attendee_id = ? order by timestamp desc",
-                    new Object[]{id}, new AttendeeHistoryRowMapper());
+                    "select attendeehistory.*, users.first_name, users.last_name from attendeehistory join users on attendeehistory.user_id = users.id where attendee_id = ? order by timestamp desc",
+                    new Object[]{id}, new AttendeeHistoryDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -88,6 +89,17 @@ public class AttendeeHistoryRepository {
             ah.setUserId(rs.getInt("user_id"));
             ah.setAttendeeId(rs.getInt("attendee_id"));
             return ah;
+        }
+    }
+
+
+    private class AttendeeHistoryDTORowMapper implements RowMapper<AttendeeHistoryDTO> {
+        @Override
+        public AttendeeHistoryDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new AttendeeHistoryDTO(
+                    rs.getTimestamp("timestamp").toInstant().atZone(ZoneId.of("America/Los_Angeles")),
+                    rs.getString("first_name") + " " + rs.getString("last_name"),
+                    rs.getString("message"));
         }
     }
 

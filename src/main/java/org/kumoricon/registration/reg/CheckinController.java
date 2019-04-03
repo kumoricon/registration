@@ -42,7 +42,7 @@ public class CheckinController {
         try {
             Attendee attendee = attendeeRepository.findById(id);
             model.addAttribute("attendee", attendee);
-            model.addAttribute("history", attendeeHistoryRepository.findAllByAttendeeId(id));
+            model.addAttribute("history", attendeeHistoryRepository.findAllDTObyAttendeeId(id));
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
