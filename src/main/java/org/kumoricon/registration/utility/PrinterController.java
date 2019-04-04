@@ -15,17 +15,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class PrinterController {
+    private final PrinterService printerService;
 
-
-    @Autowired
-    public PrinterController() {
-
+    public PrinterController(PrinterService printerService) {
+        this.printerService = printerService;
     }
 
     @RequestMapping(value = "/utility/printer")
     public String printer(Model model,
                           @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerName) {
         model.addAttribute("printer", printerName);
+        model.addAttribute("availablePrinters", printerService.getPrinterNames());
         return "utility/printer";
     }
 
