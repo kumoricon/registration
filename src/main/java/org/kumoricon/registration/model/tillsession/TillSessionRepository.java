@@ -27,8 +27,10 @@ import static org.kumoricon.registration.model.SqlHelper.translate;
 @Service
 public class TillSessionRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final ZoneId timezone;
 
     public TillSessionRepository(JdbcTemplate jdbcTemplate) {
+        this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -146,8 +148,8 @@ public class TillSessionRepository {
 
             Timestamp start = rs.getTimestamp("start_time");
             Timestamp end = rs.getTimestamp("end_time");
-            t.setStartTime(start == null ? null: start.toInstant().atZone(ZoneId.of("America/Los_Angeles")));
-            t.setEndTime(end == null ? null: end.toInstant().atZone(ZoneId.of("America/Los_Angeles")));
+            t.setStartTime(start == null ? null: start.toInstant().atZone(timezone));
+            t.setEndTime(end == null ? null: end.toInstant().atZone(timezone));
 
             t.setOpen(rs.getBoolean("open"));
             t.setUserId(rs.getInt("user_id"));

@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 public class AttendeeListDTO {
+    private static final ZoneId timezone = ZoneId.of("America/Los_Angeles");
     private Integer id;
     private String firstName;
     private String lastName;
@@ -53,7 +54,7 @@ public class AttendeeListDTO {
 
     public Long getAge() {
         if (birthDate == null) { return 0L; }
-        LocalDate now = LocalDate.now(ZoneId.of("America/Los_Angeles"));
+        LocalDate now = LocalDate.now(timezone);
         return ChronoUnit.YEARS.between(birthDate, now);
     }
 }

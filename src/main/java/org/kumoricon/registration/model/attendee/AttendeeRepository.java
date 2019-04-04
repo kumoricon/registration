@@ -20,8 +20,10 @@ import static org.kumoricon.registration.model.SqlHelper.translate;
 @Repository
 public class AttendeeRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final ZoneId timezone;
 
     public AttendeeRepository(JdbcTemplate jdbcTemplate) {
+        this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -283,7 +285,7 @@ public class AttendeeRepository {
         @Override
         public CheckInByHourDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             Timestamp ts = rs.getTimestamp("checkindate");
-            ZonedDateTime start = ts == null ? null : ts.toInstant().atZone(ZoneId.of("America/Los_Angeles"));
+            ZonedDateTime start = ts == null ? null : ts.toInstant().atZone(timezone);
 
             return new CheckInByHourDTO(start, rs.getInt("preregcheckedin"), rs.getInt("atconcheckedin"));
         }

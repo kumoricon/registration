@@ -17,8 +17,10 @@ import java.util.List;
 public class AttendeeHistoryRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ZoneId timezone;
 
     public AttendeeHistoryRepository(JdbcTemplate jdbcTemplate) {
+        this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -97,7 +99,7 @@ public class AttendeeHistoryRepository {
         @Override
         public AttendeeHistoryDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new AttendeeHistoryDTO(
-                    rs.getTimestamp("timestamp").toInstant().atZone(ZoneId.of("America/Los_Angeles")),
+                    rs.getTimestamp("timestamp").toInstant().atZone(timezone),
                     rs.getString("first_name") + " " + rs.getString("last_name"),
                     rs.getString("message"));
         }

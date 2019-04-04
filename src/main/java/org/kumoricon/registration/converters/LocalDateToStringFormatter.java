@@ -13,18 +13,19 @@ import java.time.temporal.ChronoField;
 import java.util.Locale;
 
 public class LocalDateToStringFormatter implements Formatter<LocalDate> {
+    private static final ZoneId TIMEZONE = ZoneId.of("America/Los_Angeles");
     private static final DateTimeFormatter ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DEFAULT = DateTimeFormatter.ofPattern("MMddyyyy");
     private static final DateTimeFormatter DASHES = DateTimeFormatter.ofPattern("M-d-yyyy");
     private static final DateTimeFormatter TWO_DIGIT_YEAR =
             new DateTimeFormatterBuilder()
                     .appendPattern("MMdd")
-                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(99))
+                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now(TIMEZONE).minusYears(99))
                     .toFormatter();
     private static final DateTimeFormatter TWO_DIGIT_YEAR_SLASHES =
             new DateTimeFormatterBuilder()
                     .appendPattern("M/d/")
-                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now(ZoneId.of("America/Los_Angeles")).minusYears(99))
+                    .appendValueReduced(ChronoField.YEAR_OF_ERA, 2, 4, LocalDate.now(TIMEZONE).minusYears(99))
                     .toFormatter();
     private static final DateTimeFormatter[] FORMATTERS = {ISO, DEFAULT, TWO_DIGIT_YEAR_SLASHES, DASHES, TWO_DIGIT_YEAR};
 
