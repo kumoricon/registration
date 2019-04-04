@@ -29,21 +29,30 @@
 
     <div class="row form-group mt-5">
         <label for="orderTotal" class="col-2 col-form-label">Order Total</label>
-        <div class="col-2">
+        <div class="col-2 input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+            </div>
             <input type="text" class="form-control text-right" disabled id="orderTotal" th:value="*{totalDue}" >
         </div>
     </div>
 
     <div class="row form-group">
         <label for="totalPaid" class="col-2 col-form-label">Paid so far</label>
-        <div class="col-2">
+        <div class="col-2 input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+            </div>
             <input type="text" class="form-control text-right" disabled id="totalPaid" th:value="*{totalPaid}" >
         </div>
     </div>
 
     <div class="row form-group">
         <label for="amountDue" class="col-2 col-form-label">Amount Due</label>
-        <div class="col-2">
+        <div class="col-2 input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+            </div>
             <input type="text" class="form-control text-right" disabled id="amountDue" th:value="*{totalDue.subtract(totalPaid)}" >
         </div>
     </div>
@@ -54,36 +63,42 @@
             <input type="hidden" th:field="*{paymentType}" />
 
             <div class="form-group row">
-                <label for="inputAmount" class="col-2 col-form-label">Amount</label>
-                <div class="col-2">
+                <label for="inputAmount" class="col-2 col-form-label font-weight-bold">Money Taken</label>
+                <div class="col-2 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
                     <input type="text" min="0" th:field="*{amount}" pattern="\d*\.?\d*" th:errorclass="is-invalid" class="form-control text-right" id="inputAmount" placeholder="0.00" autofocus>
                 </div>
             </div>
 
             <div class="form-group row" th:if="${paymentType == 'cash'}">
                 <label for="inputChange" class="col-2 col-form-label">Change</label>
-                <div class="col-2">
-                    <input type="text" disabled class="form-control text-right" id="inputChange" value="0.00">
+                <div class="col-2 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" disabled class="form-control text-right" id="inputChange" value="0.00" required>
                 </div>
             </div>
 
             <div class="form-group row" th:if="${paymentType == 'card'}">
-                <label for="inputAuthNumber" class="col-2 col-form-label">Auth Number</label>
+                <label for="inputAuthNumber" class="col-2 col-form-label font-weight-bold">Auth Number</label>
                 <div class="col-2">
-                    <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputAuthNumber" placeholder="123456">
+                    <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputAuthNumber" placeholder="123456" required>
                 </div>
             </div>
 
             <div class="form-group row" th:if="${paymentType == 'check'}">
-                <label for="inputCheckAuth" class="col-2 col-form-label">Drivers Lic. Number</label>
+                <label for="inputCheckAuth" class="col-2 col-form-label font-weight-bold">Drivers Lic. Number</label>
                 <div class="col-2">
-                    <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputCheckAuth" placeholder="123456">
+                    <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputCheckAuth" placeholder="123456" required>
                 </div>
             </div>
 
             <div class="form-group row">
-                <input class="btn btn-primary" name="action" type="submit" value="Save" />
-                <input class="btn btn-secondary" type="reset" value="Reset" />
+                <input class="btn btn-primary mr-2" id="btnSave" name="action" type="submit" value="Save" />
+                <input class="btn btn-secondary mr-2" type="reset" value="Reset" />
                 <a th:href="'/reg/atconorder/' + ${orderId} + '/payment'" href="#" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
