@@ -114,6 +114,20 @@ public class TillSessionRepository {
     }
 
 
+    @Transactional(readOnly = true)
+    TillSessionDTO getOpenTillSessionDTOforUser(User user) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT tillsessions.*, users.username, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.open = true and tillsessions.user_id=? GROUP BY tillsessions.id, users.username",
+                    new Object[]{user.getId()},
+                    new TillSessionDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+
+
 
     class TillSessionRowMapper implements RowMapper<TillSession>
     {

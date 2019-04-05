@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Till Session</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <div class="row" th:if="${tillSession != null}">
+        <table class="table table-bordered table-fit">
+            <tr>
+                <td>Session ID</td>
+                <td th:text="${tillSession.id}">1</td>
+            </tr>
+            <tr>
+                <td>Session is Open</td>
+                <td th:text="${tillSession.open}">True</td>
+            </tr>
+            <tr>
+                <td>Start</td>
+                <td th:text="${tillSession.startTime} ? ${#temporals.format(tillSession.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+            </tr>
+            <tr>
+                <td>End</td>
+                <td th:text="${tillSession.endTime} ? ${#temporals.format(tillSession.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row" th:if="${tillSession != null}">
+        <form method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input class="btn btn-primary" type="submit" value="Close Till">
+        </form>
+    </div>
+
+    <div class="row" th:if="${tillSession == null}">
+        No open till session found. Taking an at-con order will automatically open a till session.
+    </div>
+</div>
+
+</body>
+</html>
