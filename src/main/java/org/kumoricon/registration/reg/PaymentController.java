@@ -147,12 +147,14 @@ public class PaymentController {
                                         HttpServletRequest request) {
 
         Order order = orderRepository.findById(orderId);
+        BigDecimal totalDue = orderRepository.getTotalByOrderId(orderId);
+        BigDecimal paidSoFar = paymentRepository.getTotalPaidForOrder(orderId);
         model.addAttribute("order", order);
         model.addAttribute("payment", payment);
         model.addAttribute("paymentType", payment.getPaymentType());
         model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
-        model.addAttribute("totalPaid", paymentRepository.getTotalPaidForOrder(orderId));
-        model.addAttribute("totalDue", orderRepository.getTotalByOrderId(orderId));
+        model.addAttribute("totalPaid", paidSoFar);
+        model.addAttribute("totalDue", totalDue);
         model.addAttribute("order", order);
 
         if (bindingResult.hasErrors()) {
@@ -174,6 +176,12 @@ public class PaymentController {
         switch (payment.getPaymentType()) {
             case "cash":
                 paymentData.setPaymentType(Payment.PaymentType.CASH);
+                // For cash, don't record a payment of more than the amount due in the order. The user should
+                // be giving change. However, we should NOT be giving change for card or check transactions.
+                BigDecimal amountLeftToPay = totalDue.subtract(paidSoFar);
+                if (payment.getAmount().compareTo(amountLeftToPay) > 0) {
+                    paymentData.setAmount(amountLeftToPay);
+                }
                 break;
             case "card":
                 paymentData.setPaymentType(Payment.PaymentType.CREDIT);
