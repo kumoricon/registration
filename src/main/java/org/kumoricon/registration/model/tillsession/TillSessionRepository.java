@@ -113,6 +113,17 @@ public class TillSessionRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    List<TillSessionDTO> findOpenTillSessionDTOs() {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT tillsessions.*, users.username, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id WHERE open is true GROUP BY tillsessions.id, users.username order by tillsessions.end_time",
+                    new TillSessionDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
 
     @Transactional(readOnly = true)
     TillSessionDTO getOpenTillSessionDTOforUser(User user) {

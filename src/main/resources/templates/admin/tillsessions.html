@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Manage Till Sessions</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row mb-2">
+        <a class="btn btn-sm btn-primary mr-2" href="?filter=open" th:classappend="${filter == 'open' ? 'btn-dark' : 'btn-light'}">Open Sessions</a>
+        <a class="btn btn-sm btn-primary" href="?filter=all" th:classappend="${filter == 'all' ? 'btn-dark' : 'btn-light'}">All Sessions</a>
+    </div>
+
+    <div class="row">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Username</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${tillSessions.empty}">
+                <td colspan="5"> No Sessions Found </td>
+            </tr>
+            <tr th:each="s : ${tillSessions}">
+                <td th:text="${s.username}">Username</td>
+                <td th:text="${s.startTime} ? ${#temporals.format(s.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Start Time</td>
+                <td th:text="${s.endTime} ? ${#temporals.format(s.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">End Time</td>
+                <td class="text-right" th:text="'$' + ${s.total}">$0.00</td>
+                <td class="text-center">
+                    <form method="post" th:if="${s.isOpen()}">
+                        <input type="hidden" name="sessionId" th:value="${s.id}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input class="btn btn-sm btn-danger" type="submit" value="Close">
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
