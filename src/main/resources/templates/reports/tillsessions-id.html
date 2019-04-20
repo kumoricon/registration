@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Till Report</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <div class="row">
+        <div class="col-4"><h2 th:text="${tillSession.username}">Firstname Lastname</h2></div>
+        <div class="col-4">
+            <table class="table table-sm table-borderless">
+                <tr>
+                    <td colspan="2" th:text="'Till Session ' + ${tillSession.id}">Till Session 3</td>
+                </tr>
+                <tr>
+                    <td>Start</td>
+                    <td th:text="${tillSession.startTime} ? ${#temporals.format(tillSession.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Mon 4/12/2019 8:00:00 AM</td>
+                </tr>
+                <tr>
+                    <td>End</td>
+                    <td th:text="${tillSession.endTime} ? ${#temporals.format(tillSession.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Mon 4/12/2019 12:00:00 PM</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4">
+            <table class="table table-sm table-bordered">
+                <tr th:each="b : ${tillSession.badgeCounts}">
+                    <td th:text="${b.badgeName}">Adult Weekend</td>
+                    <td class="text-right" th:text="${b.count}">33</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-4">
+            <table class="table table-sm table-bordered">
+                <tr th:each="p : ${tillSession.getPaymentTotals()}">
+                    <td th:text="'Total ' + ${p.type}">Total Cash</td>
+                    <td class="text-right" th:text="'$' + ${p.total}">$300</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            <table class="table table-sm table-bordered">
+                <tr>
+                    <th>Order Id</th>
+                    <th>Items</th>
+                    <th>Payments</th>
+                </tr>
+                <tr th:each="o : ${tillSession.orderDTOs}">
+                    <td th:text="${o.orderId}">123</td>
+                    <td class="text-nowrap" th:text="${o.badges}">3 adult weekend, 2 child weekend</td>
+                    <td class="text-nowrap" th:text="${o.payments}">$30 cash, $20 check<br></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -84,5 +85,17 @@ public class TillSessionService {
 
     public TillSessionDTO getOpenSessionForUser(User currentUser) {
         return repository.getOpenTillSessionDTOforUser(currentUser);
+    }
+
+    @Transactional(readOnly = true)
+    public TillSessionDetailDTO getTillDetailDTO(Integer id) {
+        TillSessionDTO tillSessionDTO = repository.getTillSessionDTOById(id);
+        TillSessionDetailDTO detailDTO = TillSessionDetailDTO.fromTillSessionDTO(tillSessionDTO);
+
+        detailDTO.setPaymentTotals(repository.getPaymentTotals(id));
+        detailDTO.setBadgeCounts(repository.getBadgeCounts(id));
+        detailDTO.setOrderDTOs(repository.getOrderDetails(id));
+
+        return detailDTO;
     }
 }

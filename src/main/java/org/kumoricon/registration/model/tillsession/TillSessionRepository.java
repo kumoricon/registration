@@ -1,11 +1,13 @@
 package org.kumoricon.registration.model.tillsession;
 
+import org.kumoricon.registration.model.order.Payment;
 import org.kumoricon.registration.model.user.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +23,10 @@ import java.util.Map;
 import static org.kumoricon.registration.model.SqlHelper.translate;
 
 /**
- * Unlike most repositories, Session access should only happen through SessionService
+ * Unlike most repositories, Till Session access should only happen through SessionService
  */
 
-@Service
+@Repository
 public class TillSessionRepository {
     private final JdbcTemplate jdbcTemplate;
     private final ZoneId timezone;
@@ -106,7 +108,7 @@ public class TillSessionRepository {
     List<TillSessionDTO> findAllTillSessionDTO() {
         try {
             return jdbcTemplate.query(
-                    "SELECT tillsessions.*, users.username, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id GROUP BY tillsessions.id, users.username order by tillsessions.end_time",
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id GROUP BY tillsessions.id, users.first_name, users.last_name order by tillsessions.end_time desc",
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -117,7 +119,7 @@ public class TillSessionRepository {
     List<TillSessionDTO> findOpenTillSessionDTOs() {
         try {
             return jdbcTemplate.query(
-                    "SELECT tillsessions.*, users.username, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id WHERE open is true GROUP BY tillsessions.id, users.username order by tillsessions.end_time",
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id WHERE open is true GROUP BY tillsessions.id, users.first_name, users.last_name order by tillsessions.end_time",
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -129,7 +131,7 @@ public class TillSessionRepository {
     TillSessionDTO getOpenTillSessionDTOforUser(User user) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT tillsessions.*, users.username, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.open = true and tillsessions.user_id=? GROUP BY tillsessions.id, users.username",
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.open = true and tillsessions.user_id=? GROUP BY tillsessions.id, users.first_name, users.last_name",
                     new Object[]{user.getId()},
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -137,7 +139,114 @@ public class TillSessionRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    TillSessionDTO getTillSessionDTOById(Integer id) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.id=? GROUP BY tillsessions.id, users.first_name, users.last_name",
+                    new Object[]{id},
+                    new TillSessionDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 
+    public List<TillSessionDetailDTO.TillSessionPaymentTotalDTO> getPaymentTotals(Integer id) {
+        try {
+            return jdbcTemplate.query(
+                    "select payment_type, sum(amount) as total from payments where till_session_id = ? group by payment_type order by payment_type",
+                    new Object[] {id},
+                    new TillSessionPaymentTotalDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<TillSessionDetailDTO.TillSessionBadgeCountDTO> getBadgeCounts(Integer id) {
+        final String sql = "select b.name," +
+                "  (CASE" +
+                "     WHEN extract(year from age(now() at time zone 'America/Los_Angeles', attendees.birth_date)) >= 13 THEN" +
+                "       'Adult/Youth'" +
+                "    WHEN extract(year from age(now() at time zone 'America/Los_Angeles', attendees.birth_date)) >= 6 THEN" +
+                "       'Child'" +
+                "     ELSE" +
+                "       'Under5'" +
+                "    END) as ageRange," +
+                "       count(*)" +
+                " from attendees" +
+                "       JOIN orders o on attendees.order_id = o.id" +
+                "       JOIN badges b on attendees.badge_id = b.id" +
+                " WHERE o.id in (select order_id from payments where till_session_id = ?)" +
+                " GROUP BY b.name, ageRange" +
+                " ORDER BY b.name, ageRange;";
+        try {
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[] {id},
+                    new TillSessionBadgeCountDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<TillSessionDetailDTO.TillSessionOrderDTO> getOrderDetails(Integer id) {
+        final String sql = "select t1.id, badges, payments from (" +
+ //               "-- select badges in order" +
+                "select id, array_to_string(array_agg(name || ' ' || ageRange || ': ' || cnt), ', ') as badges from (" +
+                "  select" +
+                "   o.id," +
+                "   b.name," +
+                "   (CASE" +
+                "      WHEN extract(year from age(now() at time zone 'America/Los_Angeles', attendees.birth_date)) >= 13 THEN" +
+                "        'Adult'" +
+                "      WHEN extract(year from age(now() at time zone 'America/Los_Angeles', attendees.birth_date)) >= 6 THEN" +
+                "        'Child'" +
+                "      ELSE" +
+                "        'Under 6'" +
+                "     END) as ageRange," +
+                "   count(*) as cnt" +
+                "  from attendees" +
+                "        JOIN orders o on attendees.order_id = o.id" +
+                "        JOIN badges b on attendees.badge_id = b.id" +
+                "  WHERE o.id in (select order_id from payments where till_session_id = ?)" +
+                "  GROUP BY o.id, b.name, ageRange" +
+                "  ORDER BY o.id, b.name, ageRange) as counts" +
+                " GROUP BY id) as t1" +
+                "  left outer join (" +
+//                "-- select payments in order" +
+                "select id, array_to_string(array_agg(type || auth || ': $' || amount), ', ') as payments from (" +
+                "select" +
+                "  o.id," +
+                "  (CASE" +
+                "    WHEN p.payment_type = 0 THEN '" + Payment.PaymentType.CASH + "'" +
+                "    WHEN p.payment_type = 1 THEN '" + Payment.PaymentType.CHECK + "'" +
+                "    WHEN p.payment_type = 2 THEN '" + Payment.PaymentType.CREDIT + "'" +
+                "      WHEN p.payment_type = 3 THEN '" + Payment.PaymentType.PREREG + "'" +
+                "    END) as type," +
+                "   (CASE\n" +
+                "    WHEN p.auth_number is null then ''\n" +
+                "    ELSE ' (Auth ' || p.auth_number || ')'\n" +
+                "    END\n" +
+                "    ) as auth," +
+                "  p.amount" +
+                "  from orders o" +
+                "       JOIN payments p on o.id = p.order_id" +
+                "  WHERE p.till_session_id = ?" +
+                "  ORDER BY o.id, p.payment_type) as a" +
+                " group by id) as t2 on t1.id = t2.id;";
+
+        try {
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[] {id, id},
+                    new TillSessionOrderDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+
+    }
 
 
     class TillSessionRowMapper implements RowMapper<TillSession>
@@ -178,9 +287,41 @@ public class TillSessionRepository {
 
             t.setOpen(rs.getBoolean("open"));
             t.setUserId(rs.getInt("user_id"));
-            t.setUsername(rs.getString("username"));
+            t.setUsername(rs.getString("first_name") + " " + rs.getString("last_name"));
             t.setTotal(rs.getBigDecimal("total"));
             return t;
+        }
+    }
+
+    class TillSessionPaymentTotalDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionPaymentTotalDTO> {
+        @Override
+        public TillSessionDetailDTO.TillSessionPaymentTotalDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new TillSessionDetailDTO.TillSessionPaymentTotalDTO(
+                    Payment.PaymentType.fromInteger(rs.getInt("payment_type")).toString(),
+                    rs.getBigDecimal("total")
+            );
+        }
+    }
+
+    class TillSessionOrderDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionOrderDTO> {
+        @Override
+        public TillSessionDetailDTO.TillSessionOrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new TillSessionDetailDTO.TillSessionOrderDTO(
+                    rs.getInt("id"),
+                    rs.getString("badges"),
+                    rs.getString("payments")
+            );
+        }
+
+    }
+
+    class TillSessionBadgeCountDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionBadgeCountDTO>
+    {
+        @Override
+        public TillSessionDetailDTO.TillSessionBadgeCountDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new TillSessionDetailDTO.TillSessionBadgeCountDTO(
+                    rs.getString("name") + " " + rs.getString("agerange"),
+                    rs.getInt("count"));
         }
     }
 

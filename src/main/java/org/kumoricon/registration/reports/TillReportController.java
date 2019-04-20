@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TillReportController {
@@ -24,7 +26,18 @@ public class TillReportController {
         } catch (NumberFormatException ex) {
             model.addAttribute("err", ex.getMessage());
         }
-
         return "reports/tillsessions";
     }
+
+    @RequestMapping(value = "/reports/tillsessions/{id}")
+    @PreAuthorize("hasAuthority('view_till_report')")
+    public String tillId(Model model,
+                         @PathVariable Integer id) {
+
+        model.addAttribute("tillSession", tillSessionService.getTillDetailDTO(id));
+
+
+        return "reports/tillsessions-id";
+    }
+
 }
