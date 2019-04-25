@@ -1,5 +1,7 @@
 package org.kumoricon.registration.model.user;
 
+import groovy.util.logging.Log;
+import org.kumoricon.registration.model.loginsession.LoginRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final LoginRepository loginRepository;
     private final PasswordEncoder passwordEncoder;
     private static final String DEFFAULT_PASSWORD = "password";
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, LoginRepository loginRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.loginRepository = loginRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -32,6 +36,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User resetPassword(Integer userId) {
         User u = findById(userId);
         if (u == null) {
@@ -39,8 +44,10 @@ public class UserService {
         }
 
         u.setPassword(passwordEncoder.encode(DEFFAULT_PASSWORD));
-        u.setCredentialsNonExpired(false);
+        u.setForcePasswordChange(true);
         userRepository.save(u);
+
+        loginRepository.deleteLoginSessionsForUsername(u.getUsername());
         return u;
     }
 
@@ -52,6 +59,7 @@ public class UserService {
         return String.format("%s%5d", user.getBadgePrefix(), user.getLastBadgeNumberCreated());
     }
 
+    @Transactional
     public void updateUser(User updates) {
         User current;
         if (updates.getId() == null) {
@@ -80,7 +88,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(DEFFAULT_PASSWORD));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
+        user.setForcePasswordChange(true);
         //        u.resetPassword();                  // Set to default password and force it to be changed on login
         user.setLastBadgeNumberCreated(1213);  // Start at an arbitrary number instead of 0
         return user;
@@ -125,5 +133,9 @@ public class UserService {
     }
 
 
-
+    @Transactional
+    public void setPassword(Integer userId, String password) {
+        userRepository.setPassword(userId, false, passwordEncoder.encode(password));
+        loginRepository.deleteLoginSessionsForUserId(userId);
+    }
 }

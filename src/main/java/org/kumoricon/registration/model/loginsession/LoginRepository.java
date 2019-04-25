@@ -64,6 +64,19 @@ public class LoginRepository {
         jdbcTemplate.update(sql);
     }
 
+    @Transactional
+    public void deleteLoginSessionsForUsername(String username) {
+        final String sql = "DELETE FROM spring_session WHERE principal_name = ?";
+        jdbcTemplate.update(sql, new Object[] {username});
+    }
+
+    @Transactional
+    public void deleteLoginSessionsForUserId(Integer userId) {
+        final String sql = "DELETE FROM spring_session WHERE principal_name = (select username from users where id = ?)";
+        jdbcTemplate.update(sql, new Object[] {userId});
+    }
+
+
     @Transactional(readOnly = true)
     public List<LocalDate> getAvailableDays() {
         final String sql = "select distinct date(start at time zone 'PST') as start from loginsessions order by start desc limit 5";
@@ -104,8 +117,5 @@ public class LoginRepository {
             
             return l;
         }
-
     }
-
-
 }

@@ -47,12 +47,12 @@ public class UserRepository {
     public void save(User user) {
         if (user.getId() == null) {
             jdbcTemplate.update("INSERT INTO users " +
-                            "(account_non_expired, account_non_locked, credentials_non_expired, enabled, first_name, last_name, last_badge_number_created, password, username, role_id) " +
+                            "(account_non_expired, account_non_locked, force_password_change, enabled, first_name, last_name, last_badge_number_created, password, username, role_id) " +
                             "VALUES(?,?,?,?,?,?,?,?,?,?)",
-                    user.getAccountNonExpired(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId());
+                    user.getAccountNonExpired(), user.getAccountNonLocked(), user.getForcePasswordChange(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId());
         } else {
-            jdbcTemplate.update("UPDATE users SET account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ?, enabled = ?, first_name = ?, last_name = ?, last_badge_number_created = ?, password = ?, username = ?, role_id = ? WHERE id = ?",
-                    user.getAccountNonExpired(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId(), user.getId());
+            jdbcTemplate.update("UPDATE users SET account_non_expired = ?, account_non_locked = ?, force_password_change = ?, enabled = ?, first_name = ?, last_name = ?, last_badge_number_created = ?, password = ?, username = ?, role_id = ? WHERE id = ?",
+                    user.getAccountNonExpired(), user.getAccountNonLocked(), user.getForcePasswordChange(), user.getEnabled(), user.getFirstName(), user.getLastName(), user.getLastBadgeNumberCreated(), user.getPassword(), user.getUsername(), user.getRoleId(), user.getId());
         }
     }
 
@@ -73,6 +73,17 @@ public class UserRepository {
         jdbcTemplate.update(sql, username);
     }
 
+    @Transactional
+    public void setPassword(Integer userId, boolean forcePasswordChange, String password) {
+        int rowsUpdated = jdbcTemplate.update("UPDATE users SET password = ?, force_password_change = ?  WHERE id = ?",
+                password, forcePasswordChange, userId);
+        if (rowsUpdated < 1) {
+            throw new RuntimeException("No rows updated when updating password for user id " + userId);
+        } else if (rowsUpdated > 1) {
+            throw new RuntimeException(rowsUpdated + " rows updated when updating for user id " + userId + ". Should be 1");
+        }
+    }
+
     class UserRowMapper implements RowMapper<User>
     {
         @Override
@@ -83,7 +94,7 @@ public class UserRepository {
             user.setLastName(rs.getString("last_name"));
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
-            user.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+            user.setForcePasswordChange(rs.getBoolean("force_password_change"));
             user.setAccountNonExpired(rs.getBoolean("account_non_expired"));
             user.setAccountNonLocked(rs.getBoolean("account_non_locked"));
             user.setEnabled(rs.getBoolean("enabled"));

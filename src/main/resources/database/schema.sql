@@ -40,7 +40,7 @@ create table if not exists users
       primary key,
   account_non_expired boolean not null,
   account_non_locked boolean not null,
-  credentials_non_expired boolean not null,
+  force_password_change boolean not null default false,
   enabled boolean not null,
   first_name citext,
   last_badge_number_created integer not null,

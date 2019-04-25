@@ -16,7 +16,7 @@ public class User implements UserDetails {
     private String lastName;
     private Boolean enabled;
     private Boolean accountNonExpired;
-    private Boolean credentialsNonExpired;              // On login, prompt to reset password
+    private Boolean forcePasswordChange;
     private Boolean accountNonLocked;
     private Integer roleId;
     private String roleName;            // Gotten from roles table, not saved as part of this record
@@ -43,6 +43,9 @@ public class User implements UserDetails {
     public String getRoleName() { return roleName; }
     public void setRoleName(String roleName) { this.roleName = roleName; }
 
+    public Boolean getForcePasswordChange() { return forcePasswordChange; }
+    public void setForcePasswordChange(Boolean forcePasswordChange) { this.forcePasswordChange = forcePasswordChange; }
+
     @Override
     public boolean isAccountNonExpired() {
         return accountNonExpired;
@@ -55,7 +58,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+        // isCredentialsNonExpired() is used by Spring Security to redirect someone to a "you have to change your
+        // password" workflow. But that doesn't work in this application because a user should be _logged in_
+        // but they should be redirected to the /resetpassword page until they set a password. So that's handled
+        // by the ResetPasswordInterceptor, and the property/database column getForcePasswordChange /
+        // force_password_change. Since it's unused, this simply returns true every time.
+        return true;
     }
 
     @Override
@@ -130,14 +138,6 @@ public class User implements UserDetails {
 
     public void setAccountNonExpired(Boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
-    }
-
-    public Boolean getCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     public Boolean getAccountNonLocked() {

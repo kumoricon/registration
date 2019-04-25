@@ -2,8 +2,11 @@ package org.kumoricon.registration.admin.user;
 
 import org.kumoricon.registration.model.role.RoleRepository;
 import org.kumoricon.registration.model.user.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +24,7 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final UserService userService;
     private final UserValidator userValidator;
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserRepository userRepository, RoleRepository roleRepository, UserService userService, UserValidator userValidator) {
@@ -41,7 +45,8 @@ public class UserController {
      */
     @RequestMapping(value = "/admin/users")
     @PreAuthorize("hasAuthority('manage_users')")
-    public String listUsers(Model model) {
+    public String listUsers(final Model model) {
+        log.info("viewing user list");
         List<User> users = userRepository.findAll();
 
         model.addAttribute("users", users);
@@ -49,14 +54,16 @@ public class UserController {
     }
 
     /**
-     * Display a given user from the database, or a blank for if the user id from the URL is "new"
-     * @param userId
+     * Display a given user from the database, or a blank form if the user id from the URL is "new"
+     * @param userId User ID or "new"
      * @param model
      * @return
      */
     @RequestMapping(value = "/admin/users/{userId}")
     @PreAuthorize("hasAuthority('manage_users')")
-    public String editUser(@PathVariable String userId, final Model model) {
+    public String editUser(@PathVariable String userId,
+                           final Model model) {
+        log.info("viewing user id {}", userId);
         User user;
         if (userId.toLowerCase().equals("new")) {
             user = userService.newUser();
@@ -65,6 +72,7 @@ public class UserController {
                 user = userService.findById(Integer.parseInt(userId));
             } catch (UserIdNotFoundException ex) {
                 user = null;
+                log.error("User ID {} not found", userId);
                 model.addAttribute("err", "Error: User " + userId + " not found");
             }
         }
@@ -88,27 +96,29 @@ public class UserController {
     public String saveUser(@ModelAttribute @Validated final User user,
                            @RequestParam(required=false , value = "action") String action,
                            final BindingResult bindingResult,
-                           final Model model,
-                           HttpServletRequest request) {
+                           final Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", roleRepository.findAll());
             return "admin/users-userid";
         }
+
+        log.info("saving user {}", user);
 
         try {
             userService.updateUser(user);
         } catch (Exception ex) {
             bindingResult.addError(new ObjectError("User", ex.getMessage()));
             model.addAttribute("roles", roleRepository.findAll());
+            log.error("error saving {}", user, ex);
             return "admin/users-userid";
         }
 
         if ("Reset Password".equals(action)) {
             userService.resetPassword(user.getId());
+            log.info("reset password for user {}", user);
             return "redirect:/admin/users?msg=Reset%20password%20for%20" + user.getUsername();
         }
 
         return "redirect:/admin/users?msg=Saved%20" + user.getUsername();
-
     }
 }

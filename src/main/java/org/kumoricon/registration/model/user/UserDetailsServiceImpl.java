@@ -30,11 +30,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findOneByUsernameIgnoreCase(username);
-        user.setRights(rightRepository.findAllRightsByUserId(user.getId()));
-
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
+        user.setRights(rightRepository.findAllRightsByUserId(user.getId()));
+
         return user;
     }
 }
