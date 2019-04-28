@@ -153,25 +153,24 @@ public class AttendeeRepository {
     @Transactional
     public void save(Attendee attendee) {
         if (attendee.getId() == null) {
-            jdbcTemplate.update("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, birth_date, check_in_time, checked_in, comped_badge, country, email, emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, legal_first_name, legal_last_name, name_is_legal_name, paid, paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, parent_phone, phone_number, pre_registered, zip, order_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            jdbcTemplate.update("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, birth_date, check_in_time, checked_in, comped_badge, country, email, emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, parent_phone, phone_number, pre_registered, zip, order_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     attendee.getBadgeId(), attendee.getBadgeNumber(), attendee.isBadgePrePrinted(),
                     attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
                     attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
                     attendee.getEmergencyContactFullName(), attendee.getEmergencyContactPhone(), attendee.getFanName(),
                     attendee.getFirstName(), attendee.getLastName(), attendee.getLegalFirstName(),
-                    attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPaid(),
+                    attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
                     attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
                     attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId());
         } else {
-
-            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_number = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, pre_registered=?, zip=?, order_id=? WHERE id = ?",
+            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_number = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, preferred_pronoun=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, pre_registered=?, zip=?, order_id=? WHERE id = ?",
                     attendee.getBadgeId(), attendee.getBadgeNumber(), attendee.isBadgePrePrinted(),
                     attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
                     attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
                     attendee.getEmergencyContactFullName(), attendee.getEmergencyContactPhone(), attendee.getFanName(),
                     attendee.getFirstName(), attendee.getLastName(), attendee.getLegalFirstName(),
-                    attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPaid(),
+                    attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
                     attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
                     attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId(), attendee.getId());
@@ -212,7 +211,7 @@ public class AttendeeRepository {
     }
 
     public void saveAll(List<Attendee> attendeesToAdd) {
-        // TOOD: Replace with batch insert
+        // TODO: Replace with batch insert
         for (Attendee a : attendeesToAdd) {
             save(a);
         }
@@ -253,6 +252,7 @@ public class AttendeeRepository {
             a.setLastName(rs.getString("last_name"));
             a.setLegalFirstName(rs.getString("legal_first_name"));
             a.setLegalLastName(rs.getString("legal_last_name"));
+            a.setPreferredPronoun(rs.getString("preferred_pronoun"));
             a.setNameIsLegalName(rs.getBoolean("name_is_legal_name"));
             a.setPaid(rs.getBoolean("paid"));
             a.setPaidAmount(rs.getBigDecimal("paid_amount"));

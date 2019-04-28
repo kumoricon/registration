@@ -195,6 +195,7 @@ create table if not exists attendees
   legal_first_name citext,
   legal_last_name citext,
   name_is_legal_name boolean,
+  preferred_pronoun varchar(255),
   paid boolean,
   paid_amount numeric(19,2),
   parent_form_received boolean,

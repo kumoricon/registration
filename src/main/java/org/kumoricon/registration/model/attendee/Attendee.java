@@ -17,6 +17,7 @@ public class Attendee {
     private String legalFirstName;
     private String legalLastName;
     private Boolean nameIsLegalName;
+    private String preferredPronoun;
     private String fanName;                   // Fan Name (optional)
     private String badgeNumber;
     private String zip;
@@ -75,6 +76,9 @@ public class Attendee {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
     public String getName() { return firstName + " " + lastName; }
+
+    public String getPreferredPronoun() { return preferredPronoun; }
+    public void setPreferredPronoun(String preferredPronoun) { this.preferredPronoun = preferredPronoun; }
 
     public String getFanName() { return fanName; }
     public void setFanName(String fanName) { this.fanName = fanName; }
