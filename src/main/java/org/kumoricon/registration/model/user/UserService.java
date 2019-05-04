@@ -136,6 +136,5 @@ public class UserService {
     @Transactional
     public void setPassword(Integer userId, String password) {
         userRepository.setPassword(userId, false, passwordEncoder.encode(password));
-        loginRepository.deleteLoginSessionsForUserId(userId);
     }
 }
