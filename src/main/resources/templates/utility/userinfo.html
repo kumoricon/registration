@@ -12,8 +12,12 @@
             <td sec:authentication="name">Username</td>
         </tr>
         <tr>
-            <td>Remote Address</td>
+            <td class="text-nowrap">Logged in from</td>
             <td sec:authentication="details.remoteAddress">Remote Address</td>
+        </tr>
+        <tr>
+            <td class="text-nowrap">Current IP address</td>
+            <td th:text="${clientIp}"></td>
         </tr>
         <tr>
             <td>Authorities</td>
