@@ -25,6 +25,12 @@ public class Right implements Comparable, GrantedAuthority {
         this.description = description;
     }
 
+    public Right(Integer id, String name, String description) {
+        this(name);
+        this.id = id;
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;

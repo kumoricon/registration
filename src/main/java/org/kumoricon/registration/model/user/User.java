@@ -149,11 +149,9 @@ public class User implements UserDetails {
     }
 
     public boolean hasRight(String right) {
-        if (rights != null) {
-            return rights.contains(right);
-        } else {
-            return false;
-        }
+        if (rights == null || right == null) return false;
+
+        return rights.contains(new Right(right));
     }
 
     public void setRoleId(int roleId) {
