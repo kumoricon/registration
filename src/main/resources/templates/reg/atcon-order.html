@@ -35,8 +35,8 @@
                                 <td colspan="3"> No Attendees Found </td>
                             </tr>
                             <tr th:each="a : ${attendees}">
-                                <td th:text="${a.firstName} + ' ' + ${a.lastName}">Attendee Name</td>
-                                <td class="text-right" th:text="'$' + ${a.paidAmount}">Weekend</td>
+                                <td th:text="${a.getNameOrFanName()}">Attendee Name</td>
+                                <td class="text-right" th:text="'$' + ${a.paidAmount}">$65.00</td>
                                 <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/attendee/' + ${a.id}" href="#">Edit</a></td>
                             </tr>
                         </table>

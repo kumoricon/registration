@@ -20,7 +20,7 @@
                 <tbody>
                 <tr>
                     <td>Name</td>
-                    <td th:text="${attendee.firstName + ' ' + attendee.lastName}">Firstname Lastname</td>
+                    <td th:text="${attendee.getNameOrFanName()}">Firstname Lastname</td>
                 </tr>
 
                 <tr>

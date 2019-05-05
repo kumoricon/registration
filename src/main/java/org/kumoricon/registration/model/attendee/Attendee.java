@@ -211,9 +211,23 @@ public class Attendee {
     @Override
     public String toString() {
         if (id != null) {
-            return String.format("[Attendee %s: %s %s]", id, firstName, lastName);
+            return String.format("[Attendee %s: %s]", id, getNameOrFanName());
         } else {
-            return String.format("[Attendee: %s %s]", firstName, lastName);
+            return String.format("[Attendee: %s]", getNameOrFanName());
+        }
+    }
+
+    public String getNameOrFanName() {
+        StringBuilder sb = new StringBuilder();
+        if (firstName != null && !firstName.trim().isEmpty())
+            sb.append(firstName);
+            sb.append(" ");
+        if (lastName != null) sb.append(lastName);
+
+        if (sb.toString().trim().length() > 0) {
+            return sb.toString().trim();
+        } else {
+            return fanName;
         }
     }
 

@@ -10,6 +10,7 @@ import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -30,9 +31,15 @@ public class AtConRegistrationController {
     private final PaymentRepository paymentRepository;
     private final String[] PAYMENT_TYPES = {"cash", "card", "checkormoneyorder"};
 
+    private static final String ATTENDEE_TEMPLATE = "reg/atcon-order-attendee";
+    private static final String SPECIALTY_TEMPLATE = "reg/atcon-order-attendee-specialty";
+
     @Autowired
-    public AtConRegistrationController(AttendeeRepository attendeeRepository, OrderRepository orderRepository,
-                                       PaymentRepository paymentRepository, UserService userService, BadgeService badgeService) {
+    public AtConRegistrationController(AttendeeRepository attendeeRepository,
+                                       OrderRepository orderRepository,
+                                       PaymentRepository paymentRepository,
+                                       UserService userService,
+                                       BadgeService badgeService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
@@ -43,8 +50,9 @@ public class AtConRegistrationController {
     @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}")
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConAttendee(Model model,
-                         @PathVariable String orderId,
-                         @PathVariable String attendeeId) {
+                                @PathVariable String orderId,
+                                @PathVariable String attendeeId,
+                                @AuthenticationPrincipal User principal) {
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         List<Attendee> orderAttendees = attendeeRepository.findAllByOrderId(getIdFromParamter(orderId));
         Attendee attendee = null;
@@ -67,7 +75,7 @@ public class AtConRegistrationController {
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findByVisibleTrue());
-        return "reg/atcon-order-attendee";
+        return chooseTemplate(principal);
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}", method = RequestMethod.POST)
@@ -77,7 +85,7 @@ public class AtConRegistrationController {
                                 final BindingResult bindingResult,
                                 @PathVariable String orderId,
                                 @PathVariable String attendeeId,
-                                Principal principal) {
+                                @AuthenticationPrincipal User principal) {
 
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
@@ -92,7 +100,7 @@ public class AtConRegistrationController {
         orderRepository.save(order);
         attendee.setOrder(order);
         if (attendee.getBadgeNumber() == null) {
-            String badgeNumber = userService.getNextBadgeNumber(principal.getName());
+            String badgeNumber = userService.getNextBadgeNumber(principal.getUsername());
             attendee.setBadgeNumber(badgeNumber);
         }
         attendee.setPaidAmount(badgeService.getCostForBadgeType(attendee.getBadgeId(), attendee.getAge()));
@@ -100,7 +108,7 @@ public class AtConRegistrationController {
         attendeeRepository.save(attendee);
 
 
-        return "redirect:/reg/atconorder/" + order.getId() + "?msg=Added+" + attendee.getFirstName();
+        return "redirect:/reg/atconorder/" + order.getId() + "?msg=Added+" + attendee.getNameOrFanName();
     }
 
 
@@ -112,7 +120,7 @@ public class AtConRegistrationController {
 
         BigDecimal totalDue = orderRepository.getTotalByOrderId(orderId);
         BigDecimal totalPaid = paymentRepository.getTotalPaidForOrder(orderId);
-        Boolean canComplete = totalDue.equals(totalPaid) && !order.getPaid();
+        Boolean canComplete = !order.getPaid() && (totalDue.compareTo(totalPaid) == 0);
 
         model.addAttribute("order", order);
         model.addAttribute("attendees", attendeeRepository.findAllByOrderId(orderId));
@@ -124,10 +132,10 @@ public class AtConRegistrationController {
 
     @RequestMapping(value = "/reg/atconorder/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
-    public String newOrder(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+    public String newOrder(Model model,
+                           @AuthenticationPrincipal User principal) {
         Order order = new Order();
-        order.setOrderTakenByUser(user);
+        order.setOrderTakenByUser(principal);
         order.setOrderId(Order.generateOrderId());
         Integer newId = orderRepository.save(order);
 
@@ -138,9 +146,7 @@ public class AtConRegistrationController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     @Transactional
     public String orderComplete(Model model,
-                                Principal principal,
                                 @PathVariable Integer orderId) {
-        User user = userService.findByUsername(principal.getName());
         Order order = orderRepository.findById(orderId);
         List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
 
@@ -205,6 +211,15 @@ public class AtConRegistrationController {
             }
         }
         return false;
+    }
+
+
+    private String chooseTemplate(User user) {
+        if (user != null && user.hasRight("at_con_registration_specialty")) {
+            return SPECIALTY_TEMPLATE;
+        } else {
+            return ATTENDEE_TEMPLATE;
+        }
     }
 
 }

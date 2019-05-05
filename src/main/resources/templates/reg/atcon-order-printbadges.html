@@ -15,7 +15,7 @@
                 <th></th>
             </tr>
             <tr th:each="a : ${attendees}">
-                <td th:text="${a.name}">Attendee Name</td>
+                <td th:text="${a.nameOrFanName}">Attendee Name</td>
                 <td>Reprint</td>
             </tr>
         </table>
