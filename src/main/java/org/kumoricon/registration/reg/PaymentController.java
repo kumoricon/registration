@@ -8,10 +8,10 @@ import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.tillsession.TillSession;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,16 +28,15 @@ import java.util.List;
 @Controller
 public class PaymentController {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final TillSessionService tillSessionService;
     private final PaymentRepository paymentRepository;
     private final String[] PAYMENT_TYPES = {"cash", "card", "check"};
 
     @Autowired
-    public PaymentController(OrderRepository orderRepository, UserRepository userRepository,
-                             PaymentRepository paymentRepository, TillSessionService tillSessionService) {
+    public PaymentController(OrderRepository orderRepository,
+                             PaymentRepository paymentRepository,
+                             TillSessionService tillSessionService) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
         this.tillSessionService = tillSessionService;
         this.paymentRepository = paymentRepository;
     }
@@ -143,7 +142,7 @@ public class PaymentController {
                                         @ModelAttribute @Validated final PaymentFormDTO payment,
                                         final BindingResult bindingResult,
                                         @PathVariable Integer orderId,
-                                        Authentication auth,
+                                        @AuthenticationPrincipal User principal,
                                         HttpServletRequest request) {
 
         Order order = orderRepository.findById(orderId);
@@ -161,12 +160,11 @@ public class PaymentController {
             return "reg/atcon-order-payment";
         }
 
-        User currentUser = userRepository.findOneByUsernameIgnoreCase(auth.getName());
-        TillSession currentTillSession = tillSessionService.getCurrentSessionForUser(currentUser);
+        TillSession currentTillSession = tillSessionService.getCurrentSessionForUser(principal);
         Payment paymentData = new Payment();
 
         paymentData.setOrderId(orderId);
-        paymentData.setPaymentTakenBy(currentUser.getId());
+        paymentData.setPaymentTakenBy(principal.getId());
         paymentData.setPaymentTakenAt(Instant.now());
         paymentData.setPaymentLocation(request.getRemoteAddr());
         paymentData.setTillSessionId(currentTillSession.getId());

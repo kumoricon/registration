@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class AttendeeService {
     private final AttendeeRepository attendeeRepository;
@@ -36,4 +38,14 @@ public class AttendeeService {
         return attendee;
     }
 
+    @Transactional
+    public void checkInAttendeesInOrder(Integer orderId, User user) {
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+        for (Attendee attendee : attendees) {
+            if (attendee.getCheckedIn()) {
+                throw new RuntimeException("Attendee " + attendee + " is already checked in!");
+            }
+            checkInAttendee(attendee.getId(), user);
+        }
+    }
 }
