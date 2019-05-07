@@ -7,6 +7,10 @@ Version 0.6.0 (Pending)
   with the previous version.
 - Log current user with every message
 - Added preferred pronoun to Attendee class and database table (schema change)
+- Changed Right at_con_registration_set_fan_name to at_con_registration_specialty and allow users with that right to
+  save attendees with very little validation (names and birthdates not required for Speciality badges)
+- Added separate template for creating attendees without validation. It is used automatically for users with the 
+  above right.
 
 Version 0.5 (4/9/2019)
 - Initial "release" version. Not ready for production yet, but start tracking changes

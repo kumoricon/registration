@@ -8,9 +8,10 @@ import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.tillsession.TillSession;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ public class PaymentController {
     private final TillSessionService tillSessionService;
     private final PaymentRepository paymentRepository;
     private final String[] PAYMENT_TYPES = {"cash", "card", "check"};
+    private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
 
     @Autowired
     public PaymentController(OrderRepository orderRepository,
@@ -45,6 +47,7 @@ public class PaymentController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrderPayment(Model model,
                              @PathVariable Integer orderId) {
+        log.info("viewing payments for orderId {}", orderId);
         Order order = orderRepository.findById(orderId);
         List<Payment> payments = paymentRepository.findByOrderId(orderId);
         BigDecimal totalPaid = BigDecimal.ZERO;
@@ -64,7 +67,7 @@ public class PaymentController {
     public String atConOrderPaymentId(Model model,
                                      @PathVariable Integer orderId,
                                       @PathVariable Integer paymentId) {
-
+        log.info("viewing orderId {} paymentId {}", orderId, paymentId);
         model.addAttribute("order", orderRepository.findById(orderId));
         model.addAttribute("payment", paymentRepository.findById(paymentId));
         model.addAttribute("orderId", orderId);
@@ -76,11 +79,11 @@ public class PaymentController {
     public String savePayment(@ModelAttribute @Validated final PaymentFormDTO payment,
                            final BindingResult bindingResult,
                            @PathVariable Integer orderId,
+                           @PathVariable Integer paymentId,
                            @RequestParam(required=false , value = "action") String action,
-                           final Model model,
-                           final Authentication authentication,
-                           HttpServletRequest request) {
+                           final Model model) {
         if ("Delete".equals(action) && payment.getId() != null) {
+            log.info("deleting {}", payment);
             paymentRepository.deleteById(payment.getId());
             return "redirect:/reg/atconorder/" + orderId + "/payment?msg=Deleted%20payment%20" + payment.getId();
         }
@@ -99,10 +102,11 @@ public class PaymentController {
         paymentData.setAmount(payment.getAmount());
         paymentData.setAuthNumber(payment.getAuthNumber());
 
-
         try {
             paymentRepository.save(paymentData);
+            log.info("saved payment {}", paymentData);
         } catch (Exception ex) {
+            log.error("Error saving payment {}", payment, ex);
             bindingResult.addError(new ObjectError("payment", ex.getMessage()));
             return "reg/atcon-order-payment-id";
         }
@@ -191,6 +195,7 @@ public class PaymentController {
                 throw new RuntimeException("Invalid payment type: " + payment.getPaymentType());
         }
 
+        log.info("saving new payment {} for order {}", paymentData, order);
         paymentRepository.save(paymentData);
 
         if (orderRepository.getTotalByOrderId(orderId).equals(paymentRepository.getTotalPaidForOrder(orderId))) {

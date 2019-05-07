@@ -8,7 +8,8 @@ import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.OrderService;
 import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,11 +26,10 @@ import java.util.List;
 public class AtConRegistrationController {
     private final AttendeeRepository attendeeRepository;
     private final OrderRepository orderRepository;
-    private final UserService userService;
     private final BadgeService badgeService;
     private final OrderService orderService;
     private final PaymentRepository paymentRepository;
-    private final String[] PAYMENT_TYPES = {"cash", "card", "checkormoneyorder"};
+    private final Logger log = LoggerFactory.getLogger(AtConRegistrationController.class);
 
     private static final String ATTENDEE_TEMPLATE = "reg/atcon-order-attendee";
     private static final String SPECIALTY_TEMPLATE = "reg/atcon-order-attendee-specialty";
@@ -38,13 +38,11 @@ public class AtConRegistrationController {
     public AtConRegistrationController(AttendeeRepository attendeeRepository,
                                        OrderRepository orderRepository,
                                        PaymentRepository paymentRepository,
-                                       UserService userService,
                                        BadgeService badgeService,
                                        OrderService orderService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
-        this.userService = userService;
         this.badgeService = badgeService;
         this.orderService = orderService;
     }
@@ -60,6 +58,7 @@ public class AtConRegistrationController {
         List<Attendee> orderAttendees = attendeeRepository.findAllByOrderId(getIdFromParamter(orderId));
         Attendee attendee = null;
         if (attendeeId.equals("new")) {
+            log.info("Adding new attendee to order {}", order);
             attendee = new Attendee();
             if (orderAttendees.size() > 0) {
                 Attendee prevAttendee = orderAttendees.get(0);
@@ -72,6 +71,7 @@ public class AtConRegistrationController {
                 }
             }
         } else {
+            log.info("Editing attendee {} for order {}", attendeeId, order);
             attendee = attendeeRepository.findById(getIdFromParamter(attendeeId));
         }
 
@@ -87,33 +87,24 @@ public class AtConRegistrationController {
     public String atConAttendee(Model model,
                                 @ModelAttribute final Attendee attendee,
                                 final BindingResult bindingResult,
-                                @PathVariable String orderId,
+                                @PathVariable Integer orderId,
                                 @PathVariable String attendeeId,
                                 @AuthenticationPrincipal User principal,
                                 @RequestParam(value = "forceValidate", defaultValue = "false", required = false) Boolean forceValidate) {
 
-        Order order = orderRepository.findById(getIdFromParamter(orderId));
-        model.addAttribute("order", order);
-        model.addAttribute("attendee", attendee);
-        model.addAttribute("badgelist", badgeService.findByVisibleTrue());
-        model.addAttribute("forceValidate", forceValidate);
-
         if (bindingResult.hasErrors()) {
+            Order order = orderRepository.findById(orderId);
+            model.addAttribute("order", order);
+            model.addAttribute("attendee", attendee);
+            model.addAttribute("badgelist", badgeService.findByVisibleTrue());
+            model.addAttribute("forceValidate", forceValidate);
             return chooseTemplate(principal, forceValidate);
         }
 
-        order.addToTotalAmount(attendee.getPaidAmount());
-        orderRepository.save(order);
-        attendee.setOrder(order);
-        if (attendee.getBadgeNumber() == null) {
-            String badgeNumber = userService.getNextBadgeNumber(principal.getUsername());
-            attendee.setBadgeNumber(badgeNumber);
-        }
-        attendee.setPaidAmount(badgeService.getCostForBadgeType(attendee.getBadgeId(), attendee.getAge()));
+        log.info("Adding {} to order {}", attendee, orderId);
+        orderService.addAttendeeToOrder(orderId, attendee, principal);
 
-        attendeeRepository.save(attendee);
-
-        return "redirect:/reg/atconorder/" + order.getId() + "?msg=Added+" + attendee.getNameOrFanName();
+        return "redirect:/reg/atconorder/" + orderId + "?msg=Added+" + attendee.getNameOrFanName();
     }
 
 
@@ -121,7 +112,12 @@ public class AtConRegistrationController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConOrder(Model model, @PathVariable Integer orderId) {
 
+        log.info("viewing order ID {}", orderId);
         Order order = orderRepository.findById(orderId);
+
+        if (order == null) {
+            throw new RuntimeException("Order ID " + orderId + " not found");
+        }
 
         BigDecimal totalDue = orderRepository.getTotalByOrderId(orderId);
         BigDecimal totalPaid = paymentRepository.getTotalPaidForOrder(orderId);
@@ -138,6 +134,7 @@ public class AtConRegistrationController {
     @RequestMapping(value = "/reg/atconorder/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String newOrder(@AuthenticationPrincipal User principal) {
+        log.info("creating new order");
         Order order = new Order();
         order.setOrderTakenByUser(principal);
         order.setOrderId(Order.generateOrderId());
@@ -150,7 +147,7 @@ public class AtConRegistrationController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String orderComplete(@PathVariable Integer orderId,
                                 @AuthenticationPrincipal User principal) {
-
+        log.info("completing order {} and printing badges", orderId);
         orderService.completeOrder(orderId, principal);
         // TODO: print badges
         return "redirect:/reg/atconorder/" + orderId + "/printbadges";
@@ -172,6 +169,7 @@ public class AtConRegistrationController {
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String printBadgesAction(@PathVariable Integer orderId) {
         List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+        log.info("printed badges successfully for orderId {}: {}", orderId, attendees);
 
         for (Attendee a : attendees) {
             a.setBadgePrinted(true);
@@ -191,16 +189,13 @@ public class AtConRegistrationController {
         }
     }
 
-    private boolean isValidPaymentType(String paymentType) {
-        for (String type : PAYMENT_TYPES) {
-            if (paymentType.toLowerCase().equals(type)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-
+    /**
+     * Return the correct template based on uesr permissoins and paramter override
+     * @param user Current uesr
+     * @param forceValidate Force validation enabled?
+     * @return Template path
+     */
     private String chooseTemplate(User user, Boolean forceValidate) {
         if (user != null && user.hasRight("at_con_registration_specialty")) {
             if (forceValidate) {

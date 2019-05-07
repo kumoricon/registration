@@ -23,7 +23,7 @@ public class AttendeeService {
     public Attendee checkInAttendee(Integer attendeeId, User user) {
         Attendee attendee = attendeeRepository.findById(attendeeId);
         if (attendee != null) {
-            log.info("{} checking in attendee {}", user, attendee);
+            log.info("checking in attendee {}", attendee);
         } else {
             log.error("{} tried to check in attendee id {} but it wasn't found", user, attendeeId);
             throw new RuntimeException("Attendee " + attendeeId + " not found");
@@ -47,5 +47,10 @@ public class AttendeeService {
             }
             checkInAttendee(attendee.getId(), user);
         }
+    }
+
+    @Transactional
+    public void save(Attendee attendee) {
+        attendeeRepository.save(attendee);
     }
 }
