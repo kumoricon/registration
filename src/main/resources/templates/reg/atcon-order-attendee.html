@@ -18,11 +18,11 @@
                 <input type="hidden" th:field="*{id}" />
 
                 <div class="form-group row">
-                    <label for="inputFirstName" class="col-md-2 col-form-label-sm ">First Name</label>
+                    <label for="inputFirstName" class="col-md-2 col-form-label-sm ">First Name*</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{firstName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputFirstName" placeholder="First Name" autofocus>
                     </div>
-                    <label for="inputLastName" class="col-md-2 col-form-label-sm">Last Name</label>
+                    <label for="inputLastName" class="col-md-2 col-form-label-sm">Last Name*</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{lastName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputLastName" placeholder="Last Name">
                     </div>
@@ -43,21 +43,21 @@
 
 
                 <div class="form-group row">
-                    <label for="inputPhone" class="col-md-2 col-form-label-sm">Phone Number</label>
+                    <label for="inputPhone" class="col-md-2 col-form-label-sm">Phone Number*</label>
                     <div class="col-md-3">
                         <input type="tel" th:field="*{phoneNumber}" th:errorclass="is-invalid" class="form-control-sm" id="inputPhone" placeholder="000-000-0000">
                     </div>
-                    <label for="inputEmail" class="col-md-2 col-form-label-sm">Email</label>
+                    <label for="inputEmail" class="col-md-2 col-form-label-sm">or Email*</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{email}" th:errorclass="is-invalid" class="form-control-sm" id="inputEmail" placeholder="user@example.com">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputZip" class="col-md-2 col-form-label-sm">Zip Code</label>
+                    <label for="inputZip" class="col-md-2 col-form-label-sm">Zip Code*</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{zip}" th:errorclass="is-invalid" class="form-control-sm" id="inputZip" placeholder="00000">
                     </div>
-                    <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth</label>
+                    <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth*</label>
                     <div class="col-md-3">
                         <input type="date" th:field="*{birthDate}" th:errorclass="is-invalid" class="form-control-sm" id="inputBirthDate"
                                placeholder="MM/DD/YYYY" th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
@@ -67,11 +67,11 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="inputEmergencyContactName" class="col-md-2 col-form-label-sm">Emergency Contact Name</label>
+                    <label for="inputEmergencyContactName" class="col-md-2 col-form-label-sm">Emergency Contact Name*</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{emergencyContactFullName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputEmergencyContactName" placeholder="Jane Doe">
                     </div>
-                    <label for="inputEmergencyContactPhone" class="col-md-2 col-form-label-sm">Emergency Contact Phone</label>
+                    <label for="inputEmergencyContactPhone" class="col-md-2 col-form-label-sm">Emergency Contact Phone*</label>
                     <div class="col-md-3">
                         <input type="tel" th:field="*{emergencyContactPhone}" th:errorclass="is-invalid" class="form-control-sm" id="inputEmergencyContactPhone" placeholder="000-000-0000">
                     </div>

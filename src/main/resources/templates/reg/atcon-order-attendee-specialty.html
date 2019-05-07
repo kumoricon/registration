@@ -121,7 +121,7 @@
                         <input class="btn btn-primary" name="action" id="save" type="submit" value="Save" />
                         <a th:href="'/reg/atconorder/' + ${order.id}" class="btn btn-secondary">Cancel</a>
                         <input class="btn btn-secondary" type="reset" value="Reset" />
-                        <i>Specialty Coordinator: Form validation disabled</i>
+                        <i>Specialty Coordinator: Form validation disabled</i> <a href="?forceValidate=true">Enable Validation</a>
                     </div>
                     <div class="col-sm-2">
                         <input class="btn btn-danger" th:if="${attendee.id != null}" type="submit" name="action" value="Delete" />

@@ -54,7 +54,8 @@ public class AtConRegistrationController {
     public String atConAttendee(Model model,
                                 @PathVariable String orderId,
                                 @PathVariable String attendeeId,
-                                @AuthenticationPrincipal User principal) {
+                                @AuthenticationPrincipal User principal,
+                                @RequestParam(value = "forceValidate", defaultValue = "false", required = false) Boolean forceValidate) {
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         List<Attendee> orderAttendees = attendeeRepository.findAllByOrderId(getIdFromParamter(orderId));
         Attendee attendee = null;
@@ -77,7 +78,8 @@ public class AtConRegistrationController {
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findByVisibleTrue());
-        return chooseTemplate(principal);
+        model.addAttribute("forceValidate", forceValidate);
+        return chooseTemplate(principal, forceValidate);
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}", method = RequestMethod.POST)
@@ -87,15 +89,17 @@ public class AtConRegistrationController {
                                 final BindingResult bindingResult,
                                 @PathVariable String orderId,
                                 @PathVariable String attendeeId,
-                                @AuthenticationPrincipal User principal) {
+                                @AuthenticationPrincipal User principal,
+                                @RequestParam(value = "forceValidate", defaultValue = "false", required = false) Boolean forceValidate) {
 
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findByVisibleTrue());
+        model.addAttribute("forceValidate", forceValidate);
 
         if (bindingResult.hasErrors()) {
-            return "reg/atcon-order-attendee";
+            return chooseTemplate(principal, forceValidate);
         }
 
         order.addToTotalAmount(attendee.getPaidAmount());
@@ -197,9 +201,13 @@ public class AtConRegistrationController {
     }
 
 
-    private String chooseTemplate(User user) {
+    private String chooseTemplate(User user, Boolean forceValidate) {
         if (user != null && user.hasRight("at_con_registration_specialty")) {
-            return SPECIALTY_TEMPLATE;
+            if (forceValidate) {
+                return ATTENDEE_TEMPLATE;
+            } else {
+                return SPECIALTY_TEMPLATE;
+            }
         } else {
             return ATTENDEE_TEMPLATE;
         }
