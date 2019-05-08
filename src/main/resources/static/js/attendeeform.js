@@ -18,16 +18,27 @@ function addListeners() {
     $("input").blur(setState);
     $("#inputBirthDate").blur(onBirthdateUpdate);
     $('#inputNameIsLegalName').change(onNameIsLegalNameUpdate);
+    $('#inputParentIsEmergencyContact').change(onParentIsEmergencyContactUpdate);
 }
 
 function onBirthdateUpdate(eventObject) {
     var inputDateString = eventObject.target.value;
     updateAge(inputDateString);
-
 }
 
 function onNameIsLegalNameUpdate(eventObject) {
     showHideLegalName(eventObject.target.checked);
+}
+
+function onParentIsEmergencyContactUpdate(eventObject) {
+    console.log(eventObject);
+    if (eventObject.target.checked) {
+        $('#inputParentFullName').val($('#inputEmergencyContactName').val());
+        $('#inputParentPhone').val($('#inputEmergencyContactPhone').val());
+    } else {
+        $('#inputParentFullName').val('');
+        $('#inputParentPhone').val('');
+    }
 }
 
 function showHideLegalName(show) {
@@ -105,19 +116,21 @@ function calculateAge(dob) {
     var dateDob = dob.getDate();
 
     var yearAge = yearNow - yearDob;
+    var monthAge;
+    var dateAge;
 
     if (monthNow >= monthDob)
-        var monthAge = monthNow - monthDob;
+        monthAge = monthNow - monthDob;
     else {
         yearAge--;
-        var monthAge = 12 + monthNow -monthDob;
+        monthAge = 12 + monthNow -monthDob;
     }
 
     if (dateNow >= dateDob)
-        var dateAge = dateNow - dateDob;
+        dateAge = dateNow - dateDob;
     else {
         monthAge--;
-        var dateAge = 31 + dateNow - dateDob;
+        dateAge = 31 + dateNow - dateDob;
 
         if (monthAge < 0) {
             monthAge = 11;

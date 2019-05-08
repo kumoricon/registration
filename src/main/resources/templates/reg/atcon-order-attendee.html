@@ -18,13 +18,13 @@
                 <input type="hidden" th:field="*{id}" />
 
                 <div class="form-group row">
-                    <label for="inputFirstName" class="col-md-2 col-form-label-sm ">First Name*</label>
+                    <label for="inputFirstName" class="col-md-2 col-form-label-sm">First Name*</label>
                     <div class="col-md-3">
-                        <input type="text" th:field="*{firstName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputFirstName" placeholder="First Name" autofocus>
+                        <input type="text" th:field="*{firstName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputFirstName" placeholder="First Name" required autofocus>
                     </div>
                     <label for="inputLastName" class="col-md-2 col-form-label-sm">Last Name*</label>
                     <div class="col-md-3">
-                        <input type="text" th:field="*{lastName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputLastName" placeholder="Last Name">
+                        <input type="text" th:field="*{lastName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputLastName" placeholder="Last Name" required>
                     </div>
                 </div>
 
@@ -55,11 +55,11 @@
                 <div class="form-group row">
                     <label for="inputZip" class="col-md-2 col-form-label-sm">Zip Code*</label>
                     <div class="col-md-3">
-                        <input type="text" th:field="*{zip}" th:errorclass="is-invalid" class="form-control-sm" id="inputZip" placeholder="00000">
+                        <input type="text" th:field="*{zip}" th:errorclass="is-invalid" class="form-control-sm" id="inputZip" placeholder="00000" required>
                     </div>
                     <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth*</label>
                     <div class="col-md-3">
-                        <input type="date" th:field="*{birthDate}" th:errorclass="is-invalid" class="form-control-sm" id="inputBirthDate"
+                        <input type="date" th:field="*{birthDate}" th:errorclass="is-invalid" required class="form-control-sm" id="inputBirthDate"
                                placeholder="MM/DD/YYYY" th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
                                min="1899-12-31">
                         <span id="age"></span>
@@ -69,11 +69,11 @@
                 <div class="form-group row">
                     <label for="inputEmergencyContactName" class="col-md-2 col-form-label-sm">Emergency Contact Name*</label>
                     <div class="col-md-3">
-                        <input type="text" th:field="*{emergencyContactFullName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputEmergencyContactName" placeholder="Jane Doe">
+                        <input type="text" th:field="*{emergencyContactFullName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputEmergencyContactName" placeholder="Jane Doe" required>
                     </div>
                     <label for="inputEmergencyContactPhone" class="col-md-2 col-form-label-sm">Emergency Contact Phone*</label>
                     <div class="col-md-3">
-                        <input type="tel" th:field="*{emergencyContactPhone}" th:errorclass="is-invalid" class="form-control-sm" id="inputEmergencyContactPhone" placeholder="000-000-0000">
+                        <input type="tel" th:field="*{emergencyContactPhone}" th:errorclass="is-invalid" class="form-control-sm" id="inputEmergencyContactPhone" placeholder="000-000-0000" required>
                     </div>
                 </div>
 
