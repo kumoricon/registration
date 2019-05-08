@@ -4,6 +4,7 @@ import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,7 @@ public class ResetPasswordController {
     private final UserService userService;
     private final UserDetailsService userDetailsService;
 
-    public ResetPasswordController(UserService userService, UserDetailsService userDetailsService) {
+    public ResetPasswordController(UserService userService, @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
     }
@@ -34,8 +35,7 @@ public class ResetPasswordController {
 
     @RequestMapping(value = "/resetpassword")
     @PreAuthorize("isAuthenticated()")
-    public String passwordForm(final Model model,
-                               @AuthenticationPrincipal User user) {
+    public String passwordForm(@AuthenticationPrincipal User user) {
         log.info("{} viewing password reset screen", user);
         return "resetpassword/resetpassword";
     }

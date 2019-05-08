@@ -1,6 +1,5 @@
 package org.kumoricon.registration.model.user;
 
-import groovy.util.logging.Log;
 import org.kumoricon.registration.model.loginsession.LoginRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final String DEFFAULT_PASSWORD = "password";
+    private static final String DEFAULT_PASSWORD = "password";
 
     public UserService(UserRepository userRepository, LoginRepository loginRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -43,7 +42,7 @@ public class UserService {
             throw new UserIdNotFoundException(userId);
         }
 
-        u.setPassword(passwordEncoder.encode(DEFFAULT_PASSWORD));
+        u.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
         u.setForcePasswordChange(true);
         userRepository.save(u);
 
@@ -85,7 +84,7 @@ public class UserService {
         User user = new User();
         user.setId(null);
         user.setEnabled(true);
-        user.setPassword(passwordEncoder.encode(DEFFAULT_PASSWORD));
+        user.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setForcePasswordChange(true);

@@ -20,12 +20,16 @@ public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        // If the request's URI starts with one of the ignored paths (images, css, etc), just continue sending that
+        // resource
+        String uri = request.getRequestURI();
         for (String prefix : IGNORE_PATHS) {
-            if (request.getRequestURI().startsWith(prefix)) {
+            if (uri.startsWith(prefix)) {
                 return true;
             }
         }
 
+        // Get the current user. If their forcePasswordChange property is true, redirect to /resetpassword
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof User) {
@@ -36,7 +40,7 @@ public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
                     response.sendRedirect("/resetpassword");
                     return false;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Error redirecting to /resetpassword", e);
                 }
             }
         }
