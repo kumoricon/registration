@@ -64,18 +64,15 @@ public class LoginRepository {
         jdbcTemplate.update(sql);
     }
 
+    /**
+     * Delete all login sessions for the given username. This will force them to log out.
+     * @param username User name
+     */
     @Transactional
     public void deleteLoginSessionsForUsername(String username) {
         final String sql = "DELETE FROM spring_session WHERE principal_name = ?";
-        jdbcTemplate.update(sql, new Object[] {username});
+        jdbcTemplate.update(sql, username);
     }
-
-    @Transactional
-    public void deleteLoginSessionsForUserId(Integer userId) {
-        final String sql = "DELETE FROM spring_session WHERE principal_name = (select username from users where id = ?)";
-        jdbcTemplate.update(sql, new Object[] {userId});
-    }
-
 
     @Transactional(readOnly = true)
     public List<LocalDate> getAvailableDays() {
@@ -99,12 +96,11 @@ public class LoginRepository {
     private class SessionInfoDTORowMapper implements RowMapper<SessionInfoDTO> {
         @Override
         public SessionInfoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            SessionInfoDTO s = new SessionInfoDTO(rs.getString("primaryId"),
+            return new SessionInfoDTO(rs.getString("primaryId"),
                     rs.getString("principalName"),
                     rs.getLong("creationTime"),
                     rs.getLong("lastAccessTime"),
                     rs.getLong("expiryTime"));
-            return s;
         }
     }
 
@@ -113,9 +109,8 @@ public class LoginRepository {
         public LoginTimePeriod mapRow(ResultSet rs, int rowNum) throws SQLException {
             Timestamp ts = rs.getTimestamp("start");
             Instant i = ts == null ? null : ts.toInstant();
-            LoginTimePeriod l = new LoginTimePeriod(i, rs.getString("first_name") + " " + rs.getString("last_name"));
-            
-            return l;
+
+            return new LoginTimePeriod(i, rs.getString("first_name") + " " + rs.getString("last_name"));
         }
     }
 }

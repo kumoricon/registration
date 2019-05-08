@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +24,9 @@ public class ResetPasswordController {
     private static final Logger log = LoggerFactory.getLogger(ResetPasswordController.class);
 
     private final UserService userService;
-    private final UserDetailsService userDetailsService;
 
-    public ResetPasswordController(UserService userService, @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+    public ResetPasswordController(UserService userService) {
         this.userService = userService;
-        this.userDetailsService = userDetailsService;
     }
 
 
@@ -67,7 +64,7 @@ public class ResetPasswordController {
 
         Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
 
-        UserDetails newUser = userDetailsService.loadUserByUsername(principal.getUsername());
+        UserDetails newUser = userService.loadUserByUsername(principal.getUsername());
         AbstractAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newUser, null, newUser.getAuthorities());
         newAuth.setDetails(oldAuth.getDetails());
         SecurityContextHolder.getContext().setAuthentication(newAuth);

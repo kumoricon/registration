@@ -36,7 +36,7 @@ public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
             User user = (User) principal;
             if (user.getForcePasswordChange()) {
                 try {
-                    log.info("Redirecting {} to /resetpassword", user);
+                    log.info("forcePasswordChange set, redirecting to /resetpassword");
                     response.sendRedirect("/resetpassword");
                     return false;
                 } catch (IOException e) {

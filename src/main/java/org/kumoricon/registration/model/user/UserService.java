@@ -1,20 +1,37 @@
 package org.kumoricon.registration.model.user;
 
 import org.kumoricon.registration.model.loginsession.LoginRepository;
+import org.kumoricon.registration.model.role.RightRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Responsible for User objects. It implements UserDetailsService (and User implements UserDetails) so that they
+ * can be used by Spring Security
+ */
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
+    private final RightRepository rightRepository;
     private final PasswordEncoder passwordEncoder;
     private static final String DEFAULT_PASSWORD = "password";
+    private static final Integer INITIAL_BADGE_NUMBER = 1183; // This is the first badge number issued by each user.
+                                                              // it's a generic high number because an early director
+                                                              // got tired of people bugging him to get a low badge
+                                                              // numbers, and the tradition has stuck
 
-    public UserService(UserRepository userRepository, LoginRepository loginRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       LoginRepository loginRepository,
+                       RightRepository rightRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.loginRepository = loginRepository;
+        this.rightRepository = rightRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -88,8 +105,7 @@ public class UserService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setForcePasswordChange(true);
-        //        u.resetPassword();                  // Set to default password and force it to be changed on login
-        user.setLastBadgeNumberCreated(1213);  // Start at an arbitrary number instead of 0
+        user.setLastBadgeNumberCreated(INITIAL_BADGE_NUMBER);  // Start at an arbitrary number instead of 0
         return user;
     }
 
@@ -136,4 +152,25 @@ public class UserService {
     public void setPassword(Integer userId, String password) {
         userRepository.setPassword(userId, false, passwordEncoder.encode(password));
     }
+
+
+    /**
+     * Loads a User object WITH Rights attached from the database. This is used by Spring Security, so needs to have
+     * the Rights attached as well as the basic object properties, which are usually not added to the User object
+     * because they're not needed.
+     * @param username User name
+     * @return Object that implements UserDetails
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findOneByUsernameIgnoreCase(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        user.setRights(rightRepository.findAllRightsByUserId(user.getId()));
+
+        return user;
+    }
+
 }
