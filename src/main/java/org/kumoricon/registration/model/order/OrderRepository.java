@@ -35,39 +35,30 @@ public class OrderRepository {
         }
     }
 
-
-    @Transactional(readOnly = true)
-    public Order findByOrderNumber(String orderId) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "select * from orders where order_id=?",
-                    new Object[]{orderId}, new OrderRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-
     @Transactional(readOnly = true)
     public BigDecimal getTotalByOrderId(Integer orderId) {
         try {
-            return jdbcTemplate.queryForObject(
+            BigDecimal result = jdbcTemplate.queryForObject(
                     "select sum(attendees.paid_amount) from attendees where attendees.order_id = ?",
                     new Object[]{orderId}, BigDecimal.class);
+            return result == null ? BigDecimal.ZERO: result;    // If there are no attendees in the order, the
+                                                                // above query will return null. That needs to be
+                                                                // sanitized - should be 0.
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return BigDecimal.ZERO;
         }
     }
 
     @Transactional(readOnly = true)
-    public BigDecimal getTotalByOrderNumber(String orderId) {
+    public BigDecimal getTotalByOrderNumber(String orderNumber) {
         try {
-            return jdbcTemplate.queryForObject(
+            BigDecimal result = jdbcTemplate.queryForObject(
                     "select sum(attendees.paid_amount) from attendees join orders o on attendees.order_id = o.id\n" +
                             "where o.order_id = ?",
-                    new Object[]{orderId}, BigDecimal.class);
+                    new Object[]{orderNumber}, BigDecimal.class);
+            return result == null ? BigDecimal.ZERO: result;
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return BigDecimal.ZERO;
         }
     }
 
