@@ -11,6 +11,7 @@ Version 0.6.0 (Pending)
   save attendees with very little validation (names and birthdates not required for Speciality badges)
 - Added separate template for creating attendees without validation. It is used automatically for users with the 
   above right.
+- Don't allow check or card payments for greater than the amount due
 
 Version 0.5 (4/9/2019)
-- Initial "release" version. Not ready for production yet, but start tracking changes
+- Initial "release" vgersion. Not ready for production yet, but start tracking changes

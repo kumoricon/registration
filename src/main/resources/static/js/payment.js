@@ -55,6 +55,13 @@ function setState() {
         }
     }
 
+    if (inputAuth != null) {
+        if (amount > due) {
+            alert("Do not give change for credit cards or checks\nAmount taken must be less than or equal to amount due");
+            btnSave.attr("disabled", true);
+            return;
+        }
+    }
 
     btnSave.attr("disabled", false);
 }
