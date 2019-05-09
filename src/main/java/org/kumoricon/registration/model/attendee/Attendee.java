@@ -75,7 +75,9 @@ public class Attendee {
 
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
-    public String getName() { return firstName + " " + lastName; }
+    public String getName() {
+        return (firstName + " " + lastName).trim();
+    }
 
     public String getPreferredPronoun() { return preferredPronoun; }
     public void setPreferredPronoun(String preferredPronoun) { this.preferredPronoun = preferredPronoun; }

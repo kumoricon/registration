@@ -103,6 +103,14 @@
                     </div>
                 </div>
 
+
+                <div class="form-group row">
+                    <label for="inputParentFormReceived" class="col-md-3 col-form-label-sm">Parental Consent Form Received</label>
+                    <div class="col-md-3 text-left">
+                        <input type="checkbox" th:field="*{parentFormReceived}" th:errorclass="is-invalid" class="form-control-sm" id="inputParentFormReceived">
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="inputBadgeType" class="col-md-2 col-form-label-sm">Badge Type</label>
                     <div class="col-md-3">
@@ -110,9 +118,9 @@
                             <option th:each="b : ${badgelist}" th:value="${b.id}" th:text="${b.name}" th:selected="${b.id==attendee.badgeId}"></option>
                         </select>
                     </div>
-                    <label for="inputParentFormReceived" class="col-md-3 col-form-label-sm">Parental Consent Form Received</label>
-                    <div class="col-md-3 text-left">
-                    <input type="checkbox" th:field="*{parentFormReceived}" th:errorclass="is-invalid" class="form-control-sm" id="inputParentFormReceived">
+                    <label for="inputPaidAmount" class="col-md-2 col-form-label-sm" th:if="${#authorization.expression('hasAuthority(''attendee_override_price'')')}">Price Override<br><i>(blank for default)</i></label>
+                    <div class="col-md-3" th:if="${#authorization.expression('hasAuthority(''attendee_override_price'')')}">
+                        <input type="text" th:field="*{paidAmount}" th:errorclass="is-invalid" class="form-control-sm" id="inputPaidAmount">
                     </div>
                 </div>
 

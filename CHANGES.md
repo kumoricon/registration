@@ -13,6 +13,7 @@ Version 0.6.0 (Pending)
   above right.
 - Don't allow check or card payments for greater than the amount due
 - Only show badges user has permission to see during at-con check in
+- Added support for setting manual price at con with the attendee_override_price right
 
 Version 0.5 (4/9/2019)
 - Initial "release" vgersion. Not ready for production yet, but start tracking changes
