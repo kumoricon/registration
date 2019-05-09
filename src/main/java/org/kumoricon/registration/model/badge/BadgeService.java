@@ -1,9 +1,11 @@
 package org.kumoricon.registration.model.badge;
 
+import org.kumoricon.registration.model.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +25,23 @@ public class BadgeService {
             badge.setAgeRanges(ageRangeRepository.findAgeRangesForBadgeId(badge.getId()));
         }
         return badges;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Badge> findByVisibleAndUserRight(User user) {
+        List<Badge> badges = badgeRepository.findByVisibleTrue();
+
+        List<Badge> userCanSee = new ArrayList<>();
+        for (Badge badge : badges) {
+            if (badge.getRequiredRight() == null || user.hasRight(badge.getRequiredRight())) {
+                userCanSee.add(badge);
+            }
+        }
+
+        for (Badge badge : userCanSee) {
+            badge.setAgeRanges(ageRangeRepository.findAgeRangesForBadgeId(badge.getId()));
+        }
+        return userCanSee;
     }
 
     @Transactional(readOnly = true)

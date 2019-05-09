@@ -77,7 +77,7 @@ public class AtConRegistrationController {
 
         model.addAttribute("order", order);
         model.addAttribute("attendee", attendee);
-        model.addAttribute("badgelist", badgeService.findByVisibleTrue());
+        model.addAttribute("badgelist", badgeService.findByVisibleAndUserRight(principal));
         model.addAttribute("forceValidate", forceValidate);
         return chooseTemplate(principal, forceValidate);
     }
@@ -96,7 +96,7 @@ public class AtConRegistrationController {
             Order order = orderRepository.findById(orderId);
             model.addAttribute("order", order);
             model.addAttribute("attendee", attendee);
-            model.addAttribute("badgelist", badgeService.findByVisibleTrue());
+            model.addAttribute("badgelist", badgeService.findByVisibleAndUserRight(principal));
             model.addAttribute("forceValidate", forceValidate);
             return chooseTemplate(principal, forceValidate);
         }

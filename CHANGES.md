@@ -12,6 +12,7 @@ Version 0.6.0 (Pending)
 - Added separate template for creating attendees without validation. It is used automatically for users with the 
   above right.
 - Don't allow check or card payments for greater than the amount due
+- Only show badges user has permission to see during at-con check in
 
 Version 0.5 (4/9/2019)
 - Initial "release" vgersion. Not ready for production yet, but start tracking changes
