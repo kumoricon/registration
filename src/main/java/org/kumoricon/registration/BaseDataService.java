@@ -222,7 +222,7 @@ public class BaseDataService {
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_small_press", "view_login_history_report",
-                "badge_type_staff", "view_role_report", "view_check_in_by_badge_type_report", "view_check_in_by_badge_type_report_revenue",
+                "badge_type_staff", "view_role_report", "view_check_in_by_badge_type_report",
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
                 "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
                 "pre_print_badges", "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report",
