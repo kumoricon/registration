@@ -66,17 +66,17 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
+                <li class="nav-item mr-3">
                     <a class="nav-link" href="/utility/till" th:if="${selectedTill==null}">Select Till</a>
                     <a class="nav-link" href="/utility/till" th:if="${selectedTill!=null}" th:text="'Till ' + ${selectedTill}">Till 3</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mr-3">
                     <a class="nav-link" href="/utility/printer" th:if="${selectedPrinter == null}">Select Printer</a>
                     <a class="nav-link" href="/utility/printer" th:if="${selectedPrinter != null}" th:text="'Printer ' + ${selectedPrinter}">Printer 192.168.1.132</a>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline mt-2 mt-md-0" action="/logout">
-                        <button class="btn my-2 my-sm-0" type="submit">(<span class="logout-username" sec:authentication="name"></span>) Logout</button>
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">(<span class="logout-username" sec:authentication="name"></span>) Logout</button>
                     </form>
                 </li>
 

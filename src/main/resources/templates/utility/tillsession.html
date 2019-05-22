@@ -7,6 +7,16 @@
 
 <div layout:fragment="content" class="container">
 
+    <div class="form-group row">
+        <form class="form-inline col-sm-7" method="POST">
+            <label class="col-form-label col-sm-3" for="tillName">Till Number</label>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input class="form-control mr-2" type="text" name="tillName" id="tillName" th:value="${tillName}"/> <br/>
+            <input class="btn btn-primary" type="submit" name="action" value="Save" />
+        </form>
+
+    </div>
+
     <div class="row" th:if="${tillSession != null}">
         <table class="table table-bordered table-fit">
             <tr>
