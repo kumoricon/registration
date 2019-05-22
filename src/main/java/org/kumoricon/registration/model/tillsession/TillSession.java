@@ -8,8 +8,9 @@ public class TillSession {
     private Integer id;
     private Instant startTime;
     private Instant endTime;
-    private User user;
+
     private Integer userId;
+    private String tillName;        // The name of the till or computer the session was at. Usually "1", "2", etc
     private boolean open;
 
     public TillSession() {}
@@ -18,10 +19,10 @@ public class TillSession {
      * Generate an open session for the given user starting now
      * @param user User
      */
-    public TillSession(User user) {
-        setUser(user);
+    public TillSession(User user, String tillName) {
         setUserId(user.getId());
         setStartTime(Instant.now());
+        setTillName(tillName);
         setOpen(true);
     }
 
@@ -42,18 +43,19 @@ public class TillSession {
         }
     }
 
-    public User getUser() { return user; }
-    public void setUser(User user) {
-        if (this.user == null) {
-            this.user = user;
-        }
-    }
-
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
 
     public boolean isOpen() { return open; }
     public void setOpen(boolean open) { this.open = open; }
+
+    public String getTillName() {
+        return tillName;
+    }
+
+    public void setTillName(String tillName) {
+        this.tillName = tillName;
+    }
 
     @Override
     public String toString() {

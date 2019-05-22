@@ -16,6 +16,7 @@
             <thead class="thead-dark">
             <tr>
                 <th>Username</th>
+                <th>Till Name</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Total</th>
@@ -24,10 +25,11 @@
             </thead>
             <tbody>
             <tr th:if="${tillSessions.empty}">
-                <td colspan="5"> No Sessions Found </td>
+                <td colspan="6"> No Sessions Found </td>
             </tr>
             <tr th:each="s : ${tillSessions}">
                 <td th:text="${s.username}">Username</td>
+                <td th:text="${s.tillName != null ? s.tillName : 'not specified'}">8</td>
                 <td th:text="${s.startTime} ? ${#temporals.format(s.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Start Time</td>
                 <td th:text="${s.endTime} ? ${#temporals.format(s.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">End Time</td>
                 <td class="text-right" th:text="'$' + ${s.total}">$0.00</td>

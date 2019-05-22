@@ -204,7 +204,7 @@ class AttendeeImporterService {
                     user, sessionService.getCurrentSessionForUser(user));
             sessionService.closeSessionForUser(user);
         }
-        TillSession session = sessionService.getNewSessionForUser(user);
+        TillSession session = sessionService.getNewSessionForUser(user, null);
 
         int count = 0;
         for (String orderNumber : orderIdMap.keySet()) {

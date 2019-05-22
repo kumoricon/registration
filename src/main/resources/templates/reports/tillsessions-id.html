@@ -8,7 +8,10 @@
 <div layout:fragment="content" class="container">
 
     <div class="row">
-        <div class="col-4"><h2 th:text="${tillSession.username}">Firstname Lastname</h2></div>
+        <div class="col-4">
+            <h2 th:text="${tillSession.username}">Firstname Lastname</h2>
+            Till <span th:text="${tillSession.tillName != null ? tillSession.tillName : 'not specified'}"></span>
+        </div>
         <div class="col-4">
             <table class="table table-sm table-borderless">
                 <tr>

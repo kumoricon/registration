@@ -47,13 +47,14 @@ public class TillSessionRepository {
             parameters.put("open", tillSession.isOpen());
             parameters.put("start_time", translate(tillSession.getStartTime()));
             parameters.put("user_id", tillSession.getUserId());
+            parameters.put("till_name", tillSession.getTillName());
             Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
             tillSession.setId(key.intValue());
             return tillSession;
 
         } else {
-            jdbcTemplate.update("UPDATE tillsessions SET end_time = ?, open = ?, start_time = ?, user_id = ? WHERE id = ?",
-                    translate(tillSession.getEndTime()), tillSession.isOpen(), translate(tillSession.getStartTime()), tillSession.getUserId(), tillSession.getId());
+            jdbcTemplate.update("UPDATE tillsessions SET end_time = ?, open = ?, start_time = ?, user_id = ?, till_name = ? WHERE id = ?",
+                    translate(tillSession.getEndTime()), tillSession.isOpen(), translate(tillSession.getStartTime()), tillSession.getUserId(), tillSession.getTillName(), tillSession.getId());
             return tillSession;
         }
     }
@@ -269,6 +270,7 @@ public class TillSessionRepository {
                 tillSession.setEndTime(null);
             }
             tillSession.setUserId(rs.getInt("user_id"));
+            tillSession.setTillName(rs.getString("till_name"));
             return tillSession;
         }
     }
@@ -289,6 +291,7 @@ public class TillSessionRepository {
             t.setUserId(rs.getInt("user_id"));
             t.setUsername(rs.getString("first_name") + " " + rs.getString("last_name"));
             t.setTotal(rs.getBigDecimal("total"));
+            t.setTillName(rs.getString("till_name"));
             return t;
         }
     }

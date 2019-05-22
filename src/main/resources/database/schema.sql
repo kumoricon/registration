@@ -74,15 +74,16 @@ create index if not exists blacklist_lastname_index
 
 create table if not exists tillsessions
 (
-  id serial not null
-    constraint tillsessions_pkey
-      primary key,
-  end_time timestamp with time zone,
-  open boolean not null,
-  start_time timestamp with time zone,
-  user_id integer not null
-    constraint fkruie73rneumyyd1bgo6qw8vjt
-      references users
+    id serial not null
+        constraint tillsessions_pkey
+            primary key,
+    end_time timestamp with time zone,
+    open boolean not null,
+    start_time timestamp with time zone,
+    user_id integer not null
+        constraint fkruie73rneumyyd1bgo6qw8vjt
+            references users,
+    till_name varchar(255)
 );
 
 create index if not exists tillsessions_open_index

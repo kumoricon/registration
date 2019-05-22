@@ -26,18 +26,18 @@ public class TillSessionService {
         if (user == null) { throw new RuntimeException("getCurrentSessionForUser called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
         if (session == null) {
-            session = repository.save(new TillSession(user));
+            session = repository.save(new TillSession(user, null));
         }
         return session;
     }
 
-    public TillSession getNewSessionForUser(User user) {
+    public TillSession getNewSessionForUser(User user, String tillName) {
         if (user == null) { throw new RuntimeException("getNewSessionForUser called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
         if (session != null) {
             closeSession(session);
         }
-        session = repository.save(new TillSession(user));
+        session = repository.save(new TillSession(user, tillName));
         return session;
     }
 
@@ -50,7 +50,14 @@ public class TillSessionService {
     public TillSession closeSessionForUser(User user) {
         if (user == null) { throw new RuntimeException("closeSessionForUser called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
-        return closeSession(session.getId());
+        return closeSession(session);
+    }
+
+    public TillSession closeSessionForUser(User user, String tillName) {
+        if (user == null) { throw new RuntimeException("closeSessionForUser called with null user"); }
+        TillSession session = repository.getOpenSessionForUser(user);
+        session.setTillName(tillName);
+        return closeSession(session);
     }
 
     public TillSession closeSession(TillSession session) {

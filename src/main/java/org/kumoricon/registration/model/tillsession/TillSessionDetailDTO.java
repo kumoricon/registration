@@ -12,6 +12,7 @@ public class TillSessionDetailDTO {
     private String username;
     private Integer userId;
     private BigDecimal total;
+    private String tillName;
     private boolean open;
     private List<TillSessionOrderDTO> orderDTOs;
     private List<TillSessionPaymentTotalDTO> paymentTotals;
@@ -39,8 +40,10 @@ public class TillSessionDetailDTO {
     public void setUserId(Integer userId) { this.userId = userId; }
 
     public BigDecimal getTotal() { return total; }
-
     public void setTotal(BigDecimal total) { this.total = total; }
+
+    public String getTillName() { return tillName; }
+    public void setTillName(String tillName) { this.tillName = tillName; }
 
     public boolean isOpen() { return open; }
     public void setOpen(boolean open) { this.open = open; }
@@ -76,6 +79,7 @@ public class TillSessionDetailDTO {
         t.setUserId(tillSessionDTO.getUserId());
         t.setUsername(tillSessionDTO.getUsername());
         t.setTotal(tillSessionDTO.getTotal());
+        t.setTillName(tillSessionDTO.getTillName());
         t.setStartTime(tillSessionDTO.getStartTime());
         t.setEndTime(tillSessionDTO.getEndTime());
         return t;

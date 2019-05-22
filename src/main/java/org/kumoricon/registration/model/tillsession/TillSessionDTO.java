@@ -12,11 +12,10 @@ public class TillSessionDTO {
     private String username;
     private Integer userId;
     private BigDecimal total;
+    private String tillName;
     private boolean open;
-    private Map<String, BigDecimal> paymentTotals;
 
     public TillSessionDTO() {
-        this.paymentTotals = new HashMap<>();
     }
 
     public Integer getId() { return id; }
@@ -35,12 +34,11 @@ public class TillSessionDTO {
     public void setUserId(Integer userId) { this.userId = userId; }
 
     public BigDecimal getTotal() { return total; }
-
     public void setTotal(BigDecimal total) { this.total = total; }
+
+    public String getTillName() { return tillName; }
+    public void setTillName(String tillName) { this.tillName = tillName; }
 
     public boolean isOpen() { return open; }
     public void setOpen(boolean open) { this.open = open; }
-
-    public Map<String, BigDecimal> getPaymentTotals() { return paymentTotals; }
-    public void setPaymentTotals(Map<String, BigDecimal> paymentTotals) { this.paymentTotals = paymentTotals; }
 }

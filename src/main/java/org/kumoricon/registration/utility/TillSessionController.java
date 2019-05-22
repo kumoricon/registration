@@ -75,8 +75,8 @@ public class TillSessionController {
                 model.addAttribute("err", e.getMessage());
                 return "utility/tillsession";
             }
-        } else if (action.equals("Close")) {
-            tillSessionService.closeSessionForUser(currentUser);
+        } else if (action.equals("Close Till")) {
+            tillSessionService.closeSessionForUser(currentUser, tillName);
 
             return "redirect:/utility/till?msg=Till%20Session%20Closed";
         }
