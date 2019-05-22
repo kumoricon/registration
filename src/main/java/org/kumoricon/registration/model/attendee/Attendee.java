@@ -45,7 +45,7 @@ public class Attendee {
 
 
     public Attendee() {
-        this.paidAmount = BigDecimal.ZERO;
+        this.paidAmount = null;
         this.checkedIn = false;
         this.paid = false;
         this.preRegistered = false;
