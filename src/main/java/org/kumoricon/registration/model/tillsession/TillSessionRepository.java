@@ -172,7 +172,7 @@ public class TillSessionRepository {
                 "    WHEN extract(year from age(now() at time zone 'America/Los_Angeles', attendees.birth_date)) >= 6 THEN" +
                 "       'Child'" +
                 "     ELSE" +
-                "       'Under5'" +
+                "       'Under 6'" +
                 "    END) as ageRange," +
                 "       count(*)" +
                 " from attendees" +
