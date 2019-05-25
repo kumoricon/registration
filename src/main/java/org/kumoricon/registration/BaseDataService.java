@@ -31,6 +31,11 @@ public class BaseDataService {
     @Value("${kumoreg.trainingMode}")
     private boolean trainingMode;
 
+    @Value("${kumoreg.trainingMode.setActualPassword}")
+    private boolean setActualPassword;
+
+    @Value("${kumoreg.trainingMode.password}")
+    private String actualPassword;
 
     public BaseDataService(RoleRepository roleRepository,
                            RightRepository rightRepository,
@@ -92,6 +97,8 @@ public class BaseDataService {
         String[][] users = {
                 {"Staff", "Staff"},
                 {"Coordinator", "Coordinator"},
+                {"Specialty", "Coordinator - Specialty Badges"},
+                {"VIP", "Coordinator - VIP Badges"},
                 {"Manager", "Manager"},
                 {"Director", "Director"},
                 {"Ops", "Ops"},
@@ -101,11 +108,17 @@ public class BaseDataService {
         for (String[] userData : users) {
             createdUsers.add(userData[0]);
             User user = userService.newUser(userData[0], "User");
+            if (setActualPassword) {
+                user.setForcePasswordChange(false);
+                userService.setPasswordOnUserObject(user, actualPassword);
+            }
             user.setUsername(userData[0]);
             Role role = roleRepository.findByNameIgnoreCase(userData[1]);
             if (role == null) log.error("Couldn't find role {} when creating user {}", userData[1], userData[0]);
             user.setRoleId(role.getId());
             userRepository.save(user);
+
+
         }
         log.info("Created training users {}", createdUsers);
     }

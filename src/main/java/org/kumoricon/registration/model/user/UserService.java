@@ -154,6 +154,10 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public void setPasswordOnUserObject(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+    }
+
     /**
      * Loads a User object WITH Rights attached from the database. This is used by Spring Security, so needs to have
      * the Rights attached as well as the basic object properties, which are usually not added to the User object
