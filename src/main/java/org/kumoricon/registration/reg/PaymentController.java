@@ -1,5 +1,6 @@
 package org.kumoricon.registration.reg;
 
+import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 
@@ -147,6 +148,7 @@ public class PaymentController {
                                         final BindingResult bindingResult,
                                         @PathVariable Integer orderId,
                                         @AuthenticationPrincipal User principal,
+                                        @CookieValue(value = CookieControllerAdvice.TILL_COOKIE_NAME, required = false) String tillName,
                                         HttpServletRequest request) {
 
         Order order = orderRepository.findById(orderId);
@@ -164,7 +166,7 @@ public class PaymentController {
             return "reg/atcon-order-payment";
         }
 
-        TillSession currentTillSession = tillSessionService.getCurrentSessionForUser(principal);
+        TillSession currentTillSession = tillSessionService.getCurrentOrNewTillSession(principal, tillName);
         Payment paymentData = new Payment();
 
         paymentData.setOrderId(orderId);

@@ -30,6 +30,7 @@ import java.util.*;
 
 @Service
 class AttendeeImporterService {
+    public static final String IMPORT_TILL_NAME = "Attendee Import";
     private final TillSessionService sessionService;
 
     private final OrderRepository orderRepository;
@@ -201,10 +202,10 @@ class AttendeeImporterService {
         List<Payment> payments = new ArrayList<>();
         if (sessionService.userHasOpenSession(user)) {
             log.info("{} closed open session {} before import",
-                    user, sessionService.getCurrentSessionForUser(user));
+                    user, sessionService.getCurrentOrNewTillSession(user, IMPORT_TILL_NAME));
             sessionService.closeSessionForUser(user);
         }
-        TillSession session = sessionService.getNewSessionForUser(user, null);
+        TillSession session = sessionService.getNewSessionForUser(user, IMPORT_TILL_NAME);
 
         int count = 0;
         for (String orderNumber : orderIdMap.keySet()) {

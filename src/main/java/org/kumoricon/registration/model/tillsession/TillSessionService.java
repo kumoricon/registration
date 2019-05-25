@@ -1,12 +1,10 @@
 package org.kumoricon.registration.model.tillsession;
 
-import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -14,23 +12,23 @@ import java.util.List;
 @Service
 public class TillSessionService {
     private TillSessionRepository repository;
-    private PaymentRepository paymentRepository;
 
     @Autowired
-    public TillSessionService(TillSessionRepository repository, PaymentRepository paymentRepository) {
+    public TillSessionService(TillSessionRepository repository) {
         this.repository = repository;
-        this.paymentRepository = paymentRepository;
     }
 
-    public TillSession getCurrentSessionForUser(User user) {
-        if (user == null) { throw new RuntimeException("getCurrentSessionForUser called with null user"); }
+    @Transactional
+    public TillSession getCurrentOrNewTillSession(User user, String optionalTillName) {
+        if (user == null) { throw new RuntimeException("getCurrentOrNewTillSession called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
         if (session == null) {
-            session = repository.save(new TillSession(user, null));
+            session = getNewSessionForUser(user, optionalTillName);
         }
         return session;
     }
 
+    @Transactional
     public TillSession getNewSessionForUser(User user, String tillName) {
         if (user == null) { throw new RuntimeException("getNewSessionForUser called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
@@ -41,18 +39,21 @@ public class TillSessionService {
         return session;
     }
 
+    @Transactional(readOnly = true)
     public boolean userHasOpenSession(User user) {
         if (user == null) { throw new RuntimeException("userHasOpenSession called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
         return session != null;
     }
 
+    @Transactional
     public TillSession closeSessionForUser(User user) {
         if (user == null) { throw new RuntimeException("closeSessionForUser called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
         return closeSession(session);
     }
 
+    @Transactional
     public TillSession closeSessionForUser(User user, String tillName) {
         if (user == null) { throw new RuntimeException("closeSessionForUser called with null user"); }
         TillSession session = repository.getOpenSessionForUser(user);
@@ -60,6 +61,7 @@ public class TillSessionService {
         return closeSession(session);
     }
 
+    @Transactional
     public TillSession closeSession(TillSession session) {
         if (session != null) {
             if (session.isOpen()) {
@@ -73,23 +75,17 @@ public class TillSessionService {
         return session;
     }
 
+    @Transactional
     public TillSession closeSession(Integer id) {
         TillSession session = repository.findOneById(id);
         return closeSession(session);
     }
 
-    public List<TillSession> getAllOpenSessions() {
-        return repository.findAllOpenSessions();
-    }
-    public List<TillSession> getAllSessions() { return repository.findAllOrderByEnd(); }
     public List<TillSessionDTO> getAllTillSessionDTOs() { return repository.findAllTillSessionDTO(); }
     public List<TillSessionDTO> getOpenTillSessionDTOs() { return repository.findOpenTillSessionDTOs(); }
 
-    public BigDecimal getTotalForSession(TillSession s) {
-        return paymentRepository.getTotalForSessionId(s.getId());
-    }
 
-
+    @Transactional(readOnly = true)
     public TillSessionDTO getOpenSessionForUser(User currentUser) {
         return repository.getOpenTillSessionDTOforUser(currentUser);
     }
