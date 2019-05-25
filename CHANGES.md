@@ -1,6 +1,8 @@
 # Change History
 
-Version 0.6.0 (Pending)
+Version 0.7.0 (Pending)
+
+Version 0.6.0 (5/25/2019)
 - Added Till Detail Report after discussion w/ Treasury Dept. This report will be included with each
   closed till.
 - Added Force Password Change page/interceptor. This included a database schema change, making it incompatible
