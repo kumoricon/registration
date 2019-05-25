@@ -16,6 +16,7 @@ Version 0.6.0 (Pending)
 - Added support for setting manual price at con with the attendee_override_price right
 - Added support for Till Name saved by cookie client-side and saved when till session is closed (schema change)
 - Set till name to "Attendee Import" during attendee import
+- Added skeleton of view order/edit attendee pages
 
 Version 0.5 (4/9/2019)
 - Initial "release" version. Not ready for production yet, but start tracking changes

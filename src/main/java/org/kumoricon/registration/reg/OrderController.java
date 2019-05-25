@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -50,5 +51,28 @@ public class OrderController {
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("prevPage", prevPage);
         return "reg/orders";
+    }
+
+    @RequestMapping(value = "/orders/{orderId}")
+    @PreAuthorize("hasAuthority('manage_orders')")
+    public String viewOrder(Model model,
+                             @PathVariable Integer orderId) {
+        return "reg/orders-id";
+    }
+
+    @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}")
+    @PreAuthorize("hasAuthority('manage_orders')")
+    public String viewAttendee(Model model,
+                               @PathVariable Integer orderId,
+                               @PathVariable Integer attendeeId) {
+        return "reg/orders-id-attendees-id";
+    }
+
+    @RequestMapping(value = "/orders/{orderId}/payments/{paymentId}")
+    @PreAuthorize("hasAuthority('manage_orders')")
+    public String viewPayment(Model model,
+                               @PathVariable Integer orderId,
+                               @PathVariable Integer paymentId) {
+        return "reg/orders-id-payments-id";
     }
 }

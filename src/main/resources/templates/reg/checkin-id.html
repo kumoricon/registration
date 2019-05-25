@@ -59,7 +59,7 @@
                     <input type="hidden" name="id" th:value="${attendee.id}">
                     <input class="btn btn-primary btn-sm mr-2" type="submit" value="Yes, Information is Correct">
                 </form>
-                <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.orderId + '/' + attendee.id}">No, Edit Attendee</a>
+                <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.orderId + '/attendees/' + attendee.id}">No, Edit Attendee</a>
             </div>
         </div>
 
