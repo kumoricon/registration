@@ -8,10 +8,13 @@
 <body>
 
 <div layout:fragment="content" class="container">
+    <div class="row mb-3">
+        <a th:href="'/orders/' + ${attendee.orderId}">Back to Order</a>
+    </div>
 
     <div class="row">
         <div class="col-sm-2">Name:</div><div class="col-sm-3" th:text="${attendee.name}"></div>
-        <div class="col-sm-2">Fan Name:</div><div class="col-sm-3" th:text="${attendee.fanName}"></div>
+        <div class="col-sm-3">Preferred Pronoun:</div><div class="col-sm-3" th:text="${attendee.preferredPronoun}"></div>
     </div>
 
     <div class="row">
@@ -19,34 +22,59 @@
     </div>
 
     <div class="row">
+        <div class="col-sm-2">Fan Name:</div><div class="col-sm-3" th:text="${attendee.fanName}"></div>
+        <div class="col-sm-2">Badge Number:</div><div class="col-sm-3" th:text="${attendee.badgeNumber}"></div>
+    </div>
+
+    <div class="row mt-4">
         <div class="col-sm-2">Phone Number:</div><div class="col-sm-3" th:text="${attendee.phoneNumber}"></div>
         <div class="col-sm-2">Email:</div><div class="col-sm-3" th:text="${attendee.email}"></div>
     </div>
 
     <div class="row">
         <div class="col-sm-2">Zip Code:</div><div class="col-sm-3" th:text="${attendee.zip}"></div>
-        <div class="col-sm-2">Date of Birth:</div><div class="col-sm-3" th:text="${attendee.birthDate} ? ${#temporals.format(attendee.birthDate, 'MM/dd/yyyy')} : ''"></div>
+        <div class="col-sm-2">Date of Birth:</div>
+        <div class="col-sm-3">
+            <span th:text="${attendee.birthDate} ? ${#temporals.format(attendee.birthDate, 'MM/dd/yyyy')} : ''"></span>
+            <span th:text="'(' + ${attendee.age} + ' years old)'"></span>
+        </div>
     </div>
 
-    <div class="row mt-2">
-        <div class="col-sm-2">Emergency Contact:</div>
+    <div class="row">
+        <div class="col-sm-2">Country:</div><div class="col-sm-3" th:text="${attendee.country}"></div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-sm-3">Emergency Contact:</div>
         <div class="col-sm-6" th:text="${attendee.emergencyContactFullName} + ' - ' + ${attendee.emergencyContactPhone}"></div>
     </div>
 
     <div class="row">
-        <div class="col-sm-2">Parent:</div>
+        <div class="col-sm-2">Parent Contact:</div>
         <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="${attendee.parentFullName} + ' - ' + ${attendee.parentPhone}"></div>
     </div>
 
-    <div class="row mt-2">
-        <div class="col-sm-2">Badge Type:</div><div class="col-sm-3" th:text="${attendee.badgeId}"></div>
-        <div class="col-sm-2">Parental Consent Form Received:</div><div class="col-sm-3" th:text="${attendee.parentFormReceived}"></div>
+    <div class="row mt-4">
+        <div class="col-sm-3">Badge Type:</div><div class="col-sm-4" th:text="${attendee.badgeType}"></div>
+        <div class="col-sm-2">Amount Paid:</div><div class="col-sm-3" th:text="'$' + ${attendee.paidAmount}"></div>
     </div>
 
     <div class="row">
-        <table class="table table-sm table-bordered mt-2">
+        <div class="col-sm-3">Checked In:</div><div class="col-sm-4" th:text="${attendee.checkInTime} ? ${#temporals.format(attendee.checkInTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : 'No'"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3">Preregistered:</div><div class="col-sm-1" th:text="${attendee.preRegistered}"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">Parent Form Received:</div><div class="col-sm-1" th:text="${attendee.parentFormReceived}"></div>
+    </div>
+
+    <div class="row">
+        <table class="table table-sm table-bordered mt-4">
             <tr>
-                <th colspan="3">Notes <a class="small" th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/addnote'">Add Note</a></th>
+                <th colspan="3">Notes
+                    <a class="small" th:if="${#authorization.expression('hasAuthority(''attendee_add_note'')')}" th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/addnote'">Add Note</a></th>
             </tr>
             <tr th:each="ah : ${notes}">
                 <td class="col-2" th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>

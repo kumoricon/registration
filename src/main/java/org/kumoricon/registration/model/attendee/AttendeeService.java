@@ -14,7 +14,8 @@ public class AttendeeService {
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private static final Logger log = LoggerFactory.getLogger(AttendeeService.class);
 
-    public AttendeeService(AttendeeRepository attendeeRepository, AttendeeHistoryRepository attendeeHistoryRepository) {
+    public AttendeeService(AttendeeRepository attendeeRepository,
+                           AttendeeHistoryRepository attendeeHistoryRepository) {
         this.attendeeRepository = attendeeRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;
     }
@@ -53,4 +54,5 @@ public class AttendeeService {
     public void save(Attendee attendee) {
         attendeeRepository.save(attendee);
     }
+
 }

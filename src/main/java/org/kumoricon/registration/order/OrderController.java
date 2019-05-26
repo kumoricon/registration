@@ -1,19 +1,19 @@
 package org.kumoricon.registration.order;
 
-import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeHistoryDTO;
-import org.kumoricon.registration.model.attendee.AttendeeHistoryRepository;
-import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
+import org.kumoricon.registration.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -21,19 +21,19 @@ import java.util.List;
 @Controller
 public class OrderController {
     private final OrderRepository orderRepository;
-    private final AttendeeRepository attendeeRepository;
+    private final AttendeeDetailRepository attendeeDetailRepository;
     private final PaymentRepository paymentRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final BadgeService badgeService;
 
     @Autowired
     public OrderController(OrderRepository orderRepository,
-                           AttendeeRepository attendeeRepository,
+                           AttendeeDetailRepository attendeeDetailRepository,
                            PaymentRepository paymentRepository,
                            AttendeeHistoryRepository attendeeHistoryRepository,
                            BadgeService badgeService) {
         this.orderRepository = orderRepository;
-        this.attendeeRepository = attendeeRepository;
+        this.attendeeDetailRepository = attendeeDetailRepository;
         this.paymentRepository = paymentRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;
         this.badgeService = badgeService;
@@ -77,7 +77,7 @@ public class OrderController {
     public String viewAttendee(Model model,
                                @PathVariable Integer orderId,
                                @PathVariable Integer attendeeId) {
-        Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        AttendeeDetailDTO attendee = attendeeDetailRepository.findByIdAndOrderId(attendeeId, orderId);
         List<AttendeeHistoryDTO> notes = attendeeHistoryRepository.findAllDTObyAttendeeId(attendeeId);
 
         model.addAttribute("attendee", attendee);
@@ -86,6 +86,37 @@ public class OrderController {
 
         return "order/orders-id-attendees-id";
     }
+
+    @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}/addnote")
+    @PreAuthorize("hasAuthority('attendee_add_note')")
+    public String addNote(Model model,
+                          @PathVariable Integer orderId,
+                          @PathVariable Integer attendeeId) {
+
+        AttendeeDetailDTO attendee = attendeeDetailRepository.findByIdAndOrderId(attendeeId, orderId);
+        model.addAttribute("attendee", attendee);
+
+        return "order/orders-id-attendees-id-addnote";
+    }
+
+    @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}/addnote", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('attendee_add_note')")
+    public String saveNote(@PathVariable Integer orderId,
+                           @PathVariable Integer attendeeId,
+                           @RequestParam String message,
+                           @AuthenticationPrincipal User principal) {
+
+        String cleanedMessage = message.trim();
+        if (!message.isEmpty()) {
+            AttendeeHistory ah = new AttendeeHistory(principal, attendeeId, cleanedMessage);
+            attendeeHistoryRepository.save(ah);
+
+            return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved";
+        } else {
+            return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?err=Empty+message+not+saved";
+        }
+    }
+
 
     @RequestMapping(value = "/orders/{orderId}/payments/{paymentId}")
     @PreAuthorize("hasAuthority('manage_orders')")
