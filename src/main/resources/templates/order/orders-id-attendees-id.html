@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Attendee</title>
+    <script type="text/javascript" src="/js/attendeeform.js" defer></script>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <div class="row">
+        <div class="col-sm-2">Name:</div><div class="col-sm-3" th:text="${attendee.name}"></div>
+        <div class="col-sm-2">Fan Name:</div><div class="col-sm-3" th:text="${attendee.fanName}"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2">Legal Name:</div><div class="col-sm-3" th:text="${attendee.legalFirstName} + ' ' + ${attendee.legalLastName}"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2">Phone Number:</div><div class="col-sm-3" th:text="${attendee.phoneNumber}"></div>
+        <div class="col-sm-2">Email:</div><div class="col-sm-3" th:text="${attendee.email}"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2">Zip Code:</div><div class="col-sm-3" th:text="${attendee.zip}"></div>
+        <div class="col-sm-2">Date of Birth:</div><div class="col-sm-3" th:text="${attendee.birthDate} ? ${#temporals.format(attendee.birthDate, 'MM/dd/yyyy')} : ''"></div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-2">Emergency Contact:</div>
+        <div class="col-sm-6" th:text="${attendee.emergencyContactFullName} + ' - ' + ${attendee.emergencyContactPhone}"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2">Parent:</div>
+        <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="${attendee.parentFullName} + ' - ' + ${attendee.parentPhone}"></div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-2">Badge Type:</div><div class="col-sm-3" th:text="${attendee.badgeId}"></div>
+        <div class="col-sm-2">Parental Consent Form Received:</div><div class="col-sm-3" th:text="${attendee.parentFormReceived}"></div>
+    </div>
+
+    <div class="row">
+        <table class="table table-sm table-bordered mt-2">
+            <tr>
+                <th colspan="3">Notes <a class="small" th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/addnote'">Add Note</a></th>
+            </tr>
+            <tr th:each="ah : ${notes}">
+                <td class="col-2" th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                <td class="col-1" th:text="${ah.username}"></td>
+                <td class="col-4" th:text="${ah.message}"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

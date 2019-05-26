@@ -1,6 +1,10 @@
-package org.kumoricon.registration.reg;
+package org.kumoricon.registration.order;
 
+import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeHistoryDTO;
+import org.kumoricon.registration.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
@@ -19,12 +23,20 @@ public class OrderController {
     private final OrderRepository orderRepository;
     private final AttendeeRepository attendeeRepository;
     private final PaymentRepository paymentRepository;
+    private final AttendeeHistoryRepository attendeeHistoryRepository;
+    private final BadgeService badgeService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, AttendeeRepository attendeeRepository, PaymentRepository paymentRepository) {
+    public OrderController(OrderRepository orderRepository,
+                           AttendeeRepository attendeeRepository,
+                           PaymentRepository paymentRepository,
+                           AttendeeHistoryRepository attendeeHistoryRepository,
+                           BadgeService badgeService) {
         this.orderRepository = orderRepository;
         this.attendeeRepository = attendeeRepository;
         this.paymentRepository = paymentRepository;
+        this.attendeeHistoryRepository = attendeeHistoryRepository;
+        this.badgeService = badgeService;
     }
 
     @RequestMapping(value = "/orders")
@@ -50,14 +62,14 @@ public class OrderController {
         model.addAttribute("page", page);
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("prevPage", prevPage);
-        return "reg/orders";
+        return "order/orders";
     }
 
     @RequestMapping(value = "/orders/{orderId}")
     @PreAuthorize("hasAuthority('manage_orders')")
     public String viewOrder(Model model,
                              @PathVariable Integer orderId) {
-        return "reg/orders-id";
+        return "order/orders-id";
     }
 
     @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}")
@@ -65,7 +77,14 @@ public class OrderController {
     public String viewAttendee(Model model,
                                @PathVariable Integer orderId,
                                @PathVariable Integer attendeeId) {
-        return "reg/orders-id-attendees-id";
+        Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        List<AttendeeHistoryDTO> notes = attendeeHistoryRepository.findAllDTObyAttendeeId(attendeeId);
+
+        model.addAttribute("attendee", attendee);
+        model.addAttribute("notes", notes);
+        model.addAttribute("badgelist", badgeService.findAll());
+
+        return "order/orders-id-attendees-id";
     }
 
     @RequestMapping(value = "/orders/{orderId}/payments/{paymentId}")
@@ -73,6 +92,6 @@ public class OrderController {
     public String viewPayment(Model model,
                                @PathVariable Integer orderId,
                                @PathVariable Integer paymentId) {
-        return "reg/orders-id-payments-id";
+        return "order/orders-id-payments-id";
     }
 }

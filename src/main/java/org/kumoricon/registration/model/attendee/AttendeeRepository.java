@@ -143,6 +143,14 @@ public class AttendeeRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Attendee findByIdAndOrderId(int id, int orderId) {
+        return jdbcTemplate.queryForObject(
+                "select * from attendees where id=? and order_id = ?",
+                new Object[]{id, orderId}, new AttendeeRowMapper());
+    }
+
+
     @Transactional
     public void delete(Integer attendeeId) {
         if (attendeeId != null) {
