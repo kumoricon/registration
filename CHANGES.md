@@ -4,6 +4,7 @@ Version 0.7.0 (Pending)
 - When creating database, add citext extension if it does not exist (needed to support case insensitive searches,
   previously created in a manual step)
 - Fixed redirect bug when running behind load balancer that's using HTTPS
+- Fixed NullPointerException when a request has no cookies
 
 Version 0.6.0 (5/25/2019)
 - Added Till Detail Report after discussion w/ Treasury Dept. This report will be included with each

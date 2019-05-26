@@ -17,9 +17,13 @@ public class CookieControllerAdvice {
 
     @ModelAttribute("selectedPrinter")
     public String selectedPrinter(final HttpServletRequest request) {
-        for (Cookie c : request.getCookies()) {
-            if (c.getName().equals(PRINTER_COOKIE_NAME)) {
-                return c.getValue();
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals(PRINTER_COOKIE_NAME)) {
+                    return c.getValue();
+                }
             }
         }
         return null;
@@ -32,9 +36,13 @@ public class CookieControllerAdvice {
      */
     @ModelAttribute("selectedTill")
     public String selectedTill(final HttpServletRequest request) {
-        for (Cookie c : request.getCookies()) {
-            if (c.getName().equals(TILL_COOKIE_NAME)) {
-                return c.getValue();
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals(TILL_COOKIE_NAME)) {
+                    return c.getValue();
+                }
             }
         }
         return null;
