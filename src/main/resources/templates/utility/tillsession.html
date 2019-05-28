@@ -15,30 +15,28 @@
             <input class="btn btn-primary" type="submit" name="action" value="Save" />
 
 
-
-        <div th:if="${tillSession != null}">
-            <table class="table table-bordered table-fit">
-                <tr>
-                    <td>Session ID</td>
-                    <td th:text="${tillSession.id}">1</td>
-                </tr>
-                <tr>
-                    <td>Session is Open</td>
-                    <td th:text="${tillSession.open}">True</td>
-                </tr>
-                <tr>
-                    <td>Start</td>
-                    <td th:text="${tillSession.startTime} ? ${#temporals.format(tillSession.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
-                </tr>
-                <tr>
-                    <td>End</td>
-                    <td th:text="${tillSession.endTime} ? ${#temporals.format(tillSession.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
-                </tr>
-            </table>
-        </div>
-
-        <input th:if="${tillSession != null}" class="btn btn-danger" name="action" type="submit" value="Close Till">
-
+            <div th:if="${tillSession != null}">
+                <table class="table table-bordered table-fit mt-4">
+                    <tr>
+                        <td>Session ID</td>
+                        <td th:text="${tillSession.id}">1</td>
+                    </tr>
+                    <tr>
+                        <td>Session is Open</td>
+                        <td th:text="${tillSession.open}">True</td>
+                    </tr>
+                    <tr>
+                        <td>Start</td>
+                        <td th:text="${tillSession.startTime} ? ${#temporals.format(tillSession.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                    </tr>
+                    <tr>
+                        <td>End</td>
+                        <td th:text="${tillSession.endTime} ? ${#temporals.format(tillSession.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                    </tr>
+                </table>
+                <br>
+                <input th:if="${tillSession != null}" class="btn btn-danger" name="action" type="submit" value="Close Till">
+            </div>
         </form>
     </div>
 
