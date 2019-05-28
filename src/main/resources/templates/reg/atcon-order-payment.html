@@ -9,17 +9,23 @@
 
 <div layout:fragment="content" class="container">
     <div class="row"  th:if="${payment == null && order.paid != true}">
-        <div class="col-10 text-center">
+        <div class="col-16 text-center">
             <a class="btn btn-secondary" th:href="'/reg/atconorder/' + ${orderId}">Back to Order</a>
-            <a class="btn"
+            <a class="btn text-center"
                th:classappend="${totalDue<=0} ? disabled : btn-primary"
-               th:href="'/reg/atconorder/' + ${orderId} + '/payment/new?type=card'">Take Credit/Debit Card</a>
-            <a class="btn"
+               th:href="'/reg/atconorder/' + ${orderId} + '/payment/new?type=card'">
+                <img src="/img/card.svg" width="100" height="100"><br>
+                Take Credit/Debit Card</a>
+            <a class="btn text-center"
                th:classappend="${totalDue<=0} ? disabled : btn-primary"
-               th:href="'/reg/atconorder/' + ${orderId} + '/payment/new?type=cash'">Take Cash</a>
-            <a class="btn"
+               th:href="'/reg/atconorder/' + ${orderId} + '/payment/new?type=cash'">
+                <img src="/img/cash.svg" width="100" height="100"><br>
+                Take Cash</a>
+            <a class="btn text-center"
                th:classappend="${totalDue<=0} ? disabled : btn-primary"
-               th:href="'/reg/atconorder/' + ${orderId} + '/payment/new?type=check'">Take Check/Money Order</a>
+               th:href="'/reg/atconorder/' + ${orderId} + '/payment/new?type=check'">
+                <img src="/img/check.svg" width="100" height="100"><br>
+                Take Check/Money Order</a>
         </div>
     </div>
 
@@ -27,9 +33,16 @@
         Warning: order is closed, new payments may not be taken
     </div>
 
+    <div th:if="${paymentType != null}" class="float-right">
+        <img class="float-right" th:if="${paymentType == 'cash'}" src="/img/cash.svg" width="300" height="300">
+        <img class="float-right" th:if="${paymentType == 'card'}"  src="/img/card.svg" width="300" height="300">
+        <img class="float-right" th:if="${paymentType == 'check'}"  src="/img/check.svg" width="300" height="300">
+    </div>
+
+
     <div class="row form-group mt-5">
-        <label for="orderTotal" class="col-2 col-form-label">Order Total</label>
-        <div class="col-2 input-group">
+        <label for="orderTotal" class="col-3 col-form-label">Order Total</label>
+        <div class="col-4 input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             </div>
@@ -38,8 +51,8 @@
     </div>
 
     <div class="row form-group">
-        <label for="totalPaid" class="col-2 col-form-label">Paid so far</label>
-        <div class="col-2 input-group">
+        <label for="totalPaid" class="col-3 col-form-label">Paid so far</label>
+        <div class="col-4 input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             </div>
@@ -48,8 +61,8 @@
     </div>
 
     <div class="row form-group">
-        <label for="amountDue" class="col-2 col-form-label">Amount Due</label>
-        <div class="col-2 input-group">
+        <label for="amountDue" class="col-3 col-form-label">Amount Due</label>
+        <div class="col-4 input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             </div>
@@ -63,8 +76,8 @@
             <input type="hidden" th:field="*{paymentType}" />
 
             <div class="form-group row">
-                <label for="inputAmount" class="col-2 col-form-label font-weight-bold">Money Taken</label>
-                <div class="col-2 input-group">
+                <label for="inputAmount" class="col-3 col-form-label font-weight-bold">Money Taken</label>
+                <div class="col-4 input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                     </div>
@@ -73,8 +86,8 @@
             </div>
 
             <div class="form-group row" th:if="${paymentType == 'cash'}">
-                <label for="inputChange" class="col-2 col-form-label">Change</label>
-                <div class="col-2 input-group">
+                <label for="inputChange" class="col-3 col-form-label">Change</label>
+                <div class="col-4 input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                     </div>
@@ -83,15 +96,15 @@
             </div>
 
             <div class="form-group row" th:if="${paymentType == 'card'}">
-                <label for="inputAuthNumber" class="col-2 col-form-label font-weight-bold">Auth Number</label>
-                <div class="col-2">
+                <label for="inputAuthNumber" class="col-3 col-form-label font-weight-bold">Auth Number</label>
+                <div class="col-4">
                     <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputAuthNumber" placeholder="123456" required>
                 </div>
             </div>
 
             <div class="form-group row" th:if="${paymentType == 'check'}">
-                <label for="inputCheckAuth" class="col-2 col-form-label font-weight-bold">Drivers Lic. Number</label>
-                <div class="col-2">
+                <label for="inputCheckAuth" class="col-3 col-form-label font-weight-bold">Drivers Lic. Number</label>
+                <div class="col-4">
                     <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputCheckAuth" placeholder="123456" required>
                 </div>
             </div>
@@ -106,7 +119,7 @@
 
 
     <div class="row" th:if="${paymentType == null}">
-        <table class="table table-striped table-bordered table-condensed table-hover col-sm-4 mt-3">
+        <table class="table table-striped table-bordered table-condensed table-hover col-sm-6 mt-3">
             <thead>
                 <tr>
                     <th>Payment Type</th>
