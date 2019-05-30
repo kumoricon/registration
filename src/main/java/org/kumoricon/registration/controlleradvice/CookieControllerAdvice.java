@@ -15,6 +15,11 @@ public class CookieControllerAdvice {
     public static final String PRINTER_COOKIE_NAME = "PRINTERNAME";
     public static final String TILL_COOKIE_NAME = "TILLNAME";
 
+    /**
+     * Provides the currently selected printer name, or null if the cookie is missing or malformed.
+     * @param request
+     * @return
+     */
     @ModelAttribute("selectedPrinter")
     public String selectedPrinter(final HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -22,7 +27,14 @@ public class CookieControllerAdvice {
         if (cookies != null) {
             for (Cookie c : request.getCookies()) {
                 if (c.getName().equals(PRINTER_COOKIE_NAME)) {
-                    return c.getValue();
+                    // This has a try/catch around it so that the UI isn't broken if any weird values
+                    // end up in the cookie and it fails to parse.
+                    try {
+                        PrinterSettings settings = PrinterSettings.fromCookieValue(c.getValue());
+                        return settings.getPrinterName();
+                    } catch (Exception ex) {
+                        return null;
+                    }
                 }
             }
         }
@@ -30,7 +42,7 @@ public class CookieControllerAdvice {
     }
 
     /**
-     * Provides the till number, or null if empty. Till is typically just a number
+     * Provides the till name, or null if empty. Till is typically just a number
      * @param request
      * @return
      */

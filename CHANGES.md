@@ -7,6 +7,8 @@ Version 0.7.0 (Pending)
 - Fixed NullPointerException when a request has no cookies
 - Added Attendee Detail screen, add note functionality
 - Added icons to Take Payment screen
+- Added x and y offset on Printer selection page, support for storing offset in cookie
+- Badge generation/printing from server working
 
 Version 0.6.0 (5/25/2019)
 - Added Till Detail Report after discussion w/ Treasury Dept. This report will be included with each

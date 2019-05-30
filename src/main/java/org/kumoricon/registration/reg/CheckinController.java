@@ -1,5 +1,7 @@
 package org.kumoricon.registration.reg;
 
+import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
+import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
@@ -8,10 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -68,8 +67,7 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}/printbadge")
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadge(Model model,
-                             @PathVariable Integer id,
-                             @RequestParam(required=false , value = "action") String action) {
+                             @PathVariable Integer id) {
         Attendee attendee = attendeeRepository.findById(id);
         model.addAttribute("attendee", attendee);
         return "reg/checkin-id-printbadge";
@@ -79,31 +77,20 @@ public class CheckinController {
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadgeAction(Model model,
                                    @PathVariable Integer id,
-                                   @RequestParam(required=false , value = "action") String action) {
+                                   @RequestParam(required=false , value = "action") String action,
+                                   @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         Attendee attendee = attendeeRepository.findById(id);
+        PrinterSettings settings = PrinterSettings.fromCookieValue(printerCookie);
 
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
             return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&orderId=" + attendee.getOrderId();
         } else if (action != null && action.equals("reprintDuringCheckin")) {
+
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=Reprinting+Badge";
         } else {
             throw new RuntimeException("No action found");
         }
     }
-
-    private Attendee findAttendee(String id) {
-        Attendee attendee;
-        try {
-            attendee = attendeeRepository.findById(Integer.parseInt(id));
-            if (attendee == null) {
-                throw new RuntimeException("Attendee " + id + " not found");
-            }
-        } catch (NumberFormatException ex) {
-            throw new RuntimeException("Couldn't convert " + id + " to a number");
-        }
-        return attendee;
-    }
-
 }

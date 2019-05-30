@@ -74,6 +74,11 @@ class BadgeRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
+    @Transactional(readOnly = true)
+    public Badge findById(Integer badgeId) {
+        return jdbcTemplate.queryForObject("SELECT * from badges where badges.id=?",
+                new Object[]{badgeId}, new BadgeRowMapper());
+    }
 
     class BadgeRowMapper implements RowMapper<Badge> {
         @Override

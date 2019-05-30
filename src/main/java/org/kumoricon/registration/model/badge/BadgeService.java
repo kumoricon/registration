@@ -70,4 +70,11 @@ public class BadgeService {
         AgeRange ageRange = ageRangeRepository.findAgeRangeForBadgeIdAndAge(badgeId, age);
         return ageRange.getCost();
     }
+
+    @Transactional(readOnly = true)
+    public Badge findById(Integer badgeId) {
+        Badge badge = badgeRepository.findById(badgeId);
+        badge.setAgeRanges(ageRangeRepository.findAgeRangesForBadgeId(badgeId));
+        return badge;
+    }
 }

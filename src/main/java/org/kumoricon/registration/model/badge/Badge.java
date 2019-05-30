@@ -82,6 +82,20 @@ public class Badge {
         return getCostForAge(Long.valueOf(age));
     }
 
+    public AgeRange getAgeRangeForAge(Long age) {
+        if (age != null) {
+            for (AgeRange ageRange : ageRanges) {
+                if (ageRange.isValidForAge(age)) {
+                    return ageRange;
+                }
+            }
+        } else {
+            return getAgeRangeForAge(1L);   // If no age, return age range for 7. IE, assume they're a minor
+        }
+        return null;
+    }
+
+
     public String toString() {
         if (id != null) {
             return String.format("[Badge %s: %s]", id, name);

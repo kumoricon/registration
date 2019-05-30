@@ -233,18 +233,6 @@ public class Attendee {
         }
     }
 
-    public AgeRange getCurrentAgeRange() {
-//        if (birthDate != null && badge != null) {
-//            for (AgeRange ageRange : getBadge().getAgeRanges()) {
-//                if (ageRange.isValidForAge(getAge())) {
-//                    return ageRange;
-//                }
-//            }
-//        }
-        return null;
-    }
-
-
 //    public boolean fieldsSameAs(Attendee attendee) {
 //        if (attendee == null) return false;
 //
