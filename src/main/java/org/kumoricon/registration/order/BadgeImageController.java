@@ -10,6 +10,8 @@ import org.kumoricon.registration.print.formatter.FullBadgePrintFormatter;
 import org.kumoricon.registration.print.formatter.badgeimage.AttendeeBadgeDTO;
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreator;
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorFull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,8 @@ public class BadgeImageController {
     private final AttendeeRepository attendeeRepository;
     private final BadgeService badgeService;
 
+    private static final Logger log = LoggerFactory.getLogger(BadgeImageController.class);
+
     public BadgeImageController(AttendeeRepository attendeeRepository, BadgeService badgeService) {
         this.attendeeRepository = attendeeRepository;
         this.badgeService = badgeService;
@@ -37,6 +41,7 @@ public class BadgeImageController {
     public ResponseEntity<byte[]> getBadgeImage(@PathVariable Integer orderId,
                                               @PathVariable Integer attendeeId) {
         Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        log.info("viewed badge image for {}", attendee);
         Badge badge = badgeService.findById(attendee.getBadgeId());
         AttendeeBadgeDTO a = AttendeeBadgeDTO.fromAttendee(attendee, badge);
 
@@ -56,6 +61,7 @@ public class BadgeImageController {
                                               @PathVariable Integer attendeeId,
                                               @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
         Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        log.info("downloaded badge PDF for {}", attendee);
         Badge badge = badgeService.findById(attendee.getBadgeId());
         AttendeeBadgeDTO a = AttendeeBadgeDTO.fromAttendee(attendee, badge);
 

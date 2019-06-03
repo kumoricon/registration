@@ -1,14 +1,15 @@
 package org.kumoricon.registration.reg;
 
+import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
+import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
-import org.kumoricon.registration.model.attendee.AttendeeValidator;
-import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.OrderService;
 import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
+import org.kumoricon.registration.print.BadgePrintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.PrintException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class AtConRegistrationController {
     private final OrderRepository orderRepository;
     private final OrderService orderService;
     private final PaymentRepository paymentRepository;
+    private final BadgePrintService badgePrintService;
     private final Logger log = LoggerFactory.getLogger(AtConRegistrationController.class);
 
 
@@ -36,11 +38,13 @@ public class AtConRegistrationController {
     public AtConRegistrationController(AttendeeRepository attendeeRepository,
                                        OrderRepository orderRepository,
                                        PaymentRepository paymentRepository,
-                                       OrderService orderService) {
+                                       OrderService orderService,
+                                       BadgePrintService badgePrintService) {
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
+        this.badgePrintService = badgePrintService;
     }
 
 
@@ -82,11 +86,19 @@ public class AtConRegistrationController {
     @RequestMapping(value = "/reg/atconorder/{orderId}/complete", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String orderComplete(@PathVariable Integer orderId,
-                                @AuthenticationPrincipal User principal) {
+                                @AuthenticationPrincipal User principal,
+                                @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         log.info("completing order {} and printing badges", orderId);
         orderService.completeOrder(orderId, principal);
-        // TODO: print badges
-        return "redirect:/reg/atconorder/" + orderId + "/printbadges";
+        PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+
+        try {
+            String result = badgePrintService.printBadgesForAttendees(attendees, printerSettings);
+            return "redirect:/reg/atconorder/" + orderId + "/printbadges?msg=" + result;
+        } catch (PrintException ex) {
+            return "redirect:/reg/atconorder/" + orderId + "/printbadges?err=" + ex.getMessage();
+        }
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges", method = RequestMethod.GET)

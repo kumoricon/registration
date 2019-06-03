@@ -24,7 +24,7 @@ public class AttendeeService {
     public Attendee checkInAttendee(Integer attendeeId, User user) {
         Attendee attendee = attendeeRepository.findById(attendeeId);
         if (attendee != null) {
-            log.info("checking in attendee {}", attendee);
+            log.info("checked in {}", attendee);
         } else {
             log.error("{} tried to check in attendee id {} but it wasn't found", user, attendeeId);
             throw new RuntimeException("Attendee " + attendeeId + " not found");

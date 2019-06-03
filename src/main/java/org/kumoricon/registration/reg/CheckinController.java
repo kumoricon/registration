@@ -4,15 +4,18 @@ import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserRepository;
+import org.kumoricon.registration.print.BadgePrintService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import javax.print.PrintException;
+import java.util.List;
 
 
 /**
@@ -23,15 +26,20 @@ import java.security.Principal;
 public class CheckinController {
     private final AttendeeRepository attendeeRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
-    private final UserRepository userRepository;
     private final AttendeeService attendeeService;
+    private final BadgePrintService badgePrintService;
+
+    private static final Logger log = LoggerFactory.getLogger(CheckinController.class);
 
     @Autowired
-    public CheckinController(AttendeeRepository attendeeRepository, AttendeeHistoryRepository attendeeHistoryRepository, UserRepository userRepository, AttendeeService attendeeService) {
+    public CheckinController(AttendeeRepository attendeeRepository,
+                             AttendeeHistoryRepository attendeeHistoryRepository,
+                             AttendeeService attendeeService,
+                             BadgePrintService badgePrintService) {
         this.attendeeRepository = attendeeRepository;
-        this.userRepository = userRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;
         this.attendeeService = attendeeService;
+        this.badgePrintService = badgePrintService;
     }
 
     @RequestMapping(value = "/reg/checkin/{id}")
@@ -51,17 +59,24 @@ public class CheckinController {
 
     @RequestMapping(value = "/reg/checkin/{id}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
-    @Transactional
-    public String checkIn(Model model,
-                             @PathVariable Integer id,
-                             Principal principal) {
-        User currentUser = userRepository.findOneByUsernameIgnoreCase(principal.getName());
-        Attendee attendee = attendeeService.checkInAttendee(id, currentUser);
-        model.addAttribute("attendee", attendee);
+    public String checkIn(@PathVariable Integer id,
+                          @AuthenticationPrincipal User user,
+                          @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
 
-        // TODO: Print badge here
+        Attendee attendee = attendeeService.checkInAttendee(id, user);
 
-        return "reg/checkin-id-printbadge";
+        if (attendee.isBadgePrePrinted()) {
+            return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=Badge+is+pre-+printed";
+        }
+        PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+
+        try {
+            String result = badgePrintService.printBadgesForAttendees(List.of(attendee), printerSettings);
+            return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=" + result;
+        } catch (PrintException ex) {
+            log.error("Error printing", ex);
+            return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=" + ex.getMessage();
+        }
     }
 
     @RequestMapping(value = "/reg/checkin/{id}/printbadge")
@@ -69,26 +84,36 @@ public class CheckinController {
     public String printBadge(Model model,
                              @PathVariable Integer id) {
         Attendee attendee = attendeeRepository.findById(id);
+        if (!attendee.getCheckedIn()) {
+            return "redirect:/reg/checkin/" + attendee.getId() + "?err=attendee+not+checked+in";
+        }
+
         model.addAttribute("attendee", attendee);
         return "reg/checkin-id-printbadge";
     }
 
     @RequestMapping(value = "/reg/checkin/{id}/printbadge", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
-    public String printBadgeAction(Model model,
-                                   @PathVariable Integer id,
+    public String printBadgeAction(@PathVariable Integer id,
                                    @RequestParam(required=false , value = "action") String action,
                                    @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         Attendee attendee = attendeeRepository.findById(id);
         PrinterSettings settings = PrinterSettings.fromCookieValue(printerCookie);
 
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
+            log.info("Reports badge printed successfully for {}", attendee);
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
             return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&orderId=" + attendee.getOrderId();
         } else if (action != null && action.equals("reprintDuringCheckin")) {
-
-            return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=Reprinting+Badge";
+            log.info("reprinting badge during check in for {}", attendee);
+            try {
+                String result = badgePrintService.printBadgesForAttendees(List.of(attendee), settings);
+                return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=" + result;
+            } catch (PrintException ex) {
+                log.error("Error printing", ex);
+                return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=" + ex.getMessage();
+            }
         } else {
             throw new RuntimeException("No action found");
         }
