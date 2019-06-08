@@ -10,6 +10,7 @@ Version 0.7.0 (Pending)
 - Added x and y offset on Printer selection page, support for storing offset in cookie
 - Badge generation/printing from server
 - Show badge image during checkin, added download badge PDF link
+- Added reprint badge button
 
 Version 0.6.0 (5/25/2019)
 - Added Till Detail Report after discussion w/ Treasury Dept. This report will be included with each
