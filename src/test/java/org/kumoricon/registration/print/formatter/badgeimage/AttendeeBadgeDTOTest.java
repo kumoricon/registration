@@ -1,7 +1,6 @@
 package org.kumoricon.registration.print.formatter.badgeimage;
 
 import org.junit.Test;
-import org.kumoricon.registration.model.attendee.Attendee;
 
 import static org.junit.Assert.*;
 

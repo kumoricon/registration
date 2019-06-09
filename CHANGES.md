@@ -11,6 +11,7 @@ Version 0.7.0 (Pending)
 - Badge generation/printing from server
 - Show badge image during checkin, added download badge PDF link
 - Added reprint badge button
+- Added badge test link /utility/testbadges.pdf that will generate badges with historically troublesome names
 
 Version 0.6.0 (5/25/2019)
 - Added Till Detail Report after discussion w/ Treasury Dept. This report will be included with each

@@ -3,7 +3,6 @@ package org.kumoricon.registration.print;
 
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeFactory;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.print.formatter.BadgePrintFormatter;
