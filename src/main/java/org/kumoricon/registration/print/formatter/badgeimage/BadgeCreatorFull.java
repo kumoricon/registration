@@ -56,7 +56,7 @@ public class BadgeCreatorFull implements BadgeCreator {
         } else {
             // Draw regular name in the combined name and fan name spaces
             largeNameBg = new Rectangle(70, 275, 360, 130);
-            name = attendee.getFirstName() + " " + attendee.getLastName();
+            name = attendee.getName();
         }
 
         b.drawStretchedLeftAlignedString(name, largeNameBg, getNameFont(),Color.BLACK);
@@ -66,8 +66,10 @@ public class BadgeCreatorFull implements BadgeCreator {
         // If Fan Name exists, draw the full name here (on the second line)
         String fanName = attendee.getFanName();
         if (fanName != null && !attendee.getFanName().trim().isEmpty()) {
-            Rectangle nameBg = new Rectangle(70, 340, 360, 40);
-            b.drawStretchedCenteredString(attendee.getFirstName() + " " + attendee.getLastName(), nameBg, getNameFont(), Color.BLACK);
+            if (attendee.getName() != null && !attendee.getName().isEmpty()) {
+                Rectangle nameBg = new Rectangle(70, 340, 360, 40);
+                b.drawStretchedCenteredString(attendee.getName(), nameBg, getNameFont(), Color.BLACK);
+            }
         }
     }
 

@@ -7,8 +7,7 @@ import org.kumoricon.registration.model.badge.Badge;
 @SuppressWarnings("unused")
 public class AttendeeBadgeDTO {
     private Integer id;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String fanName;
     private String ageStripeBackgroundColor;
     private String ageStripeText;
@@ -25,29 +24,34 @@ public class AttendeeBadgeDTO {
     }
 
     public AttendeeBadgeDTO(String firstName, String lastName, String fanName) {
-        super();
-        this.firstName = firstName;
-        this.lastName = lastName;
+        setName(firstName, lastName);
         this.fanName = fanName;
     }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public String getFirstName() {
-        return firstName;
+    public void setName(String name) {
+        if (name == null) {
+            this.name = "";
+        }
+        this.name = name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String firstName, String lastName) {
+        StringBuilder nameBuilder = new StringBuilder();
+        if (firstName != null) {
+            nameBuilder.append(firstName.trim());
+            nameBuilder.append(" ");
+        }
+        if (lastName != null) {
+            nameBuilder.append(lastName.trim());
+        }
+        this.name = nameBuilder.toString().trim();
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getName() {
+        return name;
     }
 
     public String getFanName() {
@@ -101,8 +105,7 @@ public class AttendeeBadgeDTO {
     public static AttendeeBadgeDTO fromAttendee(Attendee attendee, Badge badge) {
         AttendeeBadgeDTO output = new AttendeeBadgeDTO();
         output.setId(attendee.getId());
-        output.setFirstName(attendee.getFirstName());
-        output.setLastName(attendee.getLastName());
+        output.setName(attendee.getFirstName(), attendee.getLastName());
         output.setFanName(attendee.getFanName());
 
         output.setBadgeNumber(attendee.getBadgeNumber());
@@ -116,5 +119,4 @@ public class AttendeeBadgeDTO {
 
         return output;
     }
-
 }

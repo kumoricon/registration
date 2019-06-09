@@ -32,6 +32,9 @@ public class PrinterInfoService {
      * @throws PrintException Exception if printer not found and default printer isn't set
      */
     public javax.print.PrintService findPrinter(String name) throws PrintException {
+        if (name == null) {
+            throw new PrintException("No printer selected");
+        }
         name = name.toLowerCase().trim();
         javax.print.PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
 
