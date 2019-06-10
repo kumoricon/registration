@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.kumoricon</groupId>
 	<artifactId>registration</artifactId>
-	<version>0.7.0</version>
+	<version>0.7.1</version>
 	<name>registration</name>
 	<description>Attendee registration system</description>
 

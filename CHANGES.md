@@ -1,6 +1,8 @@
 # Change History
 
-Version 0.7.0 (Pending)
+Version 0.7.1 (Pending)
+
+Version 0.7.0 (6/9/2019)
 - When creating database, add citext extension if it does not exist (needed to support case insensitive searches,
   previously created in a manual step)
 - Fixed redirect bug when running behind load balancer that's using HTTPS
