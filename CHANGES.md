@@ -1,6 +1,8 @@
 # Change History
 
 Version 0.7.1 (Pending)
+- Added Country field to at-con checkin, default to United States of America or previous attendee's country when
+  2+ attendees are added to the same order
 
 Version 0.7.0 (6/9/2019)
 - When creating database, add citext extension if it does not exist (needed to support case insensitive searches,

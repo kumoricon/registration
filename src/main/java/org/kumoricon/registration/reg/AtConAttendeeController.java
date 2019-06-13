@@ -54,10 +54,12 @@ public class AtConAttendeeController {
         if (attendeeId.equals("new")) {
             log.info("Adding new attendee to order {}", order);
             attendee = new Attendee();
+            attendee.setCountry("United States of America");
             if (orderAttendees.size() > 0) {
                 Attendee prevAttendee = orderAttendees.get(0);
                 attendee.setEmergencyContactFullName(prevAttendee.getEmergencyContactFullName());
                 attendee.setEmergencyContactPhone(prevAttendee.getEmergencyContactPhone());
+                attendee.setCountry(prevAttendee.getCountry());
                 if (prevAttendee.isMinor()) {
                     attendee.setParentFullName(prevAttendee.getParentFullName());
                     attendee.setParentPhone(prevAttendee.getParentPhone());
