@@ -101,6 +101,26 @@ public class AtConRegistrationController {
         }
     }
 
+    @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges/reprint/{attendeeId}", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String reprintBadgeDuringCheckin(@PathVariable Integer orderId,
+                                @PathVariable Integer attendeeId,
+                                @AuthenticationPrincipal User principal,
+                                @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
+        Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        log.info("reprinting badge during checkin for {}", attendeeId);
+
+        PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+
+        try {
+            String result = badgePrintService.printBadgesForAttendees(List.of(attendee), printerSettings);
+            return "redirect:/reg/atconorder/" + orderId + "/printbadges?msg=" + result;
+        } catch (PrintException ex) {
+            return "redirect:/reg/atconorder/" + orderId + "/printbadges?err=" + ex.getMessage();
+        }
+    }
+
+
     @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String printBadges(Model model,

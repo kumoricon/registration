@@ -16,7 +16,16 @@
             </tr>
             <tr th:each="a : ${attendees}">
                 <td th:text="${a.nameOrFanName}">Attendee Name</td>
-                <td>Reprint</td>
+                <td>
+                    <form th:action="'/reg/atconorder/' + ${orderId} + '/printbadges/reprint/' + ${a.id}" method="post"
+                    th:if="${!a.isBadgePrinted()}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="submit" value="Reprint" class="btn btn-primary mb-2">
+                    </form>
+
+                    <span th:if="${a.isBadgePrinted()}">Already Checked In
+                    (<a th:href="'/orders/' + ${a.orderId} + '/attendees/' + ${a.id}">Reprint here</a>)</span>
+                </td>
             </tr>
         </table>
     </div>
