@@ -42,21 +42,6 @@ public class Order {
     public void setOrderTakenByUser(User orderTakenByUser) { this.orderTakenByUser = orderTakenByUser.getId(); }
     public void setOrderTakenByUser(Integer userId) { this.orderTakenByUser = userId; }
 
-
-//    public void removePayment(Payment payment) {
-//        payments.remove(payment);
-//        if (getTotalPaid().compareTo(getTotalAmount()) >= 0) {
-//            paid = true;
-//            for (Attendee attendee : attendeeList) {
-//                attendee.setCheckedIn(true);
-//                attendee.setPaid(true);
-//            }
-//        } else {
-//            paid = false;
-//        }
-//    }
-
-
     public static String generateOrderId() {
         String symbols = "abcdefghijklmnopqrstuvwxyz01234567890";
         Random random = new Random();
@@ -66,19 +51,6 @@ public class Order {
         }
         return output.toString();
     }
-
-//    public void paymentComplete(User currentUser) {
-//        if (currentUser != null) {
-//            paid = true;
-//            for (Attendee attendee : attendeeList) {
-//                if (!attendee.getCheckedIn()) {
-//                    attendee.setCheckedIn(true);
-//                    attendee.setPaid(true);
-////                    attendee.addHistoryEntry(currentUser, "Attendee checked in");
-//                }
-//            }
-//        }
-//    }
 
     public String toString() {
         if (id != null) {
@@ -97,11 +69,4 @@ public class Order {
         totalAmount.add(amount);
     }
 
-    //    public BigDecimal getBalanceDue() {
-//        if (getTotalPaid().compareTo(getTotalAmount()) < 0) {
-//            return getTotalAmount().subtract(getTotalPaid());
-//        } else {
-//            return BigDecimal.ZERO;
-//        }
-//    }
 }
