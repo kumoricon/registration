@@ -14,14 +14,12 @@ public class Order {
     private Integer id;
     private String orderId;
     private Boolean paid;
-    private BigDecimal totalAmount;
 
     private Integer orderTakenByUser;
     private String notes;
 
     public Order() {
         this.paid = false;
-        this.totalAmount = BigDecimal.ZERO;
     }
 
     public Integer getId() { return id; }
@@ -59,14 +57,4 @@ public class Order {
             return String.format("[Order: %s]", orderId);
         }
     }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
-
-    public void addToTotalAmount(BigDecimal amount) {
-        totalAmount.add(amount);
-    }
-
 }

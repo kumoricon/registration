@@ -59,10 +59,6 @@ public class OrderService {
         }
 
         attendeeService.save(attendee);
-
-        // Recalculate order total
-        order.setTotalAmount(orderRepository.getTotalByOrderId(orderId));
-        orderRepository.save(order);
     }
 
 
