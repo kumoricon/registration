@@ -3,6 +3,7 @@ package org.kumoricon.registration.order;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
+import org.kumoricon.registration.model.order.OrderDTO;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.user.User;
@@ -49,7 +50,7 @@ public class OrderController {
         } else {
             prevPage = null;
         }
-        List<Order> orders = orderRepository.findAllBy(page);
+        List<OrderDTO> orders = orderRepository.findAllDTOBy(page);
 
         if (orders.size() == 20) {
             nextPage = page + 1;

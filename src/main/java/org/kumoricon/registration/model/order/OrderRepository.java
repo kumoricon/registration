@@ -19,6 +19,7 @@ import java.util.Map;
 @Repository
 public class OrderRepository {
     private final JdbcTemplate jdbcTemplate;
+    private static final Integer PAGE_SIZE = 20;
 
     public OrderRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -66,7 +67,7 @@ public class OrderRepository {
     @Transactional(readOnly = true)
     public List<Order> findAllBy(Integer page) {
         return jdbcTemplate.query("select * from orders ORDER BY id desc LIMIT ? OFFSET ?",
-                new Object[]{20, 20*page},
+                new Object[]{PAGE_SIZE, PAGE_SIZE*page},
                 new OrderRowMapper());
     }
 
@@ -112,6 +113,17 @@ public class OrderRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderDTO> findAllDTOBy(Integer page) {
+        return jdbcTemplate.query("select orders.*, users.username as order_taken_by_username, total_due, total_paid from orders" +
+                " LEFT OUTER JOIN (SELECT payments.order_id, sum(payments.amount) as total_paid from payments GROUP BY payments.order_id) as t1 on orders.id = t1.order_id" +
+                " LEFT OUTER JOIN (SELECT attendees.order_id, sum(attendees.paid_amount) as total_due from attendees GROUP BY attendees.order_id) as t2 on orders.id = t2.order_id" +
+                " LEFT OUTER JOIN users on orders.order_taken_by_user = users.id" +
+                " GROUP BY orders.id, username, total_due, total_paid" +
+                " ORDER BY id desc LIMIT ? OFFSET ?",
+                new Object[]{PAGE_SIZE, PAGE_SIZE*page},
+                new OrderDTORowMapper());
+    }
 
     private class OrderRowMapper implements RowMapper<Order>
     {
@@ -122,7 +134,25 @@ public class OrderRepository {
             o.setOrderId(rs.getString("order_id"));
             o.setOrderTakenByUser(rs.getInt("order_taken_by_user"));
             o.setPaid(rs.getBoolean("paid"));
+            o.setNotes(rs.getString("notes"));
             return o;
+        }
+    }
+
+
+    private class OrderDTORowMapper implements RowMapper<OrderDTO>
+    {
+        @Override
+        public OrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new OrderDTO(
+                    rs.getInt("id"),
+                    rs.getString("order_id"),
+                    rs.getBoolean("paid"),
+                    rs.getBigDecimal("total_due"),
+                    rs.getBigDecimal("total_paid"),
+                    rs.getString("order_taken_by_username"),
+                    rs.getString("notes")
+            );
         }
     }
 
