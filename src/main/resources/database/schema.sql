@@ -90,6 +90,8 @@ create table if not exists tillsessions
 create index if not exists tillsessions_open_index
   on tillsessions (open);
 
+create index if not exists tillsessions_user_id_index
+  on tillsessions (user_id);
 
 
 create table if not exists badges
@@ -131,6 +133,9 @@ create table if not exists ageranges
       on delete cascade
 );
 
+create index if not exists ageranges_badge_id_index
+    on ageranges (badge_id);
+
 
 create table if not exists orders
 (
@@ -168,6 +173,13 @@ create table if not exists payments
     constraint fk_payments_orderid_orders
       references orders
 );
+
+create index if not exists payments_till_session_id_index
+    on payments (till_session_id);
+
+create index if not exists payments_order_id_index
+    on payments (order_id);
+
 
 
 create table if not exists attendees
@@ -212,6 +224,9 @@ create table if not exists attendees
       references orders
 );
 
+create index if not exists attendees_order_id_index
+    on attendees (order_id);
+
 
 
 create table if not exists attendeehistory
@@ -229,8 +244,11 @@ create table if not exists attendeehistory
       references attendees
 );
 
+create index if not exists attendeehistory_attendee_id_index
+    on attendeehistory (attendee_id);
 
-create table loginsessions
+
+create table if not exists loginsessions
 (
   start timestamp with time zone not null,
   users_id integer not null
@@ -240,7 +258,7 @@ create table loginsessions
     unique (start, users_id)
 );
 
-create index loginsessions_start_index
+create index if not exists loginsessions_start_index
   on loginsessions (start);
 
 
