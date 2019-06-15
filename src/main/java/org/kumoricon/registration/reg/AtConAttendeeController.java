@@ -4,6 +4,7 @@ import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.attendee.AttendeeValidator;
 import org.kumoricon.registration.model.badge.BadgeService;
+import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.OrderService;
@@ -28,17 +29,19 @@ public class AtConAttendeeController {
     private final OrderRepository orderRepository;
     private final BadgeService badgeService;
     private final OrderService orderService;
+    private final BlacklistRepository blacklistRepository;
     private final Logger log = LoggerFactory.getLogger(AtConRegistrationController.class);
 
     private static final String ATTENDEE_TEMPLATE = "reg/atcon-order-attendee";
     private static final String SPECIALTY_TEMPLATE = "reg/atcon-order-attendee-specialty";
 
-    public AtConAttendeeController(AttendeeValidator attendeeValidator, AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeService badgeService, OrderService orderService) {
+    public AtConAttendeeController(AttendeeValidator attendeeValidator, AttendeeRepository attendeeRepository, OrderRepository orderRepository, BadgeService badgeService, OrderService orderService, BlacklistRepository blacklistRepository) {
         this.attendeeValidator = attendeeValidator;
         this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.badgeService = badgeService;
         this.orderService = orderService;
+        this.blacklistRepository = blacklistRepository;
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}")
@@ -100,6 +103,12 @@ public class AtConAttendeeController {
         // todo: add server-side validation here IF the current user doesn't have the at_con_registration_specialty
         // right. For example, check name isn't blank, etc. BUT specialty coords don't get that validation.
         // validation may be skipped if forceValidate==true AND principal.hasRight("at_con_registration_specialty"
+
+        if (!principal.hasRight("at_con_registration_blacklist") &&
+                blacklistRepository.numberOfMatches(attendee.getFirstName(), attendee.getLastName()) > 0) {
+            log.info("{} matched blacklist during check in", attendee);
+            return "redirect:/reg/atconorder/" + orderId + "?err=Blacklist+match.+Please+send+party+to+manager+booth";
+        }
 
         log.info("Adding {} to order {}", attendee, orderId);
         orderService.saveAttendeeToOrder(orderId, attendee, principal);
