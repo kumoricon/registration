@@ -2,22 +2,23 @@ package org.kumoricon.registration.model.blacklist;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
-@Service
+@Repository
 public class BlacklistRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public BlacklistRepository(JdbcTemplate jdbcTemplate) {
+    public BlacklistRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -28,40 +29,43 @@ public class BlacklistRepository {
     }
 
     @Transactional(readOnly = true)
-    public Optional<BlacklistName> findById(int id) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(
-                    "select * from blacklist where id=?",
-                    new Object[]{id}, new BlacklistRowMapper()));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public BlacklistName findById(int id) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject("select * from blacklist where id=:id",
+                namedParameters, new BlacklistRowMapper());
     }
 
     @Transactional
     public void delete(BlacklistName blacklistName) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", blacklistName.getId());
         if (blacklistName.getId() != null) {
-            jdbcTemplate.update("DELETE FROM blacklist WHERE id = ?", blacklistName.getId());
+            jdbcTemplate.update("DELETE FROM blacklist WHERE id = :id", namedParameters);
         }
     }
 
     @Transactional
     public void save(BlacklistName blacklistName) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", blacklistName.getId())
+                .addValue("first_name", blacklistName.getFirstName())
+                .addValue("last_name", blacklistName.getLastName());
+
         if (blacklistName.getId() == null) {
-            jdbcTemplate.update("INSERT INTO blacklist(first_name, last_name) VALUES(?,?)",
-                    blacklistName.getFirstName(), blacklistName.getLastName());
+            jdbcTemplate.update("INSERT INTO blacklist(first_name, last_name) VALUES(:first_name, :last_name)",
+                    namedParameters);
         } else {
-            jdbcTemplate.update("UPDATE blacklist SET first_name = ?, last_name = ? WHERE id = ?",
-                    blacklistName.getFirstName(),
-                    blacklistName.getLastName(),
-                    blacklistName.getId());
+            jdbcTemplate.update("UPDATE blacklist SET first_name = :first_name, last_name = :last_name WHERE id = :id",
+                    namedParameters);
         }
     }
 
     @Transactional(readOnly = true)
     public Integer numberOfMatches(String firstName, String lastName) {
-        String sql = "select count(*) from blacklist WHERE first_name = ? and last_name = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("first_name", firstName)
+                .addValue("last_name", lastName);
+
+        String sql = "select count(*) from blacklist WHERE first_name = :first_name and last_name = :last_name";
+        return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
     class BlacklistRowMapper implements RowMapper<BlacklistName>

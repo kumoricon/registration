@@ -3,6 +3,8 @@ package org.kumoricon.registration.admin.blacklist;
 import org.kumoricon.registration.model.blacklist.BlacklistName;
 import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.blacklist.BlacklistValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class BlacklistController {
     private final BlacklistRepository blacklistRepository;
     private final BlacklistValidator blacklistValidator;
+    private static final Logger log = LoggerFactory.getLogger(BlacklistController.class);
 
     @Autowired
     public BlacklistController(BlacklistRepository blacklistRepository, BlacklistValidator blacklistValidator) {
@@ -50,12 +53,7 @@ public class BlacklistController {
         if (id.toLowerCase().equals("new")) {
             blacklistName = new BlacklistName();
         } else {
-            Optional<BlacklistName> name = blacklistRepository.findById(Integer.parseInt(id));
-            if (name.isPresent()) {
-                blacklistName = name.get();
-            } else {
-                throw new RuntimeException("Blacklist entry " + id + " not found");
-            }
+            blacklistName = blacklistRepository.findById(Integer.parseInt(id));
         }
 
         model.addAttribute("blacklistName", blacklistName);
@@ -68,20 +66,19 @@ public class BlacklistController {
     @PreAuthorize("hasAuthority('manage_blacklist')")
     public String saveUser(@ModelAttribute @Validated final BlacklistName blacklistName,
                            @RequestParam(required=false , value = "action") String action,
-                           final BindingResult bindingResult,
-                           final Model model,
-                           HttpServletRequest request) {
+                           final BindingResult bindingResult) {
         if ("Delete".equals(action)) {
+            log.info("deleted blacklist entry {}", blacklistName);
             blacklistRepository.delete(blacklistName);
             return "redirect:/admin/blacklist?msg=Deleted%20" + blacklistName.getFirstName() + "%20" + blacklistName.getLastName();
         }
-
 
         if (bindingResult.hasErrors()) {
             return "admin/blacklist-id";
         }
 
         try {
+            log.info("saved blacklist entry {}", blacklistName);
             blacklistRepository.save(blacklistName);
         } catch (Exception ex) {
             bindingResult.addError(new ObjectError("blacklistName", ex.getMessage()));
