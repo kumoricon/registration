@@ -18,15 +18,22 @@ function addListeners() {
     $("input").blur(setState);
     $("#inputBirthDate").blur(onBirthdateUpdate);
     $('#inputNameIsLegalName').change(onNameIsLegalNameUpdate);
+    $('#inputBadgeType').change(onBadgeTypeChange);
 }
 
 function onBirthdateUpdate(eventObject) {
     var inputDateString = eventObject.target.value;
     updateAge(inputDateString);
+    $('#inputPaidAmount').val(null);   // Clear paid amount, it should be recalculated based on age and badge type
 }
 
 function onNameIsLegalNameUpdate(eventObject) {
     showHideLegalName(eventObject.target.checked);
+}
+
+function onBadgeTypeChange() {
+    console.log("whee");
+    $('#inputPaidAmount').val(null)
 }
 
 function showHideLegalName(show) {

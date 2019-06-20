@@ -89,7 +89,23 @@ public class AtConAttendeeController {
                                 @PathVariable Integer orderId,
                                 @PathVariable String attendeeId,
                                 @AuthenticationPrincipal User principal,
+                                @RequestParam(required=false , value = "action") String action,
                                 @RequestParam(value = "forceValidate", defaultValue = "false", required = false) Boolean forceValidate) {
+
+        if ("Delete".equals(action) && attendee.getId() != null) {
+            Order order = orderRepository.findById(orderId);
+            if (order.getPaid()) {
+                throw new RuntimeException("Error: attendees can not be deleted from an order that has been paid");
+            }
+            log.info("deleting attendee {} from {}", attendeeId, order);
+            attendeeRepository.delete(Integer.parseInt(attendeeId));
+            return "redirect:/reg/atconorder/" + orderId + "?msg=Deleted%20attendee%20" + attendeeId;
+        }
+
+        if ((principal.hasRight("at_con_registration_specialty") && forceValidate) ||
+                !principal.hasRight("at_con_registration_specialty")) {
+            attendeeValidator.validateForRegularUser(attendee, bindingResult);
+        }
 
         if (bindingResult.hasErrors()) {
             Order order = orderRepository.findById(orderId);
@@ -99,10 +115,6 @@ public class AtConAttendeeController {
             model.addAttribute("forceValidate", forceValidate);
             return chooseTemplate(principal, forceValidate);
         }
-
-        // todo: add server-side validation here IF the current user doesn't have the at_con_registration_specialty
-        // right. For example, check name isn't blank, etc. BUT specialty coords don't get that validation.
-        // validation may be skipped if forceValidate==true AND principal.hasRight("at_con_registration_specialty"
 
         if (!principal.hasRight("at_con_registration_blacklist") &&
                 blacklistRepository.numberOfMatches(attendee.getFirstName(), attendee.getLastName()) > 0) {
@@ -126,8 +138,8 @@ public class AtConAttendeeController {
 
 
     /**
-     * Return the correct template based on uesr permissoins and paramter override
-     * @param user Current uesr
+     * Return the correct template based on user permissions and parameter override
+     * @param user Current user
      * @param forceValidate Force validation enabled?
      * @return Template path
      */

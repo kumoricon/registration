@@ -5,6 +5,8 @@ Version 0.7.1 (Pending)
   2+ attendees are added to the same order
 - Added badge reprint during at-con checkin
 - Cleaned up Order List (/orders), added due and paid columns, username
+- More attendee validation for at-con orders
+- Fixed delete button for attendees in at-con orders
 
 Version 0.7.0 (6/9/2019)
 - When creating database, add citext extension if it does not exist (needed to support case insensitive searches,
