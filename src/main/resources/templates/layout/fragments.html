@@ -58,21 +58,20 @@
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_utility'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Utility</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_badge'')')}" href="#"><s>Print Test Badge</s></a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="/utility/till">Close Till Session</a>
-                        <a class="dropdown-item" href="/utility/printer">Select Printer</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_badge'')')}" href="/utility/printer">Select Printer</a>
                         <a class="dropdown-item" th:if="${#authentication.isAuthenticated()}" href="/utility/userinfo">Current User Info</a>
                     </div>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-3">
-                    <a class="nav-link" href="/utility/till" th:if="${selectedTill==null}">Select Till</a>
-                    <a class="nav-link" href="/utility/till" th:if="${selectedTill!=null}" th:text="'Till ' + ${selectedTill}">Till 3</a>
+                    <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill==null}">Select Till</a>
+                    <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill!=null}" th:text="'Till ' + ${selectedTill}">Till 3</a>
                 </li>
                 <li class="nav-item mr-3">
-                    <a class="nav-link" href="/utility/printer" th:if="${selectedPrinter == null}">Select Printer</a>
-                    <a class="nav-link" href="/utility/printer" th:if="${selectedPrinter != null}" th:text="'Printer ' + ${selectedPrinter}">Printer 192.168.1.132</a>
+                    <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter == null}">Select Printer</a>
+                    <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter != null}" th:text="'Printer ' + ${selectedPrinter}">Printer 192.168.1.132</a>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline mt-2 mt-md-0" action="/logout">

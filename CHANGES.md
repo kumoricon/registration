@@ -7,6 +7,7 @@ Version 0.7.1 (Pending)
 - Cleaned up Order List (/orders), added due and paid columns, username
 - More attendee validation for at-con orders
 - Fixed delete button for attendees in at-con orders
+- Only show printer/till selections to users that can use them
 
 Version 0.7.0 (6/9/2019)
 - When creating database, add citext extension if it does not exist (needed to support case insensitive searches,
