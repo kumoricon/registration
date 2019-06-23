@@ -26,13 +26,16 @@ public class OrderController {
     private final PaymentRepository paymentRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final BadgeService badgeService;
+    private final AttendeeRepository attendeeRepository;
 
     @Autowired
     public OrderController(OrderRepository orderRepository,
+                           AttendeeRepository attendeeRepository,
                            AttendeeDetailRepository attendeeDetailRepository,
                            PaymentRepository paymentRepository,
                            AttendeeHistoryRepository attendeeHistoryRepository,
                            BadgeService badgeService) {
+        this.attendeeRepository = attendeeRepository;
         this.orderRepository = orderRepository;
         this.attendeeDetailRepository = attendeeDetailRepository;
         this.paymentRepository = paymentRepository;
@@ -68,8 +71,12 @@ public class OrderController {
 
     @RequestMapping(value = "/orders/{orderId}")
     @PreAuthorize("hasAuthority('manage_orders')")
-    public String viewOrder(Model model,
-                             @PathVariable Integer orderId) {
+    public String listOrdersById(Model model,
+                                 @PathVariable Integer orderId) {
+        OrderDTO order = orderRepository.findDTOById(orderId);
+        model.addAttribute("order", order);
+        model.addAttribute("attendees", attendeeRepository.findAllByOrderId(orderId));
+        model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
         return "order/orders-id";
     }
 

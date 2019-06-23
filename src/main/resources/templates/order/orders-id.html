@@ -7,8 +7,59 @@
 <body>
 
 <div layout:fragment="content" class="container">
+    <div class="row">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-nowrap">Order ID</th>
+                <th class="text-nowrap">Taken By</th>
+                <th class="text-nowrap">Total Amount</th>
+                <th class="text-nowrap">Paid</th>
+                <th class="text-nowrap">Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${order == null}">
+                <td colspan="4"> No Orders Found </td>
+            </tr>
+            <tr>
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.orderTakenByUsername}"></td>
+                <td class="text-right" th:text="'$' + ${order.getTotalAmount()}"></td>
+                <td th:text="${order.paid}"></td>
+                <td th:text="${order.notes}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <table  class="table table-bordered table-striped table-sm">
+            <tbody>
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-nowrap">Attendee Name</th>
+                <th class="text-nowrap">First Name</th>
+                <th class="text-nowrap">Fan Name</th>
+                <th class="text-nowrap">Birthdate</th>
+                <th class="text-nowrap">Badge Type</th>
+            </tr>
+            </thead>
 
-    TODO Order Screen
+            <tr th:if="${attendees.empty}">
+                <td colspan="6"> No Attendeess Found </td>
+            </tr>
+            <tr th:each="attendee : ${attendees}">
+                <td> <a th:href="'/orders/' + ${attendee.orderId} + '/' + ${attendee.id}" th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
+                <td th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}">John Doe</td>
+                <td th:text="${attendee.getFanName()}">Fan Name</td>
+                <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1990 (29)</td>
+                <td th:text="${attendee.badgeType}"></td>
+                <td>
+                    <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
 </div>
 
 </body>
