@@ -3,6 +3,7 @@ package org.kumoricon.registration.order;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.Order;
+import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.order.OrderDTO;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
@@ -26,13 +27,19 @@ public class OrderController {
     private final PaymentRepository paymentRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final BadgeService badgeService;
+    private final AttendeeRepository attendeeRepository;
+    private final AttendeeSearchRepository attendeeSearchRepository;
 
     @Autowired
     public OrderController(OrderRepository orderRepository,
+                           AttendeeRepository attendeeRepository,
+                           AttendeeSearchRepository attendeeSearchRepository,
                            AttendeeDetailRepository attendeeDetailRepository,
                            PaymentRepository paymentRepository,
                            AttendeeHistoryRepository attendeeHistoryRepository,
                            BadgeService badgeService) {
+        this.attendeeRepository = attendeeRepository;
+        this.attendeeSearchRepository = attendeeSearchRepository;
         this.orderRepository = orderRepository;
         this.attendeeDetailRepository = attendeeDetailRepository;
         this.paymentRepository = paymentRepository;
@@ -68,8 +75,12 @@ public class OrderController {
 
     @RequestMapping(value = "/orders/{orderId}")
     @PreAuthorize("hasAuthority('manage_orders')")
-    public String viewOrder(Model model,
-                             @PathVariable Integer orderId) {
+    public String listOrdersById(Model model,
+                                 @PathVariable Integer orderId) {
+        OrderDTO order = orderRepository.findDTOById(orderId);
+        model.addAttribute("order", order);
+        model.addAttribute("attendees", attendeeSearchRepository.findAllByOrderId(orderId));
+        model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
         return "order/orders-id";
     }
 

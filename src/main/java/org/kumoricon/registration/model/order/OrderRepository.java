@@ -125,6 +125,17 @@ public class OrderRepository {
                 new OrderDTORowMapper());
     }
 
+    public OrderDTO findDTOById(Integer orderId) {
+        return jdbcTemplate.queryForObject("select orders.*, users.username as order_taken_by_username, total_due, total_paid from orders" +
+                        " LEFT OUTER JOIN (SELECT payments.order_id, sum(payments.amount) as total_paid from payments GROUP BY payments.order_id) as t1 on orders.id = t1.order_id" +
+                        " LEFT OUTER JOIN (SELECT attendees.order_id, sum(attendees.paid_amount) as total_due from attendees GROUP BY attendees.order_id) as t2 on orders.id = t2.order_id" +
+                        " LEFT OUTER JOIN users on orders.order_taken_by_user = users.id" +
+                        " WHERE orders.id = ?" +
+                        " GROUP BY orders.id, username, total_due, total_paid",
+                new Object[]{orderId},
+                new OrderDTORowMapper());
+    }
+
     private class OrderRowMapper implements RowMapper<Order>
     {
         @Override

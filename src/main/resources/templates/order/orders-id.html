@@ -7,8 +7,74 @@
 <body>
 
 <div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-12">
 
-    TODO Order Screen
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+
+            <table class="table table-bordered table-striped table-sm">
+                <tbody>
+                <tr>
+                    <td>Order ID</td>
+                    <td th:text="${order.id}"></td>
+                </tr>
+
+                <tr>
+                    <td>Attendees</td>
+                    <td>
+                        <table class="table table-borderless table-condensed table-hover">
+                            <tbody>
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-nowrap">Name</th>
+                                        <th class="text-nowrap">Fan Name</th>
+                                        <th class="text-nowrap">Birthdate</th>
+                                        <th class="text-nowrap">Badge Type</th>
+                                    </tr>
+                                    <tr th:if="${attendees.empty}">
+                                        <td colspan="3"> No Attendees Found </td>
+                                    </tr>
+                                    <tr th:each="attendee : ${attendees}">
+                                        <td> <a th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id}" th:text="${attendee.getFirstName()} + ' ' + ${attendee.lastName}"></td>
+                                        <td th:text="${attendee.getFanName()}"></td>
+                                        <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}"></td>
+                                        <td th:text="${attendee.badgeType}"></td>
+                                    </tr>
+                                </thead>
+                            </tbody>
+
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Payments</td>
+                    <td>
+                        <table class="table table-borderless table-condensed table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-nowrap">Type</th>
+                                    <th class="text-nowrap">Amount</th>
+                                </tr>
+                                <tr th:if="${payments.empty}">
+                                    <td colspan="2"> No Payments Found </td>
+                                </tr>
+                                <tr th:each="payment : ${payments}">
+                                    <td th:text="${payment.paymentType}"></td>
+                                    <td th:text="${payment.amount}"></td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 </body>
