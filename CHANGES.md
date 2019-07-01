@@ -1,6 +1,6 @@
 # Change History
 
-Version 0.7.1 (Pending)
+Version 0.7.1 (6/30/2019)
 - Added Country field to at-con checkin, default to United States of America or previous attendee's country when
   2+ attendees are added to the same order
 - Added badge reprint during at-con checkin
