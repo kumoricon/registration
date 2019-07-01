@@ -3,6 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org">
 <head>
     <title>Edit Attendee</title>
+    <script type="text/javascript" src="/js/datelib.js"></script>
     <script type="text/javascript" src="/js/attendeeform.js" defer></script>
 
 </head>
@@ -44,9 +45,8 @@
                 <div class="form-group row">
                     <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth*</label>
                     <div class="col-md-3">
-                        <input type="date" th:field="*{birthDate}" th:errorclass="is-invalid" required class="form-control-sm" id="inputBirthDate"
-                               placeholder="MM/DD/YYYY" th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
-                               min="1899-12-31">
+                        <input type="text" th:field="*{birthDate}" th:errorclass="is-invalid" required class="form-control-sm" id="inputBirthDate"
+                               placeholder="MMDDYYYY">
                         <span id="age"></span>
                     </div>
                 </div>

@@ -5,10 +5,9 @@
 
 $(document).ready(
     function(){
-        console.log("doc ready");
         setState();
         addListeners();
-        updateAge($('#inputBirthDate').val());
+        updateAge(parseDate($('#inputBirthDate').val()));
         showHideLegalName($('#inputNameIsLegalName').is(':checked'));
     }
 );
@@ -23,7 +22,7 @@ function addListeners() {
 
 function onBirthdateUpdate(eventObject) {
     var inputDateString = eventObject.target.value;
-    updateAge(inputDateString);
+    updateAge(parseDate(inputDateString));
     $('#inputPaidAmount').val(null);   // Clear paid amount, it should be recalculated based on age and badge type
 }
 
@@ -32,7 +31,6 @@ function onNameIsLegalNameUpdate(eventObject) {
 }
 
 function onBadgeTypeChange() {
-    console.log("whee");
     $('#inputPaidAmount').val(null)
 }
 
@@ -55,16 +53,18 @@ function showHideLegalName(show) {
 }
 
 function updateAge(inputDate) {
-    if (inputDate === "") {
+    if (inputDate === null) {
         showHideAgeFields(false);
+        $('#age').text("");
+        $('#inputBirthDate').val("").focus();
         return;
     }
     //date must be yyyy-mm-dd
     try {
-        var dob = new Date(inputDate.substring(0,4), inputDate.substring(5,7)-1, inputDate.substring(8,10));
-        var age = calculateAge(dob);
+        var age = calculateAge(inputDate);
         var yearString = age > 1 ? " years old" : " year old";
         $("#age").text('(' + age + yearString + ')');
+        $("#inputBirthDate").val(inputDate.getMonth()+1 + '/' + inputDate.getDate() + '/' + inputDate.getFullYear());
         if (age >= 18) {
             showHideAgeFields(false);
         } else {
@@ -88,47 +88,6 @@ function showHideAgeFields(isMinor) {
         $('#inputParentPhone').attr('disabled', true).attr('required', false);
         $('#inputParentIsEmergencyContact').attr('disabled', true).attr('required', false);
     }
-}
-
-
-/**
- * @param {Date} dob Date of birth
- * @returns {number} Age in years
- */
-function calculateAge(dob) {
-    var now = new Date();
-
-    var yearNow = now.getFullYear();
-    var monthNow = now.getMonth();
-    var dateNow = now.getDate();
-
-
-    var yearDob = dob.getFullYear();
-    var monthDob = dob.getMonth();
-    var dateDob = dob.getDate();
-
-    var yearAge = yearNow - yearDob;
-
-    if (monthNow >= monthDob)
-        var monthAge = monthNow - monthDob;
-    else {
-        yearAge--;
-        var monthAge = 12 + monthNow -monthDob;
-    }
-
-    if (dateNow >= dateDob)
-        var dateAge = dateNow - dateDob;
-    else {
-        monthAge--;
-        var dateAge = 31 + dateNow - dateDob;
-
-        if (monthAge < 0) {
-            monthAge = 11;
-            yearAge--;
-        }
-    }
-
-    return yearAge;
 }
 
 function setState() {

@@ -5,10 +5,9 @@
 
 $(document).ready(
     function(){
-        console.log("doc ready");
         setState();
         addListeners();
-        updateAge($('#inputBirthDate').val());
+        updateAge(parseDate($('#inputBirthDate').val()));
         showHideLegalName($('#inputNameIsLegalName').is(':checked'));
     }
 );
@@ -23,7 +22,7 @@ function addListeners() {
 
 function onBirthdateUpdate(eventObject) {
     var inputDateString = eventObject.target.value;
-    updateAge(inputDateString);
+    updateAge(parseDate(inputDateString));
 }
 
 function onNameIsLegalNameUpdate(eventObject) {
@@ -31,7 +30,6 @@ function onNameIsLegalNameUpdate(eventObject) {
 }
 
 function onParentIsEmergencyContactUpdate(eventObject) {
-    console.log(eventObject);
     if (eventObject.target.checked) {
         $('#inputParentFullName').val($('#inputEmergencyContactName').val());
         $('#inputParentPhone').val($('#inputEmergencyContactPhone').val());
@@ -42,8 +40,6 @@ function onParentIsEmergencyContactUpdate(eventObject) {
 }
 
 function showHideLegalName(show) {
-    console.log(show);
-
     if (show === false) {
         $('#inputNameIsLegalName').hide();
         $("label[for='inputNameIsLegalName']").hide();
@@ -62,16 +58,18 @@ function showHideLegalName(show) {
 }
 
 function updateAge(inputDate) {
-    if (inputDate === "") {
+    if (inputDate == null) {
         showHideAgeFields(true);
+        $('#age').text("");
+        $('#inputBirthDate').val("").focus();
         return;
     }
-    //date must be yyyy-mm-dd
+
     try {
-        var dob = new Date(inputDate.substring(0,4), inputDate.substring(5,7)-1, inputDate.substring(8,10));
-        var age = calculateAge(dob);
+        var age = calculateAge(inputDate);
         var yearString = age > 1 ? " years old" : " year old";
         $("#age").text('(' + age + yearString + ')');
+        $("#inputBirthDate").val(inputDate.getMonth()+1 + '/' + inputDate.getDate() + '/' + inputDate.getFullYear());
         if (age >= 18) {
             showHideAgeFields(false);
         } else {
@@ -98,48 +96,6 @@ function showHideAgeFields(isMinor) {
 
 }
 
-
-/**
- * @param {Date} dob Date of birth
- * @returns {number} Age in years
- */
-function calculateAge(dob) {
-    var now = new Date();
-
-    var yearNow = now.getFullYear();
-    var monthNow = now.getMonth();
-    var dateNow = now.getDate();
-
-
-    var yearDob = dob.getFullYear();
-    var monthDob = dob.getMonth();
-    var dateDob = dob.getDate();
-
-    var yearAge = yearNow - yearDob;
-    var monthAge;
-    var dateAge;
-
-    if (monthNow >= monthDob)
-        monthAge = monthNow - monthDob;
-    else {
-        yearAge--;
-        monthAge = 12 + monthNow -monthDob;
-    }
-
-    if (dateNow >= dateDob)
-        dateAge = dateNow - dateDob;
-    else {
-        monthAge--;
-        dateAge = 31 + dateNow - dateDob;
-
-        if (monthAge < 0) {
-            monthAge = 11;
-            yearAge--;
-        }
-    }
-
-    return yearAge;
-}
 
 function setState() {
     if (readyToSave()) {
