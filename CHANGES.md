@@ -1,4 +1,6 @@
 # Change History
+Version 0.7.2 (Pending)
+
 
 Version 0.7.1 (6/30/2019)
 - Added Country field to at-con checkin, default to United States of America or previous attendee's country when
