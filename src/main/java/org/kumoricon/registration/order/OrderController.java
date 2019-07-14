@@ -88,12 +88,16 @@ public class OrderController {
     @PreAuthorize("hasAuthority('manage_orders')")
     public String viewAttendee(Model model,
                                @PathVariable Integer orderId,
-                               @PathVariable Integer attendeeId) {
+                               @PathVariable Integer attendeeId,
+                               @RequestParam (required = false) String query,
+                               @RequestParam (required = false) String badgeName) {
         AttendeeDetailDTO attendee = attendeeDetailRepository.findByIdAndOrderId(attendeeId, orderId);
         List<AttendeeHistoryDTO> notes = attendeeHistoryRepository.findAllDTObyAttendeeId(attendeeId);
 
         model.addAttribute("attendee", attendee);
         model.addAttribute("notes", notes);
+        model.addAttribute("query", query);
+        model.addAttribute("badgeName", badgeName);
         model.addAttribute("badgelist", badgeService.findAll());
 
         return "order/orders-id-attendees-id";

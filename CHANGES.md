@@ -1,6 +1,7 @@
 # Change History
 Version 0.7.2 (Pending)
-
+- Added a "Back to Search" button on the Attendee Detail page that links back to either the search by name or
+  search by badge page as appropriate
 
 Version 0.7.1 (6/30/2019)
 - Added Country field to at-con checkin, default to United States of America or previous attendee's country when
