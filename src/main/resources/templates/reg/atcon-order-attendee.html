@@ -43,8 +43,17 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth*</label>
+                    <div class="col-md-5"></div>
+                    <label for="inputPronoun" class="col-md-2 col-form-label-sm">Preferred Pronoun</label>
                     <div class="col-md-3">
+                        <input type="text" th:field="*{preferredPronoun}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputPronoun" placeholder="Preferred Pronoun">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth*</label>
+                    <div class="col-md-5">
                         <input type="text" th:field="*{birthDate}" th:errorclass="is-invalid" required class="form-control-sm" id="inputBirthDate"
                                placeholder="MMDDYYYY">
                         <span id="age"></span>
