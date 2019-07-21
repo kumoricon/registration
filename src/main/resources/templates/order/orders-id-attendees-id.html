@@ -15,6 +15,10 @@
         <a class="btn btn-secondary mr-2"
            th:if="${badgeName != null}"
            th:href="'/searchbybadge?badgeName=' + ${badgeName}">Back to Search</a>
+        <a class="btn btn-secondary mr-2"
+           th:if="${#authorization.expression('hasAuthority(''attendee_edit'')')}"
+           th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/edit'">Edit</a>
+
         <a class="btn btn-secondary mr-2" th:href="'/orders/' + ${attendee.orderId}">View Order</a>
         <form th:if="${#authorization.expression('hasAuthority(''reprint_badge'')') && attendee.checkedIn}"
               th:action="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/reprint'" method="post">
@@ -25,7 +29,7 @@
 
     <div class="row">
         <div class="col-sm-2">Name:</div><div class="col-sm-3" th:text="${attendee.name}"></div>
-        <div class="col-sm-3">Preferred Pronoun:</div><div class="col-sm-3" th:text="${attendee.preferredPronoun}"></div>
+        <div class="col-sm-2">Preferred Pronoun:</div><div class="col-sm-3" th:text="${attendee.preferredPronoun}"></div>
     </div>
 
     <div class="row">

@@ -158,6 +158,11 @@ public class AttendeeRepository {
         }
     }
 
+    /**
+     * Saves or updates an Attendee record. Note that some fields are only inserted, NOT updated. Eg, badge number or
+     * pre_registered. This is on purpose - badge numbers should not change.
+     * @param attendee
+     */
     @Transactional
     public void save(Attendee attendee) {
         if (attendee.getId() == null) {
@@ -172,8 +177,8 @@ public class AttendeeRepository {
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
                     attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId());
         } else {
-            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_number = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, preferred_pronoun=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, pre_registered=?, zip=?, order_id=? WHERE id = ?",
-                    attendee.getBadgeId(), attendee.getBadgeNumber(), attendee.isBadgePrePrinted(),
+            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, preferred_pronoun=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, zip=?, order_id=? WHERE id = ?",
+                    attendee.getBadgeId(), attendee.isBadgePrePrinted(),
                     attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
                     attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
                     attendee.getEmergencyContactFullName(), attendee.getEmergencyContactPhone(), attendee.getFanName(),
@@ -181,7 +186,7 @@ public class AttendeeRepository {
                     attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
                     attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
-                    attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId(), attendee.getId());
+                    attendee.getZip(), attendee.getOrderId(), attendee.getId());
         }
     }
 

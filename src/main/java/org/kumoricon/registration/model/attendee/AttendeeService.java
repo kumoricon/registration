@@ -54,5 +54,4 @@ public class AttendeeService {
     public void save(Attendee attendee) {
         attendeeRepository.save(attendee);
     }
-
 }
