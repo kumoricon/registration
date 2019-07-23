@@ -46,7 +46,9 @@
                     <div class="col-md-5"></div>
                     <label for="inputPronoun" class="col-md-2 col-form-label-sm">Preferred Pronoun</label>
                     <div class="col-md-3">
-                        <input type="text" th:field="*{preferredPronoun}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputPronoun" placeholder="Preferred Pronoun">
+                        <select th:field="*{preferredPronoun}" th:errorclass="is-invalid" class="form-control-sm" id="inputPronoun">
+                            <option th:each="p : ${attendee.PRONOUNS}" th:value="${p}" th:text="${p}" th:selected="${p==attendee.preferredPronoun}"></option>
+                        </select>
                     </div>
                 </div>
 

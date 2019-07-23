@@ -18,7 +18,7 @@ public class AttendeeFactory {
         Attendee attendee = new Attendee();
         attendee.setFirstName("Firstname");
         attendee.setLastName("Lastname");
-        attendee.setPreferredPronoun("He/Him/His");
+        attendee.setPreferredPronoun("They");
         attendee.setFanName("Fan Name - Adult");
         attendee.setBadgeNumber("TST12340");
         attendee.setBadge(badge);

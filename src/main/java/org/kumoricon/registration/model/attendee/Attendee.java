@@ -9,6 +9,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
 
 public class Attendee {
     private Integer id;
@@ -43,6 +45,8 @@ public class Attendee {
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
 
+    // Possible values for Preferred pronoun field
+    public static final List<String> PRONOUNS = Arrays.asList(null, "He", "She", "They");
 
     public Attendee() {
         this.paidAmount = null;

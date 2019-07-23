@@ -37,7 +37,6 @@ public class OrderAttendeeEditController {
 
         model.addAttribute("attendee", attendee);
         model.addAttribute("badgelist", badgeService.findAll());
-
         return "order/orders-id-attendees-id-edit";
     }
 

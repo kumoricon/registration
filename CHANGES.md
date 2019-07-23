@@ -5,7 +5,6 @@ Version 0.7.2 (Pending)
 - Added pronoun field on regular at-con attendee checkin screen
 - Fixed permissions: staff could not view attendees after searching or view badges when printing badges
 - Changed preferred pronoun field to a dropdown
-- Added Attendee Edit screen
 
 Version 0.7.1 (6/30/2019)
 - Added Country field to at-con checkin, default to United States of America or previous attendee's country when
