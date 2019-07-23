@@ -78,7 +78,7 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}")
-    @PreAuthorize("hasAuthority('manage_orders')")
+    @PreAuthorize("hasAuthority('attendee_search')")
     public String viewAttendee(Model model,
                                @PathVariable Integer orderId,
                                @PathVariable Integer attendeeId,

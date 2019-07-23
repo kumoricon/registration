@@ -37,7 +37,7 @@ public class BadgeImageController {
 
 
     @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}/badge.png")
-    @PreAuthorize("hasAuthority('manage_orders')")
+    @PreAuthorize("hasAuthority('print_badge')")
     public ResponseEntity<byte[]> getBadgeImage(@PathVariable Integer orderId,
                                               @PathVariable Integer attendeeId) {
         Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
@@ -56,7 +56,7 @@ public class BadgeImageController {
     }
 
     @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}/badge.pdf")
-    @PreAuthorize("hasAuthority('manage_orders')")
+    @PreAuthorize("hasAuthority('print_badge')")
     public ResponseEntity<byte[]> getBadgePdf(@PathVariable Integer orderId,
                                               @PathVariable Integer attendeeId,
                                               @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
