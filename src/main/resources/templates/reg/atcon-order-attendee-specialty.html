@@ -48,7 +48,7 @@
                     </div>
                     <label for="inputPronoun" class="col-md-2 col-form-label-sm">Preferred Pronoun</label>
                     <div class="col-md-3">
-                        <select th:field="*{preferredPronoun}" th:errorclass="is-invalid" class="form-control-sm" id="inputPronoun">
+                        <select th:field="*{preferredPronoun}" th:errorclass="is-invalid" class="form-control form-control-sm" id="inputPronoun">
                             <option th:each="p : ${attendee.PRONOUNS}" th:value="${p}" th:text="${p}" th:selected="${p==attendee.preferredPronoun}"></option>
                         </select>
                     </div>
@@ -122,7 +122,7 @@
                 <div class="form-group row">
                     <label for="inputBadgeType" class="col-md-2 col-form-label-sm">Badge Type</label>
                     <div class="col-md-3">
-                        <select name="badgeId" class="form-control-sm" id="inputBadgeType" th:errorclass="is-invalid">
+                        <select name="badgeId" class="form-control form-control-sm" id="inputBadgeType" th:errorclass="is-invalid">
                             <option th:each="b : ${badgelist}" th:value="${b.id}" th:text="${b.name}" th:selected="${b.id==attendee.badgeId}"></option>
                         </select>
                     </div>
