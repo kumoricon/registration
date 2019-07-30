@@ -8,7 +8,7 @@
 <div layout:fragment="content" class="container">
 
     <div class="form-group row">
-        <form class="form-inline col-sm-7" method="POST">
+        <form class="form-inline col-sm-7" method="POST" autocomplete="off">
             <label class="col-form-label col-sm-3" for="tillName">Till Number</label>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input class="form-control mr-2" type="text" name="tillName" id="tillName" th:value="${tillName}"/>
