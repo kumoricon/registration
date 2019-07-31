@@ -1,4 +1,6 @@
 # Change History
+Version 0.7.3 (Pending)
+
 Version 0.7.2 (7/30/2019)
 - Added a "Back to Search" button on the Attendee Detail page that links back to either the search by name or
   search by badge page as appropriate
