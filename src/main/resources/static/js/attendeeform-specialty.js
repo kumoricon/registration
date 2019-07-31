@@ -18,6 +18,36 @@ function addListeners() {
     $("#inputBirthDate").blur(onBirthdateUpdate);
     $('#inputNameIsLegalName').change(onNameIsLegalNameUpdate);
     $('#inputBadgeType').change(onBadgeTypeChange);
+    $('#inputPhone').bind('keyup',onPhoneNumberUpdate);
+    $('#inputEmergencyContactPhone').bind('keyup',onEmergencyPhoneNumberUpdate);
+    $('#inputParentPhone').bind('keyup',onParentPhoneNumberUpdate);
+}
+
+function onPhoneNumberUpdate(eventObject) {
+    var inputPhoneNumber = eventObject.target.value;
+    inputPhoneNumber = inputPhoneNumber.replace(/\D/g, '');
+    var length = inputPhoneNumber.length;
+    if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
+    if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
+    $('#inputPhone').val(inputPhoneNumber);
+}
+
+function onEmergencyPhoneNumberUpdate(eventObject) {
+    var inputPhoneNumber = eventObject.target.value;
+    inputPhoneNumber = inputPhoneNumber.replace(/\D/g, '');
+    var length = inputPhoneNumber.length;
+    if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
+    if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
+    $('#inputEmergencyContactPhone').val(inputPhoneNumber);
+}
+
+function onParentPhoneNumberUpdate(eventObject) {
+    var inputPhoneNumber = eventObject.target.value;
+    inputPhoneNumber = inputPhoneNumber.replace(/\D/g, '');
+    var length = inputPhoneNumber.length;
+    if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
+    if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
+    $('#inputParentPhone').val(inputPhoneNumber);
 }
 
 function onBirthdateUpdate(eventObject) {
