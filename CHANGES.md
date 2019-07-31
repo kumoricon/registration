@@ -1,9 +1,12 @@
 # Change History
-Version 0.7.2 (Pending)
+Version 0.7.2 (7/30/2019)
 - Added a "Back to Search" button on the Attendee Detail page that links back to either the search by name or
   search by badge page as appropriate
 - Added pronoun field on regular at-con attendee checkin screen
 - Fixed permissions: staff could not view attendees after searching or view badges when printing badges
+- Added Attendee edit screen
+- Disable browser autocomplete on forms
+- Automatically format phone numbers
 
 Version 0.7.1 (6/30/2019)
 - Added Country field to at-con checkin, default to United States of America or previous attendee's country when
