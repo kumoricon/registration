@@ -17,7 +17,7 @@
                 </ul>
                 <input type="hidden" th:field="*{id}" />
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputFirstName" class="col-md-2 col-form-label-sm ">First Name</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{firstName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputFirstName" placeholder="First Name" autofocus>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputNameIsLegalName" class="col-md-2 col-form-label-sm">Name is legal name</label>
                     <input type="checkbox" th:field="*{nameIsLegalName}" th:errorclass="is-invalid" class="form-control-sm" id="inputNameIsLegalName">
                     <label for="inputLegalFirstName" class="col-md-2 col-form-label-sm">Legal First Name</label>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputFanName" class="col-md-2 col-form-label-sm">Fan Name</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{fanName}" th:errorclass="is-invalid" class="form-control-sm" id="inputFanName" placeholder="Fan Name">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputBirthDate" class="col-md-2 col-form-label-sm">Date of Birth</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{birthDate}" th:errorclass="is-invalid" class="form-control-sm" id="inputBirthDate"
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row mt-2">
+                <div class="form-group row mt-2" style="margin-bottom:0">
                     <label for="inputPhone" class="col-md-2 col-form-label-sm">Phone Number</label>
                     <div class="col-md-3">
                         <input type="tel" th:field="*{phoneNumber}" th:errorclass="is-invalid" class="form-control-sm" id="inputPhone" placeholder="000-000-0000">
@@ -73,7 +73,7 @@
                         <input type="text" th:field="*{email}" th:errorclass="is-invalid" class="form-control-sm" id="inputEmail" placeholder="user@example.com">
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputZip" class="col-md-2 col-form-label-sm">Zip Code</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{zip}" th:errorclass="is-invalid" class="form-control-sm" id="inputZip" placeholder="00000">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputEmergencyContactName" class="col-md-2 col-form-label-sm">Emergency Contact Name</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{emergencyContactFullName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputEmergencyContactName" placeholder="Jane Doe">
@@ -95,12 +95,12 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputParentIsEmergencyContact" class="col-md-3 col-form-label-sm">Parent is Emergency Contact</label>
                     <input type="checkbox" th:field="*{parentIsEmergencyContact}" th:errorclass="is-invalid" class="form-control-sm" id="inputParentIsEmergencyContact">
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputParentFullName" class="col-md-2 col-form-label-sm">Parent Name</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{parentFullName}" th:errorclass="is-invalid" class="form-control-sm text-capitalize" id="inputParentFullName" placeholder="John Doe">
@@ -112,14 +112,14 @@
                 </div>
 
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputParentFormReceived" class="col-md-3 col-form-label-sm">Parental Consent Form Received</label>
                     <div class="col-md-3 text-left">
                         <input type="checkbox" th:field="*{parentFormReceived}" th:errorclass="is-invalid" class="form-control-sm" id="inputParentFormReceived">
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <label for="inputBadgeType" class="col-md-2 col-form-label-sm">Badge Type</label>
                     <div class="col-md-3">
                         <select name="badgeId" class="form-control form-control-sm" id="inputBadgeType" th:errorclass="is-invalid">
@@ -132,7 +132,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row" style="margin-bottom:0">
                     <div class="col-sm-10">
                         <input class="btn btn-primary" name="action" id="save" type="submit" value="Save" />
                         <a th:href="'/reg/atconorder/' + ${order.id}" class="btn btn-secondary">Cancel</a>
