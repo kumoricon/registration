@@ -20,6 +20,7 @@ public class AttendeeRecord {
     public int amountPaidInCents;
     public String membershipType;
     public String vipTShirtSize;
+    public String pronouns;
     public String whenPurchased;
     public int orderOrdinal;
     public String orderId;

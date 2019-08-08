@@ -46,7 +46,7 @@ public class Attendee {
     private boolean badgePrinted;               // Has badge been printed before
 
     // Possible values for Preferred pronoun field
-    public static final List<String> PRONOUNS = Arrays.asList(null, "He", "She", "They");
+    public static final List<String> PRONOUNS = Arrays.asList(null, "he/him", "she/her", "they/them");
 
     public Attendee() {
         this.paidAmount = null;

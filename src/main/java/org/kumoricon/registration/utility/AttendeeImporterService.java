@@ -142,6 +142,7 @@ class AttendeeImporterService {
             attendee.setNameIsLegalName(record.nameOnIdIsPreferredName);
             attendee.setLegalFirstName(record.firstNameOnId);
             attendee.setLegalLastName(record.lastNameOnId);
+            attendee.setPreferredPronoun(record.pronouns);
             attendee.setFanName(record.fanName);
             attendee.setBadgeNumber(generateBadgeNumber(user.getNextBadgeNumber()));
             attendee.setZip(record.postal);
