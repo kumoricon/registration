@@ -5,6 +5,7 @@ Version 0.7.3 (Pending)
 - Don't show View Order link on Attendee Detail page if user doesn't have manage_orders right
 - Added Check In link on Attendee Detail page
 - Import preferred pronoun during attendee import
+- Fixed text on reset password screen; users will not be logged out after setting a password
 
 Version 0.7.2 (7/30/2019)
 - Added a "Back to Search" button on the Attendee Detail page that links back to either the search by name or
