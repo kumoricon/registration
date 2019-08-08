@@ -18,8 +18,12 @@
         <a class="btn btn-secondary mr-2"
            th:if="${#authorization.expression('hasAuthority(''attendee_edit'')')}"
            th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/edit'">Edit</a>
-
-        <a th:if="${#authorization.expression('hasAuthority(''manage_orders'')')" class="btn btn-secondary mr-2" th:href="'/orders/' + ${attendee.orderId}">View Order</a>
+        <a class="btn btn-secondary mr-2"
+           th:if="${#authorization.expression('hasAuthority(''pre_reg_check_in'')') && !attendee.checkedIn}"
+           th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
+        <a th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}"
+           class="btn btn-secondary mr-2"
+           th:href="'/orders/' + ${attendee.orderId}">View Order</a>
         <form th:if="${#authorization.expression('hasAuthority(''reprint_badge'')') && attendee.checkedIn}"
               th:action="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/reprint'" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

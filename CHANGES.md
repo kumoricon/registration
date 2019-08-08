@@ -3,6 +3,7 @@ Version 0.7.3 (Pending)
 - Tightened up formatting on at-con registration forms
 - Removed Computers/Printers from the menu
 - Don't show View Order link on Attendee Detail page if user doesn't have manage_orders right
+- Added Check In link on Attendee Detail page
 
 Version 0.7.2 (7/30/2019)
 - Added a "Back to Search" button on the Attendee Detail page that links back to either the search by name or
