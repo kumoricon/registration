@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Guests</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <a class="btn disabled" th:if="${prevPage}==null">Previous</a>
+            <a class="btn" th:if="${prevPage}!=null" th:href="'/guests?page=' + ${prevPage}">Previous</a>
+            <a class="btn disabled" th:if="${nextPage}==null">Next</a>
+            <a class="btn" th:if="${nextPage}!=null" th:href="'/guests?page=' + ${nextPage}">Next</a>
+            <a class="btn" href="/guests/allguestbadges.pdf">Dump Badges to PDF</a>
+        </div>
+    </div>
+
+    <div class="row">
+            <table class="table table-bordered table-striped table-sm">
+                <thead class="thead-dark">
+                <tr>
+                    <th class="text-nowrap">Name</th>
+                    <th class="text-nowrap">Legal Name</th>
+                    <th class="text-nowrap">Fan Name</th>
+                    <th class="text-nowrap" th:text="${totalCount} + ' Found'"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${guests.empty}">
+                    <td colspan="4"> No Guests Found </td>
+                </tr>
+                <tr th:each="guest : ${guests}">
+                    <td><a th:href="'/guests/' + ${guest.id} + '?page=' + ${page}" th:text="${guest.name}">Alice Smith</a></td>
+                    <td th:text="${guest.legalName}">Legal Name</td>
+                    <td th:text="${guest.fanName}">Fan Name</td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+
+    </div>
+</div>
+
+</body>
+</html>

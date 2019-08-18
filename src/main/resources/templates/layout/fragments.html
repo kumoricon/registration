@@ -23,10 +23,10 @@
                         </form>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/search">Attendee Search</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/searchbybadge">Search by Badge Type</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_guest_badge'')')}" href="/guests">Guest Badges</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="/orders">Orders</a>
                     </div>
                 </li>
-
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_administration'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown02">

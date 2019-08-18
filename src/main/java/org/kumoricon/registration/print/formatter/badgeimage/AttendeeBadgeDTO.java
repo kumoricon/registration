@@ -1,5 +1,6 @@
 package org.kumoricon.registration.print.formatter.badgeimage;
 
+import org.kumoricon.registration.guest.Guest;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.badge.AgeRange;
 import org.kumoricon.registration.model.badge.Badge;
@@ -117,6 +118,19 @@ public class AttendeeBadgeDTO {
         output.setAgeStripeText(ageRange.getStripeText());
         output.setAgeStripeBackgroundColor(ageRange.getStripeColor());
 
+        return output;
+    }
+
+    public static AttendeeBadgeDTO fromGuest(Guest guest) {
+        AttendeeBadgeDTO output = new AttendeeBadgeDTO();
+        output.setId(guest.getId());
+        output.setName(guest.getName());
+        output.setFanName(guest.getFanName());
+        output.setBadgeNumber("");
+        output.setBadgeTypeText("Guest of Honor");
+        output.setBadgeTypeBackgroundColor("#FF0099");
+        output.setAgeStripeBackgroundColor("#FF0099");
+        output.setAgeStripeText("Guest");
         return output;
     }
 }

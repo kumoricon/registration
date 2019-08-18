@@ -140,6 +140,7 @@ public class BaseDataService {
                 {"print_badge", "Print badge on attendee check in"},
                 {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
                 {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
+                {"print_guest_badge", "Print and reprint Guest of Honor badges"},
                 {"badge_type_weekend", "Select/check in the \"Weekend\" badge type"},
                 {"badge_type_day", "Select/check in the individual day badge types"},
                 {"badge_type_emerging_press", "Select/check in the \"Emerging Press\" badge type"},
@@ -202,7 +203,7 @@ public class BaseDataService {
                 "at_con_registration_specialty", "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_staff_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_vip", "menu_registration", "menu_utility", "menu_report",
-                "pre_reg_check_in_edit"});
+                "pre_reg_check_in_edit", "print_guest_badge"});
         roles.put("Coordinator - Specialty Badges", new String[] {"at_con_registration",
                 "at_con_registration_specialty", "pre_reg_check_in",
                 "attendee_search", "print_badge", "attendee_edit",
@@ -219,7 +220,7 @@ public class BaseDataService {
                 "view_check_in_by_hour_report", "badge_type_staff", "badge_type_panelist",
                 "pre_reg_check_in_edit", "menu_registration", "menu_utility", "menu_report"});
         roles.put("Manager", new String[] {"at_con_registration", "at_con_registration_specialty",
-                "pre_reg_check_in", "attendee_search",
+                "pre_reg_check_in", "attendee_search", "print_guest_badge",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "badge_type_weekend", "badge_type_day", "view_login_history_report",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
@@ -228,7 +229,7 @@ public class BaseDataService {
                 "view_check_in_by_badge_type_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
                 "view_check_in_by_user_report", "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions",
                 "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report", "menu_administration"});
-        roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty",
+        roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty", "print_guest_badge",
                 "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note",
                 "at_con_registration_blacklist", "attendee_override_price", "reprint_badge", "manage_users",
                 "manage_pass_types", "badge_type_weekend", "badge_type_day",

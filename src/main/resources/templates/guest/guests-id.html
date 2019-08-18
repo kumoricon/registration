@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Guest</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row mb-3">
+        <a th:href="'/guests?page=' + ${page}">Back</a>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+
+            <table class="table table-bordered table-striped table-sm">
+                <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td th:text="${guest.name}">Firstname Lastname</td>
+                </tr>
+                <tr>
+                    <td>Legal Name</td>
+                    <td th:text="${guest.legalName}">Fan Name</td>
+                </tr>
+                <tr>
+                    <td>Preferred Pronoun</td>
+                    <td th:text="${guest.preferredPronoun}">Pronoun</td>
+                </tr>
+                <tr>
+                    <td>Fan Name</td>
+                    <td th:text="${guest.fanName}">Fan Name</td>
+                </tr>
+                <tr>
+                    <td>Birthdate</td>
+                    <td th:text="${guest.birthDate}">1/1/1980</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <form method="post" th:action="'/guests/'+ ${guest.id} + '/print'">
+                    <input type="hidden" name="id" th:value="${guest.id}">
+                    <input type="hidden" name="action" value="printBadge">
+                    <input class="btn btn-success btn-sm" type="submit" value="Print Badge">
+                </form><br>
+                <a class="btn btn-secondary btn-sm" th:href="'/guests/' + ${guest.id} + '/badge.pdf'" target="_blank">Download Badge PDF</a>
+            </div>
+
+        </div>
+
+        <div class="col-4">
+            <img th:src="'/guests/' + ${guest.id} + '/badge.png'" width="350" height="300" style="border: 1px solid black">
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

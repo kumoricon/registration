@@ -262,4 +262,22 @@ create index if not exists loginsessions_start_index
   on loginsessions (start);
 
 
+create table if not exists guests
+(
+    id serial not null
+        constraint guests_pk
+            primary key,
+    online_id text,
+    first_name text not null,
+    last_name text,
+    legal_first_name text,
+    legal_last_name text,
+    fan_name text,
+    birth_date date,
+    has_badge_image boolean default false not null,
+    badge_image_file_type text
+);
+
+create unique index if not exists guests_online_id_uindex
+    on guests (online_id);
 
