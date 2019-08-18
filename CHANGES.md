@@ -1,4 +1,6 @@
 # Change History
+Version 0.8.1 (Pending)
+
 Version 0.8.0 (8/18/2019)
 - Tightened up formatting on at-con registration forms
 - Removed Computers/Printers from the menu
