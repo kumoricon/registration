@@ -16,7 +16,7 @@
            th:if="${badgeName != null}"
            th:href="'/searchbybadge?badgeName=' + ${badgeName}">Back to Search</a>
         <a class="btn btn-secondary mr-2"
-           th:if="${#authorization.expression('hasAuthority(''attendee_edit'')')}"
+           th:if="${#authorization.expression('hasAuthority(''attendee_edit'') ||  hasAuthority(''attendee_edit_with_override'')')}"
            th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/edit'">Edit</a>
         <a class="btn btn-secondary mr-2"
            th:if="${#authorization.expression('hasAuthority(''pre_reg_check_in'')') && !attendee.checkedIn}"

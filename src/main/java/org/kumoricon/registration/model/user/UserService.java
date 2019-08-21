@@ -2,6 +2,8 @@ package org.kumoricon.registration.model.user;
 
 import org.kumoricon.registration.model.loginsession.LoginRepository;
 import org.kumoricon.registration.model.role.RightRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +26,7 @@ public class UserService implements UserDetailsService {
                                                               // it's a generic high number because an early director
                                                               // got tired of people bugging him to get a low badge
                                                               // numbers, and the tradition has stuck
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserRepository userRepository,
                        LoginRepository loginRepository,
@@ -177,4 +180,14 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public boolean validateOverridePassword(User override, String overridePassword) {
+        if (override.getPassword() == null || overridePassword == null) return false;
+
+        if (!(override.isEnabled() && override.isAccountNonExpired() && override.isAccountNonLocked() && override.isCredentialsNonExpired())) {
+            log.warn("tried to use {} for an override but that account is disabled/expired/etc", override);
+            return false;
+        }
+        String encodedPassword = passwordEncoder.encode(overridePassword);
+        return override.getPassword().equals(encodedPassword);
+    }
 }

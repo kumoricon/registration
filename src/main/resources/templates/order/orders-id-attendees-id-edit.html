@@ -124,6 +124,18 @@
             </div>
         </div>
 
+        <div class="form-group row" th:if="${#authorization.expression('!hasAuthority(''attendee_edit'')')}">
+            <label for="inputOverrideUser" class="col-md-2 col-form-label-sm">Override Username</label>
+            <div class="col-md-3">
+                <input type="text" name="overrideUser" class="form-control-sm" id="inputOverrideUser" placeholder="User Name" required>
+            </div>
+            <label for="inputOverridePassword" class="col-md-2 col-form-label-sm">Password</label>
+            <div class="col-md-3">
+                <input type="password" name="overridePassword" class="form-control-sm" id="inputOverridePassword" placeholder="Password" required>
+            </div>
+        </div>
+
+
         <div class="form-group row">
             <div class="col-sm-10">
                 <input class="btn btn-primary" name="action" id="save" type="submit" value="Save" />
