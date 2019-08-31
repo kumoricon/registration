@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @EnableWebSecurity
@@ -29,10 +30,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .sessionManagement()
             .and()
-                .logout().deleteCookies("JSESSIONID")
+                .logout()
+                    .deleteCookies("JSESSIONID")
+                    .invalidateHttpSession(true)
+                    .logoutUrl("/logout").permitAll()
+                    .logoutSuccessUrl("/login?logout")
             .and()
                 .formLogin()
-                .permitAll();
+                    .loginPage("/login").permitAll();
 
         http.headers().contentSecurityPolicy("script-src 'self'");
 
