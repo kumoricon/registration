@@ -11,21 +11,21 @@
     <div class="row mb-3">
         <a class="btn btn-secondary mr-2"
            th:if="${query != null}"
-           th:href="'/search?q=' + ${query}">Back to Search</a>
+           th:href="@{/search(q=${query})}">Back to Search</a>
         <a class="btn btn-secondary mr-2"
            th:if="${badgeName != null}"
-           th:href="'/searchbybadge?badgeName=' + ${badgeName}">Back to Search</a>
+           th:href="@{/searchbybadge(badgeName=${badgeName})}">Back to Search</a>
         <a class="btn btn-secondary mr-2"
            th:if="${#authorization.expression('hasAuthority(''attendee_edit'') ||  hasAuthority(''attendee_edit_with_override'')')}"
-           th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/edit'">Edit</a>
+           th:href="@{/orders/{orderId}/attendees/{attendeeId}/edit(orderId=${attendee.orderId},attendeeId=${attendee.id})}">Edit</a>
         <a class="btn btn-secondary mr-2"
            th:if="${#authorization.expression('hasAuthority(''pre_reg_check_in'')') && !attendee.checkedIn}"
-           th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
+           th:href="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">Check In</a>
         <a th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}"
            class="btn btn-secondary mr-2"
-           th:href="'/orders/' + ${attendee.orderId}">View Order</a>
+           th:href="@{/orders/{orderId}(orderId=${attendee.orderId})}">View Order</a>
         <form th:if="${#authorization.expression('hasAuthority(''reprint_badge'')') && attendee.checkedIn}"
-              th:action="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/reprint'" method="post">
+              th:action="@{/orders/{orderId}/attendees/{attendeeId}/reprint(orderId=${attendee.orderId},attendeeId=${attendee.id})}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input class="btn btn-primary mr-2" type="submit" value="RePrint Badge">
         </form>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-2">Legal Name:</div><div class="col-sm-3" th:text="${attendee.legalFirstName} + ' ' + ${attendee.legalLastName}"></div>
+        <div class="col-sm-2">Legal Name:</div><div class="col-sm-3" th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|"></div>
     </div>
 
     <div class="row">
@@ -55,7 +55,7 @@
         <div class="col-sm-2">Date of Birth:</div>
         <div class="col-sm-3">
             <span th:text="${attendee.birthDate} ? ${#temporals.format(attendee.birthDate, 'MM/dd/yyyy')} : ''"></span>
-            <span th:text="'(' + ${attendee.age} + ' years old)'"></span>
+            <span th:text="|(${attendee.age} years old)|"></span>
         </div>
     </div>
 
@@ -65,17 +65,17 @@
 
     <div class="row mt-4">
         <div class="col-sm-2">Emergency Contact:</div>
-        <div class="col-sm-6" th:text="${attendee.emergencyContactFullName} + ' - ' + ${attendee.emergencyContactPhone}"></div>
+        <div class="col-sm-6" th:text="|${attendee.emergencyContactFullName} ${attendee.emergencyContactPhone}|"></div>
     </div>
 
     <div class="row">
         <div class="col-sm-2">Parent Contact:</div>
-        <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="${attendee.parentFullName} + ' - ' + ${attendee.parentPhone}"></div>
+        <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="|${attendee.parentFullName} - ${attendee.parentPhone}|"></div>
     </div>
 
     <div class="row mt-4">
         <div class="col-sm-3">Badge Type:</div><div class="col-sm-4" th:text="${attendee.badgeType}"></div>
-        <div class="col-sm-2">Amount Paid:</div><div class="col-sm-3" th:text="'$' + ${attendee.paidAmount}"></div>
+        <div class="col-sm-2">Amount Paid:</div><div class="col-sm-3" th:text="|$${attendee.paidAmount}|"></div>
     </div>
 
     <div class="row">
@@ -93,7 +93,8 @@
         <table class="table table-sm table-bordered mt-4">
             <tr>
                 <th colspan="3">Notes
-                    <a class="small" th:if="${#authorization.expression('hasAuthority(''attendee_add_note'')')}" th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/addnote'">Add Note</a></th>
+                    <a class="small" th:if="${#authorization.expression('hasAuthority(''attendee_add_note'')')}"
+                       th:href="@{/orders/{orderId}/attendees/{attendeeId}/addnote(orderId=${attendee.orderId},attendeeId=${attendee.id})}">Add Note</a></th>
             </tr>
             <tr th:each="ah : ${notes}">
                 <td class="col-2" th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>

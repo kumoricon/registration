@@ -139,7 +139,7 @@
         <div class="form-group row">
             <div class="col-sm-10">
                 <input class="btn btn-primary" name="action" id="save" type="submit" value="Save" />
-                <a th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id}" class="btn btn-secondary">Cancel</a>
+                <a th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${attendee.orderId},attendeeId=${attendee.id})}" class="btn btn-secondary">Cancel</a>
                 <input class="btn btn-secondary" type="reset" value="Reset" />
             </div>
         </div>

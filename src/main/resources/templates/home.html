@@ -42,10 +42,10 @@
                 </tr>
                 <tr th:each="badge : ${badges}">
                     <td th:text="${badge.name}">Username</td>
-                    <td class="text-right" th:text="'$' + ${#numbers.formatDecimal(badge.getCostForAge(40), 1, 'COMMA', 2, 'POINT')}">$33.00</td>
-                    <td class="text-right" th:text="'$' + ${#numbers.formatDecimal(badge.getCostForAge(16), 1, 'COMMA', 2, 'POINT')}">$33.00</td>
-                    <td class="text-right" th:text="'$' + ${#numbers.formatDecimal(badge.getCostForAge(8), 1, 'COMMA', 2, 'POINT')}">$33.00</td>
-                    <td class="text-right" th:text="'$' + ${#numbers.formatDecimal(badge.getCostForAge(4), 1, 'COMMA', 2, 'POINT')}">$0.00</td>
+                    <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(40), 1, 'COMMA', 2, 'POINT')}|">$33.00</td>
+                    <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(16), 1, 'COMMA', 2, 'POINT')}|">$33.00</td>
+                    <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(8), 1, 'COMMA', 2, 'POINT')}|">$33.00</td>
+                    <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(4), 1, 'COMMA', 2, 'POINT')}|">$0.00</td>
                 </tr>
                 </tbody>
             </table>

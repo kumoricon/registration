@@ -9,7 +9,7 @@
 
 <div layout:fragment="content" class="container">
     <div class="row mb-3">
-        <a th:href="'/orders/' + ${attendee.orderId}">Back to Order</a>
+        <a th:href="@{/orders/{orderId}(orderId=${attendee.orderId})}">Back to Order</a>
     </div>
 
     <div class="row">
@@ -18,7 +18,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-2">Legal Name:</div><div class="col-sm-3" th:text="${attendee.legalFirstName} + ' ' + ${attendee.legalLastName}"></div>
+        <div class="col-sm-2">Legal Name:</div><div class="col-sm-3" th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|"></div>
     </div>
 
     <div class="row">
@@ -36,7 +36,7 @@
         <div class="col-sm-2">Date of Birth:</div>
         <div class="col-sm-3">
             <span th:text="${attendee.birthDate} ? ${#temporals.format(attendee.birthDate, 'MM/dd/yyyy')} : ''"></span>
-            <span th:text="'(' + ${attendee.age} + ' years old)'"></span>
+            <span th:text="|(${attendee.age} years old)|"></span>
         </div>
     </div>
 
@@ -46,17 +46,17 @@
 
     <div class="row mt-4">
         <div class="col-sm-3">Emergency Contact:</div>
-        <div class="col-sm-6" th:text="${attendee.emergencyContactFullName} + ' - ' + ${attendee.emergencyContactPhone}"></div>
+        <div class="col-sm-6" th:text="|${attendee.emergencyContactFullName} - ${attendee.emergencyContactPhone}|"></div>
     </div>
 
     <div class="row">
         <div class="col-sm-2">Parent Contact:</div>
-        <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="${attendee.parentFullName} + ' - ' + ${attendee.parentPhone}"></div>
+        <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="|${attendee.parentFullName} - ${attendee.parentPhone}|"></div>
     </div>
 
     <div class="row mt-4">
         <div class="col-sm-3">Badge Type:</div><div class="col-sm-4" th:text="${attendee.badgeType}"></div>
-        <div class="col-sm-2">Amount Paid:</div><div class="col-sm-3" th:text="'$' + ${attendee.paidAmount}"></div>
+        <div class="col-sm-2">Amount Paid:</div><div class="col-sm-3" th:text="|$${attendee.paidAmount}|"></div>
     </div>
 
     <div class="row">
@@ -74,7 +74,8 @@
         <table class="table table-sm table-bordered mt-4">
             <tr>
                 <th colspan="3">Notes
-                    <a class="small" th:if="${#authorization.expression('hasAuthority(''attendee_add_note'')')}" th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '/addnote'">Add Note</a></th>
+                    <a class="small" th:if="${#authorization.expression('hasAuthority(''attendee_add_note'')')}"
+                       th:href="@{/orders/{orderId}/attendees/${attendeeId}/addnote(orderId=${attendee.orderId},attendeeId=${attendee.id})}">Add Note</a></th>
             </tr>
             <tr th:each="ah : ${notes}">
                 <td class="col-2" th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>

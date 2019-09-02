@@ -46,7 +46,7 @@
             <div class="col-sm-10">
                 <input class="btn btn-primary" name="action" id="inputSave" type="submit" value="Save" />
                 <input th:if="${payment.id != null}"  class="btn btn-secondary" type="reset" value="Reset" />
-                <a href="#" th:href="'/reg/atconorder/' + ${orderId} + '/payment'" class="btn btn-secondary">Cancel</a>
+                <a href="#" th:href="@{/reg/atconorder/{orderId}/payment(orderId=${order.id})}" class="btn btn-secondary">Cancel</a>
             </div>
             <div class="col-sm-2">
                 <input th:if="${payment.id != null}" class="btn btn-danger" type="submit" name="action" value="Delete" />

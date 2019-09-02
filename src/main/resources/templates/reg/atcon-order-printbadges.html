@@ -17,21 +17,21 @@
             <tr th:each="a : ${attendees}">
                 <td th:text="${a.nameOrFanName}">Attendee Name</td>
                 <td>
-                    <form th:action="'/reg/atconorder/' + ${orderId} + '/printbadges/reprint/' + ${a.id}" method="post"
+                    <form th:action="@{/reg/atconorder/{orderId}/printbadges/reprint/{attendeeId}(orderId=${a.orderId},attendeeId=${a.id})}" method="post"
                     th:if="${!a.isBadgePrinted()}">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <input type="submit" value="Reprint" class="btn btn-primary mb-2">
                     </form>
 
                     <span th:if="${a.isBadgePrinted()}">Already Checked In
-                    (<a th:href="'/orders/' + ${a.orderId} + '/attendees/' + ${a.id}">Reprint here</a>)</span>
+                    (<a th:href="@{/reg/atconorder/{orderId}/attendees/{attendeeId}(orderId=${a.orderId},attendeeId=${a.id})}">Reprint here</a>)</span>
                 </td>
             </tr>
         </table>
     </div>
 
     <div class="row">
-        <form th:action="'/reg/atconorder/' + ${orderId} + '/printbadges'" method="post">
+        <form th:action="@{/reg/atconorder/{orderId}/printbadges(orderId=${orderId})}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="submit" value="Printed Successfully" class="btn btn-primary mb-2">
         </form>

@@ -33,8 +33,8 @@
             <td class="text-left" th:text="${t.open}"></td>
             <td class="text-left" th:text="${t.startTime} ? ${#temporals.format(t.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
             <td class="text-left" th:text="${t.endTime} ? ${#temporals.format(t.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
-            <td class="text-right" th:text="'$' + ${#numbers.formatDecimal(t.total, 0, 'COMMA', 2, 'POINT')}"></td>
-            <td><a class="btn btn-primary btn-sm" th:href="'/reports/tillsessions/' + ${t.id}">View</a></td>
+            <td class="text-right" th:text="|$${#numbers.formatDecimal(t.total, 0, 'COMMA', 2, 'POINT')}|"></td>
+            <td><a class="btn btn-primary btn-sm" th:href="@{/reports/tillsessions/{tillSessionId}(tillSessionId=${t.id})}">View</a></td>
         </tr>
         </tbody>
     </table>

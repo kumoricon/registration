@@ -19,11 +19,11 @@
                 <tbody>
                 <tr>
                     <td>Name</td>
-                    <td th:text="${attendee.firstName + ' ' + attendee.lastName}">Firstname Lastname</td>
+                    <td th:text="|${attendee.firstName} ${attendee.lastName}|">Firstname Lastname</td>
                 </tr>
                 <tr th:if="${attendee.legalFirstName!=null || attendee.legalLastName!=null}">
                     <td>Legal Name</td>
-                    <td th:text="${attendee.legalFirstName + ' ' + attendee.legalLastName}">Firstname Lastname</td>
+                    <td th:text="|${attendee.legalFirstName} ${attendee.legalLastName}">Firstname Lastname</td>
                 </tr>
                 <tr>
                     <td>Fan Name</td>
@@ -31,15 +31,15 @@
                 </tr>
                 <tr>
                     <td>Date of Birth</td>
-                    <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1980 (39)</td>
+                    <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1980 (39)</td>
                 </tr>
                 <tr>
                     <td>Emergency Contact</td>
-                    <td th:text="${attendee.emergencyContactFullName + ' - ' + attendee.emergencyContactPhone}">Jane Doe - 123-555-1212</td>
+                    <td th:text="|${attendee.emergencyContactFullName} - ${attendee.emergencyContactPhone}|">Jane Doe - 123-555-1212</td>
                 </tr>
                 <tr th:if="${attendee.isMinor()}">
                     <td>Parent Contact</td>
-                    <td th:text="${attendee.parentFullName + ' - ' + attendee.parentPhone}">Jane Doe - 123-555-1212</td>
+                    <td th:text="|${attendee.parentFullName} - ${attendee.parentPhone}|">Jane Doe - 123-555-1212</td>
                 </tr>
                 <tr>
                     <td>Notes</td>
@@ -55,11 +55,11 @@
             </table>
 
             <div class="row form-inline">
-                <form th:if="${!attendee.checkedIn}" method="post" th:action="'/reg/checkin/' + ${attendee.id}">
+                <form th:if="${!attendee.checkedIn}" method="post" th:action="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">
                     <input type="hidden" name="id" th:value="${attendee.id}">
                     <input class="btn btn-primary btn-sm mr-2" type="submit" value="Yes, Information is Correct">
                 </form>
-                <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="${'/orders/' + attendee.orderId + '/attendees/' + attendee.id + '/edit'}">No, Edit Attendee</a>
+                <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="@{/orders/{orderId}/attendees/{attendeeId}/edit(orderId=${attendee.orderId},attendeeId=${attendee.id})}">No, Edit Attendee</a>
             </div>
         </div>
 

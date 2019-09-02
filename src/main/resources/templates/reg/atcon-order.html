@@ -36,8 +36,8 @@
                             </tr>
                             <tr th:each="a : ${attendees}">
                                 <td th:text="${a.getNameOrFanName()}">Attendee Name</td>
-                                <td class="text-right" th:text="'$' + ${a.paidAmount}">$65.00</td>
-                                <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/attendee/' + ${a.id}" href="#">Edit</a></td>
+                                <td class="text-right" th:text="|$${a.paidAmount}|">$65.00</td>
+                                <td><a class="btn btn-secondary btn-sm" th:href="@{/reg/atconorder/{orderId}/attendee/{attendeeId}(orderId=${order.id},attendeeId=${a.id})}" href="#">Edit</a></td>
                             </tr>
                         </table>
                     </td>
@@ -52,8 +52,8 @@
                             </tr>
                             <tr th:each="p : ${payments}">
                                 <td th:text="${p.paymentType}">Cash</td>
-                                <td class="text-right" th:text="'$' + ${p.amount}"></td>
-                                <td><a class="btn btn-secondary btn-sm" th:href="'/reg/atconorder/' + ${order.id} + '/payment/' + ${p.id}" href="#">Edit</a></td>
+                                <td class="text-right" th:text="|$${p.amount}|"></td>
+                                <td><a class="btn btn-secondary btn-sm" th:href="@{/reg/atconorder/{orderId}/payment/{paymentId}(orderId=${order.id},paymentId=${p.id})}" href="#">Edit</a></td>
                             </tr>
                         </table>
                     </td>
@@ -63,14 +63,14 @@
         </div>
         <div class="col-2">
             <a class="btn mb-2"
-               th:href="'/reg/atconorder/' + ${order.id} + '/attendee/new'"
+               th:href="@{/reg/atconorder/{orderId}/attendee/new(orderId=${order.id})}"
                th:classappend="${(canComplete ? 'btn-secondary' : 'btn-primary') + (order.paid ? ' disabled' : '')}">
                 Add Attendee</a>
             <a class="btn mb-2"
-               th:href="'/reg/atconorder/' + ${order.id} + '/payment'"
+               th:href="@{/reg/atconorder/{orderId}/payment(orderId=${order.id})}"
                th:classappend="${(canComplete ? 'btn-secondary' : 'btn-primary') + (order.paid ? ' disabled' : '')}">
                 Take Payment</a>
-            <form th:action="'/reg/atconorder/' + ${order.id} + '/complete'" method="post">
+            <form th:action="@{/reg/atconorder/{orderId}/complete(orderId=${order.id})}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="submit" value="Order Complete" class="btn mb2"
                    th:classappend="${!canComplete} ? 'btn-secondary' : 'btn-primary'"

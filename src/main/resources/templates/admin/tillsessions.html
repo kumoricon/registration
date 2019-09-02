@@ -32,7 +32,7 @@
                 <td th:text="${s.tillName != null ? s.tillName : 'not specified'}">8</td>
                 <td th:text="${s.startTime} ? ${#temporals.format(s.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Start Time</td>
                 <td th:text="${s.endTime} ? ${#temporals.format(s.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">End Time</td>
-                <td class="text-right" th:text="'$' + ${s.total}">$0.00</td>
+                <td class="text-right" th:text="|$${s.total}|">$0.00</td>
                 <td class="text-center">
                     <form method="post" th:if="${s.isOpen()}">
                         <input type="hidden" name="sessionId" th:value="${s.id}">

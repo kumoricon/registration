@@ -8,7 +8,7 @@
 
 <div layout:fragment="content" class="container">
     <div class="row mb-3">
-        <a th:href="'/guests?page=' + ${page}">Back</a>
+        <a th:href="@{/guests(page=${page})}">Back</a>
     </div>
 
     <div class="row">
@@ -22,7 +22,7 @@
                 </tr>
                 <tr>
                     <td>Legal Name</td>
-                    <td th:text="${guest.legalName}">Fan Name</td>
+                    <td th:text="${guest.legalName}">Legal Name</td>
                 </tr>
                 <tr>
                     <td>Preferred Pronoun</td>
@@ -40,18 +40,19 @@
             </table>
 
             <div>
-                <form method="post" th:action="'/guests/'+ ${guest.id} + '/print'">
+                <form method="post" th:action="|/guests/${guest.id}/print|">
                     <input type="hidden" name="id" th:value="${guest.id}">
                     <input type="hidden" name="action" value="printBadge">
                     <input class="btn btn-success btn-sm" type="submit" value="Print Badge">
                 </form><br>
-                <a class="btn btn-secondary btn-sm" th:href="'/guests/' + ${guest.id} + '/badge.pdf'" target="_blank">Download Badge PDF</a>
+                <a class="btn btn-secondary btn-sm"
+                   th:href="@{/guests/{guestId}/badge.pdf(guestId=${guest.id})}" target="_blank">Download Badge PDF</a>
             </div>
 
         </div>
 
         <div class="col-4">
-            <img th:src="'/guests/' + ${guest.id} + '/badge.png'" width="350" height="300" style="border: 1px solid black">
+            <img th:src="@{/guests/{guestId}/badge.png(guestId=${guest.id})}" width="350" height="300" style="border: 1px solid black">
         </div>
     </div>
 

@@ -10,8 +10,8 @@
     <div class="row mb-3">
         <a class="btn mr-3" th:each="d : ${availableDays}"
            th:classappend="${selectedDate == d ? 'btn-dark' : 'btn-light'}"
-           th:href="'?date=' + ${d.toString()}"
-           th:text="${#strings.capitalize(#strings.toLowerCase(d.dayOfWeek))} + ' ' + ${d.monthValue} + '/' + ${d.dayOfMonth} + '/' + ${d.year}">3/1/2019</a>
+           th:href="@{/reports/loginhistory(date=${d.toString()})}"
+           th:text="|${#strings.capitalize(#strings.toLowerCase(d.dayOfWeek))} ${d.monthValue}/${d.dayOfMonth}/${d.year}|">3/1/2019</a>
     </div>
 
     <div class="row">

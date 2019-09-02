@@ -11,9 +11,9 @@
     <div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
         <div class="col-sm-4">
             <a class="btn disabled" th:if="${prevPage}==null">Previous</a>
-            <a class="btn" th:if="${prevPage}!=null" th:href="'/searchbybadge?page=' + ${prevPage} + '&badgeName=' + ${badgeName}">Previous</a>
+            <a class="btn" th:if="${prevPage}!=null" th:href="@{/searchbybadge(page=${prevPage},badgeName=${badgeName})}">Previous</a>
             <a class="btn disabled" th:if="${nextPage}==null">Next</a>
-            <a class="btn" th:if="${nextPage}!=null" th:href="'/searchbybadge?page=' + ${nextPage} + '&badgeName=' + ${badgeName}">Next</a>
+            <a class="btn" th:if="${nextPage}!=null" th:href="@{/searchbybadge(page=${nextPage},badgeName=${badgeName})}">Next</a>
         </div>
         <div class="col-sm-8 mb-2">
             <form class="form-inline justify-content-center" action="/searchbybadge" method="get">
@@ -42,14 +42,16 @@
                 <td colspan="6"> No Attendees Found </td>
             </tr>
             <tr th:each="attendee : ${attendees}">
-                <td><a th:href="'/orders/' + ${attendee.orderId} + '/attendees/' + ${attendee.id} + '?badgeName=' + ${badgeName}"
-                       th:text="${attendee.firstName} + ' ' + ${attendee.lastName}">John Doe</a></td>
-                <td th:text="${attendee.legalFirstName} + ' ' + ${attendee.legalLastName}">John Doe</td>
+                <td><a th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${attendee.orderId},attendeeId=${attendee.id},badgeName=${badgeName})}"
+                       th:text="|${attendee.firstName} ${attendee.lastName}|">John Doe</a></td>
+                <td th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|">John Doe</td>
                 <td th:text="${attendee.fanName}">Fan Name</td>
-                <td th:text="${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')+ ' (' + attendee.getAge() + ')'}">01/01/1990 (29)</td>
+                <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1990 (29)</td>
                 <td th:text="${attendee.badgeType}"></td>
                 <td>
-                    <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="'/reg/checkin/' + ${attendee.id}">Check In</a>
+                    <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}"
+                       class="btn btn-primary btn-sm"
+                       th:href="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">Check In</a>
                 </td>
             </tr>
             </tbody>

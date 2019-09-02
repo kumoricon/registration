@@ -10,9 +10,9 @@
     <div class="row">
         <div class="col-sm-12">
             <a class="btn disabled" th:if="${prevPage}==null">Previous</a>
-            <a class="btn" th:if="${prevPage}!=null" th:href="'/orders?page=' + ${prevPage}">Previous</a>
+            <a class="btn" th:if="${prevPage}!=null" th:href="@{/orders(page=${prevPage})}">Previous</a>
             <a class="btn disabled" th:if="${nextPage}==null">Next</a>
-            <a class="btn" th:if="${nextPage}!=null" th:href="'/orders?page=' + ${nextPage}">Next</a>
+            <a class="btn" th:if="${nextPage}!=null" th:href="@{/orders(page=${nextPage})}">Next</a>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
                     <th class="text-nowrap">Paid</th>
                     <th class="text-nowrap">Total Due</th>
                     <th class="text-nowrap">Total Paid</th>
-                    <th class="text-nowrap" th:text="${totalCount} + ' Found'"></th>
+                    <th class="text-nowrap" th:text="|${totalCount} Found|"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,7 +33,7 @@
                     <td colspan="6"> No Orders Found </td>
                 </tr>
                 <tr th:each="order : ${orders}">
-                    <td><a th:href="'/orders/' + ${order.id}" th:text="${order.orderId}">c4ca4238a0b923820dcc509a6f75849b</a></td>
+                    <td><a th:href="@{/orders/{orderId}(orderId=${order.id})}" th:text="${order.orderId}">c4ca4238a0b923820dcc509a6f75849b</a></td>
                     <td th:text="${order.orderTakenByUsername}">admin</td>
                     <td th:text="${order.paid}">True</td>
                     <td th:text="${order.totalDue != null} ? '$' + ${order.totalDue} : _" class="text-right"></td>

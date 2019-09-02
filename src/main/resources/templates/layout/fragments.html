@@ -66,11 +66,11 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-3">
                     <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill==null}">Select Till</a>
-                    <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill!=null}" th:text="'Till ' + ${selectedTill}">Till 3</a>
+                    <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill!=null}" th:text="|Till ${selectedTill}|">Till 3</a>
                 </li>
                 <li class="nav-item mr-3">
                     <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter == null}">Select Printer</a>
-                    <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter != null}" th:text="'Printer ' + ${selectedPrinter}">Printer 192.168.1.132</a>
+                    <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter != null}" th:text="|Printer ${selectedPrinter}|">Printer 192.168.1.132</a>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline mt-2 mt-md-0" action="/confirmlogout">

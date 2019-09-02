@@ -22,7 +22,7 @@
         <tr th:each="n : ${names}">
             <td th:text="${n.firstName}">First Name</td>
             <td th:text="${n.lastName}">Last Name</td>
-            <td><a th:href="'/admin/blacklist/' + ${n.id}" href="#">Edit</a></td>
+            <td><a th:href="@{/admin/blacklist/{id}(id=${n.id})}" href="#">Edit</a></td>
         </tr>
     </table>
 </div>

@@ -129,7 +129,7 @@
                 <div class="form-group row" style="margin-bottom:0">
                     <div class="col-sm-10">
                         <input class="btn btn-primary" name="action" id="save" type="submit" value="Save" />
-                        <a th:href="'/reg/atconorder/' + ${order.id}" class="btn btn-secondary">Cancel</a>
+                        <a th:href="@{/reg/atconorder/{orderId}(orderId=${order.id})}" class="btn btn-secondary">Cancel</a>
                         <input class="btn btn-secondary" type="reset" value="Reset" />
                     </div>
                     <div class="col-sm-2">

@@ -15,7 +15,7 @@
         <div class="col-4">
             <table class="table table-sm table-borderless">
                 <tr>
-                    <td colspan="2" th:text="'Till Session ' + ${tillSession.id}">Till Session 3</td>
+                    <td colspan="2" th:text="|Till Session ${tillSession.id}|">Till Session 3</td>
                 </tr>
                 <tr>
                     <td>Start</td>
@@ -42,8 +42,8 @@
         <div class="col-4">
             <table class="table table-sm table-bordered">
                 <tr th:each="p : ${tillSession.getPaymentTotals()}">
-                    <td th:text="'Total ' + ${p.type}">Total Cash</td>
-                    <td class="text-right" th:text="'$' + ${p.total}">$300</td>
+                    <td th:text="|Total ${p.type}|">Total Cash</td>
+                    <td class="text-right" th:text="|$${p.total}|">$300</td>
                 </tr>
             </table>
         </div>
