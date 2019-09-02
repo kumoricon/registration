@@ -1,5 +1,8 @@
 package org.kumoricon.registration.login;
+import org.kumoricon.registration.model.tillsession.TillSessionService;
+import org.kumoricon.registration.model.user.User;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -12,7 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-class loginController {
+class LoginController {
+
+    private final TillSessionService tillSessionService;
+
+    public LoginController(TillSessionService tillSessionService) {
+        this.tillSessionService = tillSessionService;
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView loginGet(@RequestParam(value = "error", required = false) String error,
@@ -24,9 +33,10 @@ class loginController {
     }
 
     @RequestMapping(value = "/confirmlogout", method = RequestMethod.GET)
-    public ModelAndView confirmLogout() {
+    public ModelAndView confirmLogout(@AuthenticationPrincipal User principal) {
 
         ModelAndView m = new ModelAndView();
+        m.addObject("hasOpenTill", tillSessionService.userHasOpenSession(principal));
         m.setViewName("confirmlogout");
         return m;
     }

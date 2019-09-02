@@ -2,6 +2,7 @@
 Version 0.8.1 (Pending)
 - Changed login/logout pages to use site template/theme
 - Added attendee edit with override from another user that has edit right
+- Add warning if till session is open when logging out
 
 Version 0.8.0 (8/18/2019)
 - Tightened up formatting on at-con registration forms

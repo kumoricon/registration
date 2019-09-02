@@ -7,9 +7,13 @@
 <body>
 
 <div layout:fragment="content" class="container">
+    <div class="alert alert-danger" th:if="${hasOpenTill}">
+        Warning: Till Session is open.
+        <a href="/utility/till" class="btn btn-primary ml-3">Close Till</a>
+    </div>
     <form name="f" th:action="@{/logout}" method="post">
-        <h3 class="col-lg-4 form-signin-heading">Are you sure you want to log out?</h3>
-        <button class="col-lo-4 btn btn-lg btn-primary" type="submit">Log Out</button>
+        <h3 class="col-lg-8 form-signin-heading">Are you sure you want to log out?</h3>
+        <button class="col-lo-4 btn btn-lg" th:classappend="${hasOpenTill}? 'btn-secondary' : 'btn-primary'" type="submit">Log Out</button>
     </form>
 </div>
 </body>
