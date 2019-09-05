@@ -17,6 +17,7 @@ function addListeners() {
     $("input").blur(setState);
     $("#inputBirthDate").blur(onBirthdateUpdate);
     $('#inputNameIsLegalName').change(onNameIsLegalNameUpdate);
+    $('#inputParentIsEmergencyContact').change(onParentIsEmergencyContactUpdate);
     $('#inputBadgeType').change(onBadgeTypeChange);
     $('#inputPhone').bind('keyup',onPhoneNumberUpdate);
     $('#inputEmergencyContactPhone').bind('keyup',onEmergencyPhoneNumberUpdate);
@@ -48,6 +49,16 @@ function onParentPhoneNumberUpdate(eventObject) {
     if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
     if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
     $('#inputParentPhone').val(inputPhoneNumber);
+}
+
+function onParentIsEmergencyContactUpdate(eventObject) {
+    if (eventObject.target.checked) {
+        $('#inputParentFullName').val($('#inputEmergencyContactName').val());
+        $('#inputParentPhone').val($('#inputEmergencyContactPhone').val());
+    } else {
+        $('#inputParentFullName').val('');
+        $('#inputParentPhone').val('');
+    }
 }
 
 function onBirthdateUpdate(eventObject) {

@@ -5,6 +5,7 @@ Version 0.8.1 (Pending)
 - Add warning if till session is open when logging out
 - Updated prices for 2019
 - Added parental consent form checkbox to pre-reg check in
+- Copy emergency contact info to parent fields when "Parent is Emergency Contact" is checked on at-con speciality screen
 
 Version 0.8.0 (8/18/2019)
 - Tightened up formatting on at-con registration forms
