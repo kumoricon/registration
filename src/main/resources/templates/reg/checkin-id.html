@@ -54,13 +54,17 @@
                 </tbody>
             </table>
 
-            <div class="row form-inline">
-                <form th:if="${!attendee.checkedIn}" method="post" th:action="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">
+            <form th:if="${!attendee.checkedIn}" method="post" th:action="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">
+                <div class="row" th:if="${attendee.isMinor()}">
+                    <label for="inputParentForm" class="col-md-5 col-form-label form-check-label">Parental Consent Form Received</label>
+                    <input type="checkbox" class="form-check" id="inputParentForm" name="chkParentForm" required autofocus>
+                </div>
+                <div class="row form-inline">
                     <input type="hidden" name="id" th:value="${attendee.id}">
                     <input class="btn btn-primary btn-sm mr-2" type="submit" value="Yes, Information is Correct">
-                </form>
-                <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="@{/orders/{orderId}/attendees/{attendeeId}/edit(orderId=${attendee.orderId},attendeeId=${attendee.id})}">No, Edit Attendee</a>
-            </div>
+                    <a th:if="${!attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="@{/orders/{orderId}/attendees/{attendeeId}/edit(orderId=${attendee.orderId},attendeeId=${attendee.id})}">No, Edit Attendee</a>
+                </div>
+            </form>
         </div>
 
     </div>

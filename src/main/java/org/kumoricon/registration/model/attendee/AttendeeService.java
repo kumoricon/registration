@@ -21,7 +21,7 @@ public class AttendeeService {
     }
 
     @Transactional
-    public Attendee checkInAttendee(Integer attendeeId, User user) {
+    public Attendee checkInAttendee(Integer attendeeId, User user, Boolean parentFormReceived) {
         Attendee attendee = attendeeRepository.findById(attendeeId);
         if (attendee != null) {
             log.info("checked in {}", attendee);
@@ -30,6 +30,11 @@ public class AttendeeService {
             throw new RuntimeException("Attendee " + attendeeId + " not found");
         }
 
+        if (attendee.isMinor() && !parentFormReceived) {
+            throw new RuntimeException("Parental consent form not received");
+        }
+
+        attendee.setParentFormReceived(parentFormReceived);
         attendee.setCheckedIn(true);
         attendeeRepository.save(attendee);
 
@@ -46,7 +51,7 @@ public class AttendeeService {
             if (attendee.getCheckedIn()) {
                 throw new RuntimeException("Attendee " + attendee + " is already checked in!");
             }
-            checkInAttendee(attendee.getId(), user);
+            checkInAttendee(attendee.getId(), user, attendee.getParentFormReceived());
         }
     }
 

@@ -60,10 +60,11 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String checkIn(@PathVariable Integer id,
+                          @RequestParam(value = "chkParentForm", required = false) Boolean parentFormReceived,
                           @AuthenticationPrincipal User user,
                           @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
 
-        Attendee attendee = attendeeService.checkInAttendee(id, user);
+        Attendee attendee = attendeeService.checkInAttendee(id, user, parentFormReceived);
 
         if (attendee.isBadgePrePrinted()) {
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=Badge+is+pre-+printed";

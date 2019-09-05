@@ -4,6 +4,7 @@ Version 0.8.1 (Pending)
 - Added attendee edit with override from another user that has edit right
 - Add warning if till session is open when logging out
 - Updated prices for 2019
+- Added parental consent form checkbox to pre-reg check in
 
 Version 0.8.0 (8/18/2019)
 - Tightened up formatting on at-con registration forms
