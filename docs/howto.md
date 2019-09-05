@@ -49,3 +49,30 @@ More than you ever wanted to know about time:
 - [Choosing the right object](http://mattgreencroft.blogspot.com/2014/12/java-8-time-choosing-right-object.html)
 - [What's the difference between Instant and LocalDateTime](https://stackoverflow.com/questions/32437550/whats-the-difference-between-instant-and-localdatetime/32443004)
 
+
+
+Use Thymeleaf Templates
+-----------------------
+
+Handy examples when using Thymeleaf:
+
+- String formatting using [literal substitutions](https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#literal-substitutions):
+
+```html
+<span th:text="|(${attendee.age} years old)|"></span>
+```
+
+- Date formatting using [thymeleaf-extras-java8time](https://github.com/thymeleaf/thymeleaf-extras-java8time)
+
+```html
+<span th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1990 (29)</span>
+<td th:text="${t.startTime} ? ${#temporals.format(t.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+```
+
+- Display content if the current user has a specific right [thymeleaf-extras-springsecurity](https://github.com/thymeleaf/thymeleaf-extras-springsecurity):
+
+```html
+<div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
+...
+</div>
+```
