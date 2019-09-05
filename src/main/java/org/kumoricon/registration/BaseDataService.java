@@ -270,15 +270,15 @@ public class BaseDataService {
 
     private void createFullConAttendeeBadges() {
         log.info("Creating badge Weekend");
-        Badge weekend = BadgeFactory.createBadge("Weekend", BadgeType.ATTENDEE, "Weekend", "#000000", 65, 65, 45);
+        Badge weekend = BadgeFactory.createBadge("Weekend", BadgeType.ATTENDEE, "Weekend", "#000000", 70, 70, 20);
         weekend.setRequiredRight("badge_type_weekend");
         weekend.setWarningMessage("Attendee check in. See your coordinator!");
         badgeService.save(weekend);
 
         String[][] badgeList = {
-                {"Friday", "#81f983", "50", "50", "30"},
-                {"Saturday", "#c897fc", "50", "50", "30"},
-                {"Sunday", "#fcc697", "45", "45", "20"}};
+                {"Friday", "#81f983", "40", "40", "10"},
+                {"Saturday", "#c897fc", "45", "45", "15"},
+                {"Sunday", "#fcc697", "35", "35", "10"}};
         for (String[] currentBadge : badgeList) {
             log.info("Creating badge {}", currentBadge[0]);
             Badge badge = BadgeFactory.createBadge(currentBadge[0], BadgeType.ATTENDEE,
@@ -350,15 +350,6 @@ public class BaseDataService {
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
         badgeService.save(panelist);
     }
-
-
-    @SuppressWarnings("unused")
-    private void addLiteAttendeeBadges() {
-        log.info("Creating badge Kumoricon Lite");
-        Badge lite = BadgeFactory.createBadge("Kumoricon Lite", BadgeType.ATTENDEE, "Saturday", "#323E99", 15, 15, 15);
-        badgeService.save(lite);
-    }
-
 
     private HashMap<String, Right> getRightsHashMap() {
         HashMap<String, Right> rightHashMap = new HashMap<>();
