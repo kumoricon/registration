@@ -1,4 +1,6 @@
 # Change History
+Version 0.8.2 (Pending)
+
 Version 0.8.1 (9/7/2019)
 - Changed login/logout pages to use site template/theme
 - Added attendee edit with override from another user that has edit right
