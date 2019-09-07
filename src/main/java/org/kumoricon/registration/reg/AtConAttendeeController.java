@@ -59,10 +59,11 @@ public class AtConAttendeeController {
             attendee = new Attendee();
             attendee.setCountry("United States of America");
             if (orderAttendees.size() > 0) {
-                Attendee prevAttendee = orderAttendees.get(0);
+                Attendee prevAttendee = orderAttendees.get(orderAttendees.size()-1);
                 attendee.setEmergencyContactFullName(prevAttendee.getEmergencyContactFullName());
                 attendee.setEmergencyContactPhone(prevAttendee.getEmergencyContactPhone());
                 attendee.setCountry(prevAttendee.getCountry());
+                attendee.setZip(prevAttendee.getZip());
                 if (prevAttendee.isMinor()) {
                     attendee.setParentFullName(prevAttendee.getParentFullName());
                     attendee.setParentPhone(prevAttendee.getParentPhone());

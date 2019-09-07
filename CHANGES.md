@@ -6,6 +6,7 @@ Version 0.8.1 (Pending)
 - Updated prices for 2019
 - Added parental consent form checkbox to pre-reg check in
 - Copy emergency contact info to parent fields when "Parent is Emergency Contact" is checked on at-con speciality screen
+- Copy zip code from previous attendee in the same order during at-com registration
 
 Version 0.8.0 (8/18/2019)
 - Tightened up formatting on at-con registration forms
