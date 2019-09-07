@@ -1,7 +1,6 @@
 /**
- * Functions to make the at-con attendee form look nicer/work better
+ * Functions to make the at-con attendee form look nicer/work better. Used by both the regular and speciality form
  */
-
 
 $(document).ready(
     function(){
@@ -12,47 +11,42 @@ $(document).ready(
     }
 );
 
-
 function addListeners() {
     $("input").blur(setState);
     $("#inputBirthDate").blur(onBirthdateUpdate);
     $('#inputNameIsLegalName').change(onNameIsLegalNameUpdate);
     $('#inputParentIsEmergencyContact').change(onParentIsEmergencyContactUpdate);
-    $('#inputPhone').bind('keyup',onPhoneNumberUpdate);
-    $('#inputEmergencyContactPhone').bind('keyup',onEmergencyPhoneNumberUpdate);
-    $('#inputParentPhone').bind('keyup',onParentPhoneNumberUpdate);
+    $('#inputBadgeType').change(onBadgeTypeChange);
+    $('#inputPhone').bind('keyup', onPhoneNumberUpdate);
+    $('#inputEmergencyContactPhone').bind('keyup', onPhoneNumberUpdate);
+    $('#inputParentPhone').bind('keyup', onPhoneNumberUpdate);
 }
+
 
 function onPhoneNumberUpdate(eventObject) {
-    var inputPhoneNumber = eventObject.target.value;
-    inputPhoneNumber = inputPhoneNumber.replace(/\D/g, '');
-    var length = inputPhoneNumber.length;
-    if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
-    if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
-    $('#inputPhone').val(inputPhoneNumber);
-}
-
-function onEmergencyPhoneNumberUpdate(eventObject) {
-    var inputPhoneNumber = eventObject.target.value;
-    inputPhoneNumber = inputPhoneNumber.replace(/\D/g, '');
-    var length = inputPhoneNumber.length;
-    if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
-    if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
-    $('#inputEmergencyContactPhone').val(inputPhoneNumber);
-}
-
-function onParentPhoneNumberUpdate(eventObject) {
-    var inputPhoneNumber = eventObject.target.value;
-    inputPhoneNumber = inputPhoneNumber.replace(/\D/g, '');
-    var length = inputPhoneNumber.length;
-    if (length > 3 && length < 7) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6); }
-    if (length > 6) { inputPhoneNumber = inputPhoneNumber.slice(0,3) + "-" + inputPhoneNumber.slice(3,6) + "-" + inputPhoneNumber.slice(6,15); }
-    $('#inputParentPhone').val(inputPhoneNumber);
+    let phoneNumber = eventObject.target.value;
+    phoneNumber = phoneNumber.replace(/\D/g, '');
+    let length = phoneNumber.length;
+    if (length > 3 && length < 7) { phoneNumber = phoneNumber.slice(0,3) + "-" + phoneNumber.slice(3,6); }
+    if (length > 6) { phoneNumber = phoneNumber.slice(0,3) + "-" + phoneNumber.slice(3,6) + "-" + phoneNumber.slice(6,15); }
+    eventObject.target.value = phoneNumber;
 }
 
 function onBirthdateUpdate(eventObject) {
-    var inputDateString = eventObject.target.value;
-    updateAge(parseDate(inputDateString));
+    let dateString = eventObject.target.value;
+    updateAge(parseDate(dateString));
+    clearPaidAmountIfControlExists();
+}
+
+function onBadgeTypeChange() {
+    clearPaidAmountIfControlExists();
+}
+
+function clearPaidAmountIfControlExists() {
+    let inputPaidAmount = $('#inputPaidAmount');
+    if( inputPaidAmount.length ) {   // inputPaidAmount only exists on the speciality form
+        inputPaidAmount.val(null);   // Clear paid amount, it should be recalculated based on age and badge type
+    }
 }
 
 function onNameIsLegalNameUpdate(eventObject) {
@@ -88,16 +82,15 @@ function showHideLegalName(show) {
 }
 
 function updateAge(inputDate) {
-    if (inputDate == null) {
+    if (inputDate === null) {
         showHideAgeFields(true);
         $('#age').text("");
-        $('#inputBirthDate').val("").focus();
         return;
     }
-
+    //date must be yyyy-mm-dd
     try {
-        var age = calculateAge(inputDate);
-        var yearString = age > 1 ? " years old" : " year old";
+        let age = calculateAge(inputDate);
+        let yearString = age > 1 ? " years old" : " year old";
         $("#age").text('(' + age + yearString + ')');
         $("#inputBirthDate").val(inputDate.getMonth()+1 + '/' + inputDate.getDate() + '/' + inputDate.getFullYear());
         if (age >= 18) {
@@ -123,15 +116,23 @@ function showHideAgeFields(isMinor) {
         $('#inputParentPhone').attr('disabled', true).attr('required', false);
         $('#inputParentIsEmergencyContact').attr('disabled', true).attr('required', false);
     }
-
 }
 
 
 function setState() {
-    if (readyToSave()) {
-        $("#save").attr("disabled", false);
+    let btnSave = $("#save");
+    if ($('#inputPaidAmount').length) {     // On speciality form, because inputPaidAmount only exists on that page
+        if (readyToSaveSpeciality()) {
+            btnSave.attr("disabled", false);
+        } else {
+            btnSave.attr("disabled", true);
+        }
     } else {
-        $("#save").attr("disabled", true);
+        if (readyToSave()) {
+            btnSave.attr("disabled", false);
+        } else {
+            btnSave.attr("disabled", true);
+        }
     }
 }
 
@@ -143,4 +144,12 @@ function readyToSave() {
         $("#inputEmergencyContactName").val() !== "" &&
         $("#inputEmergencyContactPhone").val() !== "" &&
         $("#inputBirthdate").val() !== ""
+}
+
+function readyToSaveSpeciality() {
+    // Vastly reduced field enforcement -- we assume that Speciality coords have a reason for doing anything
+    // For example, they can create badges that don't have first or last name at all, or a birthdate
+    // It is required that you have either a firstname and lastname OR a fan name, though.
+    return ($("#inputFirstName").val() !== "" && $("#inputLastName").val() !== "") ||
+        $("#inputFanName").val() !== "";
 }
