@@ -1,5 +1,5 @@
 # Change History
-Version 0.8.1 (Pending)
+Version 0.8.1 (9/7/2019)
 - Changed login/logout pages to use site template/theme
 - Added attendee edit with override from another user that has edit right
 - Add warning if till session is open when logging out
