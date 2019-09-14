@@ -32,10 +32,11 @@ public class TillReportController {
     @RequestMapping(value = "/reports/tillsessions/{id}")
     @PreAuthorize("hasAuthority('view_till_report')")
     public String tillId(Model model,
-                         @PathVariable Integer id) {
+                         @PathVariable Integer id,
+                         @RequestParam(required = false, defaultValue = "false") Boolean showIndividualOrders) {
 
         model.addAttribute("tillSession", tillSessionService.getTillDetailDTO(id));
-
+        model.addAttribute("showIndividualOrders", showIndividualOrders);
 
         return "reports/tillsessions-id";
     }
