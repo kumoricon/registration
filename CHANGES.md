@@ -1,6 +1,7 @@
 # Change History
 Version 0.8.2 (Pending)
 - Made order details optional on till report
+- Added badge image preview and PDF download to on At-Con print badge page
 
 Version 0.8.1 (9/7/2019)
 - Changed login/logout pages to use site template/theme

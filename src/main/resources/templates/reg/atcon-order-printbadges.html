@@ -9,18 +9,19 @@
 <div layout:fragment="content" class="container">
 
     <div class="row">
-        <table class="table-bordered table-striped table-sm mb-2">
+        <table class="table-bordered table-striped table-sm mb-2 col-6">
             <tr>
                 <th>Attendee Name</th>
                 <th></th>
             </tr>
             <tr th:each="a : ${attendees}">
                 <td th:text="${a.nameOrFanName}">Attendee Name</td>
-                <td>
+                <td><a class="btn btn-secondary float-right ml-2"
+                       th:href="@{/orders/{orderId}/attendees/{attendeeId}/badge.pdf(orderId=${a.orderId},attendeeId=${a.id})}" target="_blank">Download Badge PDF</a>
                     <form th:action="@{/reg/atconorder/{orderId}/printbadges/reprint/{attendeeId}(orderId=${a.orderId},attendeeId=${a.id})}" method="post"
-                    th:if="${!a.isBadgePrinted()}">
+                    th:if="${!a.isBadgePrinted()}" class="float-right">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <input type="submit" value="Reprint" class="btn btn-primary mb-2">
+                        <input type="submit" value="Reprint" class="btn btn-primary">
                     </form>
 
                     <span th:if="${a.isBadgePrinted()}">Already Checked In
@@ -28,6 +29,8 @@
                 </td>
             </tr>
         </table>
+        <img id="badgePreview" width="375" height="300" class="ml-3" style="border: 1px solid gray"
+             th:src="@{/orders/{orderId}/attendees/{attendeeId}/badge.png(orderId=${attendees.get(0).orderId},attendeeId=${attendees.get(0).id})}">
     </div>
 
     <div class="row">
