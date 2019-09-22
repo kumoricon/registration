@@ -28,7 +28,7 @@ class BadgeRepository {
     List<Badge> findByVisibleTrue() {
         try {
             return jdbcTemplate.query(
-                    "select * from badges where visible= true",
+                    "select * from badges where visible= true order by id",
                     new BadgeRepository.BadgeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -39,7 +39,7 @@ class BadgeRepository {
     List<Badge> findAll() {
         try {
             return jdbcTemplate.query(
-                    "select * from badges",
+                    "select * from badges order by id",
                     new BadgeRepository.BadgeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -63,7 +63,7 @@ class BadgeRepository {
             return key.intValue();
         } else {
             jdbcTemplate.update("UPDATE badges SET badge_type = ?, badge_type_background_color = ?, badge_type_text = ?, name = ?, required_right = ?, visible = ?, warning_message = ? WHERE id = ?",
-                badge.getBadgeType(), badge.getBadgeTypeBackgroundColor(), badge.getBadgeTypeText(), badge.getName(), badge.getRequiredRight(), badge.isVisible(), badge.getWarningMessage(), badge.getId());
+                badge.getBadgeType().ordinal(), badge.getBadgeTypeBackgroundColor(), badge.getBadgeTypeText(), badge.getName(), badge.getRequiredRight(), badge.isVisible(), badge.getWarningMessage(), badge.getId());
             return badge.getId();
         }
     }

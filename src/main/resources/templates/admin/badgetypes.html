@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Badges</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row col-md-8">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+                <tr>
+
+                    <th class="text-nowrap">Badge Type</th>
+                    <th class="text-nowrap">Adult Cost</th>
+                    <th class="text-nowrap">Youth Cost</th>
+                    <th class="text-nowrap">Child Cost</th>
+                    <th class="text-nowrap">5 and Under</th>
+                    <th class="text-nowrap">User Right</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tr th:if="${badges.empty}">
+                <td colspan="6"> No Badges Found </td>
+            </tr>
+            <tr th:each="badge : ${badges}">
+                <td th:text="${badge.name}">Name</td>
+                <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(40), 1, 'COMMA', 2, 'POINT')}|">$33.00</td>
+                <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(16), 1, 'COMMA', 2, 'POINT')}|">$33.00</td>
+                <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(8), 1, 'COMMA', 2, 'POINT')}|">$33.00</td>
+                <td class="text-right" th:text="|$${#numbers.formatDecimal(badge.getCostForAge(4), 1, 'COMMA', 2, 'POINT')}|">$0.00</td>
+                <td class="text-nowrap" th:text="${badge.requiredRight}">badge_type_something</td>
+                <td class="text-center">
+                    <form method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" name="id" th:value="${badge.id}">
+                        <input type="submit" th:if="${badge.visible}" name="action" class="btn btn-danger btn-sm" value="Hide">
+                        <input type="submit" th:if="!${badge.visible}" name="action" class="btn btn-primary btn-sm" value="Show">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

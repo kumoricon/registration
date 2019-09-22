@@ -32,7 +32,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown02">
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_users'')')}" href="/admin/users">Users</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_roles'')')}" href="/admin/roles">Roles</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_pass_types'')')}" href="#"><s>Badge Types</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_pass_types'')')}" href="/admin/badgetypes">Badge Types</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_till_sessions'')')}" href="/admin/tillsessions">Till Sessions</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_active_sessions'')')}" href="/admin/loginsessions">Login Sessions</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_blacklist'')')}" href="/admin/blacklist">Blacklist</a>

@@ -77,4 +77,13 @@ public class BadgeService {
         badge.setAgeRanges(ageRangeRepository.findAgeRangesForBadgeId(badgeId));
         return badge;
     }
+
+    @Transactional
+    public void setBadgeVisibility(Integer badgeId, Boolean visible) {
+        /* TODO: a round trip to the database could be saved by adding a function in BadgeRepository to set
+           the badges visibility by ID */
+        Badge b = badgeRepository.findById(badgeId);
+        b.setVisible(visible);
+        badgeRepository.save(b);
+    }
 }
