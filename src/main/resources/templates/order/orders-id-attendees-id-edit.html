@@ -41,7 +41,10 @@
         </div>
 
         <div class="form-group row mb-0">
-            <div class="col-md-5"></div>
+            <label for="inputFanName" class="col-md-2 col-form-label-sm">Fan Name</label>
+            <div class="col-md-3">
+                <input type="text" th:field="*{fanName}" th:errorclass="is-invalid" class="form-control-sm" id="inputFanName" placeholder="Fan Name">
+            </div>
             <label for="inputPronoun" class="col-md-2 col-form-label-sm">Preferred Pronoun</label>
             <div class="col-md-2">
                 <select th:field="*{preferredPronoun}" th:errorclass="is-invalid" class="form-control form-control-sm" id="inputPronoun">

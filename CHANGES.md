@@ -2,6 +2,7 @@
 Version 0.8.3 (pending)
 - Changed "Registration" in menu bar to link to home page 
 - Removed extra whitespace on orders/X/attendees/X/edit screen 
+- Add Fan Name field to orders/X/attendees/X/edit screen
 
 Version 0.8.2 (9/22/2019)
 - Made order details optional on till report
