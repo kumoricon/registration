@@ -37,3 +37,17 @@ table.table-fit thead th, table.table-fit tfoot th {
 table.table-fit tbody td, table.table-fit tfoot td {
     width: auto !important;
 }
+
+
+.table-fix-head {
+    display: block;;
+    overflow-y: auto;
+    height: 80vh !important;
+}
+
+.table-fix-head thead th {
+    position: sticky;
+    top: 0;
+    background-color: #EEEEEE;
+    height: 1.1em;
+}

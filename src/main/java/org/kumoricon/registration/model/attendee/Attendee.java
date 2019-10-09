@@ -1,7 +1,6 @@
 package org.kumoricon.registration.model.attendee;
 
 
-import org.kumoricon.registration.model.badge.AgeRange;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.order.Order;
 import java.math.BigDecimal;

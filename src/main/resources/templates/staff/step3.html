@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/basenomenu}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Step 3: Signature</title>
+    <script src="/js/staff/sigpad.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row container">
+        <div class="col-sm-6">
+            <canvas width="500" height="200" id="canvas"></canvas>
+            Signature pad not detected
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 mt-3">
+            <form method="post" id="submitForm">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" name="imageData" id="imageData" />
+                <input class="btn btn-primary" name="action" id="save" type="submit" value="Save Signature" />
+                <a th:href="@{/}" class="btn btn-secondary mr-5">Cancel</a>
+                <button class="btn btn-secondary ml-5" id="clear">Clear</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

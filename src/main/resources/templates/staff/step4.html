@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/basenomenu}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Step 4: Done</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <span th:text="|${staff.firstName} ${staff.lastName} checked in at ${#temporals.format(staff.checkedInAt, 'EEE MM/dd/yyyy h:mm:ss a zzz')}|">
+                Checked in at...
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <a th:href="@{/staff}" class="btn btn-primary">Done</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

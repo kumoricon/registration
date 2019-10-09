@@ -173,6 +173,7 @@ public class BaseDataService {
                 {"manage_orders", "List/edit orders after they have been placed"},
                 {"manage_devices", "Add/edit devices (computer/printer mappings)"},
                 {"manage_till_sessions", "View/Close Till Sessions for other users"},
+                {"staff_check_in", "Check In Staff"},
                 {"import_pre_reg_data", "Import pre-registered attendees and orders"},
                 {"load_base_data", "Load default data (users, roles, rights)"},
                 {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"}
@@ -218,7 +219,9 @@ public class BaseDataService {
                 "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_staff_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_staff", "badge_type_panelist",
-                "pre_reg_check_in_edit", "menu_registration", "menu_utility", "menu_report"});
+                "pre_reg_check_in_edit", "menu_registration", "menu_utility", "menu_report",
+                "staff_check_in"
+        });
         roles.put("Manager", new String[] {"at_con_registration", "at_con_registration_specialty",
                 "pre_reg_check_in", "attendee_search", "print_guest_badge",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
@@ -228,7 +231,8 @@ public class BaseDataService {
                 "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_users", "view_staff_report",
                 "view_check_in_by_badge_type_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
                 "view_check_in_by_user_report", "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions",
-                "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report", "menu_administration"});
+                "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report", "menu_administration",
+                "staff_check_in"});
         roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty", "print_guest_badge",
                 "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note",
                 "at_con_registration_blacklist", "attendee_override_price", "reprint_badge", "manage_users",
@@ -240,7 +244,7 @@ public class BaseDataService {
                 "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
                 "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
                 "pre_print_badges", "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report",
-                "menu_administration", "manage_blacklist"});
+                "menu_administration", "manage_blacklist", "staff_check_in"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "menu_registration"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();

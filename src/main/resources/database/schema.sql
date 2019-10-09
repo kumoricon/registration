@@ -281,3 +281,42 @@ create table if not exists guests
 create unique index if not exists guests_online_id_uindex
     on guests (online_id);
 
+
+create table if not exists staff
+(
+	id serial not null
+		constraint staff_pkey
+			primary key,
+	age_category_at_con varchar(255),
+	badge_image_file_type varchar(255),
+	badge_print_count integer default 0 not null,
+	badge_printed boolean not null,
+	birth_date date,
+	checked_in boolean,
+	checked_in_at timestamp with time zone,
+	deleted boolean,
+	department varchar(255) not null,
+	department_color_code varchar(255),
+	first_name varchar(255) not null,
+	has_badge_image boolean not null,
+	last_modified_ms bigint not null,
+	last_name varchar(255) not null,
+	legal_first_name varchar(255),
+	legal_last_name varchar(255),
+	shirt_size varchar(255),
+	suppress_printing_department boolean not null,
+	uuid varchar(255) not null,
+	information_verified boolean default false not null,
+	picture_saved boolean default false not null,
+	signature_saved boolean default false not null
+);
+
+create table if not exists staff_positions
+(
+	id int not null
+		constraint fk2stj1bd4u7fx9l7mswhfqa78t
+			references staff,
+	position varchar(255) not null
+);
+
+

@@ -9,4 +9,9 @@ public class SqlHelper {
         return Timestamp.from(instant);
     }
 
+    public static Instant translate(Timestamp timestamp) {
+        if (timestamp == null) return null;
+        return timestamp.toInstant();
+    }
+
 }
