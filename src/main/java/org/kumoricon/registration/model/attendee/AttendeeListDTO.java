@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.attendee;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -18,6 +19,7 @@ public class AttendeeListDTO {
     private Boolean checkedIn;
     private Instant checkInTime;
     private Integer orderId;
+    private BigDecimal paidAmount;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -51,6 +53,14 @@ public class AttendeeListDTO {
 
     public Integer getOrderId() { return orderId; }
     public void setOrderId(Integer orderId) { this.orderId = orderId; }
+
+    public BigDecimal getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(BigDecimal paidAmount) {
+        this.paidAmount = paidAmount;
+    }
 
     public Long getAge() {
         if (birthDate == null) { return 0L; }

@@ -17,7 +17,7 @@ import java.util.List;
 public class AttendeeSearchRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    private static final String SELECT_COLUMNS = "select attendees.id, attendees.order_id, first_name, last_name, legal_first_name, legal_last_name, fan_name, birth_date, checked_in, check_in_time, badges.name as badge_type ";
+    private static final String SELECT_COLUMNS = "select attendees.id, attendees.order_id, first_name, last_name, legal_first_name, legal_last_name, fan_name, birth_date, checked_in, check_in_time, badges.name as badge_type, paid_amount ";
 
     public AttendeeSearchRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -91,6 +91,16 @@ public class AttendeeSearchRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<AttendeeListDTO> findAll() {
+        try {
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id order by attendees.first_name, attendees.last_name",
+                    new AttendeeListDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
     private String buildSearchString(String[] words) {
         List<String> tmpWords = new ArrayList<>();
         for (String word : words) {
@@ -131,6 +141,7 @@ public class AttendeeSearchRepository {
             a.setLegalLastName(rs.getString("legal_last_name"));
             a.setOrderId(rs.getInt("order_id"));
             a.setBadgeType(rs.getString("badge_type"));
+            a.setPaidAmount(rs.getBigDecimal("paid_amount"));
             return a;
         }
     }

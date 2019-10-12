@@ -13,12 +13,12 @@ import java.util.List;
 
 
 @Controller
-public class AttendanceReportController {
+public class CheckInReportController {
     private final AttendeeRepository attendeeRepository;
     private final DateTimeService dateTimeService;
 
     @Autowired
-    public AttendanceReportController(AttendeeRepository attendeeRepository, DateTimeService dateTimeService) {
+    public CheckInReportController(AttendeeRepository attendeeRepository, DateTimeService dateTimeService) {
         this.attendeeRepository = attendeeRepository;
         this.dateTimeService = dateTimeService;
     }

@@ -1,5 +1,6 @@
 # Change History
 Version 0.8.4 (Pending)
+- Added attendance report
 
 Version 0.8.3 (10/9/2019)
 - Changed "Registration" in menu bar to link to home page 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Active Logins</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <h1>Attendance</h1>
+
+    <table class="table table-bordered table-striped table-sm table-fit">
+        <tbody>
+            <tr>
+                <td>Total Convention Members</td>
+                <td th:text="${counts.totalConventionMembers}">0</td>
+            </tr>
+            <tr>
+                <td>Body Count</td>
+                <td th:text="${counts.warmBodyCount}">0</td>
+            </tr>
+            <tr>
+                <td>Total Paid Members</td>
+                <td th:text="${counts.paidMembers}">0</td>
+            </tr>
+            <tr>
+                <td>Paid Attendance</td>
+                <td th:text="${counts.paidAttendance}">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <b>These numbers are NOT deduplicated and will be revised post-con</b>
+
+    <ul>
+        <li>Total convention members – Everybody registered for a badge, whether showed up or not</li>
+        <li>Body count – Above, but drop people who don’t show up <i>Guest badges are always counted as checked in because they don't come to Registration to check in</i></li>
+        <li>Total paid members – Everybody registered for a badge, whether showed up or not, but dropping free badges</li>
+        <li>Paid attendance – Only counting paid “attendees”—not exhibitors, etc.</li>
+    </ul>
+
+</div>
+
+</body>
+</html>
