@@ -17,18 +17,20 @@
     <div class="row">
         <div class="mt-2" >
             <table class="table table-bordered table-sm table-fix-head" id="staffList"
-                    style="width:900px;">
+                    style="width:1000px;">
                 <thead>
                     <tr style="width:800px !important;">
                         <th style="width: 200px;">Name</th>
+                        <th style="width: 200px;">Legal Name</th>
                         <th style="width: 300px;">Department</th>
                         <th style="width: 300px;">Check In Time</th>
-                        <th style="width: 200px;"></th>
+                        <th style="width: 100px;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="s : ${staff}">
                         <td th:text="|${s.firstName} ${s.lastName}|">Firstname Lastname</td>
+                        <td th:text="|${s.legalFirstName} ${s.legalLastName}|">Firstname Lastname</td>
                         <td th:text="${s.department}">Department</td>
                         <td th:text="${s.checkedInAt} ? ${#temporals.format(s.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Check In Time</td>
                         <td>

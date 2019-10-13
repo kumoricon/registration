@@ -1,6 +1,8 @@
 # Change History
 Version 0.8.4 (Pending)
 - Added attendance report
+- Added legal name to staff check in list
+- Added T-shirt size to final staff check-in screen
 
 Version 0.8.3 (10/9/2019)
 - Changed "Registration" in menu bar to link to home page 

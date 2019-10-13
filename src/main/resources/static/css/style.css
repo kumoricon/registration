@@ -42,7 +42,7 @@ table.table-fit tbody td, table.table-fit tfoot td {
 .table-fix-head {
     display: block;;
     overflow-y: auto;
-    height: 80vh !important;
+    height: 75vh !important;
 }
 
 .table-fix-head thead th {
