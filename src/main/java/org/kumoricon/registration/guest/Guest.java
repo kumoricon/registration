@@ -9,10 +9,12 @@ public class Guest {
     private String lastName;
     private String legalFirstName;
     private String legalLastName;
+    private String preferredPronoun;
     private String fanName;
     private LocalDate birthDate;
     private Boolean hasBadgeImage;
     private String badgeImageFileType;
+    private String ageCategoryAtCon;
 
     public Integer getId() {
         return id;
@@ -62,6 +64,10 @@ public class Guest {
         this.legalLastName = legalLastName;
     }
 
+    public String getPreferredPronoun() { return preferredPronoun; }
+
+    public void setPreferredPronoun(String preferredPronoun) { this.preferredPronoun = preferredPronoun; }
+
     public String getFanName() {
         if (fanName == null) return "";
         return fanName;
@@ -103,8 +109,12 @@ public class Guest {
         return (legalFirstName + " " + legalLastName).trim();
     }
 
-    public String getPreferredPronoun() {
-        return "";  // TODO: Add this
+    public String getAgeCategoryAtCon() {
+        return ageCategoryAtCon;
+    }
+
+    public void setAgeCategoryAtCon(String ageCategoryAtCon) {
+        this.ageCategoryAtCon = ageCategoryAtCon;
     }
 
     @Override
@@ -127,4 +137,5 @@ public class Guest {
     public int hashCode() {
         return id.hashCode();
     }
+
 }

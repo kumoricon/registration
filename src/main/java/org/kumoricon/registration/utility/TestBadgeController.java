@@ -32,20 +32,21 @@ public class TestBadgeController {
             ">:(", "ಠ_ಠ", "∆$#", "( ͡° ͜ʖ ͡°)", "ひな", "もんど", "ルイ-ス", "高原・コーゲン"};
 
     private static final Logger log = LoggerFactory.getLogger(TestBadgeController.class);
+    private final BadgePrintService badgePrintService;
 
-    public TestBadgeController() {}
+    public TestBadgeController(BadgePrintService badgePrintService) {
+        this.badgePrintService = badgePrintService;
+    }
 
     @RequestMapping(value = "/utility/testbadges.pdf")
 //    @PreAuthorize("hasAuthority('manage_orders')")
     public ResponseEntity<byte[]> getTestBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
         long start = System.currentTimeMillis();
         log.info("generating test badge pdf");
-        List<AttendeeBadgeDTO> attendeeBadgeDTOS = generateAttendees();
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
-        BadgePrintFormatter badgePrintFormatter = new FullBadgePrintFormatter(attendeeBadgeDTOS, printerSettings.getxOffset(), printerSettings.getyOffset());
 
-        byte[] media = badgePrintFormatter.getStream().readAllBytes();
+        byte[] media = badgePrintService.generateAttendeePDFfromDTO(generateAttendees(), printerSettings).readAllBytes();
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
 
@@ -63,6 +64,7 @@ public class TestBadgeController {
             a.setFanName(name);
             a.setBadgeTypeText("Name Test");
             a.setBadgeNumber("TS12345");
+            a.setPronoun("They/Them");
             badgeDTOs.add(a);
         }
 

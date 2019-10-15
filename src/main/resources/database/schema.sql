@@ -267,11 +267,14 @@ create table if not exists guests
     id serial not null
         constraint guests_pk
             primary key,
+    uuid text not null,
     online_id text,
     first_name text not null,
     last_name text,
+    preferred_pronoun text,
     legal_first_name text,
     legal_last_name text,
+    age_category_at_con text,
     fan_name text,
     birth_date date,
     has_badge_image boolean default false not null,
@@ -303,6 +306,7 @@ create table if not exists staff
 	last_name varchar(255) not null,
 	legal_first_name varchar(255),
 	legal_last_name varchar(255),
+	preferred_pronoun varchar(255),
 	shirt_size varchar(255),
 	suppress_printing_department boolean not null,
 	uuid varchar(255) not null,

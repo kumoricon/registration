@@ -91,27 +91,30 @@ public class GuestImportService {
             existing = new Guest();
         }
 
-        boolean changed = updateStaffFromPerson(existing, person);
+        boolean changed = updateGuestFromPerson(existing, person);
         if (changed) {
             guestRepository.save(existing);
         }
     }
 
-    private boolean updateStaffFromPerson(Guest guest, GuestImportFile.Person person) {
+    private boolean updateGuestFromPerson(Guest guest, GuestImportFile.Person person) {
         boolean changed = false;
         if (guest.getOnlineId() != null && !guest.getOnlineId().equals(person.getId())) {
             log.error("Tried to update guest {} that didn't match Person {}'s id", guest, person);
             throw new RuntimeException("Tried to update guest from the wrong person");
         }
-        if (guest.getOnlineId() == null || !guest.getOnlineId().equals(person.getId()) ||
-                !guest.getFirstName().equals(person.getNamePreferredFirst()) ||
-                !guest.getLastName().equals(person.getNamePreferredLast()) ||
-                !guest.getLegalFirstName().equals(person.getNameOnIdFirst()) ||
-                !guest.getLegalLastName().equals(person.getNameOnIdLast()) ||
-                !guest.getFanName().equals(person.getFanName()) ||
-                !guest.getBirthDate().toString().equals(person.getBirthdate()) ||
-                !guest.getHasBadgeImage().equals(person.getHasBadgeImage()) ||
-                !guest.getBadgeImageFileType().equals(person.getBadgeImageFileType())
+        if (guest.getOnlineId() == null ||
+                notEqual(guest.getOnlineId(), person.getId()) ||
+                notEqual(guest.getFirstName(), person.getNamePreferredFirst()) ||
+                notEqual(guest.getLastName(), person.getNamePreferredLast()) ||
+                notEqual(guest.getLegalFirstName(), person.getNameOnIdFirst()) ||
+                notEqual(guest.getLegalLastName(), person.getNameOnIdLast()) ||
+                notEqual(guest.getPreferredPronoun(), person.getPreferredPronoun()) ||
+                notEqual(guest.getFanName(), person.getFanName()) ||
+                notEqual(guest.getBirthDate().toString(), person.getBirthdate()) ||
+                notEqual(guest.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
+                notEqual(guest.getHasBadgeImage(), person.getHasBadgeImage()) ||
+                notEqual(guest.getBadgeImageFileType(), person.getBadgeImageFileType())
         ) {
             changed = true;
         }
@@ -120,8 +123,10 @@ public class GuestImportService {
         guest.setLastName(person.getNamePreferredLast());
         guest.setLegalFirstName(person.getNameOnIdFirst());
         guest.setLegalLastName(person.getNameOnIdLast());
+        guest.setPreferredPronoun(person.getPreferredPronoun());
         guest.setFanName(person.getFanName());
         guest.setBirthDate(LocalDate.parse(person.getBirthdate()));
+        guest.setAgeCategoryAtCon(person.getAgeCategoryConCurrentTerm());
         guest.setHasBadgeImage(person.getHasBadgeImage());
         guest.setBadgeImageFileType(person.getBadgeImageFileType());
 
@@ -139,5 +144,14 @@ public class GuestImportService {
         } catch (IOException ex) {
             log.error("Error creating directory", ex);
         }
+    }
+
+    private static boolean notEqual(Object a, Object b) {
+        if (a == null && b == null) {
+            return true;
+        } else if (a != null) {
+            return a.equals(b);
+        }
+        return false;
     }
 }

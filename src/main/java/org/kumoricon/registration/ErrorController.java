@@ -21,6 +21,7 @@ public class ErrorController {
                 request.getUserPrincipal().getName(),
                 request.getRemoteAddr(),
                 request.getRequestURI(),
+                throwable,
                 throwable);
 
         String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");

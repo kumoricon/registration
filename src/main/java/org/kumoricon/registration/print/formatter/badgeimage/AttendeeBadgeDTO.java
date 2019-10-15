@@ -15,6 +15,7 @@ public class AttendeeBadgeDTO {
     private String badgeTypeBackgroundColor;
     private String badgeTypeText;
     private String badgeNumber;
+    private String pronoun;
 
     public AttendeeBadgeDTO() {
         this.ageStripeBackgroundColor = "#323E99";
@@ -103,13 +104,16 @@ public class AttendeeBadgeDTO {
         this.badgeNumber = badgeNumber;
     }
 
+    public String getPronoun() { return pronoun; }
+    public void setPronoun(String pronoun) { this.pronoun = pronoun; }
+
     public static AttendeeBadgeDTO fromAttendee(Attendee attendee, Badge badge) {
         AttendeeBadgeDTO output = new AttendeeBadgeDTO();
         output.setId(attendee.getId());
         output.setName(attendee.getFirstName(), attendee.getLastName());
         output.setFanName(attendee.getFanName());
-
         output.setBadgeNumber(attendee.getBadgeNumber());
+        output.setPronoun(attendee.getPreferredPronoun());
 
         output.setBadgeTypeText(badge.getBadgeTypeText());
         output.setBadgeTypeBackgroundColor(badge.getBadgeTypeBackgroundColor());

@@ -12,6 +12,7 @@
         <div class="col-sm-8 form-inline">
             <input class="form-control col-sm-6" id="search" type="text" placeholder="Search Name or Department Here..." autofocus>
             <button class="form-control btn btn-primary ml-2" id="clear">Clear</button>
+            <span class="ml-5" th:text="|(${checkedIn} / ${staff.size()} checked in)|"></span>
         </div>
     </div>
     <div class="row">
@@ -36,6 +37,8 @@
                         <td>
                             <a th:href="@{/staff/checkin/{uuid}(uuid=${s.uuid})}"
                                th:if="!${s.checkedIn}" class="btn btn-sm btn-primary">Check In</a>
+                            <a th:href="@{/staff/{uuid}(uuid=${s.uuid})}"
+                               th:if="${s.checkedIn}" class="btn btn-sm btn-primary">Reprint</a>
                         </td>
                     </tr>
                 </tbody>

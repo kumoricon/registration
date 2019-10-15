@@ -96,22 +96,22 @@ public class StaffRepository {
 //                .addValue("signature_saved", staff.getSignatureSaved());
 
         if (staff.getId() == null) {
-            Integer id = jdbcTemplate.queryForObject("INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, shirt_size, suppress_printing_department, uuid, information_verified, picture_saved, signature_saved) " +
-                            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id",
+            Integer id = jdbcTemplate.queryForObject("INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, picture_saved, signature_saved) " +
+                            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id",
                     new Object[] {staff.getAgeCategoryAtCon(), staff.getBadgeImageFileType(), staff.getBadgePrintCount(),
                     staff.getBadgePrinted(), staff.getBirthDate(), staff.getCheckedIn(), SqlHelper.translate(staff.getCheckedInAt()),
                     staff.getDeleted(), staff.getDepartment(), staff.getDepartmentColorCode(), staff.getFirstName(),
                     staff.getHasBadgeImage(), staff.getLastModifiedMS(), staff.getLastName(), staff.getLegalFirstName(),
-                    staff.getLegalLastName(), staff.getShirtSize(), staff.getSuppressPrintingDepartment(),
+                    staff.getLegalLastName(), staff.getPreferredPronoun(), staff.getShirtSize(), staff.getSuppressPrintingDepartment(),
                     staff.getUuid(), staff.getInformationVerified(), staff.getPictureSaved(), staff.getSignatureSaved()}, Integer.class);
             staff.setId(id);
         } else {
-            jdbcTemplate.update("UPDATE staff SET age_category_at_con = ?, badge_image_file_type = ?, badge_print_count = ?, badge_printed = ?, birth_date = ?, checked_in = ?, checked_in_at = ?, deleted = ?, department = ?, department_color_code = ?, first_name = ?, has_badge_image = ?, last_modified_ms = ?, last_name = ?, legal_first_name = ?, legal_last_name = ?, shirt_size = ?, suppress_printing_department = ?, uuid = ?, information_verified = ?, picture_saved = ?, signature_saved = ? WHERE id = ?",
+            jdbcTemplate.update("UPDATE staff SET age_category_at_con = ?, badge_image_file_type = ?, badge_print_count = ?, badge_printed = ?, birth_date = ?, checked_in = ?, checked_in_at = ?, deleted = ?, department = ?, department_color_code = ?, first_name = ?, has_badge_image = ?, last_modified_ms = ?, last_name = ?, legal_first_name = ?, legal_last_name = ?, preferred_pronoun = ?, shirt_size = ?, suppress_printing_department = ?, uuid = ?, information_verified = ?, picture_saved = ?, signature_saved = ? WHERE id = ?",
                     staff.getAgeCategoryAtCon(), staff.getBadgeImageFileType(), staff.getBadgePrintCount(),
                     staff.getBadgePrinted(), staff.getBirthDate(), staff.getCheckedIn(), SqlHelper.translate(staff.getCheckedInAt()),
                     staff.getDeleted(), staff.getDepartment(), staff.getDepartmentColorCode(), staff.getFirstName(),
                     staff.getHasBadgeImage(), staff.getLastModifiedMS(), staff.getLastName(), staff.getLegalFirstName(),
-                    staff.getLegalLastName(), staff.getShirtSize(), staff.getSuppressPrintingDepartment(),
+                    staff.getLegalLastName(), staff.getPreferredPronoun(), staff.getShirtSize(), staff.getSuppressPrintingDepartment(),
                     staff.getUuid(), staff.getInformationVerified(), staff.getPictureSaved(), staff.getSignatureSaved(),
                     staff.getId());
         }
@@ -144,6 +144,7 @@ public class StaffRepository {
             s.setLastName(rs.getString("last_name"));
             s.setLegalFirstName(rs.getString("legal_first_name"));
             s.setLegalLastName(rs.getString("legal_last_name"));
+            s.setPreferredPronoun(rs.getString("preferred_pronoun"));
             s.setShirtSize(rs.getString("shirt_size"));
             s.setSuppressPrintingDepartment(rs.getBoolean("suppress_printing_department"));
             s.setUuid(rs.getString("uuid"));

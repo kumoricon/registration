@@ -57,6 +57,7 @@ public class GuestImportFile {
         private String namePreferredLast;
         private String nameOnIdFirst;
         private String nameOnIdLast;
+        private String preferredPronoun;
         private String fanName;
         private String tShirtSize;
         private String badgeImpactingLastModified;
@@ -73,6 +74,7 @@ public class GuestImportFile {
                 @JsonProperty(value = "namePreferredLast") String namePreferredLast,
                 @JsonProperty(value = "nameOnIdFirst") String nameOnIdFirst,
                 @JsonProperty(value = "nameOnIdLast") String nameOnIdLast,
+                @JsonProperty(value = "pronouns") String preferredPronoun,
                 @JsonProperty(value = "fanName") String fanName,
                 @JsonProperty(value = "tShirtSize") String tShirtSize,
                 @JsonProperty(value = "badgeImpactingLastModified") String badgeImpactingLastModified,
@@ -86,6 +88,7 @@ public class GuestImportFile {
             this.namePreferredLast = namePreferredLast;
             this.nameOnIdFirst = nameOnIdFirst;
             this.nameOnIdLast = nameOnIdLast;
+            this.preferredPronoun = preferredPronoun;
             this.tShirtSize = tShirtSize;
             this.badgeImpactingLastModified = badgeImpactingLastModified;
             this.birthdate = birthdate;
@@ -114,6 +117,8 @@ public class GuestImportFile {
         public String getNameOnIdLast() {
             return nameOnIdLast;
         }
+
+        public String getPreferredPronoun() { return preferredPronoun; }
 
         public String getFanName() { return fanName; }
 

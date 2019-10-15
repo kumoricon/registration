@@ -5,11 +5,8 @@ import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
-import org.kumoricon.registration.print.formatter.BadgePrintFormatter;
-import org.kumoricon.registration.print.formatter.FullBadgePrintFormatter;
+import org.kumoricon.registration.print.BadgePrintService;
 import org.kumoricon.registration.print.formatter.badgeimage.AttendeeBadgeDTO;
-import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreator;
-import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorFull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -27,12 +24,16 @@ import java.util.List;
 public class BadgeImageController {
     private final AttendeeRepository attendeeRepository;
     private final BadgeService badgeService;
+    private final BadgePrintService badgePrintService;
 
     private static final Logger log = LoggerFactory.getLogger(BadgeImageController.class);
 
-    public BadgeImageController(AttendeeRepository attendeeRepository, BadgeService badgeService) {
+    public BadgeImageController(AttendeeRepository attendeeRepository,
+                                BadgeService badgeService,
+                                BadgePrintService badgePrintService) {
         this.attendeeRepository = attendeeRepository;
         this.badgeService = badgeService;
+        this.badgePrintService = badgePrintService;
     }
 
 
@@ -45,14 +46,11 @@ public class BadgeImageController {
         Badge badge = badgeService.findById(attendee.getBadgeId());
         AttendeeBadgeDTO a = AttendeeBadgeDTO.fromAttendee(attendee, badge);
 
-        BadgeCreator badgeCreator = new BadgeCreatorFull();
-
-        byte[] media = badgeCreator.createBadge(a);
+        byte[] media = badgePrintService.generateAttendeeImage(a);
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
 
-        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}/badge.pdf")
@@ -62,18 +60,14 @@ public class BadgeImageController {
                                               @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
         Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
         log.info("downloaded badge PDF for {}", attendee);
-        Badge badge = badgeService.findById(attendee.getBadgeId());
-        AttendeeBadgeDTO a = AttendeeBadgeDTO.fromAttendee(attendee, badge);
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
-        BadgePrintFormatter badgePrintFormatter = new FullBadgePrintFormatter(List.of(a), printerSettings.getxOffset(), printerSettings.getyOffset());
 
-        byte[] media = badgePrintFormatter.getStream().readAllBytes();
+        byte[] media = badgePrintService.generateAttendeePDF(List.of(attendee), printerSettings).readAllBytes();
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
 
-        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
 
     private HttpHeaders buildHeaders() {

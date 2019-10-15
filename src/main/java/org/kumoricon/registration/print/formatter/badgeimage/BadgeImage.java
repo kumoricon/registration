@@ -2,7 +2,9 @@ package org.kumoricon.registration.print.formatter.badgeimage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -33,9 +35,31 @@ public class BadgeImage {
         }
         image = background;
         g2 = image.createGraphics();
-        g2.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    }
+
+    void drawImage(Image image, Rectangle area) {
+        if (image == null) return;
+        g2.drawImage(image, area.x, area.y, area.width, area.height, null);
+    }
+
+    void drawStretchedImage(Image image, Rectangle area) {
+        if (image == null) return;
+        double imageWidth = image.getWidth(null);
+        double imageHeight = image.getHeight(null);
+
+        double widthRatio = area.getWidth() / imageWidth;
+        double heightRatio = area.getHeight() / imageHeight;
+        double ratio = Math.min(widthRatio, heightRatio);
+
+        int newWidth = (int) (imageWidth * ratio);
+        int newHeight = (int) (imageHeight * ratio);
+
+        Rectangle scaledArea = new Rectangle(
+                area.x + (area.width - newWidth)/2,
+                area.y + (area.height - newHeight)/2,
+                newWidth,
+                newHeight);
+        drawImage(image, scaledArea);
     }
 
     /**
@@ -48,9 +72,15 @@ public class BadgeImage {
     void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
         Rectangle paddedRect = getPaddedRect(rect);
         final Font sizedFont = scaleFont(text, paddedRect, font);
-        drawCenteredString(text, paddedRect, sizedFont, color);
+        drawCenteredString(text, rect, sizedFont, color);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
+    void drawRotatedStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
+        Rectangle rotatedBounds = new Rectangle(rect.x, rect.y, rect.height, rect.width);
+        final Font sizedFont = scaleFont(text, rotatedBounds, font);
+        drawCenteredString(text, rect, sizedFont, color);
+    }
 
     /**
      * Draw a string that is stretched to fill the given rectangle, minus a 10 pixel padding
@@ -86,6 +116,7 @@ public class BadgeImage {
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
         g2.setFont(font);
+
         drawTextOutline(text, color, x, y);
 
         g2.setColor(color);
@@ -94,14 +125,14 @@ public class BadgeImage {
 
     void drawTextOutline(String text, Color color, int x, int y) {
         g2.setColor(getInverseColor(color));
-        g2.drawString(text, x-1, y);
-        g2.drawString(text, x+1, y);
-        g2.drawString(text, x, y-1);
-        g2.drawString(text, x, y+1);
-        g2.drawString(text, x-1, y-1);
-        g2.drawString(text, x-1, y+1);
-        g2.drawString(text, x+1, y-1);
-        g2.drawString(text, x+1, y+1);
+        g2.drawString(text, x-2, y);
+        g2.drawString(text, x+2, y);
+        g2.drawString(text, x, y-2);
+        g2.drawString(text, x, y+2);
+        g2.drawString(text, x-2, y-2);
+        g2.drawString(text, x-2, y+2);
+        g2.drawString(text, x+2, y-2);
+        g2.drawString(text, x+2, y+2);
     }
 
     void drawLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
@@ -172,7 +203,15 @@ public class BadgeImage {
         }
     }
 
-    private static Color getInverseColor(Color background) {
+    /**
+     * Returns the best text color for the given background color. Ideally chooses white text on dark
+     * backgrounds and black text on light backgrounds. Uses the formula from
+     * http://en.wikipedia.org/wiki/HSV_color_space%23Lightness
+     * Based on https://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
+     * @param background Color of background
+     * @return Color (Black or White)
+     */
+    static Color getInverseColor(Color background) {
         // Counting the perceptive luminance - human eye favors green color...
         double a = 1 - (0.299 * background.getRed() + 0.587 * background.getGreen() + 0.114 * background.getBlue()) / 255;
 
@@ -181,6 +220,69 @@ public class BadgeImage {
         } else {
             return Color.WHITE;
         }
+    }
+
+    void drawRotatedCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, boolean rotateRight) {
+        if (text.length == 0) return;
+        // Since lines will be drawn rotated, line height is based on WIDTH of the bounding box
+        int lineHeight = (int) (boundingBox.getWidth() / text.length);
+
+        // Font scaling code assumes horizontal text, build a bounding box that's "rotated"
+        @SuppressWarnings("SuspiciousNameCombination")
+        Rectangle rotatedBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.height, lineHeight);
+        Font sizedFont = scaleFont(text[0], rotatedBounds, font);
+
+        // Find the smallest font needed for each line and use it for all lines
+        for (int i = 1; i < text.length; i++) {
+            Font tmpFont = scaleFont(text[i], rotatedBounds, font);
+            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
+        }
+
+        for (int i = 0; i < text.length; i++) {
+            @SuppressWarnings("SuspiciousNameCombination")
+            Rectangle lineBoundingBox = new Rectangle(boundingBox.x + (i * lineHeight), boundingBox.y, lineHeight, boundingBox.height);
+            AffineTransform orig = g2.getTransform();
+            if (rotateRight) {
+                g2.rotate(Math.PI/2, lineBoundingBox.getX() + (lineBoundingBox.getWidth()/2), lineBoundingBox.getY() + (lineBoundingBox.getHeight()/2));
+                drawCenteredString(text[text.length-1-i], lineBoundingBox, sizedFont, fgColor);
+            } else {
+                g2.rotate(-Math.PI/2, lineBoundingBox.getX() + lineBoundingBox.getWidth()/1.5, lineBoundingBox.getY() + (lineBoundingBox.getHeight()/2));
+                drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor);
+            }
+            g2.setTransform(orig);
+        }
+    }
+
+
+    void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor) {
+
+        // Find initial line height
+        int lineHeight = (int) (boundingBox.getHeight() / text.length);
+
+        Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
+        Font sizedFont = scaleFont(text[0], lineBounds, font);
+
+
+        // Find the smallest font needed for each line and use it for all lines
+        for (int i = 1; i < text.length; i++) {
+            Font tmpFont = scaleFont(text[i], lineBounds, font);
+            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
+        }
+        lineHeight = sizedFont.getSize() + 15;   // Make line height close to actual line size with padding
+
+        for (int i = 0; i < text.length; i++) {
+            Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
+            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor);
+        }
+    }
+
+
+    void drawStretchedRightRotatedString(String text, Rectangle boundingBox, Font font, Color fgColor) {
+        AffineTransform orig = g2.getTransform();
+        g2.rotate(-Math.PI/2, boundingBox.getX() + (boundingBox.getWidth()/2), boundingBox.getY() + (boundingBox.getHeight()/2));
+        drawRotatedStretchedCenteredString(text, boundingBox, font, fgColor);
+        g2.setTransform(orig);
+
     }
 
     void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor) {
@@ -197,28 +299,6 @@ public class BadgeImage {
         }
     }
 
-    void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor) {
-
-        // Find initial line height
-        int lineHeight = (int) (boundingBox.getHeight() / text.length);
-
-        Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
-        Font sizedFont = scaleFont(text[0], lineBounds, font);
-
-
-        // Find the smallest font needed for each line and use it for all lines
-        for (int i = 1; i < text.length; i++) {
-            Font tmpFont = scaleFont(text[i], lineBounds, font);
-            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
-        }
-        lineHeight = sizedFont.getSize();   // Make line height close to actual line size with padding
-
-        for (int i = 0; i < text.length; i++) {
-            Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
-            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor);
-        }
-    }
-
     static String buildTitleString(String input) {
         if (input == null) return "";
         char[] characters = input.toUpperCase().toCharArray();
@@ -228,5 +308,16 @@ public class BadgeImage {
             if (i < characters.length-1) output.append(" ");
         }
         return output.toString();
+    }
+
+    public byte[] writePNGToByteArray() {
+        try (
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "png", baos);
+            return baos.toByteArray();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 }

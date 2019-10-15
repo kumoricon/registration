@@ -2,13 +2,13 @@
 <html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org">
 <head>
-    <title>Guest</title>
+    <title>Staff</title>
 </head>
 <body>
 
 <div layout:fragment="content" class="container">
     <div class="row mb-3">
-        <a th:href="@{/guests(page=${page})}">Back</a>
+        <a th:href="@{/staff}">Back</a>
     </div>
 
     <div class="row">
@@ -18,41 +18,39 @@
                 <tbody>
                 <tr>
                     <td>Name</td>
-                    <td th:text="${guest.name}">Firstname Lastname</td>
+                    <td th:text="|${staff.firstName} ${staff.lastName}|">Firstname Lastname</td>
                 </tr>
                 <tr>
                     <td>Legal Name</td>
-                    <td th:text="${guest.legalName}">Legal Name</td>
+                    <td th:text="|${staff.legalFirstName} ${staff.legalLastName}|">Legal Name</td>
                 </tr>
                 <tr>
                     <td>Preferred Pronoun</td>
-                    <td th:text="${guest.preferredPronoun}">Pronoun</td>
+                    <td th:text="${staff.preferredPronoun}">Pronoun</td>
                 </tr>
                 <tr>
-                    <td>Fan Name</td>
-                    <td th:text="${guest.fanName}">Fan Name</td>
+                    <td>Department</td>
+                    <td th:text="${staff.department}">Department</td>
                 </tr>
                 <tr>
                     <td>Birthdate</td>
-                    <td th:text="${#temporals.format(guest.birthDate, 'MM/dd/yyyy')}">01/01/1990</td>
+                    <td th:text="${#temporals.format(staff.birthDate, 'MM/dd/yyyy')}">01/01/1990</td>
                 </tr>
                 </tbody>
             </table>
 
             <div>
-                <form method="post" th:action="|/guests/${guest.id}/print|">
-                    <input type="hidden" name="id" th:value="${guest.id}">
+                <form method="post" th:action="|/staff/${staff.uuid}/print|">
                     <input type="hidden" name="action" value="printBadge">
                     <input class="btn btn-success btn-sm" type="submit" value="Print Badge">
                 </form><br>
                 <a class="btn btn-secondary btn-sm"
-                   th:href="@{/guests/{guestId}/badge.pdf(guestId=${guest.id})}" target="_blank">Download Badge PDF</a>
+                   th:href="@{/staff/{uuid}/badge.pdf(uuid=${staff.uuid})}" target="_blank">Download Badge PDF</a>
             </div>
-
         </div>
 
         <div class="col-4">
-            <img th:src="@{/guests/{guestId}/badge.png(guestId=${guest.id})}" width="300" height="450" style="border: 1px solid black">
+            <img th:src="@{/staff/{uuid}/badge.png(uuid=${staff.uuid})}" width="300" height="450" style="border: 1px solid black">
         </div>
     </div>
 

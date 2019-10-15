@@ -2,10 +2,6 @@ package org.kumoricon.registration.guest;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
-import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeHistory;
-import org.kumoricon.registration.model.attendee.AttendeeHistoryRepository;
-import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.slf4j.Logger;
@@ -46,10 +42,8 @@ public class GuestPrintController {
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
 
         try {
-//            String result = badgePrintService.printBadgesForAttendees(List.of(attendee), printerSettings);
-            String result = "printed badge";
-            throw new PrintException("Not implemented yet");
-//            return "redirect:/guests/" + "?msg=" + result;
+            String result = badgePrintService.printBadgesForGuest(List.of(guest), printerSettings);
+            return "redirect:/guests/" + "?msg=" + result;
         } catch (PrintException ex) {
             log.error("Error printing", ex);
             return "redirect:/guests/" + guest.getId() + "?err=" + ex.getMessage();

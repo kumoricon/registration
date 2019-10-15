@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 
 @Controller
 public class CheckInController {
@@ -29,9 +30,26 @@ public class CheckInController {
     @RequestMapping(value="/staff")
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String staffList(Model model) {
-        model.addAttribute("staff", staffRepository.findAll());
+        List<Staff> staff = staffRepository.findAll();
+        int checkedIn = 0;          // Just count them here to save another database call, since
+        for (Staff s : staff) {     // We need the whole list anyway
+            if (s.getCheckedIn()) checkedIn++;
+        }
+        model.addAttribute("staff", staff);
+        model.addAttribute("checkedIn", checkedIn);
+
         return "staff/stafflist";
     }
+
+    @RequestMapping(value = "/staff/{uuid}")
+    @PreAuthorize("hasAuthority('staff_check_in')")
+    public String viewStaff(Model model,
+                            @PathVariable String uuid) {
+        Staff staff = staffRepository.findByUuid(uuid);
+        model.addAttribute("staff", staff);
+        return "staff/staff-id";
+    }
+
 
     @RequestMapping(value = "/staff/checkin/{uuid}")
     @PreAuthorize("hasAuthority('staff_check_in')")

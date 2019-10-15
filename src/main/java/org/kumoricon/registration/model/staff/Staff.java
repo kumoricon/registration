@@ -15,6 +15,7 @@ public class Staff {
     private String lastName;
     private String legalFirstName;
     private String legalLastName;
+    private String preferredPronoun;
     private String shirtSize;
     private String department;
     private String departmentColorCode;
@@ -82,6 +83,10 @@ public class Staff {
     public void setLegalLastName(String legalLastName) {
         this.legalLastName = legalLastName;
     }
+
+    public String getPreferredPronoun() { return preferredPronoun; }
+
+    public void setPreferredPronoun(String preferredPronoun) { this.preferredPronoun = preferredPronoun; }
 
     public String getShirtSize() {
         return shirtSize;

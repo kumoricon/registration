@@ -1,6 +1,6 @@
 package org.kumoricon.registration.print.formatter.badgeimage;
 
-public interface BadgeCreator {
+public interface BadgeCreatorAttendee {
     /**
      * Creates a badge image from the given information and returns a byte array
      * of the PNG.

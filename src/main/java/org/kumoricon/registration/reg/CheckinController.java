@@ -102,7 +102,7 @@ public class CheckinController {
         PrinterSettings settings = PrinterSettings.fromCookieValue(printerCookie);
 
         if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
-            log.info("Reports badge printed successfully for {}", attendee);
+            log.info("reports badge printed successfully for {}", attendee);
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
             return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&orderId=" + attendee.getOrderId();

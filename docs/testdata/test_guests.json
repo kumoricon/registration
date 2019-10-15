@@ -13,7 +13,8 @@
       "tShirtSize": "XL",
       "badgeImpactingLastModified": "2019-06-22 06:27:20",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 312,
@@ -43,7 +44,8 @@
       "tShirtSize": "S",
       "badgeImpactingLastModified": "2019-06-21 06:59:04",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 2429,
@@ -73,7 +75,8 @@
       "tShirtSize": "XS",
       "badgeImpactingLastModified": "2019-06-18 20:14:28",
       "hasBadgeImage": true,
-      "badgeImageFileType": "png"
+      "badgeImageFileType": "png",
+      "pronouns": "He/Him"
     },
     {
       "id": 1027,
@@ -88,7 +91,8 @@
       "tShirtSize": "XL",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 8621,
@@ -103,7 +107,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 4793,
@@ -133,7 +138,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "He/Him"
     },
     {
       "id": 3496,
@@ -148,7 +154,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "They/Them"
     },
     {
       "id": 981,
@@ -178,7 +185,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 1169,
@@ -223,7 +231,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 8406,
@@ -238,7 +247,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "She/Her"
     },
     {
       "id": 8026,
@@ -283,7 +293,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "He/Him"
     },
     {
       "id": 3359,
@@ -347,8 +358,8 @@
     },
     {
       "id": 1785,
-      "namePreferred": "Angelika William",
-      "namePreferredFirst": "Angelika",
+      "namePreferred": "Angel William",
+      "namePreferredFirst": "Angel",
       "namePreferredLast": "William",
       "nameOnId": "Angelika William",
       "nameOnIdFirst": "Angelika",
@@ -358,7 +369,8 @@
       "tShirtSize": "M",
       "badgeImpactingLastModified": "2019-06-18 02:12:05",
       "hasBadgeImage": true,
-      "badgeImageFileType": "jpg"
+      "badgeImageFileType": "jpg",
+      "pronouns": "They/Them"
     },
     {
       "id": 7876,

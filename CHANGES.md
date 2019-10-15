@@ -4,6 +4,10 @@ Version 0.8.4 (Pending)
 - Added legal name to staff check in list
 - Added T-shirt size to final staff check-in screen
 - Take check number on Check Payment screen
+- Added signature pad support. SigPlusExtLite SDK & Browser Extension must be installed.
+- Renamed Staff Report to Users Report
+- Added Staff to Check in by Badge report
+- Added checked in count to Staff Check In screen
 
 Version 0.8.3 (10/9/2019)
 - Changed "Registration" in menu bar to link to home page 

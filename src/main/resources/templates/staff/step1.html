@@ -19,6 +19,10 @@
                     <td th:text="|${staff.legalFirstName} ${staff.legalLastName}|">Firstname Lastname</td>
                 </tr>
                 <tr>
+                    <td>Preferred Pronoun</td>
+                    <td th:text="${staff.preferredPronoun}">They/Them</td>
+                </tr>
+                <tr>
                     <td>Date of Birth</td>
                     <td th:text="|${#temporals.format(staff.birthDate , 'MM/dd/yyyy')} (${staff.getAgeCategoryAtCon()})|">01/01/1990 (Adult)</td>
                 </tr>
