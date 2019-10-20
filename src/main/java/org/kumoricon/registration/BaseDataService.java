@@ -158,7 +158,7 @@ public class BaseDataService {
                 {"view_check_in_by_hour_report", "View attendee check ins per hour report"},
                 {"view_check_in_by_user_report", "View attendee check ins per user report"},
                 {"view_login_history_report", "View login history report"},
-                {"view_staff_report", "View staff report (lists name/phone numbers)"},
+                {"view_users_report", "View users report"},
                 {"view_role_report", "View registration system role report"},
                 {"view_till_report", "View till report"},
                 {"view_export", "Export information/reports"},
@@ -198,18 +198,18 @@ public class BaseDataService {
         });
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
                 "badge_type_weekend", "badge_type_day", "print_badge", "attendee_edit",
-                "attendee_add_note", "reprint_badge", "view_staff_report", "view_login_history_report",
+                "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "pre_reg_check_in_edit", "menu_registration", "menu_utility",
                 "menu_report"});
         roles.put("Coordinator - VIP Badges", new String[] {"at_con_registration", "pre_reg_check_in",
                 "at_con_registration_specialty", "attendee_search", "print_badge", "attendee_edit",
-                "attendee_add_note", "reprint_badge", "view_staff_report", "view_login_history_report",
+                "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_vip", "menu_registration", "menu_utility", "menu_report",
                 "pre_reg_check_in_edit", "print_guest_badge"});
         roles.put("Coordinator - Specialty Badges", new String[] {"at_con_registration",
                 "at_con_registration_specialty", "pre_reg_check_in",
                 "attendee_search", "print_badge", "attendee_edit",
-                "attendee_add_note", "reprint_badge", "view_staff_report", "view_login_history_report",
+                "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_artist",
                 "badge_type_standard_press", "badge_type_emerging_press",
                 "badge_type_exhibitor", "badge_type_guest",
@@ -218,7 +218,7 @@ public class BaseDataService {
                 "pre_reg_check_in_edit", "at_con_registration_specialty"});
         roles.put("MSO", new String[] {"pre_reg_check_in",
                 "attendee_search", "print_badge", "attendee_edit",
-                "attendee_add_note", "reprint_badge", "view_staff_report", "view_login_history_report",
+                "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_staff", "badge_type_panelist",
                 "pre_reg_check_in_edit", "menu_registration", "menu_utility", "menu_report",
                 "staff_check_in"
@@ -229,7 +229,7 @@ public class BaseDataService {
                 "badge_type_weekend", "badge_type_day", "view_login_history_report",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist", "badge_type_small_press",
-                "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_users", "view_staff_report",
+                "badge_type_staff", "attendee_override_price", "reprint_badge", "manage_users", "view_users_report",
                 "view_check_in_by_badge_type_report", "view_check_in_by_hour_report", "view_till_report", "view_export",
                 "view_check_in_by_user_report", "pre_reg_check_in_edit", "manage_orders", "manage_till_sessions",
                 "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report", "menu_administration",
@@ -242,7 +242,7 @@ public class BaseDataService {
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_small_press", "view_login_history_report",
                 "badge_type_staff", "view_role_report", "view_check_in_by_badge_type_report",
-                "view_staff_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
+                "view_users_report", "view_check_in_by_hour_report", "view_till_report", "pre_reg_check_in_edit",
                 "view_check_in_by_user_report", "view_export", "manage_orders", "manage_till_sessions",
                 "pre_print_badges", "at_con_registration_specialty", "menu_registration", "menu_utility", "menu_report",
                 "menu_administration", "manage_blacklist", "staff_check_in", "view_attendance_report"});

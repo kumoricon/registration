@@ -12,20 +12,20 @@ import java.util.List;
 
 
 @Controller
-public class StaffReportController {
+public class UsersReportController {
     private final UserRepository userRepository;
 
     @Autowired
-    public StaffReportController(UserRepository userRepository) {
+    public UsersReportController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
 
-    @RequestMapping(value = "/reports/staff")
-    @PreAuthorize("hasAuthority('view_staff_report')")
+    @RequestMapping(value = "/reports/users")
+    @PreAuthorize("hasAuthority('view_users_report')")
     public String staff(Model model) {
         List<User> users = userRepository.findAll();
         model.addAttribute("staff", users);
-        return "reports/staff";
+        return "reports/users";
     }
 }
