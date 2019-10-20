@@ -12,7 +12,7 @@
     </div>
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-5">
 
             <table class="table table-bordered table-striped table-sm">
                 <tbody>
@@ -29,13 +29,26 @@
                     <td th:text="${staff.preferredPronoun}">Pronoun</td>
                 </tr>
                 <tr>
+                    <td>Birthdate</td>
+                    <td th:text="${#temporals.format(staff.birthDate, 'MM/dd/yyyy')}">01/01/1990</td>
+                </tr>
+                <tr>
                     <td>Department</td>
                     <td th:text="${staff.department}">Department</td>
                 </tr>
                 <tr>
-                    <td>Birthdate</td>
-                    <td th:text="${#temporals.format(staff.birthDate, 'MM/dd/yyyy')}">01/01/1990</td>
+                    <td>Positions</td>
+                    <td>
+                        <span th:each="p : ${staff.positions}">
+                            <span th:text="${p}">Coordinator of Awesome</span><br>
+                        </span>
+                    </td>
                 </tr>
+                <tr th:if="${staff.checkedIn}">
+                    <td>Check In Time</td>
+                    <td th:text="${staff.checkedInAt} ? ${#temporals.format(staff.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                </tr>
+
                 </tbody>
             </table>
 
