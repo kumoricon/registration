@@ -61,9 +61,10 @@ public class CheckInController {
     @RequestMapping(value = "/staff/checkin/{uuid}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String checkIn1Post(Model model, @PathVariable(name = "uuid") String uuid) {
-        Staff s = staffRepository.findByUuid(uuid);
-        s.setInformationVerified(true);
-        staffRepository.save(s);
+        Staff staff = staffRepository.findByUuid(uuid);
+        if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
+        staff.setInformationVerified(true);
+        staffRepository.save(staff);
         return "redirect:/staff/checkin2/" + uuid;
     }
 
@@ -83,15 +84,16 @@ public class CheckInController {
     public String checkIn2Post(Model model,
                                @PathVariable(name = "uuid") String uuid,
                                @RequestParam("imageData") String imageData) {
-        Staff s = staffRepository.findByUuid(uuid);
+        Staff staff = staffRepository.findByUuid(uuid);
+        if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
         try {
-            fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + ".png", imageData);
+            fileStorageService.storeFile(staff.getFirstName() + "_" + staff.getLastName() + "_" + staff.getUuid() + ".png", imageData);
         } catch (IOException ex) {
             log.error("Error saving image", ex);
             return "staff/step2?err=Error+saving+image";
         }
-        s.setPictureSaved(true);
-        staffRepository.save(s);
+        staff.setPictureSaved(true);
+        staffRepository.save(staff);
         return "redirect:/staff/checkin3/" + uuid;
     }
 
@@ -99,6 +101,7 @@ public class CheckInController {
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String checkIn3(Model model, @PathVariable(name = "uuid") String uuid) {
         Staff staff = staffRepository.findByUuid(uuid);
+        if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
         if (!staff.getPictureSaved()) {
             return "redirect:/staff/checkin2/" + uuid + "?err=Picture+not+saved";
         }
