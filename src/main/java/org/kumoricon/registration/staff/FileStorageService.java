@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
@@ -33,20 +31,24 @@ public class FileStorageService {
             throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
         }
 
-        String[] parts = imageData.split(",");
-        String imageString = parts[1];
+        BufferedImage image = decodeImageFromString(imageData);
+        Path targetLocation = this.uploadPath.resolve(Instant.now().toEpochMilli() + "-" + fileName);
+        File outputFile = targetLocation.toFile();
+        ImageIO.write(image, "png", outputFile);
+    }
 
-        BufferedImage image = null;
-        byte[] imageByte;
-
-        imageByte = decoder.decode(imageString);
+    BufferedImage decodeImageFromString(String imageData) {
+        if (imageData.startsWith("data:image/png;base64,")) {
+            imageData = imageData.substring(22);
+        } else if (imageData.startsWith("data:image/jpeg;base64,")) {
+            imageData = imageData.substring(23);
+        }
+        byte[] imageByte = decoder.decode(imageData);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(imageByte)) {
-            image = ImageIO.read(bis);
-            Path targetLocation = this.uploadPath.resolve(Instant.now().toEpochMilli() + "-" + fileName);
-
-            File outputFile = targetLocation.toFile();
-
-            ImageIO.write(image, "png", outputFile);
+            BufferedImage image = ImageIO.read(bis);
+            return image;
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't extract image", e);
         }
     }
 

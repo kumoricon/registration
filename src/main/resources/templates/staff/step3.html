@@ -8,10 +8,12 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div class="row container">
+    <div class="row container mb-4">
+        <div class="col-sm-3">
+            <button class="btn btn-primary" id="openSigWindow">Open Signature Window</button>
+        </div>
         <div class="col-sm-6">
-            <canvas width="500" height="200" id="canvas"></canvas>
-            Signature pad not detected
+            <span id="message"></span>
         </div>
     </div>
     <div class="row">
@@ -21,7 +23,6 @@
                 <input type="hidden" name="imageData" id="imageData" />
                 <input class="btn btn-primary" name="action" id="save" type="submit" value="Save Signature" />
                 <a th:href="@{/}" class="btn btn-secondary mr-5">Cancel</a>
-                <button class="btn btn-secondary ml-5" id="clear">Clear</button>
             </form>
         </div>
     </div>
