@@ -55,6 +55,12 @@ public class StaffRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Integer countByCheckedIn(boolean checkedIn) {
+        final String sql = "select count(*) from staff where checked_in = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[] {checkedIn}, Integer.class);
+    }
+
     @Transactional
     public void savePositions(Integer id, List<String> positions) {
         final String clearSql = "DELETE FROM staff_positions where id = ?";

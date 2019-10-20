@@ -32,6 +32,25 @@
             </tr>
         </tbody>
     </table>
+
+    <table class="table table-bordered table-striped table-sm col-5">
+        <thead class="thead-dark">
+        <tr>
+            <th>Badge Type</th>
+            <th>Checked In</th>
+            <th>Not Checked In</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Staff</td>
+            <td class="text-right" th:text="${staffCheckedIn}">0</td>
+            <td class="text-right" th:text="${staffNotCheckedIn}">0</td>
+        </tr>
+        </tbody>
+    </table>
+
+    Staff checked in: <span th:text="|${staffCheckedIn} of ${staffTotal}|"></span>
 </div>
 
 </body>
