@@ -2,6 +2,8 @@ package org.kumoricon.registration.utility;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
+import org.kumoricon.registration.model.badge.Badge;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.kumoricon.registration.print.formatter.badgeimage.AttendeeBadgeDTO;
 import org.slf4j.Logger;
@@ -27,9 +29,11 @@ public class TestBadgeController {
 
     private static final Logger log = LoggerFactory.getLogger(TestBadgeController.class);
     private final BadgePrintService badgePrintService;
+    private final BadgeService badgeService;
 
-    public TestBadgeController(BadgePrintService badgePrintService) {
+    public TestBadgeController(BadgePrintService badgePrintService, BadgeService badgeService) {
         this.badgePrintService = badgePrintService;
+        this.badgeService = badgeService;
     }
 
     @RequestMapping(value = "/utility/testbadges")
@@ -38,24 +42,56 @@ public class TestBadgeController {
         return "utility/testbadges.html";
     }
 
-    @RequestMapping(value = "/utility/testbadges.pdf")
+    @RequestMapping(value = "/utility/testBadges.pdf")
     @PreAuthorize("hasAuthority('pre_print_badges')")
     public ResponseEntity<byte[]> getTestBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
+        return generateAttendeePDF(printerCookie, generateTestAttendees());
+    }
+
+    @RequestMapping(value = "/utility/attendeeBadges.pdf")
+    @PreAuthorize("hasAuthority('pre_print_badges')")
+    public ResponseEntity<byte[]> getAllAttendeeBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
+        return generateAttendeePDF(printerCookie, generateAllAttendeeBadges());
+    }
+
+
+    private ResponseEntity<byte[]> generateAttendeePDF(String printerCookie, List<AttendeeBadgeDTO> attendeeBadgeDTOS) throws IOException {
         long start = System.currentTimeMillis();
-        log.info("generating test badge pdf");
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
 
-        byte[] media = badgePrintService.generateAttendeePDFfromDTO(generateAttendees(), printerSettings).readAllBytes();
+        byte[] media = badgePrintService.generateAttendeePDFfromDTO(attendeeBadgeDTOS, printerSettings).readAllBytes();
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
 
         log.info("generated test badge PDF in {} ms", System.currentTimeMillis()-start);
 
         return new ResponseEntity<>(media, headers, HttpStatus.OK);
+
     }
 
-    private List<AttendeeBadgeDTO> generateAttendees() {
+
+    private List<AttendeeBadgeDTO> generateAllAttendeeBadges() {
+        List<AttendeeBadgeDTO> badgeDTOS = new ArrayList<>();
+        int cnt = 100000;
+        for (Badge b : badgeService.findAll()) {
+            AttendeeBadgeDTO a = new AttendeeBadgeDTO();
+            a.setId(cnt++);
+            a.setName("Firtsname Lastname");
+            a.setFanName("Fan Name");
+            a.setBadgeNumber("12345");
+            a.setPronoun("They/Them");
+            a.setBadgeTypeText(b.getBadgeTypeText());
+            a.setBadgeTypeBackgroundColor(b.getBadgeTypeBackgroundColor());
+            a.setAgeStripeText("Adult");
+            a.setAgeStripeBackgroundColor("#323E99");
+            badgeDTOS.add(a);
+        }
+        return badgeDTOS;
+    }
+
+
+    private List<AttendeeBadgeDTO> generateTestAttendees() {
         List<AttendeeBadgeDTO> badgeDTOs = new ArrayList<>();
 
         for (String name : NAMES_TO_TEST) {
