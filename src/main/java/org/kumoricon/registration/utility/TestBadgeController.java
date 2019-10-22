@@ -2,20 +2,14 @@ package org.kumoricon.registration.utility;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
-import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeRepository;
-import org.kumoricon.registration.model.attendee.AttendeeService;
-import org.kumoricon.registration.model.badge.Badge;
-import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.print.BadgePrintService;
-import org.kumoricon.registration.print.formatter.BadgePrintFormatter;
-import org.kumoricon.registration.print.formatter.FullBadgePrintFormatter;
 import org.kumoricon.registration.print.formatter.badgeimage.AttendeeBadgeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,8 +32,14 @@ public class TestBadgeController {
         this.badgePrintService = badgePrintService;
     }
 
+    @RequestMapping(value = "/utility/testbadges")
+    @PreAuthorize("hasAuthority('pre_print_badges')")
+    public String getTillSession(Model model) {
+        return "utility/testbadges.html";
+    }
+
     @RequestMapping(value = "/utility/testbadges.pdf")
-//    @PreAuthorize("hasAuthority('manage_orders')")
+    @PreAuthorize("hasAuthority('pre_print_badges')")
     public ResponseEntity<byte[]> getTestBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
         long start = System.currentTimeMillis();
         log.info("generating test badge pdf");
