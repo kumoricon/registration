@@ -30,6 +30,7 @@ public class BadgeResourceService {
     private final String badgeResourcePathString;
     private final String fontFilename;
     private Path badgeResourcePath;
+    private final Boolean printAttendeeBackgrounds;
 
     private Image adultSeal;
     private Image youthSeal;
@@ -43,9 +44,11 @@ public class BadgeResourceService {
     private Font nameFont;
 
     public BadgeResourceService(@Value("${staffbadge.badgeresourcepath}") String badgeResourcePathString,
-                             @Value("${staffbadge.fontfilename}") String fontFilename) {
+                                @Value("${staffbadge.fontfilename}") String fontFilename,
+                                @Value("${badge.printAttendeeBackgrounds:false}") Boolean printAttendeeBackgrounds) {
         this.badgeResourcePathString = badgeResourcePathString;
         this.fontFilename = fontFilename;
+        this.printAttendeeBackgrounds = printAttendeeBackgrounds;
     }
 
     public BadgeResource getBadgeResourceFor(BadgeType badgeType) {
@@ -121,9 +124,15 @@ public class BadgeResourceService {
             childSeal = loadImage("staffchild.png");
             staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2019-Badge-Staff.pdf");
             guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2019-Badge-Guest.pdf");
-            attendeeBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Attendee.pdf");
-            specialtyBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Specialty.pdf");
-            vipBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-VIP.pdf");
+            if (printAttendeeBackgrounds) {
+                attendeeBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Attendee.pdf");
+                specialtyBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Specialty.pdf");
+                vipBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-VIP.pdf");
+            } else {
+                attendeeBadgeBackground = buildBlankAttendeeBadge();
+                specialtyBadgeBackground = buildBlankAttendeeBadge();
+                vipBadgeBackground = buildBlankAttendeeBadge();
+            }
             nameFont = loadNameFont();
             badgeFont = loadBadgeFont();
         } catch (IOException ex) {
@@ -161,12 +170,16 @@ public class BadgeResourceService {
             log.info("Loaded PDF background {}", filename);
             return background;
         } catch (IOException ex) {
-            background = new PDDocument();
-            PDPage page = new PDPage(new PDRectangle(612f, 396f));
-            background.addPage(page);
-
             log.warn("Couldn't load PDF background {}, using blank document", filename);
+            background = buildBlankAttendeeBadge();
         }
+        return background;
+    }
+
+    private PDDocument buildBlankAttendeeBadge() {
+        PDDocument background = new PDDocument();
+        PDPage page = new PDPage(new PDRectangle(612f, 396f));
+        background.addPage(page);
         return background;
     }
 
@@ -184,13 +197,19 @@ public class BadgeResourceService {
             log.info("Loaded PDF background {}", filename);
             return background;
         } catch (IOException ex) {
-            background = new PDDocument();
-            background.addPage(new PDPage(new PDRectangle(396f, 612f)));
-            background.addPage(new PDPage(new PDRectangle(396f, 612f)));
             log.warn("Couldn't load PDF background {}, using blank document", filename);
+            background = buildBlankStaffBadge();
         }
         return background;
     }
+
+    private PDDocument buildBlankStaffBadge() {
+        PDDocument background = new PDDocument();
+        background.addPage(new PDPage(new PDRectangle(396f, 612f)));
+        background.addPage(new PDPage(new PDRectangle(396f, 612f)));
+        return background;
+    }
+
 
     private void closeDocument(PDDocument pdDocument) {
         if (pdDocument != null) {
