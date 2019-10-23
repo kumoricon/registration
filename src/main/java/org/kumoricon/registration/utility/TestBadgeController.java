@@ -4,6 +4,7 @@ import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
+import org.kumoricon.registration.model.badge.BadgeType;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.kumoricon.registration.print.formatter.badgeimage.AttendeeBadgeDTO;
 import org.slf4j.Logger;
@@ -45,22 +46,34 @@ public class TestBadgeController {
     @RequestMapping(value = "/utility/testBadges.pdf")
     @PreAuthorize("hasAuthority('pre_print_badges')")
     public ResponseEntity<byte[]> getTestBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
-        return generateAttendeePDF(printerCookie, generateTestAttendees());
+        return generateAttendeePDF(printerCookie, generateTestAttendees(), BadgeType.ATTENDEE);
     }
 
     @RequestMapping(value = "/utility/attendeeBadges.pdf")
     @PreAuthorize("hasAuthority('pre_print_badges')")
     public ResponseEntity<byte[]> getAllAttendeeBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
-        return generateAttendeePDF(printerCookie, generateAllAttendeeBadges());
+        return generateAttendeePDF(printerCookie, generateAllAttendeeBadges(BadgeType.ATTENDEE), BadgeType.ATTENDEE);
+    }
+
+    @RequestMapping(value = "/utility/specialtyBadges.pdf")
+    @PreAuthorize("hasAuthority('pre_print_badges')")
+    public ResponseEntity<byte[]> getAllSpecialtyBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
+        return generateAttendeePDF(printerCookie, generateAllAttendeeBadges(BadgeType.SPECIALTY), BadgeType.SPECIALTY);
+    }
+
+    @RequestMapping(value = "/utility/vipBadges.pdf")
+    @PreAuthorize("hasAuthority('pre_print_badges')")
+    public ResponseEntity<byte[]> getAllVipBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
+        return generateAttendeePDF(printerCookie, generateAllAttendeeBadges(BadgeType.VIP), BadgeType.VIP);
     }
 
 
-    private ResponseEntity<byte[]> generateAttendeePDF(String printerCookie, List<AttendeeBadgeDTO> attendeeBadgeDTOS) throws IOException {
+    private ResponseEntity<byte[]> generateAttendeePDF(String printerCookie, List<AttendeeBadgeDTO> attendeeBadgeDTOS, BadgeType badgeType) throws IOException {
         long start = System.currentTimeMillis();
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
 
-        byte[] media = badgePrintService.generateAttendeePDFfromDTO(attendeeBadgeDTOS, printerSettings).readAllBytes();
+        byte[] media = badgePrintService.generateAttendeePDFfromDTO(attendeeBadgeDTOS, printerSettings, badgeType).readAllBytes();
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
 
@@ -71,21 +84,23 @@ public class TestBadgeController {
     }
 
 
-    private List<AttendeeBadgeDTO> generateAllAttendeeBadges() {
+    private List<AttendeeBadgeDTO> generateAllAttendeeBadges(BadgeType badgeType) {
         List<AttendeeBadgeDTO> badgeDTOS = new ArrayList<>();
         int cnt = 100000;
         for (Badge b : badgeService.findAll()) {
-            AttendeeBadgeDTO a = new AttendeeBadgeDTO();
-            a.setId(cnt++);
-            a.setName("Firtsname Lastname");
-            a.setFanName("Fan Name");
-            a.setBadgeNumber("12345");
-            a.setPronoun("They/Them");
-            a.setBadgeTypeText(b.getBadgeTypeText());
-            a.setBadgeTypeBackgroundColor(b.getBadgeTypeBackgroundColor());
-            a.setAgeStripeText("Adult");
-            a.setAgeStripeBackgroundColor("#323E99");
-            badgeDTOS.add(a);
+            if (b.getBadgeType() == badgeType) {
+                AttendeeBadgeDTO a = new AttendeeBadgeDTO();
+                a.setId(cnt++);
+                a.setName("Firstname Lastname");
+                a.setFanName("Fan Name");
+                a.setBadgeNumber("AB12345");
+                a.setPronoun("They/Them");
+                a.setBadgeTypeText(b.getBadgeTypeText());
+                a.setBadgeTypeBackgroundColor(b.getBadgeTypeBackgroundColor());
+                a.setAgeStripeText("Adult");
+                a.setAgeStripeBackgroundColor("#323E99");
+                badgeDTOS.add(a);
+            }
         }
         return badgeDTOS;
     }

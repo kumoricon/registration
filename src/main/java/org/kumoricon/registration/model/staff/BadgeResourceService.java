@@ -6,6 +6,7 @@ import org.apache.pdfbox.multipdf.PDFCloneUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.kumoricon.registration.model.badge.BadgeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,8 @@ public class BadgeResourceService {
     private PDDocument staffBadgeBackground;
     private PDDocument guestBadgeBackground;
     private PDDocument attendeeBadgeBackground;
+    private PDDocument specialtyBadgeBackground;
+    private PDDocument vipBadgeBackground;
     private Font badgeFont;
     private Font nameFont;
 
@@ -43,6 +46,24 @@ public class BadgeResourceService {
                              @Value("${staffbadge.fontfilename}") String fontFilename) {
         this.badgeResourcePathString = badgeResourcePathString;
         this.fontFilename = fontFilename;
+    }
+
+    public BadgeResource getBadgeResourceFor(BadgeType badgeType) {
+        switch (badgeType) {
+            case ATTENDEE:
+                return getAttendeeBadgeResources();
+            case VIP:
+                return getVipBadgeResources();
+            case SPECIALTY :
+                return getSpecialtyBadgeResources();
+            case STAFF:
+                return getStaffBadgeResources();
+            case GUEST:
+                return getGuestBadgeResource();
+            default:
+                log.warn("Tried to get badge resources for type {} that is not supported in BadgeResourceService", badgeType);
+                return getAttendeeBadgeResources();
+        }
     }
 
     public BadgeResource getStaffBadgeResources() {
@@ -55,6 +76,14 @@ public class BadgeResourceService {
 
     public BadgeResource getAttendeeBadgeResources() {
         return new BadgeResource(cloneDocument(attendeeBadgeBackground), badgeFont, nameFont);
+    }
+
+    private BadgeResource getSpecialtyBadgeResources() {
+        return new BadgeResource(cloneDocument(specialtyBadgeBackground), badgeFont, nameFont);
+    }
+
+    private BadgeResource getVipBadgeResources() {
+        return new BadgeResource(cloneDocument(vipBadgeBackground), badgeFont, nameFont);
     }
 
     public Image getAdultSeal() { return adultSeal; }
@@ -93,6 +122,8 @@ public class BadgeResourceService {
             staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2019-Badge-Staff.pdf");
             guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2019-Badge-Guest.pdf");
             attendeeBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Attendee.pdf");
+            specialtyBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Specialty.pdf");
+            vipBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-VIP.pdf");
             nameFont = loadNameFont();
             badgeFont = loadBadgeFont();
         } catch (IOException ex) {

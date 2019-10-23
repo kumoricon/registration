@@ -299,7 +299,7 @@ public class BaseDataService {
 
         // Create badge types with security restrictions below
         log.info("Creating badge VIP");
-        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.ATTENDEE, "VIP", "#000000", 300, 300, 300);
+        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.VIP, "VIP", "#000000", 300, 300, 300);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         vip.setBadgeTypeText("VIP");
@@ -308,49 +308,49 @@ public class BaseDataService {
 
     private void createSpecialtyBadges() {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.OTHER, "Artist", "#800080", 75f, 75f, 75f);
+        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.SPECIALTY, "Artist", "#800080", 75f, 75f, 75f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         badgeService.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.OTHER, "Exhibitor", "#00597c", 250f, 250f, 250f);
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.SPECIALTY, "Exhibitor", "#00597c", 250f, 250f, 250f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         badgeService.save(exhibitor);
 
         log.info("Creating badge Guest");
-        Badge guest = BadgeFactory.createBadge("Guest", BadgeType.OTHER,"Guest", "#62F442", 0f, 0f, 0f);
+        Badge guest = BadgeFactory.createBadge("Guest", BadgeType.GUEST,"Guest", "#62F442", 0f, 0f, 0f);
         guest.setRequiredRight("badge_type_guest");
         guest.setWarningMessage("Guest check in. See your coordinator!");
         badgeService.save(guest);
 
         log.info("Creating badge Small Press");
-        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.OTHER,"Small Press", "#007c5f", 0f, 0f, 0f);
+        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.SPECIALTY,"Small Press", "#007c5f", 0f, 0f, 0f);
         smallPress.setRequiredRight("badge_type_small_press");
         smallPress.setWarningMessage("Press check in. See your coordinator!");
         badgeService.save(smallPress);
 
         log.info("Creating badge Emerging Press");
-        Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.OTHER,"E Press", "#1DE5D1", 0f, 0f, 0f);
+        Badge ePress = BadgeFactory.createBadge("Emerging Press", BadgeType.SPECIALTY,"E Press", "#1DE5D1", 0f, 0f, 0f);
         ePress.setRequiredRight("badge_type_emerging_press");
         ePress.setWarningMessage("Press check in. See your coordinator!");
         badgeService.save(ePress);
 
         log.info("Creating badge Standard Press");
-        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.OTHER,"S Press", "#16b7a7", 0f, 0f, 0f);
+        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.SPECIALTY,"S Press", "#16b7a7", 0f, 0f, 0f);
         sPress.setRequiredRight("badge_type_standard_press");
         sPress.setWarningMessage("Press check in. See your coordinator!");
         badgeService.save(sPress);
 
         log.info("Creating badge Industry");
-        Badge industry = BadgeFactory.createBadge("Industry", BadgeType.OTHER,"Industry", "#FF00FC", 0f, 0f, 0f);
+        Badge industry = BadgeFactory.createBadge("Industry", BadgeType.SPECIALTY,"Industry", "#FF00FC", 0f, 0f, 0f);
         industry.setRequiredRight("badge_type_industry");
         industry.setWarningMessage("Industry check in. See your coordinator!");
         badgeService.save(industry);
 
         log.info("Creating badge Panelist");
-        Badge panelist = BadgeFactory.createBadge("Panelist", BadgeType.OTHER,"Panelist", "#FFA500", 0f, 0f, 0f);
+        Badge panelist = BadgeFactory.createBadge("Panelist", BadgeType.SPECIALTY,"Panelist", "#FFA500", 0f, 0f, 0f);
         panelist.setRequiredRight("badge_type_panelist");
         panelist.setWarningMessage("Panelist check in. See your coordinator!");
         badgeService.save(panelist);

@@ -306,10 +306,9 @@ public class BadgeImage {
         g2.rotate(-Math.PI/2, boundingBox.getX() + (boundingBox.getWidth()/2), boundingBox.getY() + (boundingBox.getHeight()/2));
         drawRotatedStretchedCenteredString(text, boundingBox, font, fgColor);
         g2.setTransform(orig);
-
     }
 
-    void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor) {
+    void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor, int outlineWidth) {
         String text = ageStripeText.toUpperCase();
 
         int letterBoundingBoxHeight = ageBackground.height / ageStripeText.length();
@@ -319,7 +318,7 @@ public class BadgeImage {
                     ageBackground.y + (letterBoundingBoxHeight * i),
                     ageBackground.width,
                     letterBoundingBoxHeight);
-            drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor);
+            drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor, outlineWidth);
         }
     }
 

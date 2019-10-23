@@ -6,6 +6,7 @@ import org.kumoricon.registration.guest.Guest;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
+import org.kumoricon.registration.model.badge.BadgeType;
 import org.kumoricon.registration.model.staff.*;
 import org.kumoricon.registration.print.formatter.BadgePrintFormatter;
 import org.kumoricon.registration.print.formatter.FullBadgePrintFormatter;
@@ -134,10 +135,12 @@ public class BadgePrintService extends PrintService {
         return badgePrintFormatter.getStream();
     }
 
-    public InputStream generateAttendeePDFfromDTO(List<AttendeeBadgeDTO> attendees, PrinterSettings printerSettings) {
+    public InputStream generateAttendeePDFfromDTO(List<AttendeeBadgeDTO> attendees, PrinterSettings printerSettings, BadgeType badgeType) {
+        BadgeResource badgeResource = badgeResourceService.getBadgeResourceFor(badgeType);
+
         BadgePrintFormatter badgePrintFormatter = new FullBadgePrintFormatter(attendees,
                 printerSettings.getxOffset(), printerSettings.getyOffset(),
-                badgeResourceService.getAttendeeBadgeResources());
+                badgeResource);
         return badgePrintFormatter.getStream();
     }
 
