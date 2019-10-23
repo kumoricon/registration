@@ -70,10 +70,15 @@ public class BadgeImage {
      * @param color Text color
      */
     void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
+        drawStretchedCenteredString(text, rect, font, color, 1);
+    }
+
+    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
         Rectangle paddedRect = getPaddedRect(rect);
         final Font sizedFont = scaleFont(text, paddedRect, font);
-        drawCenteredString(text, rect, sizedFont, color);
+        drawCenteredString(text, rect, sizedFont, color, outlineWidth);
     }
+
 
     @SuppressWarnings("SuspiciousNameCombination")
     void drawRotatedStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
@@ -123,17 +128,36 @@ public class BadgeImage {
         g2.drawString(text, x, y);
     }
 
-    void drawTextOutline(String text, Color color, int x, int y) {
-        g2.setColor(getInverseColor(color));
-        g2.drawString(text, x-2, y);
-        g2.drawString(text, x+2, y);
-        g2.drawString(text, x, y-2);
-        g2.drawString(text, x, y+2);
-        g2.drawString(text, x-2, y-2);
-        g2.drawString(text, x-2, y+2);
-        g2.drawString(text, x+2, y-2);
-        g2.drawString(text, x+2, y+2);
+    void drawCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+        FontMetrics metrics = g2.getFontMetrics(font);
+        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        g2.setFont(font);
+
+        drawTextOutline(text, color, x, y, outlineWidth);
+
+        g2.setColor(color);
+        g2.drawString(text, x, y);
     }
+
+    void drawTextOutline(String text, Color color, int x, int y) {
+        drawTextOutline(text, color, x, y, 1);
+    }
+
+    void drawTextOutline(String text, Color color, int x, int y, int width) {
+        if (width <= 0) return;
+        g2.setColor(getInverseColor(color));
+        g2.drawString(text, x-width, y);
+        g2.drawString(text, x+width, y);
+        g2.drawString(text, x, y-width);
+        g2.drawString(text, x, y+width);
+        g2.drawString(text, x-width, y-width);
+        g2.drawString(text, x-width, y+width);
+        g2.drawString(text, x+width, y-width);
+        g2.drawString(text, x+width, y+width);
+    }
+
 
     void drawLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
         FontMetrics metrics = g2.getFontMetrics(font);

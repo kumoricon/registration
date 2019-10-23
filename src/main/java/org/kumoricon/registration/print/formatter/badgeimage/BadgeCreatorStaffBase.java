@@ -2,10 +2,7 @@ package org.kumoricon.registration.print.formatter.badgeimage;
 
 import org.kumoricon.registration.model.staff.StaffBadgeDTO;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 class BadgeCreatorStaffBase {
     static final int DPI = 150;
@@ -50,9 +47,9 @@ class BadgeCreatorStaffBase {
 
     void drawPronouns(BadgeImage b, StaffBadgeDTO staff) {
         if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isBlank()) {
-            Rectangle background = new Rectangle(460, 815, 100, 50);
+            Rectangle background = new Rectangle(450, 815, 120, 70);
 //            b.fillRect(background, Color.RED);
-            b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, badgeFont, Color.BLACK);
+            b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, nameFont, Color.BLACK, 0);
         }
     }
 }
