@@ -1,0 +1,17 @@
+# Kumoreg Systemd init file
+[Unit]
+Description=Registration Management System
+Requires=cups.service
+After=network.target
+After=cups.service
+After=postgresql.service
+After=syslog.target
+
+[Service]
+User=registration
+Group=registration
+ExecStart=/usr/bin/java -jar /opt/registration/registration.jar --spring.config.location=/opt/registration/registration.properties -Xmx1024m -Xms256m
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

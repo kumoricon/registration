@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<homepage>https://github.com/kumoregdev/registration</homepage>
 	</properties>
 
 	<dependencies>
@@ -111,6 +112,75 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>jdeb</artifactId>
+				<groupId>org.vafer</groupId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jdeb</goal>
+						</goals>
+						<configuration>
+							<verbose>true</verbose>
+							<controlDir>${basedir}/src/deb/control</controlDir>
+							<dataSet>
+								<data>
+									<src>${project.build.directory}/${project.build.finalName}.jar</src>
+									<type>file</type>
+									<mapper>
+										<type>perm</type>
+
+										<prefix>/opt/registration/lib</prefix>
+									</mapper>
+								</data>
+								<data>
+									<type>link</type>
+									<symlink>true</symlink>
+									<linkName>/opt/registration/registration.jar</linkName>
+									<linkTarget>lib/${project.build.finalName}.jar</linkTarget>
+								</data>
+								<data>
+									<type>link</type>
+									<symlink>true</symlink>
+									<linkName>/opt/registration/registration-training.jar</linkName>
+									<linkTarget>lib/${project.build.finalName}.jar</linkTarget>
+								</data>
+								<data>
+									<src>${basedir}/src/deb/systemd</src>
+									<type>directory</type>
+									<mapper>
+										<type>perm</type>
+										<prefix>/etc/systemd/system</prefix>
+										<user>registration</user>
+										<group>registration</group>
+									</mapper>
+								</data>
+								<data>
+									<src>${basedir}/src/deb/configuration</src>
+									<type>directory</type>
+									<mapper>
+										<type>perm</type>
+										<prefix>/opt/registration/configuration</prefix>
+										<user>registration</user>
+										<group>registration</group>
+									</mapper>
+								</data>
+								<data>
+									<src>${basedir}/src/deb/bin</src>
+									<type>directory</type>
+									<mapper>
+										<type>perm</type>
+										<prefix>/opt/registration/bin</prefix>
+										<filemode>755</filemode>
+									</mapper>
+								</data>
+							</dataSet>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
