@@ -38,8 +38,8 @@ public class GuestPrintController {
                                @AuthenticationPrincipal User user) {
         Guest guest = guestRepository.findById(guestId);
 
-        log.info("reprinting badge for {}", guest);
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+        log.info("printing badge for {} on {}", guest, printerSettings.getPrinterName());
 
         try {
             String result = badgePrintService.printBadgesForGuest(List.of(guest), printerSettings);

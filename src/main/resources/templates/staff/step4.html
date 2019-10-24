@@ -12,10 +12,24 @@
             <span th:text="|${staff.firstName} ${staff.lastName} checked in at ${#temporals.format(staff.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')}|">
                 Checked in at...
             </span><br>
-            <span th:text="|T-Shirt Size: ${staff.shirtSize}|"></span>
+            <span th:text="|T-Shirt Size: ${staff.shirtSize}|"></span><br>
+            <span th:if="${staff.badgePrinted}">
+                Badge already printed. <a th:href="@{/staff/{uuid}(uuid=${staff.uuid})}">View Staff</a>
+            </span>
         </div>
     </div>
-    <div class="row">
+    <div class="row" th:if="${!staff.badgePrinted}">
+        <div class="form-inline">
+            <form method="post" th:action="|/staff/${staff.uuid}/print|">
+                <input type="hidden" name="action" value="printBadge">
+                <input class="btn btn-success btn-sm" type="submit" value="Print Badge">
+            </form>
+            <a class="btn btn-secondary btn-sm ml-5"
+               th:href="@{/staff/{uuid}/badge.pdf(uuid=${staff.uuid})}" target="_blank">Download Badge PDF</a>
+        </div>
+    </div>
+
+    <div class="row mt-3">
         <div class="col-sm-6">
             <a th:href="@{/staff}" class="btn btn-primary">Done</a>
         </div>

@@ -38,6 +38,7 @@ public class StaffBadgeController {
                              @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
         Staff s = staffRepository.findByUuid(uuid);
+        log.info("printing badge for {} on {}", s, printerSettings.getPrinterName());
         try {
             String result = badgePrintService.printBadgesForStaff(List.of(s), printerSettings);
             s.setBadgePrintCount(s.getBadgePrintCount() + 1);
