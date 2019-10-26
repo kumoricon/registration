@@ -1,5 +1,6 @@
 # Change History
 Version 0.8.5 (pending)
+- MSO role permissions cleanup
 
 Version 0.8.4 (10/26/2019)
 - Added attendance report

@@ -219,7 +219,7 @@ public class BaseDataService {
         roles.put("MSO", new String[] {"pre_reg_check_in",
                 "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
-                "view_check_in_by_hour_report", "badge_type_staff", "badge_type_panelist",
+                "view_check_in_by_hour_report", "badge_type_staff",
                 "pre_reg_check_in_edit", "menu_registration", "menu_utility", "menu_report",
                 "staff_check_in"
         });
@@ -282,8 +282,8 @@ public class BaseDataService {
 
         log.info("Creating badge Weekend - Military Discount");
         Badge weekendMilitary = BadgeFactory.createBadge("Weekend - Military Discount", BadgeType.ATTENDEE, "Weekend", "#000000", 60, 60, 10);
-        weekend.setRequiredRight("badge_type_weekend");
-        weekend.setWarningMessage("Attendee check in. See your coordinator!");
+        weekendMilitary.setRequiredRight("badge_type_weekend");
+        weekendMilitary.setWarningMessage("Attendee check in. See your coordinator!");
         badgeService.save(weekendMilitary);
 
         String[][] badgeList = {
