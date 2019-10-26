@@ -9,6 +9,8 @@ Version 0.8.4 (Pending)
 - Added Staff to Check in by Badge report
 - Added checked in count to Staff Check In screen
 - Added utility/testbadges screen
+- Added badge printing layouts for 2019
+- Added .deb package creator for installation
 
 Version 0.8.3 (10/9/2019)
 - Changed "Registration" in menu bar to link to home page 
