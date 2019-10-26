@@ -280,6 +280,12 @@ public class BaseDataService {
         weekend.setWarningMessage("Attendee check in. See your coordinator!");
         badgeService.save(weekend);
 
+        log.info("Creating badge Weekend - Military Discount");
+        Badge weekendMilitary = BadgeFactory.createBadge("Weekend - Military Discount", BadgeType.ATTENDEE, "Weekend", "#000000", 60, 60, 10);
+        weekend.setRequiredRight("badge_type_weekend");
+        weekend.setWarningMessage("Attendee check in. See your coordinator!");
+        badgeService.save(weekendMilitary);
+
         String[][] badgeList = {
                 {"Friday", "#81f983", "40", "40", "10"},
                 {"Saturday", "#c897fc", "45", "45", "15"},

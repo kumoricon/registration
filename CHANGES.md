@@ -11,6 +11,7 @@ Version 0.8.4 (Pending)
 - Added utility/testbadges screen
 - Added badge printing layouts for 2019
 - Added .deb package creator for installation
+- Added Military Discount weekend badge type
 
 Version 0.8.3 (10/9/2019)
 - Changed "Registration" in menu bar to link to home page 
