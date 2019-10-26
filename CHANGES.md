@@ -1,5 +1,5 @@
 # Change History
-Version 0.8.4 (Pending)
+Version 0.8.4 (10/26/2019)
 - Added attendance report
 - Added legal name to staff check in list
 - Added T-shirt size to final staff check-in screen
