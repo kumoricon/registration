@@ -119,6 +119,8 @@ public class StaffImportFile {
             return nameOnIdLast;
         }
 
+        public String getPreferredPronoun() { return preferredPronoun; }
+
         public String gettShirtSize() {
             return tShirtSize;
         }

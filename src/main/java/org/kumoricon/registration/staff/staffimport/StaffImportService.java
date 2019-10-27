@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class StaffImportService {
@@ -111,25 +112,26 @@ public class StaffImportService {
             positions.add(p.title);
         }
 
-        if (staff.getUuid() == null || !staff.getUuid().equals(person.getId()) ||
-                !staff.getFirstName().equals(person.getNamePreferredFirst()) ||
-                !staff.getLastName().equals(person.getNamePreferredLast()) ||
-                !staff.getLegalFirstName().equals(person.getNameOnIdFirst()) ||
-                !staff.getLegalLastName().equals(person.getNameOnIdLast()) ||
-                !staff.getBirthDate().toString().equals(person.getBirthdate()) ||
-                !staff.getShirtSize().equals(person.gettShirtSize()) ||
+        if (
+                !Objects.equals(staff.getFirstName(), person.getNamePreferredFirst()) ||
+                !Objects.equals(staff.getLastName(), person.getNamePreferredLast()) ||
+                !Objects.equals(staff.getLegalFirstName(), person.getNameOnIdFirst()) ||
+                !Objects.equals(staff.getLegalLastName(), person.getNameOnIdLast()) ||
+                !Objects.equals(staff.getPreferredPronoun(), person.getPreferredPronoun()) ||
+                !Objects.equals(staff.getBirthDate().toString(), person.getBirthdate()) ||
+                !Objects.equals(staff.getShirtSize(), person.gettShirtSize()) ||
                 !staff.getPositions().equals(positions) ||
-                !staff.getAgeCategoryAtCon().equals(person.getAgeCategoryConCurrentTerm()) ||
-                !staff.getHasBadgeImage().equals(person.getHasBadgeImage()) ||
-                !staff.getBadgeImageFileType().equals(person.getBadgeImageFileType())
+                !Objects.equals(staff.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
+                !Objects.equals(staff.getHasBadgeImage(), person.getHasBadgeImage()) ||
+                !Objects.equals(staff.getBadgeImageFileType(), person.getBadgeImageFileType())
         ) {
             staff.setLastModifiedMS(Instant.now().toEpochMilli());
         }
-        staff.setUuid(person.getId());
         staff.setFirstName(person.getNamePreferredFirst());
         staff.setLastName(person.getNamePreferredLast());
         staff.setLegalFirstName(person.getNameOnIdFirst());
         staff.setLegalLastName(person.getNameOnIdLast());
+        staff.setPreferredPronoun(person.getPreferredPronoun());
         staff.setBirthDate(LocalDate.parse(person.getBirthdate()));
         staff.setShirtSize(person.gettShirtSize());
         staff.setPositions(positions);
