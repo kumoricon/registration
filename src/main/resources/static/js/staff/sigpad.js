@@ -12,14 +12,32 @@ $(document).ready(function() {
     initializeSigpad();
 });
 
+
+
 function initializeSigpad() {
     let isInstalled = document.documentElement.getAttribute('SigPlusExtLiteExtension-installed');
     if (!isInstalled) {
         msg.innerText = "SigPlusExtLite extension is either not installed or disabled. Please install or enable extension.";
         document.getElementById("openSigWindow").disabled = true;
         saveBtn.disabled = false;   // Allow continuing without signature since SigPlus Extension isn't installed
-        return
+
+        // If the signature pad isn't detected as installed, add an observer to watch for
+        // attribute changes (that could indicate that it's been installed and run this function again.
+        // Sometimes the Chrome plugin hasn't finished initializing when this function is run for the
+        // first time.
+        let observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === "attributes") {
+                    console.log("attributes changed");
+                    initializeSigpad();
+                }
+            });
+        });
+        observer.observe(document.documentElement, {
+            attributes: true //configure it to listen to attribute changes
+        });
     } else {
+        msg.innerText = 'Signature pad detected';
         if (REQUIRE_SIGNATURE) {
             saveBtn.disabled = true;    // Disable Save button until signature is entered
         }
@@ -41,7 +59,6 @@ function initializeSigpad() {
         document.documentElement.appendChild(extensionDataElement);
         openSignatureWindow();
     }
-
 }
 
 function openSignatureWindow() {
