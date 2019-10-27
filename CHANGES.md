@@ -3,6 +3,7 @@ Version 0.8.5 (pending)
 - MSO role permissions cleanup
 - Fixed pronouns in staff import
 - Improved signature pad detection
+- Fixed redirect to non-existent page when printing staff badges
 
 Version 0.8.4 (10/26/2019)
 - Added attendance report

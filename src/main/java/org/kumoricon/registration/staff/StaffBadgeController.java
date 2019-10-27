@@ -47,7 +47,7 @@ public class StaffBadgeController {
             return "redirect:/staff?msg=" + result;
         } catch (PrintException ex) {
             log.error("Error printing", ex);
-            return "redirect:/staff/" + s.getUuid() + "/printBadge/" + "?err=" + ex.getMessage();
+            return "redirect:/staff/" + s.getUuid() + "?err=" + ex.getMessage();
         }
     }
 
