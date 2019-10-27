@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Component
 public class GuestImportService {
@@ -104,17 +105,17 @@ public class GuestImportService {
             throw new RuntimeException("Tried to update guest from the wrong person");
         }
         if (guest.getOnlineId() == null ||
-                notEqual(guest.getOnlineId(), person.getId()) ||
-                notEqual(guest.getFirstName(), person.getNamePreferredFirst()) ||
-                notEqual(guest.getLastName(), person.getNamePreferredLast()) ||
-                notEqual(guest.getLegalFirstName(), person.getNameOnIdFirst()) ||
-                notEqual(guest.getLegalLastName(), person.getNameOnIdLast()) ||
-                notEqual(guest.getPreferredPronoun(), person.getPreferredPronoun()) ||
-                notEqual(guest.getFanName(), person.getFanName()) ||
-                notEqual(guest.getBirthDate().toString(), person.getBirthdate()) ||
-                notEqual(guest.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
-                notEqual(guest.getHasBadgeImage(), person.getHasBadgeImage()) ||
-                notEqual(guest.getBadgeImageFileType(), person.getBadgeImageFileType())
+                !Objects.equals(guest.getOnlineId(), person.getId()) ||
+                !Objects.equals(guest.getFirstName(), person.getNamePreferredFirst()) ||
+                !Objects.equals(guest.getLastName(), person.getNamePreferredLast()) ||
+                !Objects.equals(guest.getLegalFirstName(), person.getNameOnIdFirst()) ||
+                !Objects.equals(guest.getLegalLastName(), person.getNameOnIdLast()) ||
+                !Objects.equals(guest.getPreferredPronoun(), person.getPreferredPronoun()) ||
+                !Objects.equals(guest.getFanName(), person.getFanName()) ||
+                !Objects.equals(guest.getBirthDate().toString(), person.getBirthdate()) ||
+                !Objects.equals(guest.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
+                !Objects.equals(guest.getHasBadgeImage(), person.getHasBadgeImage()) ||
+                !Objects.equals(guest.getBadgeImageFileType(), person.getBadgeImageFileType())
         ) {
             changed = true;
         }
@@ -144,14 +145,5 @@ public class GuestImportService {
         } catch (IOException ex) {
             log.error("Error creating directory", ex);
         }
-    }
-
-    private static boolean notEqual(Object a, Object b) {
-        if (a == null && b == null) {
-            return true;
-        } else if (a != null) {
-            return a.equals(b);
-        }
-        return false;
     }
 }
