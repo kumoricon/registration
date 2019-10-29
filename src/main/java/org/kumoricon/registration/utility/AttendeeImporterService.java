@@ -165,6 +165,13 @@ class AttendeeImporterService {
                 throw new RuntimeException("Badge type " + record.membershipType + " not found on line " + count);
             }
 
+            // Treat guests as always being checked in since they don't check in through Registration,
+            // we just provide badges. Add a note in the record below in createNotes()
+            if (record.membershipType != null && record.membershipType.toLowerCase().equals("guest")) {
+                attendee.setCheckedIn(true);
+                attendee.setCheckInTime(Instant.now());
+            }
+
             attendee.setPreRegistered(true);
             attendeesToAdd.add(attendee);
         }
@@ -177,25 +184,26 @@ class AttendeeImporterService {
     protected Integer createNotes(List<AttendeeRecord> attendeeRecords, User user) {
         long start = System.currentTimeMillis();
         List<AttendeeHistory> notes = new ArrayList<>();
-        int count = 0;
         for (AttendeeRecord record : attendeeRecords) {
             Integer attendeeId = attendeeIdMap.get(record.firstName + record.lastName + record.orderId);
 
             if (!record.notes.isEmpty() && !record.notes.trim().isEmpty()) {
-                count++;
                 AttendeeHistory note = new AttendeeHistory(user, attendeeId, record.notes);
                 notes.add(note);
             }
             if (!record.vipTShirtSize.trim().isEmpty()) {
-                count++;
                 AttendeeHistory note = new AttendeeHistory(user, attendeeId, "VIP T-Shirt size: " + record.vipTShirtSize);
+                notes.add(note);
+            }
+            if (record.membershipType != null && record.membershipType.toLowerCase().equals("guest")) {
+                AttendeeHistory note = new AttendeeHistory(user, attendeeId, "Guest marked checked in during import");
                 notes.add(note);
             }
         }
         attendeeHistoryRepository.saveAll(notes);
 
-        log.info("Saved {} notes in {} ms", count, System.currentTimeMillis() - start);
-        return count;
+        log.info("Saved {} notes in {} ms", notes.size(), System.currentTimeMillis() - start);
+        return notes.size();
     }
 
     private Integer createPayments(List<AttendeeRecord> attendeeRecords, User user) {
