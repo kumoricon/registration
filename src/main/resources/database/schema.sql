@@ -267,8 +267,7 @@ create table if not exists guests
     id serial not null
         constraint guests_pk
             primary key,
-    uuid text not null,
-    online_id text,
+    online_id text not null,
     first_name text not null,
     last_name text,
     preferred_pronoun text,

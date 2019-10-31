@@ -66,6 +66,7 @@ public class GuestImportFile {
         private Boolean hasBadgeImage;
         private String badgeImageFileType;
         private Long detailsVersion;
+        private Boolean isCanceled;
 
         @JsonCreator
         public Person(
@@ -82,7 +83,8 @@ public class GuestImportFile {
                 @JsonProperty(value = "ageCategoryConCurrentTerm") String ageCategoryConCurrentTerm,
                 @JsonProperty(value = "hasBadgeImage") Boolean hasBadgeImage,
                 @JsonProperty(value = "badgeImageFileType") String badgeImageFileType,
-                @JsonProperty(value = "detailsVersion") Long detailsVersion) {
+                @JsonProperty(value = "detailsVersion") Long detailsVersion,
+                @JsonProperty(value = "isCanceled", defaultValue = "false") Boolean isCanceled) {
             this.id = id;
             this.namePreferredFirst = namePreferredFirst;
             this.namePreferredLast = namePreferredLast;
@@ -96,6 +98,7 @@ public class GuestImportFile {
             this.hasBadgeImage = hasBadgeImage;
             this.badgeImageFileType = badgeImageFileType;
             this.detailsVersion = detailsVersion;
+            this.isCanceled = isCanceled;
         }
 
         public String getId() {
@@ -148,6 +151,16 @@ public class GuestImportFile {
 
         public Long getDetailsVersion() {
             return detailsVersion;
+        }
+
+        public Boolean isCanceled() {
+            if (isCanceled == null) return false;
+            return isCanceled;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("[Person %s: %s %s]", id, namePreferredFirst, namePreferredLast);
         }
     }
 }

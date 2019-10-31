@@ -84,7 +84,12 @@ public class GuestImportService {
     }
 
     private void importPerson(GuestImportFile.Person person) {
-        log.info("Importing {} {}", person.getNamePreferredFirst(), person.getNamePreferredLast());
+        if (person.isCanceled()) {
+            log.info("{} was canceled online, deleting from system", person);
+            guestRepository.deleteByOnlineId(person.getId());
+            return;
+        }
+        log.info("Importing {}", person);
         Guest existing;
         try {
             existing = guestRepository.findByOnlineId(person.getId());

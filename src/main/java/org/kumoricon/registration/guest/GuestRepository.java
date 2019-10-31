@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public class GuestRepository {
@@ -54,6 +53,16 @@ public class GuestRepository {
             jdbcTemplate.update("DELETE FROM guests WHERE id = :id", namedParameters);
         }
     }
+
+    @Transactional
+    public void deleteByOnlineId(String onlineId) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("online_id", onlineId);
+        final String clearSql = "DELETE FROM guests where online_id = :online_id";
+
+        jdbcTemplate.update(clearSql, namedParameters);
+    }
+
+
 
     @Transactional
     public void save(Guest guest) {
