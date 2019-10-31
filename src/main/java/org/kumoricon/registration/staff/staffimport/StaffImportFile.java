@@ -152,6 +152,11 @@ public class StaffImportFile {
         public Long getDetailsVersion() {
             return detailsVersion;
         }
+
+        @Override
+        public String toString() {
+            return String.format("[Person %s: %s %s]", id, namePreferredFirst, namePreferredLast);
+        }
     }
 
     static class Position {

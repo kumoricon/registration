@@ -88,7 +88,8 @@ public class StaffImportService {
     }
 
     private void importPerson(StaffImportFile.Person person) {
-        log.info("Importing {} {}", person.getNamePreferredFirst(), person.getNamePreferredLast());
+
+        log.info("Importing {}", person);
         Staff existing = staffRepository.findByUuid(person.getId());
         if (existing == null) {
             existing = new Staff();
@@ -113,6 +114,7 @@ public class StaffImportService {
         }
 
         if (
+                !Objects.equals(staff.getUuid(), person.getId()) ||
                 !Objects.equals(staff.getFirstName(), person.getNamePreferredFirst()) ||
                 !Objects.equals(staff.getLastName(), person.getNamePreferredLast()) ||
                 !Objects.equals(staff.getLegalFirstName(), person.getNameOnIdFirst()) ||
@@ -127,6 +129,7 @@ public class StaffImportService {
         ) {
             staff.setLastModifiedMS(Instant.now().toEpochMilli());
         }
+        staff.setUuid(person.getId());
         staff.setFirstName(person.getNamePreferredFirst());
         staff.setLastName(person.getNamePreferredLast());
         staff.setLegalFirstName(person.getNameOnIdFirst());
