@@ -91,6 +91,7 @@ public class GuestImportFile {
             this.nameOnIdFirst = nameOnIdFirst;
             this.nameOnIdLast = nameOnIdLast;
             this.preferredPronoun = preferredPronoun;
+            this.fanName = fanName;
             this.tShirtSize = tShirtSize;
             this.badgeImpactingLastModified = badgeImpactingLastModified;
             this.birthdate = birthdate;

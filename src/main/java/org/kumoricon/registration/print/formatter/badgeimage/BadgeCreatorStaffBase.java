@@ -3,6 +3,7 @@ package org.kumoricon.registration.print.formatter.badgeimage;
 import org.kumoricon.registration.model.staff.StaffBadgeDTO;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 class BadgeCreatorStaffBase {
     static final int DPI = 150;
@@ -39,10 +40,12 @@ class BadgeCreatorStaffBase {
     }
 
     void drawLargeName(BadgeImage b, StaffBadgeDTO staff) {
-        String[] name = new String[] {staff.getFirstName(), staff.getLastName()};
+        // Staff don't have fan names, but guests do, so add that to the list if it's not null.
+        // Also, some guests apparently don't have a last name entered.
+        String[] names = buildNameList(staff.getFanName(), staff.getFirstName(), staff.getLastName());
         Rectangle largeNameBg = new Rectangle(125, 700, 325, 150);
 //        b.fillRect(largeNameBg, Color.ORANGE);
-        b.drawCenteredStrings(name, largeNameBg, nameFont, Color.BLACK);
+        b.drawCenteredStrings(names, largeNameBg, nameFont, Color.BLACK);
     }
 
     void drawPronouns(BadgeImage b, StaffBadgeDTO staff) {
@@ -51,5 +54,25 @@ class BadgeCreatorStaffBase {
 //            b.fillRect(background, Color.RED);
             b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, nameFont, Color.BLACK, 0);
         }
+    }
+
+    /**
+     * Builds an array of Strings from the input strings, excluding any that are null or blank
+     * @param strings
+     * @return
+     */
+    String[] buildNameList(String...strings) {
+        java.util.List<String> names = new ArrayList<>();
+        for (String s : strings) {
+            if (s != null && !s.isBlank()) {
+                names.add(s);
+            }
+        }
+
+        String[] output = new String[names.size()];
+        for (int i = 0; i < names.size(); i++) {
+            output[i] = names.get(i);
+        }
+        return output;
     }
 }

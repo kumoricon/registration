@@ -8,6 +8,7 @@ import java.util.List;
 public class StaffBadgeDTO {
     private String firstName;
     private String lastName;
+    private String fanName;
     private String preferredPronoun;
     private String[] positions;
     private String department;
@@ -22,7 +23,7 @@ public class StaffBadgeDTO {
         firstName = builder.firstName;
         lastName = builder.lastName;
         preferredPronoun = builder.preferredPronoun;
-
+        fanName = builder.fanName;
         positions = builder.positions.toArray(new String[0]);
         department = builder.department;
         departmentBackgroundColor = builder.departmentBackgroundColor;
@@ -42,6 +43,8 @@ public class StaffBadgeDTO {
     }
 
     public String getPreferredPronoun() { return preferredPronoun; }
+
+    public String getFanName() { return fanName; }
 
     public String[] getPositions() {
         return positions;
@@ -99,6 +102,7 @@ public class StaffBadgeDTO {
         private String firstName;
         private String lastName;
         private String preferredPronoun;
+        private String fanName;
         private List<String> positions;
         private String department;
         private String departmentBackgroundColor;
@@ -125,6 +129,11 @@ public class StaffBadgeDTO {
 
         public Builder withPreferredPronoun(String val) {
             preferredPronoun = val;
+            return this;
+        }
+
+        public Builder withFanName(String val) {
+            fanName = val;
             return this;
         }
 

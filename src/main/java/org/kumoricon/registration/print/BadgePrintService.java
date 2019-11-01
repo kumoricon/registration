@@ -212,6 +212,7 @@ public class BadgePrintService extends PrintService {
             StaffBadgeDTO sb = new StaffBadgeDTO.Builder()
                     .withFirstName(g.getFirstName())
                     .withLastName(g.getLastName())
+                    .withFanName(g.getFanName())
                     .withAgeRange(g.getAgeCategoryAtCon())
                     .withDepartmentBackgroundColor(null)
                     .withPreferredPronoun(g.getPreferredPronoun())
