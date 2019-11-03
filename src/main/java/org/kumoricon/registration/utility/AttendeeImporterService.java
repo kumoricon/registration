@@ -158,6 +158,14 @@ class AttendeeImporterService {
             attendee.setPaid(true);     // All are paid, there isn't a specific flag for it
             attendee.setPaidAmount(new BigDecimal(record.amountPaidInCents / 100));
 
+            if ("Day1".equals(record.membershipType)) {
+                record.membershipType = "Friday";
+            } else if ("Day2".equals(record.membershipType)) {
+                record.membershipType = "Saturday";
+            } else if ("Day3".equals(record.membershipType)) {
+                record.membershipType = "Sunday";
+            }
+
             if (badgeMap.containsKey(record.membershipType)) {
                 attendee.setBadge(badgeMap.get(record.membershipType));
             } else {
