@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Check In Order</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-9">
+
+            <table class="table table-bordered table-striped table-fit table-sm">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Legal Name</td>
+                        <td>Fan Name</td>
+                        <td>Parental Consent Form Required</td>
+                        <td>Checked In</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:each="attendee : ${attendees}">
+                    <td th:text="|${attendee.firstName} ${attendee.lastName}|">Firstname Lastname</td>
+                    <td th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|">Firstname Lastname</td>
+                    <td th:text="${attendee.fanName}"></td>
+                    <td th:text="${attendee.isMinor()}"></td>
+                    <td th:text="${attendee.checkedIn}"></td>
+                    <td>
+                        <a th:if="${attendee.checkedIn}" class="btn btn-danger btn-sm mr-2" th:href="@{/orders/{orderId}/attendees/{attendeeId}/edit(orderId=${attendee.orderId},attendeeId=${attendee.id})}">Reprint Badge</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-sm table-bordered mt-4">
+            <thead>
+                <tr>
+                    <td>Note for Attendee</td>
+                    <td>Saved At</td>
+                    <td>Saved By</td>
+                    <td>Message</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ah : ${notes}">
+                    <td th:text="${ah.attendeeName}"></td>
+                    <td th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                    <td th:text="${ah.username}"></td>
+                    <td th:text="${ah.message}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <form th:if="${!orderCheckedIn}" method="post" th:action="@{/reg/checkinorder/{orderId}(orderId=${orderId})}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="row form-inline">
+                <input th:if="${numberOfMinors}==0" class="btn btn-primary btn-sm mr-2" type="submit" value="Check In All Attendees">
+                <input th:if="${numberOfMinors}>0" class="btn btn-danger btn-sm mr-2" type="submit" th:value="|Check In All Attendees. Received ${numberOfMinors} parental consent form(s)|">
+            </div>
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

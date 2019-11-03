@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.PrintException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -79,6 +80,57 @@ public class CheckinController {
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=" + ex.getMessage();
         }
     }
+
+    @RequestMapping(value = "/reg/checkinorder/{orderId}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('pre_reg_check_in_order')")
+    public String checkInOrder(Model model,
+                               @PathVariable Integer orderId) {
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+        boolean orderCheckedIn = true;
+        int numberOfMinors = 0;
+        for (Attendee attendee : attendees) {
+            if (!attendee.getCheckedIn()) {
+                orderCheckedIn = false;
+            }
+            if (attendee.isMinor()) {
+                numberOfMinors++;
+            }
+        }
+        List<AttendeeHistoryDTO> notes = attendeeHistoryRepository.findAllDTObyOrderId(orderId);
+        model.addAttribute("attendees", attendees);
+        model.addAttribute("notes", notes);
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("orderCheckedIn", orderCheckedIn);
+        model.addAttribute("numberOfMinors", numberOfMinors);
+        return "reg/checkinorder-id";
+    }
+
+
+    @RequestMapping(value = "/reg/checkinorder/{orderId}", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('pre_reg_check_in_order')")
+    public String checkInOrder(@PathVariable Integer orderId,
+                          @RequestParam(value = "chkParentForm", required = false) Boolean parentFormReceived,
+                          @AuthenticationPrincipal User user,
+                          @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
+
+        PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+        List<Attendee> output = new ArrayList<>();
+        for (Attendee attendee : attendees) {
+            if (!attendee.getCheckedIn()) {
+                output.add(attendeeService.checkInAttendee(attendee.getId(), user, attendee.isMinor()));
+            }
+        }
+
+        try {
+            String result = badgePrintService.printBadgesForAttendees(output, printerSettings);
+            return "redirect:/reg/checkinorder/" + orderId + "?msg=" + result;
+        } catch (PrintException ex) {
+            log.error("Error printing", ex);
+            return "redirect:/reg/checkinorder/" + orderId + "?err=" + ex.getMessage();
+        }
+    }
+
 
     @RequestMapping(value = "/reg/checkin/{id}/printbadge")
     @PreAuthorize("hasAuthority('pre_reg_check_in')")

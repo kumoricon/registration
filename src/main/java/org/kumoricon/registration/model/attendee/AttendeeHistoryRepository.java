@@ -39,13 +39,23 @@ public class AttendeeHistoryRepository {
     public List<AttendeeHistoryDTO> findAllDTObyAttendeeId(int id) {
         try {
             return jdbcTemplate.query(
-                    "select attendeehistory.*, users.first_name, users.last_name from attendeehistory join users on attendeehistory.user_id = users.id where attendee_id = ? order by timestamp desc",
+                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id = ? order by timestamp desc",
                     new Object[]{id}, new AttendeeHistoryDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<AttendeeHistoryDTO> findAllDTObyOrderId(Integer orderId) {
+        try {
+            return jdbcTemplate.query(
+                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id IN (select id from attendees where attendees.order_id = ?) order by timestamp desc",
+                    new Object[]{orderId}, new AttendeeHistoryDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
 
     @Transactional
     public void save(AttendeeHistory attendeeHistory) {
@@ -101,7 +111,9 @@ public class AttendeeHistoryRepository {
             return new AttendeeHistoryDTO(
                     rs.getTimestamp("timestamp").toInstant().atZone(timezone),
                     rs.getString("first_name") + " " + rs.getString("last_name"),
-                    rs.getString("message"));
+                    rs.getString("message"),
+                    rs.getInt("attendee_id"),
+                    rs.getString("a_first_name") + " " + rs.getString("a_last_name"));
         }
     }
 

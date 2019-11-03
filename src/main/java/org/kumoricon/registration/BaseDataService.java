@@ -132,6 +132,7 @@ public class BaseDataService {
                 {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
                 {"pre_reg_check_in", "Check in preregistered attendees"},
                 {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
+                {"pre_reg_check_in_order", "Check in entire preregistered order at once"},
                 {"attendee_search", "Search for and view attendees"},
                 {"attendee_edit", "Edit attendees from mySearch results"},
                 {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
@@ -207,7 +208,7 @@ public class BaseDataService {
                 "view_check_in_by_hour_report", "badge_type_vip", "menu_registration", "menu_utility", "menu_report",
                 "pre_reg_check_in_edit", "print_guest_badge"});
         roles.put("Coordinator - Specialty Badges", new String[] {"at_con_registration",
-                "at_con_registration_specialty", "pre_reg_check_in",
+                "at_con_registration_specialty", "pre_reg_check_in", "pre_reg_check_in_order",
                 "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_artist",
