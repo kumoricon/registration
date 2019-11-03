@@ -6,6 +6,7 @@ Version 0.8.5 (pending)
 - Fixed redirect to non-existent page when printing staff badges
 - Mark guests as checked in during attendee import
 - Add support for online purchases of single day badges
+- Set staff login photo resolution to 800x600
 
 Version 0.8.4 (10/26/2019)
 - Added attendance report

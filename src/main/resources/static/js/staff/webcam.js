@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     // Trigger taking photo
     document.getElementById('snap').addEventListener('click', function() {
-        context.drawImage(video, 0, 0, 640, 480);
+        context.drawImage(video, 0, 0, 800, 600);
         let data = canvas.toDataURL();
         document.getElementById('imageData').value = data;
         document.getElementById('save').disabled = false;
