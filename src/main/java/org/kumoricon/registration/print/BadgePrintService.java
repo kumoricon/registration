@@ -60,7 +60,7 @@ public class BadgePrintService extends PrintService {
 
         if (attendees.size() > 0) {
             try (InputStream pdfStream = generateAttendeePDF(attendees, printerSettings)) {
-                printDocument(pdfStream, printerSettings.getPrinterName(), true);
+                printDocument(pdfStream, printerSettings.getPrinterName(), false);
                 return String.format("Printed %s badges to %s.",
                         attendees.size(),
                         printerSettings.getPrinterName());

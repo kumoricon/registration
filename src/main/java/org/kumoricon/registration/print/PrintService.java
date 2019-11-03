@@ -1,10 +1,11 @@
 package org.kumoricon.registration.print;
 
 import javax.print.*;
+import javax.print.attribute.DocAttributeSet;
+import javax.print.attribute.HashDocAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaSizeName;
-import javax.print.attribute.standard.OrientationRequested;
 import javax.print.attribute.standard.Sides;
 import java.io.InputStream;
 
@@ -34,19 +35,21 @@ public abstract class PrintService {
 
         DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
         PrintRequestAttributeSet printRequestSet = new HashPrintRequestAttributeSet();
+        DocAttributeSet docAttributeSet = new HashDocAttributeSet();
         if (duplex) {
             printRequestSet.add(Sides.DUPLEX);
+            docAttributeSet.add(Sides.DUPLEX);
         }
 
-        Doc doc = new SimpleDoc(inputStream, flavor, null);
+        printRequestSet.add(MediaSizeName.INVOICE);
+        docAttributeSet.add(MediaSizeName.INVOICE);
+
+        Doc doc = new SimpleDoc(inputStream, flavor, docAttributeSet);
         if (printerInfoService == null) {
             throw new PrintException("PrintService.printDocument called when printerInfoService is null");
         }
         printService = printerInfoService.findPrinter(printerName);
         job = printService.createPrintJob();
-        printRequestSet.add(MediaSizeName.INVOICE);
-        printRequestSet.add(OrientationRequested.LANDSCAPE);
         job.print(doc, printRequestSet);
     }
-
 }
