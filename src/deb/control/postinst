@@ -19,6 +19,14 @@ fi
 # automatically
 if [ ! -d /opt/registration/data/ ]; then
     mkdir /opt/registration/data/
-    chown registration /opt/registration/data/
-    chgrp registration /opt/registration/data/
+    mkdir /opt/registration/data/badgeImage/
+    mkdir /opt/registration/data/badgeResource/
+    mkdir /opt/registration/data/guestImport/
+    mkdir /opt/registration/data/guestImportDLQ/
+    mkdir /opt/registration/data/staffImport/
+    mkdir /opt/registration/data/staffImportDLQ/
+    mkdir /opt/registration/data/staffUpload/
+    chown registration /opt/registration/data/ -R
+    chgrp registration /opt/registration/data/ -R
+    chmod 775 /opt/registration/data/ -R
 fi
