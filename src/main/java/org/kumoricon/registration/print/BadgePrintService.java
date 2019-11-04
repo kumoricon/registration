@@ -218,8 +218,7 @@ public class BadgePrintService extends PrintService {
                     .withPreferredPronoun(g.getPreferredPronoun())
                     .withAgeBackgroundColor(getAgeStripeColor(g.getAgeCategoryAtCon()))
                     .withAgeImage(getAgeImage(g.getAgeCategoryAtCon()))
-                    // Guests don't have badge images, but load the mascot
-                    .withBadgeImage(badgeImageService.getMascotImage())
+                    .withBadgeImage(badgeImageService.getBadgeForUuid(g.getOnlineId(), g.getBadgeImageFileType()))
                     .withHideDepartment(true)
                     .build();
             staffBadgeDTOS.add(sb);
