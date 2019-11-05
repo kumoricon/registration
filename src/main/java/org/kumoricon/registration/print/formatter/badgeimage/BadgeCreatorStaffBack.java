@@ -23,13 +23,13 @@ public class BadgeCreatorStaffBack extends BadgeCreatorStaffBase {
 
     @Override
     void drawBadgeAgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(108, 145, 79, 205);
+        Rectangle badgeImageLocation = new Rectangle(216, 290, 158, 410);
         b.drawStretchedImage(staff.getAgeImage(), badgeImageLocation);
     }
 
 
     private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(200, 185, 250, 250);
+        Rectangle badgeImageLocation = new Rectangle(400, 370, 500, 500);
         b.drawStretchedImage(staff.getBadgeImage(), badgeImageLocation);
     }
 }
