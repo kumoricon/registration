@@ -313,11 +313,13 @@ public class BadgeImage {
 
         int letterBoundingBoxHeight = ageBackground.height / ageStripeText.length();
 
+        // The +5 and +10 below are to make the letters just a touch bigger so they
+        // aren't so far apart.
         for (int i = 0; i < ageStripeText.length(); i++) {
             Rectangle letterBoundingBox = new Rectangle(ageBackground.x,
-                    ageBackground.y + (letterBoundingBoxHeight * i),
+                    ageBackground.y + (letterBoundingBoxHeight * i)+5,
                     ageBackground.width,
-                    letterBoundingBoxHeight);
+                    letterBoundingBoxHeight+10);
             drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor, outlineWidth);
         }
     }

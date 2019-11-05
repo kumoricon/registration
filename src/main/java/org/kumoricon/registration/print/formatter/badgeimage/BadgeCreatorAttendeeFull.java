@@ -73,7 +73,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
             Rectangle badgeType = new Rectangle(1162, 100, 220, 764);
             b.fillRect(badgeType, bgColor);
 
-            Rectangle textBoundingBox = new Rectangle(1180, 140, 160, 724);
+            Rectangle textBoundingBox = new Rectangle(1180, 160, 160, 690);
             b.drawVerticalCenteredString(attendee.getBadgeTypeText(), textBoundingBox, badgeFont, fgColor, 0);
         }
     }
@@ -82,13 +82,10 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
         String badgeNumber = attendee.getBadgeNumber();
         Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
         Color fgColor = BadgeImage.getInverseColor(bgColor);
-        Rectangle badgeNumberBounds = new Rectangle(1160, 880, 180, 160);
+        Rectangle badgeNumberBounds = new Rectangle(1160, 880, 170, 160);
 
         String[] lines;
-        if (badgeNumber.length() == 7) {
-            lines = new String[]{badgeNumber.substring(0, 2), badgeNumber.substring(2)};
-            b.drawCenteredStrings(lines, badgeNumberBounds, badgeFont, fgColor);
-        } else if (badgeNumber.length() == 8) {
+        if (badgeNumber.length() == 8) {
             lines = new String[] {badgeNumber.substring(0, 3), badgeNumber.substring(3)};
             b.drawCenteredStrings(lines, badgeNumberBounds, badgeFont, fgColor);
         } else {
