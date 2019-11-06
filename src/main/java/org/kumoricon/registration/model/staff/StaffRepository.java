@@ -33,6 +33,26 @@ public class StaffRepository {
         }
     }
 
+    /**
+     * Returns 50 staff, in order by department, firstname, lastname
+     * @param start Offset
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<Staff> findAllWithPositions(Integer start) {
+        final String sql = "SELECT * FROM staff WHERE deleted = FALSE ORDER BY department, first_name, last_name OFFSET ? LIMIT 50";
+        try {
+            List<Staff> staffList = jdbcTemplate.query(sql, new StaffRowMapper(), start);
+            for (Staff s : staffList) {
+                s.setPositions(findPositions(s.getId()));
+            }
+            return staffList;
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
     @Transactional(readOnly = true)
     public Staff findByUuid(String uuid) {
         final String sql = "select * from staff where uuid = ?";

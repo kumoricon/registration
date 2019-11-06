@@ -70,6 +70,25 @@ public class StaffBadgeController {
         return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/staff/badges-{page}.pdf")
+    @PreAuthorize("hasAuthority('staff_check_in')")
+    public ResponseEntity<byte[]> getAllStaffBadgePdf(@PathVariable Integer page,
+                                                   @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
+
+        List<Staff> staffList = staffRepository.findAllWithPositions((page-1)*50);
+        log.info("downloaded all staff badge PDF page {}", page);
+
+        PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+
+        InputStream pdfStream = badgePrintService.generateStaffPDF(staffList, printerSettings);
+        byte[] media = pdfStream.readAllBytes();
+        HttpHeaders headers = buildHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        return new ResponseEntity<>(media, headers, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/staff/{uuid}/badge.png")
     @PreAuthorize("hasAuthority('staff_check_in')")
     public ResponseEntity<byte[]> getBadgeImage(@PathVariable String uuid) {
