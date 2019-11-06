@@ -10,7 +10,9 @@ class BadgeCreatorStaffBase {
     static final int BADGE_WIDTH = (int) 4.25*DPI;
     static final int BADGE_HEIGHT = (int) 6.25*DPI;
 
+    @SuppressWarnings("WeakerAccess")
     Font badgeFont;
+    @SuppressWarnings("WeakerAccess")
     Font nameFont;
 
     public BadgeCreatorStaffBase(Font badgeFont, Font nameFont) {
@@ -19,21 +21,24 @@ class BadgeCreatorStaffBase {
     }
 
     void drawBadgeAgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(220, 290, 158, 410);
+        Rectangle badgeImageLocation = new Rectangle(225, 291, 155, 406);
         b.drawStretchedImage(staff.getAgeImage(), badgeImageLocation);
     }
 
 
     void drawBadgeTypeStripe(BadgeImage b, StaffBadgeDTO staff) {
         // Guests don't have a department color stripe, but staff do
+        Color fgColor = Color.BLACK;
         if (staff != null && staff.getDepartmentBackgroundColor() != null) {
             Color bgColor = Color.decode(staff.getDepartmentBackgroundColor());
-            Color fgColor = BadgeImage.getInverseColor(bgColor);
+            fgColor = BadgeImage.getInverseColor(bgColor);
 
-            Rectangle positionsBackground = new Rectangle(0, 154, 214, 1576);
+            Rectangle positionsBackground = new Rectangle(0, 254, 214, 1576);
             b.fillRect(positionsBackground, bgColor);
+        }
 
-            Rectangle textBounds = new Rectangle(44, 310, 176, 1450);
+        if (staff != null && staff.getPositions() != null) {
+            Rectangle textBounds = new Rectangle(44, 310, 176, 1430);
 //            b.fillRect(textBounds, Color.CYAN);
             b.drawRotatedCenteredStrings(staff.getPositions(), textBounds, badgeFont, fgColor, true);
         }

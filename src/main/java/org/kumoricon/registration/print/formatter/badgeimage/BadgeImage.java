@@ -236,6 +236,7 @@ public class BadgeImage {
      * @return Color (Black or White)
      */
     static Color getInverseColor(Color background) {
+        if (background == null) return Color.BLACK;
         // Counting the perceptive luminance - human eye favors green color...
         double a = 1 - (0.299 * background.getRed() + 0.587 * background.getGreen() + 0.114 * background.getBlue()) / 255;
 
