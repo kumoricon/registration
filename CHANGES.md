@@ -7,6 +7,7 @@ Version 0.8.5 (pending)
 - Mark guests as checked in during attendee import
 - Add support for online purchases of single day badges
 - Set staff login photo resolution to 800x600
+- Added download badge PDF by badge type
 
 Version 0.8.4 (10/26/2019)
 - Added attendance report

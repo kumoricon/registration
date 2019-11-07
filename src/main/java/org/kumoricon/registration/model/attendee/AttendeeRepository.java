@@ -223,6 +223,18 @@ public class AttendeeRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<Attendee> findAllByBadgeType(Integer badgeId) {
+        try {
+            return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY last_name, first_name",
+                    new Object[]{badgeId},
+                    new AttendeeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
     public void saveAll(List<Attendee> attendeesToAdd) {
         // TODO: Replace with batch insert
         for (Attendee a : attendeesToAdd) {

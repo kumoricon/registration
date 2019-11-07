@@ -2,6 +2,9 @@ package org.kumoricon.registration.utility;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
+import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.attendee.AttendeeService;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.badge.BadgeType;
@@ -14,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
@@ -31,10 +35,12 @@ public class TestBadgeController {
     private static final Logger log = LoggerFactory.getLogger(TestBadgeController.class);
     private final BadgePrintService badgePrintService;
     private final BadgeService badgeService;
+    private final AttendeeRepository attendeeRepository;
 
-    public TestBadgeController(BadgePrintService badgePrintService, BadgeService badgeService) {
+    public TestBadgeController(BadgePrintService badgePrintService, BadgeService badgeService, AttendeeRepository attendeeRepository) {
         this.badgePrintService = badgePrintService;
         this.badgeService = badgeService;
+        this.attendeeRepository = attendeeRepository;
     }
 
     @RequestMapping(value = "/utility/testbadges")
@@ -65,6 +71,22 @@ public class TestBadgeController {
     @PreAuthorize("hasAuthority('pre_print_badges')")
     public ResponseEntity<byte[]> getAllVipBadgePdf(@CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
         return generateAttendeePDF(printerCookie, generateAllAttendeeBadges(BadgeType.VIP), BadgeType.VIP);
+    }
+
+    @RequestMapping(value = "/utility/actualBadges/{badgeId}/badges.pdf")
+    @PreAuthorize("hasAuthority('pre_print_badges')")
+    public ResponseEntity<byte[]> getActualBadgePdf(
+            @PathVariable(value = "badgeId") Integer badgeId,
+            @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
+
+        List<Attendee> attendees = attendeeRepository.findAllByBadgeType(badgeId);
+        PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+
+        byte[] media = badgePrintService.generateAttendeePDF(attendees, printerSettings).readAllBytes();
+        HttpHeaders headers = buildHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
 
 
