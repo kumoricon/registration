@@ -1,7 +1,5 @@
 package org.kumoricon.registration.reports.attendance;
 
-import org.kumoricon.registration.guest.Guest;
-import org.kumoricon.registration.guest.GuestRepository;
 import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.staff.Staff;
@@ -17,17 +15,14 @@ import java.math.BigDecimal;
 @Controller
 public class AttendanceReportController {
     private final AttendeeSearchRepository attendeeSearchRepository;
-    private final GuestRepository guestRepository;
     private final StaffRepository staffRepository;
     private final String[] ATTENDEE_BADGE_TYPES = {"wednesday", "thursday", "friday", "saturday", "sunday", "weekend", "vip"};
     private final String[] VENDOR_BADGE_TYPES = {"artist", "exhibitor"};
 
     @Autowired
     public AttendanceReportController(AttendeeSearchRepository attendeeSearchRepository,
-                                      GuestRepository guestRepository,
                                       StaffRepository staffRepository) {
         this.attendeeSearchRepository = attendeeSearchRepository;
-        this.guestRepository = guestRepository;
         this.staffRepository = staffRepository;
     }
 
@@ -37,7 +32,6 @@ public class AttendanceReportController {
 
         AttendanceCounts attendanceCounts = new AttendanceCounts();
         countAttendees(attendanceCounts);
-        countGuests(attendanceCounts);
         countStaff(attendanceCounts);
 
         model.addAttribute("counts", attendanceCounts);
@@ -65,18 +59,6 @@ public class AttendanceReportController {
                     a.getCheckedIn()) {
                 attendanceCounts.incrementPaidAttendees();
             }
-        }
-    }
-
-    /**
-     * Assume all guests are checked in, since we don't manage guest checkins through this
-     * software. (Only badge reprints)
-     * @param attendanceCounts
-     */
-    private void countGuests(AttendanceCounts attendanceCounts) {
-        for (Guest g: guestRepository.findAll()) {
-            attendanceCounts.incrmentTotalConventionMembers();
-            attendanceCounts.incrementWarmBodyCount();
         }
     }
 
