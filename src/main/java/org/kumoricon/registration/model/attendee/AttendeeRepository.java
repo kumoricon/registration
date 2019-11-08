@@ -226,7 +226,7 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public List<Attendee> findAllByBadgeType(Integer badgeId) {
         try {
-            return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY last_name, first_name",
+            return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY last_name, first_name, fan_name",
                     new Object[]{badgeId},
                     new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {

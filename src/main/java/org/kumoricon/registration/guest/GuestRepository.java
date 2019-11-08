@@ -26,7 +26,7 @@ public class GuestRepository {
 
     @Transactional(readOnly = true)
     public List<Guest> findAll() {
-        return jdbcTemplate.query("select * from guests",
+        return jdbcTemplate.query("select * from guests order by fan_name, last_name, first_name",
                 new GuestRowMapper());
     }
 

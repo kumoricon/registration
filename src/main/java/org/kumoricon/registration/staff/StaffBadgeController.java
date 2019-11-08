@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.print.PrintException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -72,20 +72,35 @@ public class StaffBadgeController {
 
     @RequestMapping(value = "/staff/badges-{page}.pdf")
     @PreAuthorize("hasAuthority('staff_check_in')")
-    public ResponseEntity<byte[]> getAllStaffBadgePdf(@PathVariable Integer page,
+    public ResponseEntity<String> getAllStaffBadgePdf(@PathVariable Integer page,
                                                    @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
 
-        List<Staff> staffList = staffRepository.findAllWithPositions((page-1)*50);
-        log.info("downloaded all staff badge PDF page {}", page);
+        int start = page;
+        log.info("export all staff badge PDF page {}+", page);
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
 
-        InputStream pdfStream = badgePrintService.generateStaffPDF(staffList, printerSettings);
-        byte[] media = pdfStream.readAllBytes();
+        boolean keepRunning = true;
+        while (keepRunning) {
+            long startTime = System.currentTimeMillis();
+            File file = Paths.get("/tmp", "2019-staff-badges-" + start + ".pdf").toFile();
+            List<Staff> staffList = staffRepository.findAllWithPositions((start-1)*50);
+            InputStream pdfStream = badgePrintService.generateStaffPDF(staffList, printerSettings);
+            byte[] media = pdfStream.readAllBytes();
+            try(OutputStream os = new FileOutputStream(file)) {
+                os.write(media);
+            }
+            long endTime = System.currentTimeMillis();
+            log.info("Wrote {} bytes to {} in {} ms", media.length, file, endTime-startTime);
+            if (staffList.size() < 50) {
+                keepRunning = false;
+            }
+            start += 1;
+        }
         HttpHeaders headers = buildHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentType(MediaType.TEXT_PLAIN);
 
-        return new ResponseEntity<>(media, headers, HttpStatus.OK);
+        return new ResponseEntity<>("Saved", headers, HttpStatus.OK);
     }
 
 

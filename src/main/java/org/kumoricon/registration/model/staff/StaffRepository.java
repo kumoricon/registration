@@ -40,7 +40,7 @@ public class StaffRepository {
      */
     @Transactional(readOnly = true)
     public List<Staff> findAllWithPositions(Integer start) {
-        final String sql = "SELECT * FROM staff WHERE deleted = FALSE ORDER BY department, first_name, last_name OFFSET ? LIMIT 50";
+        final String sql = "SELECT * FROM staff WHERE deleted = FALSE ORDER BY last_name, first_name OFFSET ? LIMIT 50";
         try {
             List<Staff> staffList = jdbcTemplate.query(sql, new StaffRowMapper(), start);
             for (Staff s : staffList) {
