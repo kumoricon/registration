@@ -1,4 +1,6 @@
 # Change History
+Version 0.8.6 (Pending)
+
 Version 0.8.5 (11/8/2019)
 - MSO role permissions cleanup
 - Fixed pronouns in staff import
