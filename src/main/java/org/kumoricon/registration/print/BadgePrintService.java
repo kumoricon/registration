@@ -129,9 +129,16 @@ public class BadgePrintService extends PrintService {
 
     public InputStream generateAttendeePDF(List<Attendee> attendees, PrinterSettings printerSettings) {
         List<AttendeeBadgeDTO> attendeeBadgeDTOS = attendeeBadgeDTOsFromAttendees(attendees);
+
+        // Note: These two lines mean that we can only generate badges for a single attendee
+        // type (regular, VIP, specialty) at once. In practice, this hasn't been a problem
+        // because regular attendees, specialty and VIP all check in at different booths
+        Badge b = badgeService.findById(attendees.get(0).getBadgeId());
+        BadgeResource badgeResource = badgeResourceService.getBadgeResourceFor(b.getBadgeType());
+
         BadgePrintFormatter badgePrintFormatter = new FullBadgePrintFormatter(attendeeBadgeDTOS,
                 printerSettings.getxOffset(), printerSettings.getyOffset(),
-                badgeResourceService.getAttendeeBadgeResources());
+                badgeResource);
         return badgePrintFormatter.getStream();
     }
 
