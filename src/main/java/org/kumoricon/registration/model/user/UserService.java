@@ -153,12 +153,14 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void setPassword(Integer userId, String password) {
-        userRepository.setPassword(userId, false, passwordEncoder.encode(password));
+        String encodedPassword = passwordEncoder.encode(password);
+        userRepository.setPassword(userId, false, encodedPassword);
     }
 
 
     public void setPasswordOnUserObject(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
+        log.info("Set password to {}", user.getPassword());
     }
 
     /**
@@ -187,7 +189,12 @@ public class UserService implements UserDetailsService {
             log.warn("tried to use {} for an override but that account is disabled/expired/etc", override);
             return false;
         }
-        String encodedPassword = passwordEncoder.encode(overridePassword);
-        return override.getPassword().equals(encodedPassword);
+        boolean passwordMatches = passwordEncoder.matches(overridePassword, override.getPassword());
+        if (passwordMatches) {
+            return true;
+        } else {
+            log.info("tried to use {} for an override but override password doesn't match", override);
+            return false;
+        }
     }
 }

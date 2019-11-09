@@ -1,6 +1,8 @@
 # Change History
 Version 0.8.6 (Pending)
 - Renamed "Staff" report to "Users" on menu
+- Fixed bug where override user wouldn't work on attendee edit screen
+- Add note when Attendee is edited with override
 
 Version 0.8.5 (11/8/2019)
 - MSO role permissions cleanup
