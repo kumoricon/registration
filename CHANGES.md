@@ -1,5 +1,6 @@
 # Change History
 Version 0.8.6 (Pending)
+- Renamed "Staff" report to "Users" on menu
 
 Version 0.8.5 (11/8/2019)
 - MSO role permissions cleanup
