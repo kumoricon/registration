@@ -211,7 +211,7 @@ public class BaseDataService {
                 "at_con_registration_specialty", "pre_reg_check_in", "pre_reg_check_in_order",
                 "attendee_search", "print_badge", "attendee_edit",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
-                "view_check_in_by_hour_report", "badge_type_artist",
+                "view_check_in_by_hour_report", "badge_type_artist", "badge_type_weekend", "badge_type_day",
                 "badge_type_standard_press", "badge_type_emerging_press",
                 "badge_type_exhibitor", "badge_type_guest",
                 "badge_type_panelist", "badge_type_industry",
