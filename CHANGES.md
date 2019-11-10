@@ -5,6 +5,7 @@ Version 0.8.6 (Pending)
 - Add note when Attendee is edited with override
 - Add "Back" button on Printer select screen to take user back to whatever
   URL they were on before selecting the printer
+- Add "Print Badge Front" and "Print Badge Back" buttons on guest and staff pages
 
 Version 0.8.5 (11/8/2019)
 - MSO role permissions cleanup

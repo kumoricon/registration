@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.kumoricon.registration.model.staff.BadgeResource;
 import org.kumoricon.registration.model.staff.StaffBadgeDTO;
+import org.kumoricon.registration.print.Sides;
 import org.kumoricon.registration.print.formatter.badgeimage.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
     private final BadgeCreatorStaffFront badgeCreator;
     private final BadgeCreatorStaffBack badgeCreatorBack;
     private final List<StaffBadgeDTO> staffList;
+    private final Sides sides;
     private final PDDocument background;
     private static final Logger LOGGER = LoggerFactory.getLogger(StaffBadgePrintFormatter.class);
     private Integer xOffset = 0;
@@ -29,10 +31,11 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
      * @param xOffset Horizontal offset in points (1/72 inch)
      * @param yOffset Vertical offset in points (1/72 inch)
      */
-    public StaffBadgePrintFormatter(List<StaffBadgeDTO> staffList, Integer xOffset, Integer yOffset, BadgeResource badgeResource) {
+    public StaffBadgePrintFormatter(List<StaffBadgeDTO> staffList, Sides sides, Integer xOffset, Integer yOffset, BadgeResource badgeResource) {
         this.xOffset = (xOffset == null) ? 0 : xOffset;
         this.yOffset = (yOffset == null) ? 0 : yOffset;
         this.staffList = staffList;
+        this.sides = sides;
         this.background = badgeResource.getBackground();
         badgeCreator = new BadgeCreatorStaffFront(badgeResource.getBadgeFont(), badgeResource.getNameFont());
         badgeCreatorBack = new BadgeCreatorStaffBack(badgeResource.getBadgeFont(), badgeResource.getNameFont());
@@ -80,8 +83,12 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
         try {
             document = new PDDocument();
             for (StaffBadgeDTO staffBadgeDTO : staffList) {
-                generatePageFront(staffBadgeDTO, document);
-                generatePageBack(staffBadgeDTO, document);
+                if (sides.equals(Sides.FRONT) || sides.equals(Sides.BOTH)) {
+                    generatePageFront(staffBadgeDTO, document);
+                }
+                if (sides.equals(Sides.BACK) || sides.equals(Sides.BOTH)) {
+                    generatePageBack(staffBadgeDTO, document);
+                }
             }
 
             document.save(os);

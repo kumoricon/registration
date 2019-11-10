@@ -5,17 +5,16 @@ import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
 import org.kumoricon.registration.print.BadgePrintService;
+import org.kumoricon.registration.print.Sides;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.print.PrintException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.List;
@@ -35,16 +34,21 @@ public class StaffBadgeController {
     @RequestMapping(value = "/staff/{uuid}/print", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String printBadge(@PathVariable(name = "uuid") String uuid,
+                             @RequestParam(name = "sides", defaultValue = "both") String sides,
+                             HttpServletRequest request,
                              @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+        String previousLink = request.getHeader("referer");
+        Sides printSides = Sides.from(sides);
+
         Staff s = staffRepository.findByUuid(uuid);
         log.info("printing badge for {} on {}", s, printerSettings.getPrinterName());
         try {
-            String result = badgePrintService.printBadgesForStaff(List.of(s), printerSettings);
+            String result = badgePrintService.printBadgesForStaff(List.of(s), printSides, printerSettings);
             s.setBadgePrintCount(s.getBadgePrintCount() + 1);
             s.setBadgePrinted(true);
             staffRepository.save(s);
-            return "redirect:/staff?msg=" + result;
+            return "redirect:" + previousLink + "?msg=" + result;
         } catch (PrintException ex) {
             log.error("Error printing", ex);
             return "redirect:/staff/" + s.getUuid() + "?err=" + ex.getMessage();
@@ -62,7 +66,7 @@ public class StaffBadgeController {
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
 
-        InputStream pdfStream = badgePrintService.generateStaffPDF(List.of(s), printerSettings);
+        InputStream pdfStream = badgePrintService.generateStaffPDF(List.of(s), Sides.BOTH, printerSettings);
         byte[] media = pdfStream.readAllBytes();
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -85,7 +89,7 @@ public class StaffBadgeController {
             long startTime = System.currentTimeMillis();
             File file = Paths.get("/tmp", "2019-staff-badges-" + start + ".pdf").toFile();
             List<Staff> staffList = staffRepository.findAllWithPositions((start-1)*50);
-            InputStream pdfStream = badgePrintService.generateStaffPDF(staffList, printerSettings);
+            InputStream pdfStream = badgePrintService.generateStaffPDF(staffList, Sides.BOTH, printerSettings);
             byte[] media = pdfStream.readAllBytes();
             try(OutputStream os = new FileOutputStream(file)) {
                 os.write(media);

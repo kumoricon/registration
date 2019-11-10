@@ -72,13 +72,13 @@ public class BadgePrintService extends PrintService {
         }
     }
 
-    public String printBadgesForStaff(List<Staff> staff, PrinterSettings printerSettings) throws PrintException {
+    public String printBadgesForStaff(List<Staff> staff, Sides sides, PrinterSettings printerSettings) throws PrintException {
         if (enablePrintingFromServer != null && !enablePrintingFromServer) {
             return("Printing from server not enabled");
         }
 
         if (staff.size() > 0) {
-            try (InputStream pdfStream = generateStaffPDF(staff, printerSettings)) {
+            try (InputStream pdfStream = generateStaffPDF(staff, sides, printerSettings)) {
                 printDocument(pdfStream, printerSettings.getPrinterName(), true);
                 return String.format("Printed %s badges to %s.",
                         staff.size(),
@@ -91,13 +91,13 @@ public class BadgePrintService extends PrintService {
         }
     }
 
-    public String printBadgesForGuest(List<Guest> guests, PrinterSettings printerSettings) throws PrintException {
+    public String printBadgesForGuest(List<Guest> guests, Sides sides, PrinterSettings printerSettings) throws PrintException {
         if (enablePrintingFromServer != null && !enablePrintingFromServer) {
             return("Printing from server not enabled");
         }
 
         if (guests.size() > 0) {
-            try (InputStream pdfStream = generateGuestPDF(guests, printerSettings)) {
+            try (InputStream pdfStream = generateGuestPDF(guests, sides, printerSettings)) {
                 printDocument(pdfStream, printerSettings.getPrinterName(), true);
                 return String.format("Printed %s badges to %s.",
                         guests.size(),
@@ -110,21 +110,21 @@ public class BadgePrintService extends PrintService {
         }
     }
 
-    public InputStream generateGuestPDF(List<Guest> guests, PrinterSettings printerSettings) {
+    public InputStream generateGuestPDF(List<Guest> guests, Sides sides, PrinterSettings printerSettings) {
         List<StaffBadgeDTO> staffBadgeDTOS = staffBadgeDTOsFromGuest(guests);
-        return generateStaffPDF(staffBadgeDTOS, printerSettings, badgeResourceService.getGuestBadgeResource());
+        return generateStaffPDF(staffBadgeDTOS, sides, printerSettings, badgeResourceService.getGuestBadgeResource());
     }
 
-    public InputStream generateStaffPDF(List<StaffBadgeDTO> staffBadgeDTOS, PrinterSettings printerSettings, BadgeResource badgeResource) {
-        BadgePrintFormatter badgePrintFormatter = new StaffBadgePrintFormatter(staffBadgeDTOS,
+    public InputStream generateStaffPDF(List<StaffBadgeDTO> staffBadgeDTOS, Sides sides, PrinterSettings printerSettings, BadgeResource badgeResource) {
+        BadgePrintFormatter badgePrintFormatter = new StaffBadgePrintFormatter(staffBadgeDTOS, sides,
                 printerSettings.getxOffset(), printerSettings.getyOffset(),
                 badgeResource);
         return badgePrintFormatter.getStream();
     }
 
-    public InputStream generateStaffPDF(List<Staff> staff, PrinterSettings printerSettings) {
+    public InputStream generateStaffPDF(List<Staff> staff, Sides sides, PrinterSettings printerSettings) {
         List<StaffBadgeDTO> staffBadgeDTOS = staffBadgeDTOsFromStaff(staff);
-        return generateStaffPDF(staffBadgeDTOS, printerSettings, badgeResourceService.getStaffBadgeResources());
+        return generateStaffPDF(staffBadgeDTOS, sides, printerSettings, badgeResourceService.getStaffBadgeResources());
     }
 
     public InputStream generateAttendeePDF(List<Attendee> attendees, PrinterSettings printerSettings) {

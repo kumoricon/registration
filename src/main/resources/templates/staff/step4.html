@@ -22,7 +22,18 @@
         <div class="form-inline">
             <form method="post" th:action="|/staff/${staff.uuid}/print|">
                 <input type="hidden" name="action" value="printBadge">
-                <input class="btn btn-success btn-sm" type="submit" value="Print Badge">
+                <input type="hidden" name="sides" value="front">
+                <input class="btn btn-success btn-sm" type="submit" value="Print Badge Front">
+            </form>
+            <form method="post" th:action="|/staff/${staff.uuid}/print|">
+                <input type="hidden" name="action" value="printBadge">
+                <input type="hidden" name="sides" value="back">
+                <input class="btn btn-success btn-sm ml-2" type="submit" value="Print Badge Back">
+            </form>
+            <form method="post" th:action="|/staff/${staff.uuid}/print|">
+                <input type="hidden" name="action" value="printBadge">
+                <input type="hidden" name="sides" value="both">
+                <input class="btn btn-success btn-sm ml-2" type="submit" value="Print Badge (Both Sides)">
             </form>
             <a class="btn btn-secondary btn-sm ml-5"
                th:href="@{/staff/{uuid}/badge.pdf(uuid=${staff.uuid})}" target="_blank">Download Badge PDF</a>

@@ -5,6 +5,7 @@ import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.staff.BadgeResourceService;
 import org.kumoricon.registration.model.staff.StaffBadgeDTO;
 import org.kumoricon.registration.print.BadgePrintService;
+import org.kumoricon.registration.print.Sides;
 import org.kumoricon.registration.print.formatter.BadgePrintFormatter;
 import org.kumoricon.registration.print.formatter.StaffBadgePrintFormatter;
 import org.slf4j.Logger;
@@ -60,7 +61,7 @@ public class GuestBadgeController {
         List<StaffBadgeDTO> badgeDTOS = badgePrintService.staffBadgeDTOsFromGuest(List.of(guest));
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
-        BadgePrintFormatter badgePrintFormatter = new StaffBadgePrintFormatter(badgeDTOS, printerSettings.getxOffset(), printerSettings.getyOffset(), badgeResourceService.getGuestBadgeResource());
+        BadgePrintFormatter badgePrintFormatter = new StaffBadgePrintFormatter(badgeDTOS, Sides.BOTH, printerSettings.getxOffset(), printerSettings.getyOffset(), badgeResourceService.getGuestBadgeResource());
 
         byte[] media = badgePrintFormatter.getStream().readAllBytes();
         HttpHeaders headers = buildHeaders();
@@ -80,7 +81,7 @@ public class GuestBadgeController {
         List<StaffBadgeDTO> badgeDTOS = badgePrintService.staffBadgeDTOsFromGuest(guests);
 
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
-        BadgePrintFormatter badgePrintFormatter = new StaffBadgePrintFormatter(badgeDTOS, printerSettings.getxOffset(), printerSettings.getyOffset(), badgeResourceService.getGuestBadgeResource());
+        BadgePrintFormatter badgePrintFormatter = new StaffBadgePrintFormatter(badgeDTOS, Sides.BOTH, printerSettings.getxOffset(), printerSettings.getyOffset(), badgeResourceService.getGuestBadgeResource());
 
         byte[] media = badgePrintFormatter.getStream().readAllBytes();
         HttpHeaders headers = buildHeaders();

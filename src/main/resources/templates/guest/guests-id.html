@@ -42,11 +42,27 @@
             <div>
                 <form method="post" th:action="|/guests/${guest.id}/print|">
                     <input type="hidden" name="id" th:value="${guest.id}">
+                    <input type="hidden" name="sides" value="front">
                     <input type="hidden" name="action" value="printBadge">
-                    <input class="btn btn-success btn-sm" type="submit" value="Print Badge">
+                    <input class="btn btn-success btn-sm" type="submit" value="Print Badge Front">
+                </form>
+                <form method="post" th:action="|/guests/${guest.id}/print|">
+                    <input type="hidden" name="id" th:value="${guest.id}">
+                    <input type="hidden" name="sides" value="back">
+                    <input type="hidden" name="action" value="printBadge">
+                    <input class="btn btn-success btn-sm mt-2" type="submit" value="Print Badge Back">
+                </form>
+                <form method="post" th:action="|/guests/${guest.id}/print|">
+                    <input type="hidden" name="id" th:value="${guest.id}">
+                    <input type="hidden" name="sides" value="both">
+                    <input type="hidden" name="action" value="printBadge">
+                    <input class="btn btn-success btn-sm mt-2" type="submit" value="Print Badge (Both Sides)">
                 </form><br>
-                <a class="btn btn-secondary btn-sm"
+                <a class="btn btn-secondary mt-2 btn-sm"
                    th:href="@{/guests/{guestId}/badge.pdf(guestId=${guest.id})}" target="_blank">Download Badge PDF</a>
+                <br>
+                <a class="btn btn-info mt-2 btn-sm"
+                   th:href="@{/guests/}">Done</a>
             </div>
 
         </div>
