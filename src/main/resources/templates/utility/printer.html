@@ -7,9 +7,10 @@
 
 <div layout:fragment="content" class="container">
     <div class="form-group row">
-        <form class="form-inline" method="POST" action="/utility/printer">
+        <form class="form-inline" method="POST" action="/utility/printer" name="customPrinter">
             <label class="col-form-label col-sm-2" for="printer">Printer</label>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" name="previousUrl" th:value="${previousUrl}">
             <input class="form-control mr-2" type="text" name="printer" id="printer" th:value="${printer}" autofocus/>
             <input class="form-control col-1 mr-2" type="number" name="xOffset" id="xOffset" th:value="${xOffset}" placeholder="X Offset"
                    title="Horizontal offset in points (1/72 inch). Positive numbers move badge to the right on the page."/>
@@ -27,21 +28,24 @@
         <tr th:each="p : ${availablePrinters}">
             <td th:text="${p}" th:styleappend="${p == printer ? 'font-weight:bold' : ''}"></td>
             <td>
-                <form method="post">
+                <form method="post" th:name="|${p}-save|">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="hidden" name="printer" th:value="${p}" />
+                    <input type="hidden" name="previousUrl" th:value="${previousUrl}">
                     <input class="btn btn-sm btn-primary" type="submit" name="action" value="Select">
                 </form>
             </td>
             <td>
-                <form method="post">
+                <form method="post" th:name="|${p}-test|">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="hidden" name="printer" th:value="${p}" />
+                    <input type="hidden" name="previousUrl" th:value="${previousUrl}">
                     <input class="btn btn-sm btn-secondary" type="submit" name="action" value="Test">
                 </form>
             </td>
         </tr>
     </table>
+    <a class="btn btn-primary" th:href="${previousLink}">Back</a>
 </div>
 
 </body>

@@ -3,6 +3,8 @@ Version 0.8.6 (Pending)
 - Renamed "Staff" report to "Users" on menu
 - Fixed bug where override user wouldn't work on attendee edit screen
 - Add note when Attendee is edited with override
+- Add "Back" button on Printer select screen to take user back to whatever
+  URL they were on before selecting the printer
 
 Version 0.8.5 (11/8/2019)
 - MSO role permissions cleanup

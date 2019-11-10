@@ -1,6 +1,7 @@
 package org.kumoricon.registration.utility;
 
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.badge.BadgeService;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.print.PrintException;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 @Controller
 public class PrinterController {
@@ -34,14 +37,25 @@ public class PrinterController {
     }
 
     @RequestMapping(value = "/utility/printer")
-    public String printer(Model model,
+    public String printer(HttpServletRequest request,
+                          Model model,
+                          @RequestParam(value="previousUrl", required = false) String previousUrl,
                           @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         PrinterSettings settings = PrinterSettings.fromCookieValue(printerCookie);
+        String previousLink;
 
+        if (previousUrl == null || previousUrl.isBlank()) {
+            previousLink = request.getHeader("referer");
+            previousUrl = Base64.encodeBase64URLSafeString(previousLink.getBytes());
+        } else {
+            previousLink = new String(Base64.decodeBase64(previousUrl));
+        }
         model.addAttribute("printer", settings.getPrinterName());
         model.addAttribute("xOffset", settings.getxOffset());
         model.addAttribute("yOffset", settings.getyOffset());
         model.addAttribute("availablePrinters", printerInfoService.getPrinterNames());
+        model.addAttribute("previousUrl", previousUrl);
+        model.addAttribute("previousLink", previousLink);
         return "utility/printer";
     }
 
@@ -50,11 +64,17 @@ public class PrinterController {
                              @RequestParam String printer,
                              @RequestParam(required = false, defaultValue = "0") Integer xOffset,
                              @RequestParam(required = false, defaultValue = "0") Integer yOffset,
+                             @RequestParam(required = false) String previousUrl,
                              @RequestParam String action,
                              HttpServletResponse response) {
         String newPrinter = printer.trim();
         String urlSafePrinterName = getUrlSafePrinterName(newPrinter);
+        previousUrl = sanitizePreviousUrl(previousUrl);
+        String previousLink = new String(Base64.decodeBase64(previousUrl));
         PrinterSettings settings = new PrinterSettings(newPrinter, xOffset, yOffset);
+
+        model.addAttribute("previousUrl", previousUrl);
+        model.addAttribute("previousLink", previousLink);
 
         if (action.equals("Test")) {
             log.info("Printed test badge to " + newPrinter);
@@ -69,7 +89,7 @@ public class PrinterController {
             } catch (PrintException ex) {
                 log.error("Error printing to {}", newPrinter, ex);
                 model.addAttribute("err", ex.getMessage());
-                return "utilty/printer";
+                return "utility/printer";
             }
         } else if (action.equals("Save") || action.equals("Select")) {
             log.info("Setting printer to {}", settings);
@@ -82,10 +102,10 @@ public class PrinterController {
             } catch (Exception e) {
                 log.error("Error setting printer to {}", newPrinter, e);
                 model.addAttribute("err", e.getMessage());
-                return "utilty/printer";
+                return "utility/printer";
             }
 
-            return "redirect:/utility/printer?msg=Selected+printer+" + urlSafePrinterName;
+            return "redirect:/utility/printer?previousUrl="+previousUrl+"&msg=Selected+printer+" + urlSafePrinterName;
 
         }
 
@@ -100,5 +120,16 @@ public class PrinterController {
             log.error("Error converting to URL safe printer name", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String sanitizePreviousUrl(String previousUrl) {
+        // If an array of values was passed in, just use the first. Seems to happen with some forms,
+        // I'm guessing because they have an <input type="hidden"> with the same name in two different forms.
+        // But my (possibly wrong) understanding is that separate forms should be submitted, well, separately.
+        // If that's not true, rework the forms in printer.html and clean this up
+        if (previousUrl.contains(",")) {
+            return previousUrl.split(",")[0];
+        }
+        return previousUrl;
     }
 }
