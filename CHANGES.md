@@ -1,5 +1,5 @@
 # Change History
-Version 0.8.6 (Pending)
+Version 1.0.0 (11/11/2019)
 - Renamed "Staff" report to "Users" on menu
 - Fixed bug where override user wouldn't work on attendee edit screen
 - Add note when Attendee is edited with override
