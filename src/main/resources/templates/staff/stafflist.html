@@ -9,10 +9,12 @@
 
 <div layout:fragment="content" class="container">
     <div class="row">
-        <div class="col-sm-8 form-inline">
+        <div class="col-sm-11 form-inline">
             <input class="form-control col-sm-6" id="search" type="text" placeholder="Search Name or Department Here..." autofocus>
             <button class="form-control btn btn-primary ml-2" id="clear">Clear</button>
-            <span class="ml-5" th:text="|(${checkedIn} / ${staff.size()} checked in)|"></span>
+            <a class="form-control btn btn-primary ml-2" href="?checkedIn=true" th:if="!${checkedIn}">View Checked In</a>
+            <a class="form-control btn btn-primary ml-2" href="?checkedIn=false" th:if="${checkedIn}">View Not Checked In Only</a>
+            <span class="ml-5" th:text="|(${checkedInCount} / ${totalCount} checked in)|"></span>
         </div>
     </div>
     <div class="row">

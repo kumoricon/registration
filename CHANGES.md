@@ -3,6 +3,7 @@ Version 1.0.1 (pending)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
 - Staff check in: don't redirect away from step 4 when printing badge front (since they'll need to print 
   badge back as well)
+- Staff check in: added toggle to show checked in/not checked in staff
 
 Version 1.0.0 (11/11/2019)
 - Renamed "Staff" report to "Users" on menu
