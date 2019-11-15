@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.print.PrintException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -39,19 +41,22 @@ public class StaffBadgeController {
                              @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
         String previousLink = request.getHeader("referer");
+        previousLink = previousPage(previousLink);
         Sides printSides = Sides.from(sides);
 
         Staff s = staffRepository.findByUuid(uuid);
         log.info("printing badge for {} on {}", s, printerSettings.getPrinterName());
         try {
             String result = badgePrintService.printBadgesForStaff(List.of(s), printSides, printerSettings);
-            s.setBadgePrintCount(s.getBadgePrintCount() + 1);
-            s.setBadgePrinted(true);
-            staffRepository.save(s);
+            if (!printSides.equals(Sides.FRONT)) {
+                s.setBadgePrintCount(s.getBadgePrintCount() + 1);
+                s.setBadgePrinted(true);
+                staffRepository.save(s);
+            }
             return "redirect:" + previousLink + "?msg=" + result;
         } catch (PrintException ex) {
             log.error("Error printing", ex);
-            return "redirect:/staff/" + s.getUuid() + "?err=" + ex.getMessage();
+            return "redirect:" + previousLink + "?err=" + ex.getMessage();
         }
     }
 
@@ -129,6 +134,16 @@ public class StaffBadgeController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setExpires(3);
         return headers;
+    }
+
+    private String previousPage(String referrer) {
+        try {
+            URL url = new URL(referrer);
+            return url.getPath();
+        } catch (MalformedURLException e) {
+            log.warn("Parsed bad referrer: {}", referrer, e);
+            return referrer;
+        }
     }
 
 }
