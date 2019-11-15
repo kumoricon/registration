@@ -1,4 +1,6 @@
 # Change History
+Version 1.0.2 (pending)
+
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
 - Staff check in: don't redirect away from step 4 when printing badge front (since they'll need to print 
