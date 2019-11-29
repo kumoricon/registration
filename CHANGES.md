@@ -1,5 +1,6 @@
 # Change History
 Version 1.0.2 (pending)
+- Search staff list server-side for performance on slow clients
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)

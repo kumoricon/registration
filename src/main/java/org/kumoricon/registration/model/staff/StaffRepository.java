@@ -34,6 +34,45 @@ public class StaffRepository {
     }
 
     /**
+     * Search for the given name in the staff table. If only a single word is in the search phrase, return
+     * records where first OR last or legal first or legal last name start with that (case insensitive)
+     * If there is a space in the search phrase, assume that it is "Firstname Lastname" and return records
+     * were first_name or legal_first_name starts with firstname, and last_name or legal_last_name starts with
+     * the second word.
+     * @param search Search phrase
+     * @return List of matching records or empty list
+     */
+    @Transactional(readOnly = true)
+    public List<Staff> findByNameLike(String search) {
+        if (search == null || search.isBlank()) {
+            return new ArrayList<>();
+        }
+        String[] terms = search.trim().split(" ", 2);
+
+        String[] searchTerm = new String[terms.length];
+        for (int i = 0; i < terms.length; i++) {
+            searchTerm[i] = terms[i] + "%";
+        }
+
+        final String multiSQL  = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE ? AND last_name ILIKE ?) OR (legal_first_name ILIKE ? AND legal_last_name ILIKE ?) ORDER BY first_name, last_name";
+        final String singleSQL = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE ? OR last_name ILIKE ?) OR (legal_first_name ILIKE ? OR legal_last_name ILIKE ?) ORDER BY first_name, last_name";
+        try {
+            List<Staff> staffList;
+            if (searchTerm.length > 1) {
+                staffList = jdbcTemplate.query(multiSQL, new StaffRowMapper(), searchTerm[0], searchTerm[1], searchTerm[0], searchTerm[1]);
+            } else {
+                staffList = jdbcTemplate.query(singleSQL, new StaffRowMapper(), searchTerm[0], searchTerm[0], searchTerm[0], searchTerm[0]);
+            }
+            for (Staff s : staffList) {
+                s.setPositions(findPositions(s.getId()));
+            }
+            return staffList;
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * Returns 50 staff, in order by department, firstname, lastname
      * @param start Offset
      * @return
@@ -79,6 +118,12 @@ public class StaffRepository {
     public Integer countByCheckedIn(boolean checkedIn) {
         final String sql = "select count(*) from staff where checked_in = ?";
         return jdbcTemplate.queryForObject(sql, new Object[] {checkedIn}, Integer.class);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer count() {
+        final String sql = "select count(*) from staff";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
     @Transactional

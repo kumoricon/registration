@@ -31,32 +31,13 @@ public class CheckInController {
     @RequestMapping(value="/staff")
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String staffList(Model model,
-                            @RequestParam(required = false, defaultValue = "false") boolean checkedIn ) {
-        List<Staff> staff = staffRepository.findAll();
-        // TODO: filtering this in code instead of the database is terrible and needs to be
-        // refactored, but this is the quickest way to do what I need to do right now.
-        // The whole thing should be changed to do the search server-side anyway (though maybe with some
-        // search-as-you-type callbacks?) because some of the clients are ridiculously old and slow
-        // Seriously, my phone has a faster CPU.
-        List<Staff> outputCheckedIn = new ArrayList<>();
-        List<Staff> outputNotCheckedIn = new ArrayList<>();
-        int checkedInCount = 0;          // Just count them here to save another database call
-        for (Staff s : staff) {
-            if (s.getCheckedIn()) {
-                checkedInCount++;
-                outputCheckedIn.add(s);
-            } else {
-                outputNotCheckedIn.add(s);
-            }
-        }
-        if (checkedIn) {
-            model.addAttribute("staff", outputCheckedIn);
-        } else {
-            model.addAttribute("staff", outputNotCheckedIn);
-        }
-        model.addAttribute("checkedIn", checkedIn);
-        model.addAttribute("totalCount", staff.size());
-        model.addAttribute("checkedInCount", checkedInCount);
+                            @RequestParam(required = false, name = "q", defaultValue = "") String search) {
+        log.info("searching staff list for {}", search);
+
+        model.addAttribute("staff", staffRepository.findByNameLike(search));
+        model.addAttribute("totalCount", staffRepository.count());
+        model.addAttribute("search", search);
+        model.addAttribute("checkedInCount", staffRepository.countByCheckedIn(true));
 
         return "staff/stafflist";
     }
