@@ -18,7 +18,7 @@
         <table class="table table-bordered table-striped table-sm">
             <thead class="thead-dark">
             <tr>
-                <th>Name</th>
+                <th>Name <i>(logged in*)</i></th>
                 <th colspan="4" class="am-header">AM 12</th>
                 <th colspan="4" class="am-header">1</th>
                 <th colspan="4" class="am-header">2</th>
@@ -50,11 +50,15 @@
                 <td th:colspan="${periods.size()}">No Login Sessions Found </td>
             </tr>
             <tr th:each="row : ${history}">
-                <td  style="min-width: 200px;" class="text-nowrap" th:text="${row.get(0)}">Firstname Lastname</td>
-                <td th:each="col : ${row.subList(1, 97)}" th:style="${col}"></td>
+                <td  style="min-width: 200px;" class="text-nowrap" th:text="|${row.get(0)} (${row.get(97)})|">Firstname Lastname</td>
+                <td th:each="col, iter : ${row.subList(1, 97)}" th:style="${col}" th:title="${periodNames[iter.index]}"></td>
             </tr>
             </tbody>
         </table>
+
+        <p class="font-italic">Note: Total logged in time is listed as HH:MM for the selected day. It is calculated in
+            15 minute increments. For example, if someone logs in at 9:14 AM, they would be counted as having logged in
+            during the 9:00 - 9:15 AM period and would get credit for 15 minutes.</p>
     </div>
 </div>
 
