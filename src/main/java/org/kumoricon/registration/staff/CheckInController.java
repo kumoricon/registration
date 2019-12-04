@@ -1,21 +1,19 @@
 package org.kumoricon.registration.staff;
 
+import org.kumoricon.registration.model.SearchSuggestion;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class CheckInController {
@@ -40,6 +38,12 @@ public class CheckInController {
         model.addAttribute("checkedInCount", staffRepository.countByCheckedIn(true));
 
         return "staff/stafflist";
+    }
+
+    @RequestMapping(value="/staff/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public SearchSuggestion suggest(@RequestParam(name="query") String query) {
+        return new SearchSuggestion(query, staffRepository.findNamesLike(query));
     }
 
     @RequestMapping(value = "/staff/{uuid}")

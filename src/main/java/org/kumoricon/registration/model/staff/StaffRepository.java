@@ -9,17 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class StaffRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final ZoneId timezone;
 
     public StaffRepository(JdbcTemplate jdbcTemplate) {
-        this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -31,6 +27,67 @@ public class StaffRepository {
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Returns names and legal names that begin with the word(s) in the search query.
+     * @param search May contain one or more words separated by spaces
+     * @return Sorted set of names
+     */
+    @Transactional(readOnly = true)
+    public Set<String> findNamesLike(String search) {
+        if (search == null || search.isBlank()) {
+            return new TreeSet<>();
+        }
+        String[] searchTerm = searchStringToQueryTerms(search);
+
+        final String nameSingleSQL = "SELECT first_name || ' ' || last_name as name from staff WHERE deleted = FALSE AND first_name ILIKE ? OR last_name ILIKE ? LIMIT 15";
+        final String nameMultiSQL = "SELECT first_name || ' ' || last_name as name from staff WHERE deleted = FALSE AND first_name ILIKE ? AND last_name ILIKE ? LIMIT 15";
+        final String legalSingleSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from staff WHERE deleted = FALSE AND legal_first_name ILIKE ? OR legal_last_name ILIKE ? LIMIT 15";
+        final String legalMultiSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from staff WHERE deleted = FALSE AND legal_first_name ILIKE ? AND legal_last_name ILIKE ? LIMIT 15";
+
+        List<String> names;
+        List<String> legalNames;
+        if (searchTerm.length > 1) {
+            try {
+                names = jdbcTemplate.queryForList(nameMultiSQL, String.class, searchTerm[0], searchTerm[1]);
+            } catch (EmptyResultDataAccessException e) {
+                names = new ArrayList<>();
+            }
+
+            try {
+                legalNames = jdbcTemplate.queryForList(legalMultiSQL, String.class, searchTerm[0], searchTerm[1]);
+            } catch (EmptyResultDataAccessException e) {
+                legalNames = new ArrayList<>();
+            }
+        } else {
+            try {
+                names = jdbcTemplate.queryForList(nameSingleSQL, String.class, searchTerm[0], searchTerm[0]);
+            } catch (EmptyResultDataAccessException e) {
+                names = new ArrayList<>();
+            }
+            try {
+                legalNames = jdbcTemplate.queryForList(legalSingleSQL, String.class, searchTerm[0], searchTerm[0]);
+            } catch (EmptyResultDataAccessException e) {
+                legalNames = new ArrayList<>();
+            }
+        }
+
+        SortedSet<String> results = new TreeSet<>();
+        names.forEach(s -> results.add(s.strip()));         // We have at least one person that goes by a single name.
+        legalNames.forEach(s -> results.add(s.strip()));    // This is here so their name doesn't get an extra trailing
+                                                            // space from the concatenation that happens in the
+                                                            // SQL query
+        return results;
+    }
+
+    private String[] searchStringToQueryTerms(String search) {
+        String[] terms = search.trim().split(" ", 2);
+
+        for (int i = 0; i < terms.length; i++) {
+            terms[i] = terms[i] + "%";
+        }
+        return terms;
     }
 
     /**
@@ -47,12 +104,7 @@ public class StaffRepository {
         if (search == null || search.isBlank()) {
             return new ArrayList<>();
         }
-        String[] terms = search.trim().split(" ", 2);
-
-        String[] searchTerm = new String[terms.length];
-        for (int i = 0; i < terms.length; i++) {
-            searchTerm[i] = terms[i] + "%";
-        }
+        String[] searchTerm = searchStringToQueryTerms(search);
 
         final String multiSQL  = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE ? AND last_name ILIKE ?) OR (legal_first_name ILIKE ? AND legal_last_name ILIKE ?) ORDER BY first_name, last_name";
         final String singleSQL = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE ? OR last_name ILIKE ?) OR (legal_first_name ILIKE ? OR legal_last_name ILIKE ?) ORDER BY first_name, last_name";
@@ -73,9 +125,9 @@ public class StaffRepository {
     }
 
     /**
-     * Returns 50 staff, in order by department, firstname, lastname
+     * Returns a paged list of staff
      * @param start Offset
-     * @return
+     * @return List of staff, in order by lastname, firstname
      */
     @Transactional(readOnly = true)
     public List<Staff> findAllWithPositions(Integer start) {

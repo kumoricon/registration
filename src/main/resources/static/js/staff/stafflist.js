@@ -3,5 +3,13 @@ $(document).ready(function(){
        $("#search").val("").focus();
        return false;
     });
-    $("#search").select();
+
+    $("#search")
+        .autocomplete({
+            serviceUrl: '/staff/suggest',
+        onSelect: function (suggestion) {
+            $('#search').val(suggestion.value);
+            $('#searchForm').submit();
+        }})
+        .select();
 });
