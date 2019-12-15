@@ -4,6 +4,7 @@ Version 1.0.2 (pending)
 - Added each user's total logged in time for the displayed day to the Login History report
 - Time period is displayed when you hover over a cell in the Login History Report
 - Added autocomplete dropdown to staff search
+- Switch to Jetty from Tomcat, which increased performance, especially for file uploads
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)

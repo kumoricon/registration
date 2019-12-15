@@ -1,10 +1,8 @@
 package org.kumoricon.registration.utility;
 
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
-import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.kumoricon.registration.print.PrinterInfoService;
 import org.slf4j.Logger;
@@ -23,13 +21,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.Base64;
 
 @Controller
 public class PrinterController {
     private final PrinterInfoService printerInfoService;
     private final BadgePrintService badgePrintService;
     private static final Logger log = LoggerFactory.getLogger(PrinterController.class);
+    private final Base64.Decoder decoder = Base64.getUrlDecoder();
+    private final Base64.Encoder encoder = Base64.getUrlEncoder();
 
     public PrinterController(PrinterInfoService printerInfoService, BadgePrintService badgePrintService) {
         this.printerInfoService = printerInfoService;
@@ -46,9 +46,9 @@ public class PrinterController {
 
         if (previousUrl == null || previousUrl.isBlank()) {
             previousLink = request.getHeader("referer");
-            previousUrl = Base64.encodeBase64URLSafeString(previousLink.getBytes());
+            previousUrl = encoder.encodeToString(previousLink.getBytes());
         } else {
-            previousLink = new String(Base64.decodeBase64(previousUrl));
+            previousLink = new String(decoder.decode(previousUrl));
         }
         model.addAttribute("printer", settings.getPrinterName());
         model.addAttribute("xOffset", settings.getxOffset());
@@ -70,7 +70,7 @@ public class PrinterController {
         String newPrinter = printer.trim();
         String urlSafePrinterName = getUrlSafePrinterName(newPrinter);
         previousUrl = sanitizePreviousUrl(previousUrl);
-        String previousLink = new String(Base64.decodeBase64(previousUrl));
+        String previousLink = new String(decoder.decode(previousUrl));
         PrinterSettings settings = new PrinterSettings(newPrinter, xOffset, yOffset);
 
         model.addAttribute("previousUrl", previousUrl);
