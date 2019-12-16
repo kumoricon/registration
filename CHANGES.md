@@ -6,6 +6,7 @@ Version 1.0.2 (pending)
 - Added autocomplete dropdown to staff search
 - Switch to Jetty from Tomcat, which increased performance, especially for file uploads
 - Upload staff photos as JPG instead of PNG
+- Save staff photos and signatures with the name {name}-{id}-photo/signature-{timestamp}.jpg/png
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
