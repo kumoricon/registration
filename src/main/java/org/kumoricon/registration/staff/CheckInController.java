@@ -92,7 +92,7 @@ public class CheckInController {
         Staff staff = staffRepository.findByUuid(uuid);
         if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
         try {
-            fileStorageService.storeFile(staff.getFirstName() + "_" + staff.getLastName() + "_" + staff.getUuid() + ".png", imageData);
+            fileStorageService.storeFile(staff.getFirstName() + "_" + staff.getLastName() + "_" + staff.getUuid() + "-photo", imageData);
         } catch (IOException ex) {
             log.error("Error saving image", ex);
             return "staff/step2?err=Error+saving+image";
@@ -126,7 +126,7 @@ public class CheckInController {
                                                 // software failure to keep staff from checking in. Should still have
                                                 // the photo from step 2
         try {
-            fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + "-signature.png", imageData);
+            fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + "-signature", imageData);
         } catch (IOException ex) {
             log.error("Error saving image", ex);
             return "staff/step3?err=Error+saving+image";
@@ -156,7 +156,7 @@ public class CheckInController {
         return "staff/step4";
     }
 
-    private static final String NO_DATA_SAVED_IMAGE = "iVBORw0KGgoAAAANSUhEUgAAAGQAAAAUCAAAAABeq8dJAAABxUlEQVQ4y+2UTUsC" +
+    private static final String NO_DATA_SAVED_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAUCAAAAABeq8dJAAABxUlEQVQ4y+2UTUsC" +
             "URSG5w/4D1r3AwQhEKFNRLhwVbuoVStrUQgWWmaWi4wiCAL7LiICicykj0EUbKwmKKJFQVMGEwRBNnfKatR7mrkzji1CiD4g8Kwu7znveT" +
             "j33BkK/iCoCuS/QJ5dhR9pn2QIRDKG5DOty4WIzbYmfeoQ+/BnchmHDml03H+EcB0PrwcXX4GUceiQ1rOgDME71trVvCzw3px6XThsaZ9j" +
             "UPeMcTCbNxpse3iUoibvRzEkGOQMWjLJJtPUm+4gJUAnAaL7QFJ4Q2mgQXKBdJLmnJmnkSNFOV9ajL7IkMs+QfQyyJqWFlgyBlIm0SB1ab" +
