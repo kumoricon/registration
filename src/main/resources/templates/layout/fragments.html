@@ -37,6 +37,7 @@
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_till_sessions'')')}" href="/admin/tillsessions">Till Sessions</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_active_sessions'')')}" href="/admin/loginsessions">Login Sessions</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_blacklist'')')}" href="/admin/blacklist">Blacklist</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_settings'')')}" href="/admin/settings">Settings</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''import_pre_reg_data'')')}" href="/utility/attendeeimport">Import Attendees</a>
                     </div>
                 </li>
