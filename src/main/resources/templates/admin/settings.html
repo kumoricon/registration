@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Settings</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <table class="table table-bordered">
+        <tr>
+            <td>Printing Enabled</td>
+            <td th:text="${settings.enablePrinting}"></td>
+        </tr>
+        <tr>
+            <td>Report Printer Name</td>
+            <td th:text="${settings.reportPrinterName}"></td>
+        </tr>
+        <tr>
+            <td>Training Mode Enabled</td>
+            <td th:text="${settings.trainingMode}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

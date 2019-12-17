@@ -174,6 +174,7 @@ public class BaseDataService {
                 {"manage_roles", "Add/edit security roles"},
                 {"manage_orders", "List/edit orders after they have been placed"},
                 {"manage_devices", "Add/edit devices (computer/printer mappings)"},
+                {"manage_settings", "Manage run-time server settings"},
                 {"manage_till_sessions", "View/Close Till Sessions for other users"},
                 {"staff_check_in", "Check In Staff"},
                 {"import_pre_reg_data", "Import pre-registered attendees and orders"},
