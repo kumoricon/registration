@@ -38,6 +38,9 @@ public class SettingsController {
             case "trainingMode":
                 settingsService.setTrainingMode(Boolean.parseBoolean(value));
                 break;
+            case "reportPrinterName":
+                settingsService.setReportPrinterName(value);
+                break;
         }
         return "redirect:/admin/settings";
     }

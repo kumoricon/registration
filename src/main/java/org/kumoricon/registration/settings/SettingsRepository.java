@@ -12,9 +12,9 @@ public class SettingsRepository {
     private final JdbcTemplate jdbcTemplate;
 
     // Settings key names as stored in database
-    private static final String TRAINING_MODE = "trainingMode";
-    private static final String ENABLE_PRINTING = "enablePrinting";
-    private static final String REPORT_PRINTER_NAME = "reportPrinterName";
+    public static final String TRAINING_MODE = "trainingMode";
+    public static final String ENABLE_PRINTING = "enablePrinting";
+    public static final String REPORT_PRINTER_NAME = "reportPrinterName";
 
     public SettingsRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
