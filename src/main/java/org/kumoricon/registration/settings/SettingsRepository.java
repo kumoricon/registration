@@ -30,7 +30,7 @@ public class SettingsRepository {
         Map<String, String> results = jdbcTemplate.query("select name, value from settings", (ResultSetExtractor<Map<String, String>>) rs -> {
                     HashMap<String, String> data = new HashMap<>();
                     while (rs.next()) {
-                        data.put(rs.getString("string1"), rs.getString("string2"));
+                        data.put(rs.getString("name"), rs.getString("value"));
                     }
                     return data;
                 });

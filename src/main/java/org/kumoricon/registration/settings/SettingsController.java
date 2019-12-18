@@ -1,20 +1,12 @@
 package org.kumoricon.registration.settings;
 
-import org.kumoricon.registration.model.role.RoleRepository;
-import org.kumoricon.registration.model.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 public class SettingsController {
@@ -31,5 +23,22 @@ public class SettingsController {
     public String listSettings(final Model model) {
         model.addAttribute("settings", settingsService.getCurrentSettings());
         return "admin/settings";
+    }
+
+    @RequestMapping(value = "/admin/settings/toggle", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('manage_settings')")
+    public String toggleSetting(@RequestParam String name,
+                                @RequestParam String value) {
+
+        log.info("set {} to {}", name, value);
+        switch(name) {
+            case "enablePrinting":
+                settingsService.setPrintingEnabled(Boolean.parseBoolean(value));
+                break;
+            case "trainingMode":
+                settingsService.setTrainingMode(Boolean.parseBoolean(value));
+                break;
+        }
+        return "redirect:/admin/settings";
     }
 }

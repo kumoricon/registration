@@ -36,4 +36,13 @@ public class SettingsService {
                 .setUpdated(System.currentTimeMillis());
     }
 
+    public void setPrintingEnabled(Boolean value) {
+        this.currentSettings = new Settings.Builder(currentSettings).setEnablePrinting(value).build();
+        settingsRepository.upsertSetting("enablePrinting", value.toString());
+    }
+
+    public void setTrainingMode(Boolean value) {
+        this.currentSettings = new Settings.Builder(currentSettings).setTrainingMode(value).build();
+        settingsRepository.upsertSetting("trainingMode", value.toString());
+    }
 }
