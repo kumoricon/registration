@@ -1,5 +1,11 @@
 CREATE EXTENSION IF NOT EXISTS citext;
 
+create table if not exists settings
+(
+  name varchar(200) not null primary key,
+  value varchar(200)
+);
+
 create table if not exists rights
 (
   id serial not null

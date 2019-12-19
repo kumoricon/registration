@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Settings</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <table class="table">
+        <tr>
+            <td class="col-sm-3">Printing Enabled</td>
+            <td>
+                <form method="post" action="/admin/settings/toggle">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="name" value="enablePrinting">
+                    <input type="hidden" name="value" th:value="!${settings.enablePrinting}">
+                    <input class="btn btn-sm" th:classappend="(!${settings.enablePrinting} ? 'btn-danger' : 'btn-success')"
+                           type="submit" th:value="${settings.enablePrinting}">
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>Report Printer Name</td>
+            <td>
+                <form method="post" action="/admin/settings/toggle" class="form-inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="name" value="reportPrinterName">
+                    <input type="text" class="form form-control col-6 mr-2" name="value" th:value="${settings.reportPrinterName}">
+                    <input class="btn btn-sm form-inline"
+                           type="submit" th:value="Save">
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>Training Mode Enabled</td>
+            <td>
+                <form method="post" action="/admin/settings/toggle">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" name="name" value="trainingMode">
+                <input type="hidden" name="value" th:value="!${settings.trainingMode}">
+                <input class="btn btn-sm" th:classappend="(!${settings.trainingMode} ? 'btn-danger' : 'btn-success')"
+                       type="submit" th:value="${settings.trainingMode}">
+            </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
