@@ -31,19 +31,27 @@ public class FileStorageService {
             throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
         }
 
+        String fileFormat = findImageFormat(imageData);
         BufferedImage image = decodeImageFromString(imageData);
-        Path targetLocation = this.uploadPath.resolve(Instant.now().toEpochMilli() + "-" + fileName);
+        Path targetLocation = this.uploadPath.resolve(fileName + "_" + Instant.now().toEpochMilli() + "." + fileFormat);
         File outputFile = targetLocation.toFile();
-        ImageIO.write(image, "png", outputFile);
+
+        ImageIO.write(image, fileFormat, outputFile);
+    }
+
+    private String findImageFormat(String imageData) {
+        if (imageData.startsWith("data:image/png;base64,")) {
+            return "png";
+        } else if (imageData.startsWith("data:image/jpeg;base64,")) {
+            return "jpg";
+        } else {
+            throw new RuntimeException("Could not find file type, must be jpg or png");
+        }
     }
 
     BufferedImage decodeImageFromString(String imageData) {
-        if (imageData.startsWith("data:image/png;base64,")) {
-            imageData = imageData.substring(22);
-        } else if (imageData.startsWith("data:image/jpeg;base64,")) {
-            imageData = imageData.substring(23);
-        }
-        byte[] imageByte = decoder.decode(imageData);
+        int start = imageData.indexOf(";base64,") + 8;
+        byte[] imageByte = decoder.decode(imageData.substring(start));
         try (ByteArrayInputStream bis = new ByteArrayInputStream(imageByte)) {
             BufferedImage image = ImageIO.read(bis);
             return image;

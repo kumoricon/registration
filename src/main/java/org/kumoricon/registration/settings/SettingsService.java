@@ -36,4 +36,18 @@ public class SettingsService {
                 .setUpdated(System.currentTimeMillis());
     }
 
+    public void setPrintingEnabled(Boolean value) {
+        this.currentSettings = new Settings.Builder(currentSettings).setEnablePrinting(value).build();
+        settingsRepository.upsertSetting(SettingsRepository.ENABLE_PRINTING, value.toString());
+    }
+
+    public void setTrainingMode(Boolean value) {
+        this.currentSettings = new Settings.Builder(currentSettings).setTrainingMode(value).build();
+        settingsRepository.upsertSetting(SettingsRepository.TRAINING_MODE, value.toString());
+    }
+
+    public void setReportPrinterName(String printerName) {
+        this.currentSettings = new Settings.Builder(currentSettings).setReportPrinterName(printerName).build();
+        settingsRepository.upsertSetting(SettingsRepository.REPORT_PRINTER_NAME, printerName);
+    }
 }
