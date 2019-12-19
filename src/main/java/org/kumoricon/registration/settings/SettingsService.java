@@ -2,15 +2,29 @@ package org.kumoricon.registration.settings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * This service provides configuration options that can be set at run time. Default values may
+ * be loaded from the configuration file (usually `application.properties`), but if the settings
+ * are also in the database the values in the database will be used.
+ *
+ * Settings are cached in memory (in an immutable object) to save a database round trip
+ */
 @Service
 public class SettingsService {
     private static final Logger log = LoggerFactory.getLogger(SettingsService.class);
     private final SettingsRepository settingsRepository;
     private Settings currentSettings;
+
+    // Default startup values from config file; will be overwritten by values stored in the database
+    @Value("${kumoreg.printing.enablePrintingFromServer}")
+    private Boolean enablePrintingFromServerDefault;
+    @Value("${kumoreg.trainingMode}")
+    private Boolean trainingModeDefault;
 
     public SettingsService(SettingsRepository settingsRepository) {
         this.settingsRepository = settingsRepository;
@@ -30,20 +44,20 @@ public class SettingsService {
 
     private Settings.Builder defaultSettingsBuilder() {
         return new Settings.Builder()
-                .setTrainingMode(false)
-                .setEnablePrinting(true)
+                .setTrainingMode(trainingModeDefault)
+                .setEnablePrinting(enablePrintingFromServerDefault)
                 .setReportPrinterName(null)
                 .setUpdated(System.currentTimeMillis());
     }
 
     public void setPrintingEnabled(Boolean value) {
-        this.currentSettings = new Settings.Builder(currentSettings).setEnablePrinting(value).build();
         settingsRepository.upsertSetting(SettingsRepository.ENABLE_PRINTING, value.toString());
+        this.currentSettings = new Settings.Builder(currentSettings).setEnablePrinting(value).build();
     }
 
     public void setTrainingMode(Boolean value) {
-        this.currentSettings = new Settings.Builder(currentSettings).setTrainingMode(value).build();
         settingsRepository.upsertSetting(SettingsRepository.TRAINING_MODE, value.toString());
+        this.currentSettings = new Settings.Builder(currentSettings).setTrainingMode(value).build();
     }
 
     public void setReportPrinterName(String printerName) {

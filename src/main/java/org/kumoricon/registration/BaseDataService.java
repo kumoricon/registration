@@ -28,8 +28,8 @@ public class BaseDataService {
     private final BadgeService badgeService;
     private static final Logger log = LoggerFactory.getLogger(BaseDataService.class);
 
-    @Value("${kumoreg.trainingMode}")
-    private boolean trainingMode;
+    @Value("${kumoreg.trainingMode}")       // No point in using SettingsService for this, as this
+    private boolean trainingMode;           // service only runs during start up
 
     @Value("${kumoreg.trainingMode.setActualPassword}")
     private boolean setActualPassword;

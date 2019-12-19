@@ -15,7 +15,7 @@ import org.kumoricon.registration.print.formatter.badgeimage.AttendeeBadgeDTO;
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorAttendee;
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorAttendeeFull;
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorStaffFront;
-import org.springframework.beans.factory.annotation.Value;
+import org.kumoricon.registration.settings.SettingsService;
 import org.springframework.stereotype.Service;
 
 import javax.print.*;
@@ -30,20 +30,21 @@ import java.util.List;
 
 @Service
 public class BadgePrintService extends PrintService {
-    @Value("${kumoreg.printing.enablePrintingFromServer}")
-    protected Boolean enablePrintingFromServer;
     private final BadgeService badgeService;
     private final BadgeImageService badgeImageService;
     private final BadgeResourceService badgeResourceService;
+    private final SettingsService settingsService;
 
     public BadgePrintService(PrinterInfoService printerInfoService,
                              BadgeService badgeService,
                              BadgeImageService badgeImageService,
-                             BadgeResourceService badgeResourceService) {
+                             BadgeResourceService badgeResourceService,
+                             SettingsService settingsService) {
         super(printerInfoService);
         this.badgeService = badgeService;
         this.badgeImageService = badgeImageService;
         this.badgeResourceService = badgeResourceService;
+        this.settingsService = settingsService;
     }
 
     /**
@@ -54,7 +55,7 @@ public class BadgePrintService extends PrintService {
      * @throws PrintException Printer error
      */
     public String printBadgesForAttendees(List<Attendee> attendees, PrinterSettings printerSettings) throws PrintException {
-        if (enablePrintingFromServer != null && !enablePrintingFromServer) {
+        if (!settingsService.getCurrentSettings().getEnablePrinting()) {
             return("Printing from server not enabled");
         }
 
@@ -73,7 +74,7 @@ public class BadgePrintService extends PrintService {
     }
 
     public String printBadgesForStaff(List<Staff> staff, Sides sides, PrinterSettings printerSettings) throws PrintException {
-        if (enablePrintingFromServer != null && !enablePrintingFromServer) {
+        if (!settingsService.getCurrentSettings().getEnablePrinting()) {
             return("Printing from server not enabled");
         }
 
@@ -92,7 +93,7 @@ public class BadgePrintService extends PrintService {
     }
 
     public String printBadgesForGuest(List<Guest> guests, Sides sides, PrinterSettings printerSettings) throws PrintException {
-        if (enablePrintingFromServer != null && !enablePrintingFromServer) {
+        if (!settingsService.getCurrentSettings().getEnablePrinting()) {
             return("Printing from server not enabled");
         }
 

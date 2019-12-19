@@ -5,7 +5,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" th:fragment="contentmenu">
-        <a class="navbar-brand" href="/">Registration</a>
+        <a class="navbar-brand" href="/" th:classappend="${trainingMode} ? text-light : text-warning">Registration</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -105,7 +105,9 @@
 
 
     <footer class="page-footer fixed-bottom font-small blue" th:fragment="footer">
-        <div class="footer-copyright text-center">Version 1.0.2</div>
+        <div class="footer-copyright text-center">Version 1.0.2
+            <span class="ml-5" th:if="${trainingMode}">Training Mode Enabled</span>
+        </div>
     </footer>
 
 </body>
