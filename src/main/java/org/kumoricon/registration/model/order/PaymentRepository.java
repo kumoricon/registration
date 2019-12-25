@@ -81,6 +81,20 @@ public class PaymentRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<PaymentDTO> findDTOByOrderId(Integer orderId) {
+        try {
+            return jdbcTemplate.query("select payments.*, u.first_name, u.last_name, t.till_name from payments" +
+                            "    LEFT OUTER JOIN users u on payments.payment_taken_by = u.id " +
+                            "    LEFT OUTER JOIN tillsessions t ON payments.till_session_id = t.id where order_id = ?",
+                    new Object[]{orderId},
+                    new PaymentDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
     public void saveAll(List<Payment> payments) {
         for (Payment payment : payments) {
             save(payment);
@@ -111,5 +125,24 @@ public class PaymentRepository {
         }
     }
 
+    private class PaymentDTORowMapper implements RowMapper<PaymentDTO>
+    {
+        @Override
+        public PaymentDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            PaymentDTO p = new PaymentDTO();
+            p.setId(rs.getInt("id"));
+            p.setAmount(rs.getBigDecimal("amount"));
+            p.setAuthNumber(rs.getString("auth_number"));
+            p.setPaymentType(Payment.PaymentType.fromInteger(rs.getInt("payment_type")));
+            p.setPaymentLocation(rs.getString("payment_location"));
+            p.setPaymentTakenAt(rs.getTimestamp("payment_taken_at").toInstant());
+            p.setPaymentTakenBy(rs.getInt("payment_taken_by"));
+            p.setPaymentTakenByUsername(rs.getString("first_name") + " " + rs.getString("last_name"));
+            p.setTillName(rs.getString("till_name"));
+            p.setTillSessionId(rs.getInt("till_session_id"));
+            p.setOrderId(rs.getInt("order_id"));
+            return p;
+        }
+    }
 
 }

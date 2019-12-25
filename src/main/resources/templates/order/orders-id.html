@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-8">
+        <div class="col-12">
 
             <table class="table table-bordered table-striped table-sm">
                 <tbody>
@@ -58,6 +58,10 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="text-nowrap">Type</th>
+                                    <th class="text-nowrap">Auth/Check Number</th>
+                                    <th class="text-nowrap">Taken At</th>
+                                    <th class="text-nowrap">Taken By</th>
+                                    <th class="text-nowrap">Till Name/Session</th>
                                     <th class="text-nowrap">Amount</th>
                                 </tr>
                                 <tr th:if="${payments.empty}">
@@ -65,7 +69,11 @@
                                 </tr>
                                 <tr th:each="payment : ${payments}">
                                     <td th:text="${payment.paymentType}"></td>
-                                    <td th:text="${payment.amount}"></td>
+                                    <td th:text="${payment.authNumber}"></td>
+                                    <td th:text="${payment.paymentTakenAt} ? ${#temporals.format(payment.paymentTakenAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                                    <td th:text="${payment.paymentTakenByUsername}"></td>
+                                    <td th:text="|${payment.tillName} - ${payment.tillSessionId}|"></td>
+                                    <td class="text-right" th:text="|$${payment.amount}|"></td>
                                 </tr>
                             </thead>
                         </table>
