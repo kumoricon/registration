@@ -73,7 +73,7 @@ public class OrderController {
         OrderDTO order = orderRepository.findDTOById(orderId);
         model.addAttribute("order", order);
         model.addAttribute("attendees", attendeeSearchRepository.findAllByOrderId(orderId));
-        model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
+        model.addAttribute("payments", paymentRepository.findDTOByOrderId(orderId));
         return "order/orders-id";
     }
 
