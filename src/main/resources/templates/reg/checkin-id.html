@@ -34,14 +34,6 @@
                     <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1980 (39)</td>
                 </tr>
                 <tr>
-                    <td>Emergency Contact</td>
-                    <td th:text="|${attendee.emergencyContactFullName} - ${attendee.emergencyContactPhone}|">Jane Doe - 123-555-1212</td>
-                </tr>
-                <tr th:if="${attendee.isMinor()}">
-                    <td>Parent Contact</td>
-                    <td th:text="|${attendee.parentFullName} - ${attendee.parentPhone}|">Jane Doe - 123-555-1212</td>
-                </tr>
-                <tr>
                     <td>Notes</td>
                     <td>
                         <p th:each="note : ${history}">
