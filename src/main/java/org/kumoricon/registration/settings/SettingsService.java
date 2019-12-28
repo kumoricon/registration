@@ -25,6 +25,10 @@ public class SettingsService {
     private Boolean enablePrintingFromServerDefault;
     @Value("${kumoreg.trainingMode}")
     private Boolean trainingModeDefault;
+    @Value("${staff.requirePhoto}")
+    private Boolean requireStaffPhotoDefault;
+    @Value("${staff.requireSignature}")
+    private Boolean requireStaffSignatureDefault;
 
     public SettingsService(SettingsRepository settingsRepository) {
         this.settingsRepository = settingsRepository;
@@ -43,11 +47,14 @@ public class SettingsService {
     }
 
     private Settings.Builder defaultSettingsBuilder() {
-        return new Settings.Builder()
-                .setTrainingMode(trainingModeDefault)
-                .setEnablePrinting(enablePrintingFromServerDefault)
-                .setReportPrinterName(null)
-                .setUpdated(System.currentTimeMillis());
+        Settings.Builder builder = new Settings.Builder();
+        builder.setTrainingMode(trainingModeDefault);
+        builder.setEnablePrinting(enablePrintingFromServerDefault);
+        builder.setReportPrinterName(null);
+        builder.setRequireStaffPhoto(requireStaffPhotoDefault);
+        builder.setRequireStaffSignature(requireStaffSignatureDefault);
+        builder.setUpdated(System.currentTimeMillis());
+        return builder;
     }
 
     public void setPrintingEnabled(Boolean value) {
@@ -61,7 +68,17 @@ public class SettingsService {
     }
 
     public void setReportPrinterName(String printerName) {
-        this.currentSettings = new Settings.Builder(currentSettings).setReportPrinterName(printerName).build();
         settingsRepository.upsertSetting(SettingsRepository.REPORT_PRINTER_NAME, printerName);
+        this.currentSettings = new Settings.Builder(currentSettings).setReportPrinterName(printerName).build();
+    }
+
+    public void setRequireStaffPhoto(Boolean value) {
+        settingsRepository.upsertSetting(SettingsRepository.REQUIRE_STAFF_PHOTO, value.toString());
+        this.currentSettings = new Settings.Builder(currentSettings).setRequireStaffPhoto(value).build();
+    }
+
+    public void setRequireStaffSignature(Boolean value) {
+        settingsRepository.upsertSetting(SettingsRepository.REQUIRE_STAFF_SIGNATURE, value.toString());
+        this.currentSettings = new Settings.Builder(currentSettings).setRequireStaffSignature(value).build();
     }
 }
