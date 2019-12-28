@@ -41,6 +41,12 @@ public class SettingsController {
             case "reportPrinterName":
                 settingsService.setReportPrinterName(value);
                 break;
+            case "requireStaffSignature":
+                settingsService.setRequireStaffSignature(Boolean.parseBoolean(value));
+                break;
+            case "requireStaffPhoto":
+                settingsService.setRequireStaffPhoto(Boolean.parseBoolean(value));
+                break;
         }
         return "redirect:/admin/settings";
     }

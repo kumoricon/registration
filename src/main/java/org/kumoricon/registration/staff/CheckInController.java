@@ -3,6 +3,7 @@ package org.kumoricon.registration.staff;
 import org.kumoricon.registration.model.SearchSuggestion;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
+import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,11 +20,15 @@ import java.util.*;
 public class CheckInController {
     private final StaffRepository staffRepository;
     private final FileStorageService fileStorageService;
+    private final SettingsService settingsService;
     private final Logger log = LoggerFactory.getLogger(CheckInController.class);
 
-    public CheckInController(StaffRepository staffRepository, FileStorageService fileStorageService) {
+    public CheckInController(StaffRepository staffRepository,
+                             FileStorageService fileStorageService,
+                             SettingsService settingsService) {
         this.staffRepository = staffRepository;
         this.fileStorageService = fileStorageService;
+        this.settingsService = settingsService;
     }
 
     @RequestMapping(value="/staff")
@@ -41,6 +46,7 @@ public class CheckInController {
     }
 
     @RequestMapping(value="/staff/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('staff_check_in')")
     @ResponseBody
     public SearchSuggestion suggest(@RequestParam(name="query") String query) {
         return new SearchSuggestion(query, staffRepository.findNamesLike(query));
@@ -81,6 +87,7 @@ public class CheckInController {
             return "redirect:/staff/checkin/" + uuid + "?err=Information+not+verified";
         }
         model.addAttribute("staff", staff);
+        model.addAttribute("requirePhoto", settingsService.getCurrentSettings().getRequireStaffPhoto());
         return "staff/step2";
     }
 
@@ -91,6 +98,12 @@ public class CheckInController {
                                @RequestParam("imageData") String imageData) {
         Staff staff = staffRepository.findByUuid(uuid);
         if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
+
+        if (imageData.isEmpty() && !settingsService.getCurrentSettings().getRequireStaffPhoto()) {
+            imageData = NO_DATA_SAVED_IMAGE;    // A blank image will be saved if the incoming image is blank AND
+        }                                       // the staff photo isn't required
+
+
         try {
             fileStorageService.storeFile(staff.getFirstName() + "_" + staff.getLastName() + "_" + staff.getUuid() + "-photo", imageData);
         } catch (IOException ex) {
@@ -111,20 +124,22 @@ public class CheckInController {
             return "redirect:/staff/checkin2/" + uuid + "?err=Picture+not+saved";
         }
         model.addAttribute("staff", staff);
+        model.addAttribute("requireSignature", settingsService.getCurrentSettings().getRequireStaffSignature());
         return "staff/step3";
     }
 
     @RequestMapping(value = "/staff/checkin3/{uuid}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('staff_check_in')")
-    public String checkIn3Post(Model model,
-                               @PathVariable(name = "uuid") String uuid,
+    public String checkIn3Post(@PathVariable(name = "uuid") String uuid,
                                @RequestParam("imageData") String imageData) {
         Staff s = staffRepository.findByUuid(uuid);
-        if (imageData.isEmpty()) {              // A blank image will be sent if the signature pad software isn't
-            imageData = NO_DATA_SAVED_IMAGE;    // installed. Add an indicator that _something_ was saved, just not
-        }                                       // anything useful. Allowing this because I don't want hardware of
-                                                // software failure to keep staff from checking in. Should still have
-                                                // the photo from step 2
+        if (imageData.isEmpty() && !settingsService.getCurrentSettings().getRequireStaffSignature()) {
+            imageData = NO_DATA_SAVED_IMAGE;    // A blank image will be sent if the signature pad software isn't
+                                                // installed or the option to not require a signature was enabled and
+                                                // the user just skipped saving the signature. Add an indicator that
+                                                // _something_ was saved, just not anything useful.
+        }
+
         try {
             fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + "-signature", imageData);
         } catch (IOException ex) {

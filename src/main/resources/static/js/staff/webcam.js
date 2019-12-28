@@ -4,11 +4,15 @@ $(document).ready(function() {
     let context = canvas.getContext('2d');
     let video = document.getElementById('video');
     let mediaConfig =  { video: true };
+    let requirePhoto = document.getElementById('REQUIRE_PHOTO').value === 'true';
     let errBack = function(e) {
         console.log('An error has occurred!', e)
     };
 
-    // Put video listeners into place
+    // REQUIRE_PHOTO is set in the HTML template
+    document.getElementById('save').disabled = requirePhoto;
+
+        // Put video listeners into place
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
             //video.src = window.URL.createObjectURL(stream);
@@ -35,10 +39,9 @@ $(document).ready(function() {
         }, errBack);
     } else {
         // Camera not detected/working
-        document.getElementById('imageData').value = data;
-        document.getElementById('save').disabled = false;
         document.getElementById('snap').innerText = "Webcam not detected";
     }
+
 
     // Trigger taking photo
     document.getElementById('snap').addEventListener('click', function() {

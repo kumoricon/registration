@@ -8,6 +8,7 @@
 <body>
 
 <div layout:fragment="content" class="container">
+    <input type="hidden" id="REQUIRE_SIGNATURE" th:value="${requireSignature}">
     <div class="row container mb-4">
         <div class="col-sm-3">
             <button class="btn btn-primary" id="openSigWindow">Open Signature Window</button>

@@ -1,12 +1,11 @@
 var extensionDataElement;
 var msg;
 var saveBtn;
-
-const REQUIRE_SIGNATURE = true;    // If true, AND the SigPlus Lite Extension is detected, a signature will
-                                   // be required before the save button is enabled.
+var requireSignature;
 
 $(document).ready(function() {
     extensionDataElement = document.createElement("MyExtensionDataElement");
+    requireSignature = document.getElementById('REQUIRE_SIGNATURE').value === 'true';
     msg = document.getElementById("message");
     saveBtn = document.getElementById("save");
     initializeSigpad();
@@ -19,7 +18,7 @@ function initializeSigpad() {
     if (!isInstalled) {
         msg.innerText = "SigPlusExtLite extension is either not installed or disabled. Please install or enable extension.";
         document.getElementById("openSigWindow").disabled = true;
-        saveBtn.disabled = false;   // Allow continuing without signature since SigPlus Extension isn't installed
+        saveBtn.disabled = requireSignature;  // Allow continuing without signature since SigPlus Extension isn't installed
 
         // If the signature pad isn't detected as installed, add an observer to watch for
         // attribute changes (that could indicate that it's been installed and run this function again.
@@ -38,7 +37,7 @@ function initializeSigpad() {
         });
     } else {
         msg.innerText = 'Signature pad detected';
-        if (REQUIRE_SIGNATURE) {
+        if (requireSignature) {
             saveBtn.disabled = true;    // Disable Save button until signature is entered
         }
         document.getElementById("openSigWindow").addEventListener('click', openSignatureWindow);

@@ -8,6 +8,7 @@
 <body>
 
 <div layout:fragment="content" class="container">
+    <input type="hidden" id="REQUIRE_PHOTO" th:value="${requirePhoto}">
     <div class="row align-middle">
         <video id="video" class="border" width="320" height="240" autoplay></video>
         <button class="btn btn-primary ml-4 mr-4" id="snap">Take Photo</button>

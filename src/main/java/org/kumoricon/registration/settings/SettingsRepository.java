@@ -15,6 +15,8 @@ public class SettingsRepository {
     public static final String TRAINING_MODE = "trainingMode";
     public static final String ENABLE_PRINTING = "enablePrinting";
     public static final String REPORT_PRINTER_NAME = "reportPrinterName";
+    public static final String REQUIRE_STAFF_PHOTO = "requireStaffPhoto";
+    public static final String REQUIRE_STAFF_SIGNATURE= "requireStaffSignature";
 
     public SettingsRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

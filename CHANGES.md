@@ -10,6 +10,7 @@ Version 1.1.0 (pending)
 - Added configurable run-time settings (schema change) and configuration screen
 - Remove emergency contact info from pre-reg check in screen
 - Added payment information to order detail screen
+- Add configuration option to require staff photo and signature
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
