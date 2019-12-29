@@ -29,58 +29,6 @@ public class StaffRepository {
         }
     }
 
-    /**
-     * Returns names and legal names that begin with the word(s) in the search query.
-     * @param search May contain one or more words separated by spaces
-     * @return Sorted set of names
-     */
-    @Transactional(readOnly = true)
-    public Set<String> findNamesLike(String search) {
-        if (search == null || search.isBlank()) {
-            return new TreeSet<>();
-        }
-        String[] searchTerm = searchStringToQueryTerms(search);
-
-        final String nameSingleSQL = "SELECT first_name || ' ' || last_name as name from staff WHERE deleted = FALSE AND first_name ILIKE ? OR last_name ILIKE ? LIMIT 15";
-        final String nameMultiSQL = "SELECT first_name || ' ' || last_name as name from staff WHERE deleted = FALSE AND first_name ILIKE ? AND last_name ILIKE ? LIMIT 15";
-        final String legalSingleSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from staff WHERE deleted = FALSE AND legal_first_name ILIKE ? OR legal_last_name ILIKE ? LIMIT 15";
-        final String legalMultiSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from staff WHERE deleted = FALSE AND legal_first_name ILIKE ? AND legal_last_name ILIKE ? LIMIT 15";
-
-        List<String> names;
-        List<String> legalNames;
-        if (searchTerm.length > 1) {
-            try {
-                names = jdbcTemplate.queryForList(nameMultiSQL, String.class, searchTerm[0], searchTerm[1]);
-            } catch (EmptyResultDataAccessException e) {
-                names = new ArrayList<>();
-            }
-
-            try {
-                legalNames = jdbcTemplate.queryForList(legalMultiSQL, String.class, searchTerm[0], searchTerm[1]);
-            } catch (EmptyResultDataAccessException e) {
-                legalNames = new ArrayList<>();
-            }
-        } else {
-            try {
-                names = jdbcTemplate.queryForList(nameSingleSQL, String.class, searchTerm[0], searchTerm[0]);
-            } catch (EmptyResultDataAccessException e) {
-                names = new ArrayList<>();
-            }
-            try {
-                legalNames = jdbcTemplate.queryForList(legalSingleSQL, String.class, searchTerm[0], searchTerm[0]);
-            } catch (EmptyResultDataAccessException e) {
-                legalNames = new ArrayList<>();
-            }
-        }
-
-        SortedSet<String> results = new TreeSet<>();
-        names.forEach(s -> results.add(s.strip()));         // We have at least one person that goes by a single name.
-        legalNames.forEach(s -> results.add(s.strip()));    // This is here so their name doesn't get an extra trailing
-                                                            // space from the concatenation that happens in the
-                                                            // SQL query
-        return results;
-    }
-
     private String[] searchStringToQueryTerms(String search) {
         String[] terms = search.trim().split(" ", 2);
 
