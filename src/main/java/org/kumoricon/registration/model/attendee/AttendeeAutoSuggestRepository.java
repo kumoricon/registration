@@ -27,12 +27,12 @@ public class AttendeeAutoSuggestRepository extends AutoSuggestRepository {
         }
         MapSqlParameterSource searchTerm = searchStringToQueryTerms(search);
 
-        final String nameSingleSQL = "SELECT first_name || ' ' || last_name as name from attendees WHERE first_name ILIKE :term0 || '%' OR last_name ILIKE :term0 || '%' LIMIT 5";
-        final String nameMultiSQL = "SELECT first_name || ' ' || last_name as name from attendees WHERE first_name ILIKE :term0 || '%' AND last_name ILIKE :term1 || '%' LIMIT 5";
-        final String legalSingleSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from attendees WHERE legal_first_name ILIKE :term0 || '%' OR legal_last_name ILIKE :term0 || '%' LIMIT 5";
-        final String legalMultiSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from attendees WHERE legal_first_name ILIKE :term0 || '%' AND legal_last_name ILIKE :term1 || '%' LIMIT 5";
-        final String fanNameSingleSQL = "SELECT fan_name as name from attendees WHERE fan_name ILIKE :term0 LIMIT 5";
-        final String fanNameMultiSQL = "SELECT fan_name as name from attendees WHERE fan_name ILIKE '%'|| :term0 || '%' AND fan_name ILIKE '%' || :term1 || '%' LIMIT 5";
+        final String nameSingleSQL = "SELECT first_name || ' ' || last_name as name from attendees WHERE first_name ILIKE :term0 || '%' OR last_name ILIKE :term0 || '%' LIMIT 4";
+        final String nameMultiSQL = "SELECT first_name || ' ' || last_name as name from attendees WHERE first_name ILIKE :term0 || '%' AND last_name ILIKE :term1 || '%' LIMIT 4";
+        final String legalSingleSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from attendees WHERE legal_first_name ILIKE :term0 || '%' OR legal_last_name ILIKE :term0 || '%' LIMIT 4";
+        final String legalMultiSQL = "SELECT legal_first_name || ' ' || legal_last_name as name from attendees WHERE legal_first_name ILIKE :term0 || '%' AND legal_last_name ILIKE :term1 || '%' LIMIT 4";
+        final String fanNameSingleSQL = "SELECT fan_name as name from attendees WHERE fan_name ILIKE '%' || :term0  || '%' LIMIT 4";
+        final String fanNameMultiSQL = "SELECT fan_name as name from attendees WHERE fan_name ILIKE '%'|| :term0 || '%' AND fan_name ILIKE '%' || :term1 || '%' LIMIT 4";
         List<String> names;
         List<String> legalNames;
         List<String> fanNames;
