@@ -1,8 +1,9 @@
 package org.kumoricon.registration.model.attendee;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +16,11 @@ import java.util.List;
 
 @Repository
 public class AttendeeSearchRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private static final String SELECT_COLUMNS = "select attendees.id, attendees.order_id, first_name, last_name, legal_first_name, legal_last_name, fan_name, birth_date, checked_in, check_in_time, badges.name as badge_type, paid_amount ";
 
-    public AttendeeSearchRepository(JdbcTemplate jdbcTemplate) {
+    public AttendeeSearchRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -31,23 +32,28 @@ public class AttendeeSearchRepository {
      */
     @Transactional(readOnly = true)
     public List<AttendeeListDTO> searchFor(String[] searchWords) {
-        String searchString = buildSearchString(searchWords);
         String sqlMulti = SELECT_COLUMNS + "from attendees " +
                 "join badges on attendees.badge_id = badges.id where " +
-                "(first_name similar to ? and last_name similar to ?) or " +
-                "(legal_first_name similar to ? and legal_last_name similar to ?) or " +
-                "fan_name similar to ? order by attendees.first_name, attendees.last_name";
+                "(first_name ILIKE :term0 || '%' and last_name ILIKE :term1 || '%') or " +
+                "(legal_first_name ILIKE :term0 || '%' and legal_last_name ILIKE :term1 || '%') or " +
+                "fan_name ILIKE '%' || :term0 || '%' AND fan_name ILIKE '%' || :term1 || '%' order by attendees.first_name, attendees.last_name";
         String sqlSingle = SELECT_COLUMNS + "from attendees " +
                 "join badges on attendees.badge_id = badges.id where " +
-                "first_name similar to ? or last_name similar to ? or " +
-                "legal_first_name similar to ? or legal_last_name similar to ? or " +
-                "fan_name similar to ? order by attendees.first_name, attendees.last_name";
+                "first_name ILIKE :term0 || '%' or last_name ILIKE :term0 || '%' or " +
+                "legal_first_name ILIKE :term0 || '%' or legal_last_name ILIKE :term0 || '%' or " +
+                "fan_name ILIKE '%' || :term0 || '%' order by attendees.first_name, attendees.last_name";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        for (int i = 0; i < searchWords.length; i++) {
+            params.addValue("term" + i, searchWords[i]);
+        }
 
         try {
-            String sql = searchWords.length == 1 ? sqlSingle : sqlMulti;
-            return jdbcTemplate.query(
-                    sql,
-                    new Object[]{searchString, searchString, searchString, searchString, searchString}, new AttendeeListDTORowMapper());
+            if (searchWords.length >= 2) {
+                return jdbcTemplate.query(sqlMulti, params, new AttendeeListDTORowMapper());
+            } else {
+                return jdbcTemplate.query(sqlSingle, params, new AttendeeListDTORowMapper());
+            }
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -60,10 +66,11 @@ public class AttendeeSearchRepository {
                 "join badges on attendees.badge_id = badges.id " +
                 "where orders.order_id = ? order by attendees.first_name, attendees.last_name";
 
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+
         try {
             return jdbcTemplate.query(
-                    sql,
-                    new Object[]{orderId}, new AttendeeListDTORowMapper());
+                    sql, params, new AttendeeListDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -71,9 +78,13 @@ public class AttendeeSearchRepository {
 
     @Transactional(readOnly = true)
     public List<AttendeeListDTO> searchByBadgeType(Integer badgeId, Integer page) {
+        MapSqlParameterSource params = new MapSqlParameterSource("badgeId", badgeId);
+        params.addValue("offset", page*20);
+        params.addValue("limit", 20);
+
         try {
-            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE badge_id = ? order by attendees.first_name, attendees.last_name LIMIT ? OFFSET ?",
-                    new Object[]{badgeId, 20, 20*page},
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE badge_id = :badgeId order by attendees.first_name, attendees.last_name LIMIT :limit OFFSET :offset",
+                    params,
                     new AttendeeListDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -82,9 +93,11 @@ public class AttendeeSearchRepository {
 
     @Transactional(readOnly = true)
     public List<AttendeeListDTO> findAllByOrderId(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+
         try {
-            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE order_id = ? order by attendees.first_name, attendees.last_name",
-                    new Object[]{orderId},
+            return jdbcTemplate.query(SELECT_COLUMNS + "from attendees JOIN badges on attendees.badge_id = badges.id WHERE order_id = :orderId order by attendees.first_name, attendees.last_name",
+                    params,
                     new AttendeeListDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -101,21 +114,8 @@ public class AttendeeSearchRepository {
         }
     }
 
-    private String buildSearchString(String[] words) {
-        List<String> tmpWords = new ArrayList<>();
-        for (String word : words) {
-            tmpWords.add("(" + word + ")");
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        sb.append(String.join("|", tmpWords));
-        sb.append(")%");
-
-        return sb.toString();
-    }
-
     @SuppressWarnings("Duplicates")
-    private class AttendeeListDTORowMapper implements RowMapper<AttendeeListDTO> {
+    private static class AttendeeListDTORowMapper implements RowMapper<AttendeeListDTO> {
         @Override
         public AttendeeListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             AttendeeListDTO a = new AttendeeListDTO();
