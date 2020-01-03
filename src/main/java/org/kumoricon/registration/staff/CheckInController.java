@@ -2,6 +2,7 @@ package org.kumoricon.registration.staff;
 
 import org.kumoricon.registration.model.SearchSuggestion;
 import org.kumoricon.registration.model.staff.Staff;
+import org.kumoricon.registration.model.staff.StaffAutoSuggestRepository;
 import org.kumoricon.registration.model.staff.StaffRepository;
 import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
@@ -19,14 +20,17 @@ import java.util.*;
 @Controller
 public class CheckInController {
     private final StaffRepository staffRepository;
+    private final StaffAutoSuggestRepository staffAutoSuggestRepository;
     private final FileStorageService fileStorageService;
     private final SettingsService settingsService;
     private final Logger log = LoggerFactory.getLogger(CheckInController.class);
 
     public CheckInController(StaffRepository staffRepository,
+                             StaffAutoSuggestRepository staffAutoSuggestRepository,
                              FileStorageService fileStorageService,
                              SettingsService settingsService) {
         this.staffRepository = staffRepository;
+        this.staffAutoSuggestRepository = staffAutoSuggestRepository;
         this.fileStorageService = fileStorageService;
         this.settingsService = settingsService;
     }
@@ -49,7 +53,7 @@ public class CheckInController {
     @PreAuthorize("hasAuthority('staff_check_in')")
     @ResponseBody
     public SearchSuggestion suggest(@RequestParam(name="query") String query) {
-        return new SearchSuggestion(query, staffRepository.findNamesLike(query));
+        return new SearchSuggestion(query, staffAutoSuggestRepository.findNamesLike(query));
     }
 
     @RequestMapping(value = "/staff/{uuid}")
