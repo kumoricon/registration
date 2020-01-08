@@ -63,13 +63,6 @@ function setState() {
         }
     }
 
-    if (inputAuth.value.length > 10)
-    {
-        alert("Authorization number must be 10 or less characters.");
-        btnSave.attr("disabled", true);
-        return;
-    }
-
     btnSave.attr("disabled", false);
 }
 
