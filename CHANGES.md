@@ -18,6 +18,7 @@ Version 1.0.1 (11/14/2019)
   badge back as well)
 - Staff check in: added toggle to show checked in/not checked in staff
 - Add autocomplete for attendee search
+- Add checks to ensure authorization number is 10 characters or less.
 
 Version 1.0.0 (11/11/2019)
 - Renamed "Staff" report to "Users" on menu
