@@ -101,11 +101,14 @@ public class PaymentController {
         }
 
         paymentData.setAmount(payment.getAmount());
-        if(payment.getAuthNumber().length() <= 10)
+        if( !payment.getPaymentType().equals("cash") )
         {
-            paymentData.setAuthNumber(payment.getAuthNumber());
-        } else {
-            throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
+            if(payment.getAuthNumber().length() <= 10)
+            {
+                paymentData.setAuthNumber(payment.getAuthNumber());
+            } else {
+                throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
+            }
         }
 
         try {
@@ -181,12 +184,18 @@ public class PaymentController {
         paymentData.setTillSessionId(currentTillSession.getId());
         paymentData.setAmount(payment.getAmount());
 
-        if(payment.getAuthNumber().length() <= 10)
+        paymentData.setAmount(payment.getAmount());
+
+        if( !payment.getPaymentType().equals("cash") )
         {
-            paymentData.setAuthNumber(payment.getAuthNumber());
-        } else {
-            throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
+            if(payment.getAuthNumber().length() <= 10)
+            {
+                paymentData.setAuthNumber(payment.getAuthNumber());
+            } else {
+                throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
+            }
         }
+
 
         switch (payment.getPaymentType()) {
             case "cash":
