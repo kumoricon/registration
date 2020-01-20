@@ -2,6 +2,7 @@ package org.kumoricon.registration.model.user;
 
 import org.kumoricon.registration.model.loginsession.LoginRepository;
 import org.kumoricon.registration.model.role.RightRepository;
+import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class UserService implements UserDetailsService {
     private final LoginRepository loginRepository;
     private final RightRepository rightRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final String DEFAULT_PASSWORD = "password";
+    private final SettingsService settingsService;
     private static final Integer INITIAL_BADGE_NUMBER = 1183; // This is the first badge number issued by each user.
                                                               // it's a generic high number because an early director
                                                               // got tired of people bugging him to get a low badge
@@ -31,11 +32,13 @@ public class UserService implements UserDetailsService {
     public UserService(UserRepository userRepository,
                        LoginRepository loginRepository,
                        RightRepository rightRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       SettingsService settingsService) {
         this.userRepository = userRepository;
         this.loginRepository = loginRepository;
         this.rightRepository = rightRepository;
         this.passwordEncoder = passwordEncoder;
+        this.settingsService = settingsService;
     }
 
     public User findById(Integer id) {
@@ -62,7 +65,7 @@ public class UserService implements UserDetailsService {
             throw new UserIdNotFoundException(userId);
         }
 
-        u.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
+        u.setPassword(passwordEncoder.encode(settingsService.getCurrentSettings().getDefaultPassword()));
         u.setForcePasswordChange(true);
         userRepository.save(u);
 
@@ -104,7 +107,7 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setId(null);
         user.setEnabled(true);
-        user.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
+        user.setPassword(passwordEncoder.encode(settingsService.getCurrentSettings().getDefaultPassword()));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setForcePasswordChange(true);

@@ -35,14 +35,38 @@
             <td>Training Mode Enabled</td>
             <td>
                 <form method="post" action="/admin/settings/toggle">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="hidden" name="name" value="trainingMode">
-                <input type="hidden" name="value" th:value="!${settings.trainingMode}">
-                <input class="btn btn-sm" th:classappend="(!${settings.trainingMode} ? 'btn-danger' : 'btn-success')"
-                       type="submit" th:value="${settings.trainingMode}">
-            </form>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="name" value="trainingMode">
+                    <input type="hidden" name="value" th:value="!${settings.trainingMode}">
+                    <input class="btn btn-sm" th:classappend="(!${settings.trainingMode} ? 'btn-danger' : 'btn-success')"
+                           type="submit" th:value="${settings.trainingMode}">
+                </form>
             </td>
         </tr>
+        <tr>
+            <td>Force Password Change</td>
+            <td>
+                <form method="post" action="/admin/settings/toggle">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="name" value="forcePasswordChange">
+                    <input type="hidden" name="value" th:value="!${settings.forcePasswordChange}">
+                    <input class="btn btn-sm" th:classappend="(!${settings.forcePasswordChange} ? 'btn-danger' : 'btn-success')"
+                           type="submit" th:value="${settings.forcePasswordChange}">
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>Default Password</td>
+            <td>
+                <form method="post" action="/admin/settings/toggle" class="form-inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="name" value="defaultPassword">
+                    <input type="text" class="form form-control col-6 mr-2" name="value" th:value="${settings.defaultPassword}">
+                    <input class="btn btn-sm form-inline" type="submit" th:value="Save">
+                </form>
+            </td>
+        </tr>
+
 
         <tr>
             <td>Require Staff Photo</td>

@@ -10,6 +10,8 @@ public class Settings {
     private final Boolean trainingMode;
     private final Boolean requireStaffPhoto;
     private final Boolean requireStaffSignature;
+    private final String defaultPassword;
+    private final Boolean forcePasswordChange;
 
     private Settings(Builder builder) {
         updated = builder.updated;
@@ -18,25 +20,24 @@ public class Settings {
         trainingMode = builder.trainingMode;
         requireStaffPhoto = builder.requireStaffPhoto;
         requireStaffSignature = builder.requireStaffSignature;
+        defaultPassword = builder.defaultPassword;
+        forcePasswordChange = builder.forcePasswordChange;
     }
 
     public Long getUpdated() {
         return updated;
     }
-
     public String getReportPrinterName() {
         return reportPrinterName;
     }
-
     public Boolean getEnablePrinting() {
         return enablePrinting;
     }
-
     public Boolean getTrainingMode() { return trainingMode; }
-
     public Boolean getRequireStaffPhoto() { return requireStaffPhoto; }
-
     public Boolean getRequireStaffSignature() { return requireStaffSignature; }
+    public String getDefaultPassword() { return defaultPassword; }
+    public Boolean getForcePasswordChange() { return forcePasswordChange; }
 
     public static final class Builder {
         private Long updated;
@@ -45,6 +46,8 @@ public class Settings {
         private Boolean trainingMode;
         private Boolean requireStaffPhoto;
         private Boolean requireStaffSignature;
+        private String defaultPassword;
+        private Boolean forcePasswordChange;
 
         public Builder() {
         }
@@ -56,6 +59,8 @@ public class Settings {
             this.trainingMode = copy.getTrainingMode();
             this.requireStaffPhoto = copy.getRequireStaffPhoto();
             this.requireStaffSignature = copy.getRequireStaffSignature();
+            this.defaultPassword = copy.getDefaultPassword();
+            this.forcePasswordChange = copy.getForcePasswordChange();
         }
 
         public Builder setUpdated(Long updated) {
@@ -85,6 +90,17 @@ public class Settings {
 
         public Builder setRequireStaffSignature(Boolean requireStaffSignature) {
             this.requireStaffSignature = requireStaffSignature;
+            return this;
+        }
+
+        public Builder setDefaultPassword(String defaultPassword) {
+            assert defaultPassword != null;
+            this.defaultPassword = defaultPassword;
+            return this;
+        }
+
+        public Builder setForcePasswordChange(Boolean forcePasswordChange) {
+            this.forcePasswordChange = forcePasswordChange;
             return this;
         }
 
