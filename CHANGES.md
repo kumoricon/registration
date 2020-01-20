@@ -28,6 +28,7 @@ Version 1.0.0 (11/11/2019)
 - Add "Back" button on Printer select screen to take user back to whatever
   URL they were on before selecting the printer
 - Add "Print Badge Front" and "Print Badge Back" buttons on guest and staff pages
+- Made default password and force password change setings configurable at run time
 
 Version 0.8.5 (11/8/2019)
 - MSO role permissions cleanup

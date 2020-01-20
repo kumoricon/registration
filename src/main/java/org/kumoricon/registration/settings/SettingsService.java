@@ -29,6 +29,10 @@ public class SettingsService {
     private Boolean requireStaffPhotoDefault;
     @Value("${staff.requireSignature}")
     private Boolean requireStaffSignatureDefault;
+    @Value("${kumoreg.defaultPassword}")
+    private String defaultPasswordDefault;
+    @Value("${kumoreg.forcePasswordChange}")
+    private Boolean forcePasswordChangeDefault;
 
     public SettingsService(SettingsRepository settingsRepository) {
         this.settingsRepository = settingsRepository;
@@ -53,6 +57,8 @@ public class SettingsService {
         builder.setReportPrinterName(null);
         builder.setRequireStaffPhoto(requireStaffPhotoDefault);
         builder.setRequireStaffSignature(requireStaffSignatureDefault);
+        builder.setDefaultPassword(defaultPasswordDefault);
+        builder.setForcePasswordChange(forcePasswordChangeDefault);
         builder.setUpdated(System.currentTimeMillis());
         return builder;
     }
@@ -80,5 +86,15 @@ public class SettingsService {
     public void setRequireStaffSignature(Boolean value) {
         settingsRepository.upsertSetting(SettingsRepository.REQUIRE_STAFF_SIGNATURE, value.toString());
         this.currentSettings = new Settings.Builder(currentSettings).setRequireStaffSignature(value).build();
+    }
+
+    public void setDefaultPassword(String value) {
+        settingsRepository.upsertSetting(SettingsRepository.DEFAULT_PASSWORD, value);
+        this.currentSettings = new Settings.Builder(currentSettings).setDefaultPassword(value).build();
+    }
+
+    public void setForcePasswordChange(Boolean value) {
+        settingsRepository.upsertSetting(SettingsRepository.FORCE_PASSWORD_CHANGE, value.toString());
+        this.currentSettings = new Settings.Builder(currentSettings).setForcePasswordChange(value).build();
     }
 }

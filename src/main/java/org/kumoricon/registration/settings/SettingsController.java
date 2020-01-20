@@ -47,6 +47,12 @@ public class SettingsController {
             case "requireStaffPhoto":
                 settingsService.setRequireStaffPhoto(Boolean.parseBoolean(value));
                 break;
+            case "forcePasswordChange":
+                settingsService.setForcePasswordChange(Boolean.parseBoolean(value));
+                break;
+            case "defaultPassword":
+                settingsService.setDefaultPassword(value);
+                break;
         }
         return "redirect:/admin/settings";
     }

@@ -8,6 +8,7 @@ import org.kumoricon.registration.model.role.RoleRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
 import org.kumoricon.registration.model.user.UserService;
+import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,27 +27,21 @@ public class BaseDataService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final BadgeService badgeService;
+    private final SettingsService settingsService;
     private static final Logger log = LoggerFactory.getLogger(BaseDataService.class);
-
-    @Value("${kumoreg.trainingMode}")       // No point in using SettingsService for this, as this
-    private boolean trainingMode;           // service only runs during start up
-
-    @Value("${kumoreg.trainingMode.setActualPassword}")
-    private boolean setActualPassword;
-
-    @Value("${kumoreg.trainingMode.password}")
-    private String actualPassword;
 
     public BaseDataService(RoleRepository roleRepository,
                            RightRepository rightRepository,
                            UserRepository userRepository,
                            UserService userService,
-                           BadgeService badgeService) {
+                           BadgeService badgeService,
+                           SettingsService settingsService) {
         this.roleRepository = roleRepository;
         this.rightRepository = rightRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.badgeService = badgeService;
+        this.settingsService = settingsService;
     }
 
     void createDefaultData() {
@@ -54,7 +49,7 @@ public class BaseDataService {
             createRights();
             createRoles();
             createAdminUser();
-            if (trainingMode) {
+            if (settingsService.getCurrentSettings().getTrainingMode()) {
                 createTrainingUsers();
             }
             createFullConAttendeeBadges();
@@ -108,9 +103,9 @@ public class BaseDataService {
         for (String[] userData : users) {
             createdUsers.add(userData[0]);
             User user = userService.newUser(userData[0], "User");
-            if (setActualPassword) {
+            if (settingsService.getCurrentSettings().getForcePasswordChange()) {
                 user.setForcePasswordChange(false);
-                userService.setPasswordOnUserObject(user, actualPassword);
+                userService.setPasswordOnUserObject(user, settingsService.getCurrentSettings().getDefaultPassword());
             }
             user.setUsername(userData[0]);
             Role role = roleRepository.findByNameIgnoreCase(userData[1]);
