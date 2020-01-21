@@ -117,23 +117,30 @@ public class StaffBadgeDTO {
             this.hideDepartment = false;
         }
 
+        public String nullHandler(String input) {
+            if(input == null)
+                return "";
+
+            return input;
+        }
+
         public Builder withFirstName(String val) {
-            firstName = val;
+            firstName = nullHandler(val);
             return this;
         }
 
         public Builder withLastName(String val) {
-            lastName = val;
+            lastName = nullHandler(val);
             return this;
         }
 
         public Builder withPreferredPronoun(String val) {
-            preferredPronoun = val;
+            preferredPronoun = nullHandler(val);
             return this;
         }
 
         public Builder withFanName(String val) {
-            fanName = val;
+            fanName = nullHandler(val);
             return this;
         }
 
@@ -143,12 +150,12 @@ public class StaffBadgeDTO {
         }
 
         public Builder withDepartment(String val) {
-            department = val;
+            department = nullHandler(val);
             return this;
         }
 
         public Builder withDepartmentBackgroundColor(String val) {
-            departmentBackgroundColor = val;
+            departmentBackgroundColor = nullHandler(val);
             return this;
         }
 
@@ -158,12 +165,12 @@ public class StaffBadgeDTO {
         }
 
         public Builder withAgeRange(String val) {
-            ageRange = val;
+            ageRange = nullHandler(val);
             return this;
         }
 
         public Builder withAgeBackgroundColor(String val) {
-            ageBackgroundColor = val;
+            ageBackgroundColor = nullHandler(val);
             return this;
         }
 

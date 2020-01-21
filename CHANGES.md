@@ -13,6 +13,7 @@ Version 1.1.0 (pending)
 - Add configuration option to require staff photo and signature
 - Add checks to ensure authorization number is 10 characters or less.
 - Added Staff Checked In by Department report with chart
+- Null values in Attendee and Staff badge DTOs will initialize with empty string values instead.
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
