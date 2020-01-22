@@ -214,6 +214,7 @@ create table if not exists attendees
   last_name citext,
   legal_first_name citext,
   legal_last_name citext,
+  membership_revoked boolean not null,
   name_is_legal_name boolean,
   preferred_pronoun varchar(255),
   paid boolean,

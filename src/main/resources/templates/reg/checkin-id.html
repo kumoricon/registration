@@ -46,7 +46,7 @@
                 </tbody>
             </table>
 
-            <form th:if="${!attendee.checkedIn}" method="post" th:action="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">
+            <form th:if="${!attendee.checkedIn && !attendee.membershipRevoked}" method="post" th:action="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">
                 <div class="row" th:if="${attendee.isMinor()}">
                     <label for="inputParentForm" class="col-md-5 col-form-label form-check-label">Parental Consent Form Received</label>
                     <input type="checkbox" class="form-check" id="inputParentForm" name="chkParentForm" required autofocus>

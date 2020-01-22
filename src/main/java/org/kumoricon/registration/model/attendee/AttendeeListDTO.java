@@ -20,6 +20,7 @@ public class AttendeeListDTO {
     private Instant checkInTime;
     private Integer orderId;
     private BigDecimal paidAmount;
+    private Boolean membershipRevoked;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -57,10 +58,12 @@ public class AttendeeListDTO {
     public BigDecimal getPaidAmount() {
         return paidAmount;
     }
-
     public void setPaidAmount(BigDecimal paidAmount) {
         this.paidAmount = paidAmount;
     }
+
+    public Boolean getMembershipRevoked() { return membershipRevoked; }
+    public void setMembershipRevoked(Boolean membershipRevoked) { this.membershipRevoked = membershipRevoked; }
 
     public Long getAge() {
         if (birthDate == null) { return 0L; }

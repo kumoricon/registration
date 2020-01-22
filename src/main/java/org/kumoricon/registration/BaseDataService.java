@@ -11,7 +11,6 @@ import org.kumoricon.registration.model.user.UserService;
 import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -48,12 +47,12 @@ public class BaseDataService {
         if (tablesAreEmpty()) {
             createRights();
             createRoles();
-            createAdminUser();
             if (settingsService.getCurrentSettings().getTrainingMode()) {
                 createTrainingUsers();
             }
             createFullConAttendeeBadges();
             createSpecialtyBadges();
+            createAdminUser();
         }
     }
 
@@ -79,7 +78,7 @@ public class BaseDataService {
     }
 
     private void createAdminUser() {
-        log.info("No users found. Creating default user 'admin' with password 'password'");
+        log.info("No users found. Creating default user 'admin' with password '{}'", settingsService.getCurrentSettings().getDefaultPassword());
         User defaultUser = userService.newUser("Admin", "User");
         Role adminRole = roleRepository.findByNameIgnoreCase("Administrator");
         defaultUser.setUsername("admin");
@@ -109,7 +108,10 @@ public class BaseDataService {
             }
             user.setUsername(userData[0]);
             Role role = roleRepository.findByNameIgnoreCase(userData[1]);
-            if (role == null) log.error("Couldn't find role {} when creating user {}", userData[1], userData[0]);
+            if (role == null) {
+                log.error("Couldn't find role {} when creating user {}. Skipping user creation", userData[1], userData[0]);
+                continue;
+            }
             user.setRoleId(role.getId());
             userRepository.save(user);
 
@@ -133,6 +135,7 @@ public class BaseDataService {
                 {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
                 {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
                 {"attendee_override_price", "Manually set price for attendee"},
+                {"attendee_revoke_membership", "Revoke membership; badge may not be reprinted, name added to blacklist"},
                 {"print_badge", "Print badge on attendee check in"},
                 {"reprint_badge", "Reprint attendee badges after attendee is checked in"},
                 {"reprint_badge_with_override", "Reprint badge if a user with reprint_badge right approves it"},
@@ -236,7 +239,7 @@ public class BaseDataService {
         roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty", "print_guest_badge",
                 "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note",
                 "at_con_registration_blacklist", "attendee_override_price", "reprint_badge", "manage_users",
-                "manage_pass_types", "badge_type_weekend", "badge_type_day",
+                "manage_pass_types", "badge_type_weekend", "badge_type_day", "attendee_revoke_membership",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
                 "badge_type_exhibitor", "badge_type_guest", "badge_type_industry", "badge_type_panelist",
                 "badge_type_small_press", "view_login_history_report",

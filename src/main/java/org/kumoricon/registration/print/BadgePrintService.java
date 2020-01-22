@@ -60,6 +60,9 @@ public class BadgePrintService extends PrintService {
         }
 
         if (attendees.size() > 0) {
+            for (Attendee a : attendees) {
+                if (a.isMembershipRevoked()) throw new RuntimeException("Membership for " + a.getName() + " is revoked");
+            }
             try (InputStream pdfStream = generateAttendeePDF(attendees, printerSettings)) {
                 printDocument(pdfStream, printerSettings.getPrinterName(), false);
                 return String.format("Printed %s badges to %s.",
