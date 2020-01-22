@@ -27,28 +27,28 @@ public class AttendeeBadgeDTO {
 
     public AttendeeBadgeDTO(String firstName, String lastName, String fanName) {
         setName(firstName, lastName);
-        this.fanName = fanName;
+        this.fanName = nullHandler(fanName);
+    }
+
+    public String nullHandler(String input) {
+        if(input == null)
+            return "";
+
+        return input;
     }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public void setName(String name) {
-        if (name == null) {
-            this.name = "";
-        }
-        this.name = name;
-    }
+    public void setName(String name) { this.name = nullHandler(name); }
 
     public void setName(String firstName, String lastName) {
         StringBuilder nameBuilder = new StringBuilder();
-        if (firstName != null) {
-            nameBuilder.append(firstName.trim());
-            nameBuilder.append(" ");
-        }
-        if (lastName != null) {
-            nameBuilder.append(lastName.trim());
-        }
+
+        nameBuilder.append( nullHandler(firstName).trim() );
+        nameBuilder.append(" ");
+        nameBuilder.append( nullHandler(lastName).trim() );
+
         this.name = nameBuilder.toString().trim();
     }
 
@@ -60,16 +60,14 @@ public class AttendeeBadgeDTO {
         return fanName;
     }
 
-    public void setFanName(String fanName) {
-        this.fanName = fanName;
-    }
+    public void setFanName(String fanName) { this.fanName = nullHandler(fanName); }
 
     public String getAgeStripeBackgroundColor() {
         return ageStripeBackgroundColor;
     }
 
     public void setAgeStripeBackgroundColor(String ageStripeBackgroundColor) {
-        this.ageStripeBackgroundColor = ageStripeBackgroundColor;
+        this.ageStripeBackgroundColor = nullHandler( ageStripeBackgroundColor );
     }
 
     public String getAgeStripeText() {
@@ -77,7 +75,7 @@ public class AttendeeBadgeDTO {
     }
 
     public void setAgeStripeText(String ageStripeText) {
-        this.ageStripeText = ageStripeText;
+        this.ageStripeText = nullHandler(ageStripeText);
     }
 
     public String getBadgeTypeBackgroundColor() {
@@ -85,7 +83,7 @@ public class AttendeeBadgeDTO {
     }
 
     public void setBadgeTypeBackgroundColor(String badgeTypeBackgroundColor) {
-        this.badgeTypeBackgroundColor = badgeTypeBackgroundColor;
+        this.badgeTypeBackgroundColor = nullHandler(badgeTypeBackgroundColor);
     }
 
     public String getBadgeTypeText() {
@@ -93,7 +91,7 @@ public class AttendeeBadgeDTO {
     }
 
     public void setBadgeTypeText(String badgeTypeText) {
-        this.badgeTypeText = badgeTypeText;
+        this.badgeTypeText = nullHandler(badgeTypeText);
     }
 
     public String getBadgeNumber() {
@@ -101,11 +99,11 @@ public class AttendeeBadgeDTO {
     }
 
     public void setBadgeNumber(String badgeNumber) {
-        this.badgeNumber = badgeNumber;
+        this.badgeNumber = nullHandler(badgeNumber);
     }
 
     public String getPronoun() { return pronoun; }
-    public void setPronoun(String pronoun) { this.pronoun = pronoun; }
+    public void setPronoun(String pronoun) { this.pronoun = nullHandler(pronoun); }
 
     public static AttendeeBadgeDTO fromAttendee(Attendee attendee, Badge badge) {
         AttendeeBadgeDTO output = new AttendeeBadgeDTO();
