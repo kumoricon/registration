@@ -78,7 +78,7 @@ public class CheckInOrderController {
         List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
         List<Attendee> output = new ArrayList<>();
         for (Attendee attendee : attendees) {
-            if (!attendee.getCheckedIn()) {
+            if (!attendee.getCheckedIn() && !attendee.isMembershipRevoked()) {
                 output.add(attendeeService.checkInAttendee(attendee.getId(), user, attendee.isMinor()));
             }
         }
@@ -107,6 +107,9 @@ public class CheckInOrderController {
 
         if (!attendee.getCheckedIn()) {
             return "redirect:/reg/checkinorder/" + orderId + "?err=Not+checked+in";
+        }
+        if (attendee.isMembershipRevoked()) {
+            return "redirect:/reg/checkinorder/" + orderId + "?err=Membership+revoked";
         }
         try {
             String result = badgePrintService.printBadgesForAttendees(List.of(attendee), printerSettings);

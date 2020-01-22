@@ -39,10 +39,11 @@ public class Attendee {
     private Integer badgeId;
     private Integer orderId;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
-    private Instant checkInTime;                    // Timestamp when checked in
+    private Instant checkInTime;                // Timestamp when checked in
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
+    private boolean membershipRevoked;          // If false, attendee may be checked in and badge may be reprinted
 
     // Possible values for Preferred pronoun field
     public static final List<String> PRONOUNS = Arrays.asList(null, "he/him", "she/her", "they/them");
@@ -57,6 +58,7 @@ public class Attendee {
         this.badgePrePrinted = false;
         this.badgePrinted = false;
         this.nameIsLegalName = true;
+        this.membershipRevoked = false;
     }
 
 
@@ -212,6 +214,9 @@ public class Attendee {
 
     public void setPreRegistered(boolean preRegistered) { this.preRegistered = preRegistered; }
     public Boolean isPreRegistered() { return preRegistered; }
+
+    public void setMembershipRevoked(boolean membershipRevoked) { this.membershipRevoked = membershipRevoked; }
+    public boolean isMembershipRevoked() { return membershipRevoked; }
 
     @Override
     public String toString() {

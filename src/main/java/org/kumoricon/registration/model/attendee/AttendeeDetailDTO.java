@@ -37,7 +37,7 @@ public class AttendeeDetailDTO {
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
-
+    private boolean membershipRevoked;
 
     AttendeeDetailDTO() {}
 
@@ -299,6 +299,10 @@ public class AttendeeDetailDTO {
     public void setBadgePrinted(boolean badgePrinted) {
         this.badgePrinted = badgePrinted;
     }
+
+    public boolean isMembershipRevoked() { return membershipRevoked; }
+
+    public void setMembershipRevoked(boolean membershipRevoked) { this.membershipRevoked = membershipRevoked; }
 
     @Override
     public String toString() {

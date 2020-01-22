@@ -166,7 +166,7 @@ public class AttendeeRepository {
     @Transactional
     public void save(Attendee attendee) {
         if (attendee.getId() == null) {
-            jdbcTemplate.update("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, birth_date, check_in_time, checked_in, comped_badge, country, email, emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, parent_phone, phone_number, pre_registered, zip, order_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            jdbcTemplate.update("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, birth_date, check_in_time, checked_in, comped_badge, country, email, emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     attendee.getBadgeId(), attendee.getBadgeNumber(), attendee.isBadgePrePrinted(),
                     attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
                     attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
@@ -175,9 +175,9 @@ public class AttendeeRepository {
                     attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
                     attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
-                    attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId());
+                    attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId(), attendee.isMembershipRevoked());
         } else {
-            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, preferred_pronoun=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, zip=?, order_id=? WHERE id = ?",
+            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, preferred_pronoun=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, zip=?, order_id=?, membership_revoked=? WHERE id = ?",
                     attendee.getBadgeId(), attendee.isBadgePrePrinted(),
                     attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
                     attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
@@ -186,7 +186,7 @@ public class AttendeeRepository {
                     attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
                     attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
                     attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
-                    attendee.getZip(), attendee.getOrderId(), attendee.getId());
+                    attendee.getZip(), attendee.getOrderId(), attendee.isMembershipRevoked(), attendee.getId());
         }
     }
 
@@ -289,6 +289,7 @@ public class AttendeeRepository {
             a.setPreRegistered(rs.getBoolean("pre_registered"));
             a.setZip(rs.getString("zip"));
             a.setOrderId(rs.getInt("order_id"));
+            a.setMembershipRevoked(rs.getBoolean("membership_revoked"));
             return a;
         }
     }

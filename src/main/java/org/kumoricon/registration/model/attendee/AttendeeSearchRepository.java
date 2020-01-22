@@ -18,7 +18,7 @@ import java.util.List;
 public class AttendeeSearchRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    private static final String SELECT_COLUMNS = "select attendees.id, attendees.order_id, first_name, last_name, legal_first_name, legal_last_name, fan_name, birth_date, checked_in, check_in_time, badges.name as badge_type, paid_amount ";
+    private static final String SELECT_COLUMNS = "select attendees.id, attendees.order_id, first_name, last_name, legal_first_name, legal_last_name, fan_name, birth_date, checked_in, check_in_time, badges.name as badge_type, paid_amount, membership_revoked ";
 
     public AttendeeSearchRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -142,6 +142,7 @@ public class AttendeeSearchRepository {
             a.setOrderId(rs.getInt("order_id"));
             a.setBadgeType(rs.getString("badge_type"));
             a.setPaidAmount(rs.getBigDecimal("paid_amount"));
+            a.setMembershipRevoked(rs.getBoolean("membership_revoked"));
             return a;
         }
     }

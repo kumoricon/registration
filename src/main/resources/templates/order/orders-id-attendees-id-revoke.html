@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Attendee</title>
+    <script type="text/javascript" src="/js/attendeeform.js" defer></script>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <p>Revoke membership for <b th:text="${attendee.name}"></b>?</p>
+    <ul>
+        <li>They will not be able to check in</li>
+        <li>Reprinting their badge will be blocked</li>
+        <li>Their name will be added to the blacklist (anyone matching that name must see manager to buy badge)</li>
+    </ul>
+
+    <form th:if="${#authorization.expression('hasAuthority(''attendee_revoke_membership'')') && !attendee.membershipRevoked}"
+          th:action="@{/orders/{orderId}/attendees/{attendeeId}/revoke(orderId=${attendee.orderId},attendeeId=${attendee.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input class="btn btn-danger ml-4 mr-2" type="submit" value="Revoke Membership">
+        <a class="btn btn-secondary" th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${attendee.orderId},attendeeId=${attendee.id})}">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

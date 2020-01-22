@@ -83,6 +83,7 @@ public class AttendeeDetailRepository {
             a.setPreRegistered(rs.getBoolean("pre_registered"));
             a.setZip(rs.getString("zip"));
             a.setOrderId(rs.getInt("order_id"));
+            a.setMembershipRevoked(rs.getBoolean("membership_revoked"));
             return a;
         }
     }

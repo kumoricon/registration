@@ -47,8 +47,8 @@
                 <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1990 (29)</td>
                 <td th:text="${attendee.badgeType}"></td>
                 <td>
-                    <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">Check In</a>
-                    <a th:if="${!attendee.checkedIn} and ${#authorization.expression('hasAuthority(''pre_reg_check_in_order'')')}" class="btn btn-primary btn-sm" th:href="@{/reg/checkinorder/{orderId}(orderId=${attendee.orderId})}">Check In Order</a>
+                    <a th:if="${!attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">Check In</a>
+                    <a th:if="${!attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''pre_reg_check_in_order'')')}" class="btn btn-primary btn-sm" th:href="@{/reg/checkinorder/{orderId}(orderId=${attendee.orderId})}">Check In Order</a>
                 </td>
             </tr>
             </tbody>
