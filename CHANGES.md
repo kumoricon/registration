@@ -15,6 +15,7 @@ Version 1.1.0 (pending)
 - Added Staff Checked In by Department report with chart
 - Null values in Attendee and Staff badge DTOs will initialize with empty string values instead.
 - Added directory-only Revoke Membership button (schema change)
+- Make sure names on blacklist are unique
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)

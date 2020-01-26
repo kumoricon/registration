@@ -69,7 +69,8 @@ create table if not exists blacklist
     constraint blacklist_pkey
       primary key,
   first_name citext not null,
-  last_name citext not null
+  last_name citext not null,
+  unique (first_name, last_name)
 );
 
 create index if not exists blacklist_firstname_index
