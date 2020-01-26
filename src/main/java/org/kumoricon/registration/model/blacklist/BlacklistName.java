@@ -1,5 +1,7 @@
 package org.kumoricon.registration.model.blacklist;
 
+import java.util.Objects;
+
 public class BlacklistName {
     private Integer id;
     private String firstName;
@@ -27,5 +29,25 @@ public class BlacklistName {
         } else {
             return String.format("[Blacklist: %s %s]", firstName, lastName);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BlacklistName that = (BlacklistName) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(firstName, that.firstName)) return false;
+        return Objects.equals(lastName, that.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        return result;
     }
 }

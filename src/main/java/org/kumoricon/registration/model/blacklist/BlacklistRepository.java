@@ -50,7 +50,7 @@ public class BlacklistRepository {
                 .addValue("last_name", blacklistName.getLastName());
 
         if (blacklistName.getId() == null) {
-            jdbcTemplate.update("INSERT INTO blacklist(first_name, last_name) VALUES(:first_name, :last_name)",
+            jdbcTemplate.update("INSERT INTO blacklist(first_name, last_name) VALUES(:first_name, :last_name) ON CONFLICT DO NOTHING",
                     namedParameters);
         } else {
             jdbcTemplate.update("UPDATE blacklist SET first_name = :first_name, last_name = :last_name WHERE id = :id",
