@@ -168,6 +168,7 @@ public class BaseDataService {
                 {"menu_report", "Can see the Reports Menu"},
                 {"menu_utility", "Can see the Utility Menu"},
                 {"manage_blacklist", "Add/edit blacklist entries"},
+                {"manage_export", "Export staff and attendee data"},
                 {"manage_users", "Add/edit users and reset passwords"},
                 {"manage_pass_types", "Add/edit badge types"},
                 {"manage_roles", "Add/edit security roles"},

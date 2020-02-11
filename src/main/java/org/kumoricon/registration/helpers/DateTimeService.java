@@ -16,6 +16,10 @@ public class DateTimeService {
     private static final ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a").withZone(zoneId);
 
+    public String format(Instant instant) {
+        if (instant == null) return "";
+        return DATE_TIME_FORMATTER.format(instant.atZone(zoneId));
+    }
 
     public String epochToDateString(Long milliseconds) {
         Instant t = Instant.ofEpochMilli(milliseconds);
