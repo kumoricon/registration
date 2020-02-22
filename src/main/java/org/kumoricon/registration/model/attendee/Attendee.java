@@ -46,7 +46,7 @@ public class Attendee {
     private boolean membershipRevoked;          // If false, attendee may be checked in and badge may be reprinted
 
     // Possible values for Preferred pronoun field
-    public static final List<String> PRONOUNS = Arrays.asList(null, "he/him", "she/her", "they/them");
+    public static final List<String> PRONOUNS = Arrays.asList(null, "He/Him", "She/Her", "They/Them", "Ask Me My Pronouns");
 
     public Attendee() {
         this.paidAmount = null;
