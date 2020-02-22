@@ -127,6 +127,13 @@
             </div>
         </div>
 
+        <div class="form-group row mt-2 mb-2">
+            <label for="inputNote" class="col-md-1 col-form-label-sm">Note*</label>
+            <div class="col-md-10">
+                <textarea class="col-md-10" name="note" id="inputNote" required></textarea>
+            </div>
+        </div>
+
         <div class="form-group row mb-0" th:if="${#authorization.expression('!hasAuthority(''attendee_edit'')')}">
             <label for="inputOverrideUser" class="col-md-2 col-form-label-sm">Override Username</label>
             <div class="col-md-3">
