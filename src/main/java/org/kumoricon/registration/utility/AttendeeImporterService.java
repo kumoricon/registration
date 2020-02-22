@@ -142,7 +142,7 @@ class AttendeeImporterService {
             attendee.setNameIsLegalName(record.nameOnIdIsPreferredName);
             attendee.setLegalFirstName(record.firstNameOnId);
             attendee.setLegalLastName(record.lastNameOnId);
-            attendee.setPreferredPronoun(record.pronouns);
+            attendee.setPreferredPronoun(normalizePronoun(record.pronouns));
             attendee.setFanName(record.fanName);
             attendee.setBadgeNumber(generateBadgeNumber(user.getNextBadgeNumber()));
             attendee.setZip(record.postal);
@@ -188,6 +188,19 @@ class AttendeeImporterService {
         log.info("Saved {} attendees in {} ms", count, System.currentTimeMillis()-start);
         return count;
     }
+
+    protected static String normalizePronoun(String pronoun) {
+        if (pronoun == null || pronoun.isBlank()) { return null; }
+        String lowerStr = pronoun.toLowerCase().trim();
+        for (String p : Attendee.PRONOUNS) {
+            if (lowerStr.equalsIgnoreCase(p)) {
+                return p;
+            }
+        }
+        log.warn("Couldn't find match for pronoun {} in {}, setting to null", pronoun, Attendee.PRONOUNS);
+        return null;
+    }
+
 
     protected Integer createNotes(List<AttendeeRecord> attendeeRecords, User user) {
         long start = System.currentTimeMillis();
