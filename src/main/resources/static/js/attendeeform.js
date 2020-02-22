@@ -128,6 +128,17 @@ function setState() {
             btnSave.attr("disabled", true);
         }
     } else {
+        if (shouldRequirePhone()) {
+            $('#inputPhoneLabel').text('Phone Number*');
+            $('#inputEmailLabel').text('or Email*');
+            $('#inputPhone').attr('disabled', false);
+            $('#inputEmail').attr('disabled', false);
+        } else {
+            $('#inputPhoneLabel').text('Phone Number');
+            $('#inputEmailLabel').text('or Email');
+            $('#inputPhone').attr('disabled', true);
+            $('#inputEmail').attr('disabled', true);
+        }
         if (readyToSave()) {
             btnSave.attr("disabled", false);
         } else {
@@ -136,11 +147,19 @@ function setState() {
     }
 }
 
+function shouldRequirePhone() {
+    let birthDate = $('#inputBirthDate').val();
+    if (birthDate == null || birthDate.trim() === "") return true;
+    let age = calculateAge(parseDate(birthDate));
+    return age >= 13;
+}
+
 function readyToSave() {
     return $("#inputFirstName").val() !== "" &&
         $("#inputLastName").val() !== "" &&
         $("#inputZip").val() !== "" &&
-        ($("#inputPhone").val() !== "" || $("#inputEmail").val() !== "") &&
+        // Only require phone number for youth and adults
+        (($("#inputPhone").val() !== "" || $("#inputEmail").val() !== "") || !shouldRequirePhone()) &&
         $("#inputEmergencyContactName").val() !== "" &&
         $("#inputEmergencyContactPhone").val() !== "" &&
         $("#inputBirthdate").val() !== ""
