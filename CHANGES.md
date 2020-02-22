@@ -17,6 +17,7 @@ Version 1.1.0 (pending)
 - Added director-only Revoke Membership button (schema change)
 - Make sure names on blacklist are unique
 - Added attendee and staff export to CSV
+- Don't require phone or email for Child badges
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)

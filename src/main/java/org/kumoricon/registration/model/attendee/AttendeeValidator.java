@@ -59,7 +59,8 @@ public class AttendeeValidator implements Validator {
             errors.reject("baddate.birthDate", "Birth date may not be in the future");
         }
 
-        if (isNullOrEmpty(attendee.getEmail()) && isNullOrEmpty(attendee.getPhoneNumber())) {
+        // Don't require phone number or email for child badges (<13)
+        if (attendee.getAge() >= 13 && isNullOrEmpty(attendee.getEmail()) && isNullOrEmpty(attendee.getPhoneNumber())) {
             errors.reject("notnull.phoneOrEmail", "Phone or Email is required");
         }
 

@@ -64,11 +64,11 @@
 
 
                 <div class="form-group row mt-2" style="margin-bottom:0">
-                    <label for="inputPhone" class="col-md-2 col-form-label-sm">Phone Number*</label>
+                    <label for="inputPhone" id="inputPhoneLabel" class="col-md-2 col-form-label-sm">Phone Number*</label>
                     <div class="col-md-3">
                         <input type="tel" th:field="*{phoneNumber}" th:errorclass="is-invalid" class="form-control-sm" id="inputPhone" placeholder="000-000-0000">
                     </div>
-                    <label for="inputEmail" class="col-md-2 col-form-label-sm">or Email*</label>
+                    <label for="inputEmail" id="inputEmailLabel" class="col-md-2 col-form-label-sm">or Email*</label>
                     <div class="col-md-3">
                         <input type="text" th:field="*{email}" th:errorclass="is-invalid" class="form-control-sm" id="inputEmail" placeholder="user@example.com">
                     </div>
