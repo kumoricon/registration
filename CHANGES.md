@@ -18,6 +18,7 @@ Version 1.1.0 (pending)
 - Make sure names on blacklist are unique
 - Added attendee and staff export to CSV
 - Don't require phone or email for Child badges
+- Added required note to Attendee Edit screen, saves to Attendee History
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)

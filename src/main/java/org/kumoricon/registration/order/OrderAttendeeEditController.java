@@ -55,6 +55,7 @@ public class OrderAttendeeEditController {
                                    @ModelAttribute @Validated final Attendee attendee,
                                    @RequestParam(value = "overrideUser", required = false) final String overrideUser,
                                    @RequestParam(value = "overridePassword", required = false) final String overridePassword,
+                                   @RequestParam(value="note") final String note,
                                    @AuthenticationPrincipal User principal,
                                    @PathVariable Integer orderId,
                                    @PathVariable Integer attendeeId) {
@@ -65,6 +66,7 @@ public class OrderAttendeeEditController {
             if (principal.hasRight("attendee_edit")) {
                 log.info("saved attendee {}", attendee);
                 attendeeRepository.save(attendee);
+                attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), note));
                 return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved";
             } else {
                 User override = (User) userService.loadUserByUsername(overrideUser);
@@ -75,18 +77,20 @@ public class OrderAttendeeEditController {
                 }
                 log.info("saved attendee {} with override by {}", attendee, override.getUsername());
                 attendeeRepository.save(attendee);
-                attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), "Edited with override from " + override));
+                attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), note + "\n\n(Edited with override from " + override +")"));
                 return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved+with+override";
             }
         } catch (UsernameNotFoundException ex) {
             model.addAttribute("attendee", attendee);
             model.addAttribute("badgelist", badgeService.findAll());
             model.addAttribute("err", "Bad override username or password");
+            model.addAttribute("note", note);
             return "order/orders-id-attendees-id-edit";
         } catch (Exception ex) {
             model.addAttribute("attendee", attendee);
             model.addAttribute("badgelist", badgeService.findAll());
             model.addAttribute("err", ex.getMessage());
+            model.addAttribute("note", note);
             return "order/orders-id-attendees-id-edit";
         }
     }
