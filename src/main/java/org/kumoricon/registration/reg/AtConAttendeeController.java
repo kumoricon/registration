@@ -53,7 +53,7 @@ public class AtConAttendeeController {
                                 @RequestParam(value = "forceValidate", defaultValue = "false", required = false) Boolean forceValidate) {
         Order order = orderRepository.findById(getIdFromParamter(orderId));
         List<Attendee> orderAttendees = attendeeRepository.findAllByOrderId(getIdFromParamter(orderId));
-        Attendee attendee = null;
+        Attendee attendee;
         if (attendeeId.equals("new")) {
             log.info("Adding new attendee to order {}", order);
             attendee = new Attendee();

@@ -288,7 +288,7 @@ class AttendeeImporterService {
             log.info("{} done importing data", user);
 
         } catch (Exception ex) {
-            log.error("Error parsing file: ", ex.getMessage(), ex);
+            log.error("Error parsing file: {}", ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } finally {
             try {

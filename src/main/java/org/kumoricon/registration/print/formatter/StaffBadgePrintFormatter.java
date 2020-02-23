@@ -22,8 +22,8 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
     private final Sides sides;
     private final PDDocument background;
     private static final Logger LOGGER = LoggerFactory.getLogger(StaffBadgePrintFormatter.class);
-    private Integer xOffset = 0;
-    private Integer yOffset = 0;
+    private Integer xOffset;
+    private Integer yOffset;
 
     /**
      * Generates a PDF containing badges ready to be printed.

@@ -46,7 +46,7 @@ public class RolesController {
     @RequestMapping(value = "/admin/roles/{roleId}")
     @PreAuthorize("hasAuthority('manage_roles')")
     public String editRole(@PathVariable String roleId, final Model model) {
-        Role role = null;
+        Role role;
         if (roleId.toLowerCase().equals("new")) {
             role = new Role();
         } else {
