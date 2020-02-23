@@ -37,7 +37,7 @@ public class PaymentRepository {
 
     @Transactional(readOnly = true)
     public BigDecimal getTotalByPaymentTypeForSessionId(Integer id, Integer paymentType) {
-        String sql = "select sum(amount) from payments WHERE session_id = ? AND payment_type = ?";
+        String sql = "select sum(amount) from payments WHERE till_session_id = ? AND payment_type = ?";
         return jdbcTemplate.queryForObject(sql,
                 new Object[]{id, paymentType}, BigDecimal.class);
     }

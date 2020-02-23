@@ -108,7 +108,7 @@ public class TillSessionRepository {
     List<TillSessionDTO> findAllTillSessionDTO() {
         try {
             return jdbcTemplate.query(
-                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id GROUP BY tillsessions.id, users.first_name, users.last_name order by tillsessions.end_time desc",
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id GROUP BY tillsessions.id, users.first_name, users.last_name, tillsessions.end_time order by tillsessions.end_time desc",
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -119,7 +119,7 @@ public class TillSessionRepository {
     List<TillSessionDTO> findOpenTillSessionDTOs() {
         try {
             return jdbcTemplate.query(
-                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id WHERE open is true GROUP BY tillsessions.id, users.first_name, users.last_name order by tillsessions.end_time",
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id WHERE open is true GROUP BY tillsessions.id, users.first_name, users.last_name, tillsessions.end_time order by tillsessions.end_time",
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
