@@ -25,17 +25,6 @@ public class AttendeeHistoryRepository {
     }
 
     @Transactional(readOnly = true)
-    public AttendeeHistory findById(int id) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "select * from attendeehistory where id=? order by timestamp desc",
-                    new Object[]{id}, new AttendeeHistoryRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-    @Transactional(readOnly = true)
     public List<AttendeeHistoryDTO> findAllDTObyAttendeeId(int id) {
         try {
             return jdbcTemplate.query(
@@ -89,21 +78,6 @@ public class AttendeeHistoryRepository {
             save(ah);
         }
     }
-
-    static class AttendeeHistoryRowMapper implements RowMapper<AttendeeHistory>
-    {
-        @Override
-        public AttendeeHistory mapRow(ResultSet rs, int rowNum) throws SQLException {
-            AttendeeHistory ah = new AttendeeHistory();
-            ah.setId(rs.getInt("id"));
-            ah.setMessage(rs.getString("message"));
-            ah.setTimestamp(rs.getTimestamp("timestamp"));
-            ah.setUserId(rs.getInt("user_id"));
-            ah.setAttendeeId(rs.getInt("attendee_id"));
-            return ah;
-        }
-    }
-
 
     private class AttendeeHistoryDTORowMapper implements RowMapper<AttendeeHistoryDTO> {
         @Override

@@ -25,11 +25,6 @@ public class Badge {
         setName(name);
     }
 
-    public Badge(String name, BadgeType badgeType) {
-        this(name);
-        setBadgeType(badgeType);
-    }
-
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -53,7 +48,6 @@ public class Badge {
     public void setBadgeType(BadgeType badgeType) { this.badgeType = badgeType; }
 
     public List<AgeRange> getAgeRanges() { return ageRanges; }
-    public void addAgeRange(AgeRange ageRange) { ageRanges.add(ageRange); }
     public void addAgeRange(String name, int minAge, int maxAge, double cost, String stripeColor, String stripeText) {
         AgeRange a = new AgeRange(name, minAge, maxAge, cost, stripeColor, stripeText, this.id);
         ageRanges.add(a);
@@ -76,10 +70,6 @@ public class Badge {
             }
         }
         throw new RuntimeException("No matching age range found for age " + age + " in " + name);
-    }
-
-    public BigDecimal getCostForAge(Integer age) {
-        return getCostForAge(Long.valueOf(age));
     }
 
     public AgeRange getAgeRangeForAge(Long age) {

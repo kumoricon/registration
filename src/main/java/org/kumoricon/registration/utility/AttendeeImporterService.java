@@ -227,7 +227,7 @@ class AttendeeImporterService {
         return notes.size();
     }
 
-    private Integer createPayments(List<AttendeeRecord> attendeeRecords, User user) {
+    private Integer createPayments(User user) {
         long start = System.currentTimeMillis();
         List<Payment> payments = new ArrayList<>();
         if (sessionService.userHasOpenSession(user)) {
@@ -272,7 +272,6 @@ class AttendeeImporterService {
             List<AttendeeRecord> attendees = loadFile(jsonFile);
 
             badgeMap = getBadgeMap();
-            User currentUser = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
 
             orderCount = createOrders(attendees, user);
             orderIdMap = getOrderIdMap();
@@ -281,7 +280,7 @@ class AttendeeImporterService {
             attendeeIdMap = getAttendeeMap();
             noteCount = createNotes(attendees, user);
 
-            paymentCount = createPayments(attendees, user);
+            paymentCount = createPayments(user);
 
             jsonFile.close();
 
