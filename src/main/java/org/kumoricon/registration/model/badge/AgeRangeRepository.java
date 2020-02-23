@@ -61,7 +61,7 @@ class AgeRangeRepository {
         }
     }
 
-    class AgeRangeRowMapper implements RowMapper<AgeRange>
+    static class AgeRangeRowMapper implements RowMapper<AgeRange>
     {
         @Override
         public AgeRange mapRow(ResultSet rs, int rowNum) throws SQLException {

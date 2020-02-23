@@ -86,14 +86,14 @@ public class LoginRepository {
         return jdbcTemplate.query(sql, new Object[]{startTime, endTime}, new LoginTimePeriodRowMapper());
     }
 
-    private class LocalDateRowMapper implements RowMapper<LocalDate> {
+    private static class LocalDateRowMapper implements RowMapper<LocalDate> {
         @Override
         public LocalDate mapRow(ResultSet rs, int rowNum) throws SQLException {
             return rs.getDate("start").toLocalDate();
         }
     }
 
-    private class SessionInfoDTORowMapper implements RowMapper<SessionInfoDTO> {
+    private static class SessionInfoDTORowMapper implements RowMapper<SessionInfoDTO> {
         @Override
         public SessionInfoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new SessionInfoDTO(rs.getString("primaryId"),
@@ -104,7 +104,7 @@ public class LoginRepository {
         }
     }
 
-    private class LoginTimePeriodRowMapper implements RowMapper<LoginTimePeriod> {
+    private static class LoginTimePeriodRowMapper implements RowMapper<LoginTimePeriod> {
         @Override
         public LoginTimePeriod mapRow(ResultSet rs, int rowNum) throws SQLException {
             Timestamp ts = rs.getTimestamp("start");

@@ -68,7 +68,7 @@ public class BlacklistRepository {
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    class BlacklistRowMapper implements RowMapper<BlacklistName>
+    static class BlacklistRowMapper implements RowMapper<BlacklistName>
     {
         @Override
         public BlacklistName mapRow(ResultSet rs, int rowNum) throws SQLException {

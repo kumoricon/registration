@@ -36,7 +36,7 @@ public class RegistrationApplication {
             prePostEnabled = true,
             securedEnabled = true,
             jsr250Enabled = true)
-    public class MethodSecurityConfig
+    public static class MethodSecurityConfig
             extends GlobalMethodSecurityConfiguration {
     }
 }

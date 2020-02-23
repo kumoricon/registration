@@ -107,7 +107,7 @@ public class PaymentRepository {
                 new PaymentRowMapper());
     }
 
-    private class PaymentRowMapper implements RowMapper<Payment>
+    private static class PaymentRowMapper implements RowMapper<Payment>
     {
         @Override
         public Payment mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -125,7 +125,7 @@ public class PaymentRepository {
         }
     }
 
-    private class PaymentDTORowMapper implements RowMapper<PaymentDTO>
+    private static class PaymentDTORowMapper implements RowMapper<PaymentDTO>
     {
         @Override
         public PaymentDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
