@@ -1,5 +1,6 @@
 package org.kumoricon.registration.utility;
 
+@SuppressWarnings("ALL")
 public class AttendeeRecord {
     public String firstName;
     public String lastName;

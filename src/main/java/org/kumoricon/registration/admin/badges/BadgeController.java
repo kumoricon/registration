@@ -36,7 +36,7 @@ public class BadgeController {
     @RequestMapping(value = "/admin/badgetypes", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('manage_pass_types')")
     public String toggleBadgeType(@RequestParam(value="id") Integer id,
-                           @RequestParam(required=true, value = "action") String action) {
+                                  @RequestParam(value = "action") String action) {
         if ("Show".equals(action)) {
             log.info("Showing badge {}", id);
             badgeService.setBadgeVisibility(id, true);
