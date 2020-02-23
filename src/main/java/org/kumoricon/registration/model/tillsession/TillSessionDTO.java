@@ -2,8 +2,6 @@ package org.kumoricon.registration.model.tillsession;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TillSessionDTO {
     private Integer id;
