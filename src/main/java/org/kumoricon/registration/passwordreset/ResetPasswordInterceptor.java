@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Component
 public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
-    private static Logger log = LoggerFactory.getLogger(ResetPasswordInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(ResetPasswordInterceptor.class);
 
     private final String[] IGNORE_PATHS = {"/webjars", "/css/", "/img", "/js", "/favicon.ico", "/resetpassword"};
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class TillSessionService {
-    private TillSessionRepository repository;
+    private final TillSessionRepository repository;
 
     @Autowired
     public TillSessionService(TillSessionRepository repository) {

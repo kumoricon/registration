@@ -3,14 +3,14 @@ package org.kumoricon.registration.model.order;
 import java.math.BigDecimal;
 
 public class OrderDTO {
-    private Integer id;
-    private String orderId;
-    private Boolean paid;
-    private BigDecimal totalDue;
-    private BigDecimal totalPaid;
+    private final Integer id;
+    private final String orderId;
+    private final Boolean paid;
+    private final BigDecimal totalDue;
+    private final BigDecimal totalPaid;
 
-    private String orderTakenByUsername;
-    private String notes;
+    private final String orderTakenByUsername;
+    private final String notes;
 
     public OrderDTO(Integer id, String orderId, Boolean paid, BigDecimal totalDue, BigDecimal totalPaid, String orderTakenByUsername, String notes) {
         this.id = id;

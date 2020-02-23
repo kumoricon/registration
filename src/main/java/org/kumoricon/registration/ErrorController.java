@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ErrorController {
-    private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

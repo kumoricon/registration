@@ -24,8 +24,8 @@ import java.util.List;
  *             Other: oooooooo
  */
 public class ChartDataDTO {
-    private List<String> labels;
-    private List<DataSet> data;
+    private final List<String> labels;
+    private final List<DataSet> data;
 
     public ChartDataDTO(List<String> labels) {
         this.labels = labels;
@@ -46,11 +46,11 @@ public class ChartDataDTO {
     }
 
     public static class DataSet {
-        private String label;
-        private String backgroundColor;
-        private String borderColor;
-        private Float borderWidth;
-        List<Integer> data;
+        private final String label;
+        private final String backgroundColor;
+        private final String borderColor;
+        private final Float borderWidth;
+        final List<Integer> data;
 
         public DataSet(String label, String backgroundColor, String borderColor, Float borderWidth, List<Integer> data) {
             this.label = label;

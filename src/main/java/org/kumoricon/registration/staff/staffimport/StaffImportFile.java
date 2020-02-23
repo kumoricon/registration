@@ -9,8 +9,8 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StaffImportFile {
-    private List<Action> actions;
-    private List<Person> persons;
+    private final List<Action> actions;
+    private final List<Person> persons;
 
     @JsonCreator
     public StaffImportFile (
@@ -30,8 +30,8 @@ public class StaffImportFile {
 
 
     static class Action {
-        private Long actionsVersion;
-        private List<String> deleted;
+        private final Long actionsVersion;
+        private final List<String> deleted;
 
         @JsonCreator
         public Action(
@@ -52,20 +52,20 @@ public class StaffImportFile {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Person {
-        private String id;
-        private String namePreferredFirst;
-        private String namePreferredLast;
-        private String nameOnIdFirst;
-        private String nameOnIdLast;
-        private String preferredPronoun;
-        private String tShirtSize;
-        private String badgeImpactingLastModified;
-        private List<Position> positions;
-        private String birthdate;
-        private String ageCategoryConCurrentTerm;
-        private Boolean hasBadgeImage;
-        private String badgeImageFileType;
-        private Long detailsVersion;
+        private final String id;
+        private final String namePreferredFirst;
+        private final String namePreferredLast;
+        private final String nameOnIdFirst;
+        private final String nameOnIdLast;
+        private final String preferredPronoun;
+        private final String tShirtSize;
+        private final String badgeImpactingLastModified;
+        private final List<Position> positions;
+        private final String birthdate;
+        private final String ageCategoryConCurrentTerm;
+        private final Boolean hasBadgeImage;
+        private final String badgeImageFileType;
+        private final Long detailsVersion;
 
         @JsonCreator
         public Person(
@@ -160,11 +160,11 @@ public class StaffImportFile {
     }
 
     static class Position {
-        public String term;
-        public String title;
-        public String rank;
-        public String department;
-        public Boolean departmentSuppressed;
+        public final String term;
+        public final String title;
+        public final String rank;
+        public final String department;
+        public final Boolean departmentSuppressed;
 
         @JsonCreator
         public Position(

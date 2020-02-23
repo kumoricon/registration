@@ -53,8 +53,7 @@ public class FileStorageService {
         int start = imageData.indexOf(";base64,") + 8;
         byte[] imageByte = decoder.decode(imageData.substring(start));
         try (ByteArrayInputStream bis = new ByteArrayInputStream(imageByte)) {
-            BufferedImage image = ImageIO.read(bis);
-            return image;
+            return ImageIO.read(bis);
         } catch (IOException e) {
             throw new RuntimeException("Couldn't extract image", e);
         }

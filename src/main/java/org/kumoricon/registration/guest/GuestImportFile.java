@@ -9,8 +9,8 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GuestImportFile {
-    private List<Action> actions;
-    private List<Person> persons;
+    private final List<Action> actions;
+    private final List<Person> persons;
 
     @JsonCreator
     public GuestImportFile(
@@ -30,8 +30,8 @@ public class GuestImportFile {
 
 
     static class Action {
-        private Long actionsVersion;
-        private List<String> deleted;
+        private final Long actionsVersion;
+        private final List<String> deleted;
 
         @JsonCreator
         public Action(
@@ -52,21 +52,21 @@ public class GuestImportFile {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Person {
-        private String id;
-        private String namePreferredFirst;
-        private String namePreferredLast;
-        private String nameOnIdFirst;
-        private String nameOnIdLast;
-        private String preferredPronoun;
-        private String fanName;
-        private String tShirtSize;
-        private String badgeImpactingLastModified;
-        private String birthdate;
-        private String ageCategoryConCurrentTerm;
-        private Boolean hasBadgeImage;
-        private String badgeImageFileType;
-        private Long detailsVersion;
-        private Boolean isCanceled;
+        private final String id;
+        private final String namePreferredFirst;
+        private final String namePreferredLast;
+        private final String nameOnIdFirst;
+        private final String nameOnIdLast;
+        private final String preferredPronoun;
+        private final String fanName;
+        private final String tShirtSize;
+        private final String badgeImpactingLastModified;
+        private final String birthdate;
+        private final String ageCategoryConCurrentTerm;
+        private final Boolean hasBadgeImage;
+        private final String badgeImageFileType;
+        private final Long detailsVersion;
+        private final Boolean isCanceled;
 
         @JsonCreator
         public Person(

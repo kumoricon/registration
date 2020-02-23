@@ -31,7 +31,7 @@ public class GuestImportService {
     private Path inputPath;
     private Path dlqPath;
 
-    private GuestRepository guestRepository;
+    private final GuestRepository guestRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired

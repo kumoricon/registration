@@ -11,8 +11,10 @@ class BadgeCreatorStaffBase {
     static final int BADGE_HEIGHT = (int) 6.25*DPI;
 
     @SuppressWarnings("WeakerAccess")
+    final
     Font badgeFont;
     @SuppressWarnings("WeakerAccess")
+    final
     Font nameFont;
 
     public BadgeCreatorStaffBase(Font badgeFont, Font nameFont) {
