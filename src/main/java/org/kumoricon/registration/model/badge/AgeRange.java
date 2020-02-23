@@ -1,6 +1,7 @@
 package org.kumoricon.registration.model.badge;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class AgeRange {
     private Integer id;
@@ -74,6 +75,6 @@ public class AgeRange {
     }
 
     public String toString() {
-        return String.format("[AgeRange: %s (%s-%s): $%s]", name, minAge, maxAge, cost.setScale(2).toString());
+        return String.format("[AgeRange: %s (%s-%s): $%s]", name, minAge, maxAge, cost.setScale(2, RoundingMode.HALF_UP).toString());
     }
 }
