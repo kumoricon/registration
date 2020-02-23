@@ -2,7 +2,6 @@ package org.kumoricon.registration.order;
 
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.BadgeService;
-import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.order.OrderDTO;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;

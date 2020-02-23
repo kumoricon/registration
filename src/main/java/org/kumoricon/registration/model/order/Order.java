@@ -2,7 +2,6 @@ package org.kumoricon.registration.model.order;
 
 import org.kumoricon.registration.model.user.User;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**

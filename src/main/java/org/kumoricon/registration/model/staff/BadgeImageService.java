@@ -1,6 +1,5 @@
 package org.kumoricon.registration.model.staff;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

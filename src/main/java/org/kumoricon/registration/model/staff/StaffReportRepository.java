@@ -1,6 +1,5 @@
 package org.kumoricon.registration.model.staff;
 
-import org.kumoricon.registration.model.SqlHelper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
