@@ -21,8 +21,8 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
     private final BadgeCreatorAttendee badgeCreator;
     private final BadgeResource badgeResource;
     private static final Logger LOGGER = LoggerFactory.getLogger(FullBadgePrintFormatter.class);
-    private Integer xOffset = 0;
-    private Integer yOffset = 0;
+    private Integer xOffset;
+    private Integer yOffset;
 
     /**
      * Generates a PDF containing badges ready to be printed.
