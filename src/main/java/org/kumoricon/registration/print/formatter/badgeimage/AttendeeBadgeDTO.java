@@ -30,7 +30,7 @@ public class AttendeeBadgeDTO {
         this.fanName = nullHandler(fanName);
     }
 
-    public String nullHandler(String input) {
+    private String nullHandler(String input) {
         if(input == null)
             return "";
 
@@ -43,13 +43,10 @@ public class AttendeeBadgeDTO {
     public void setName(String name) { this.name = nullHandler(name); }
 
     public void setName(String firstName, String lastName) {
-        StringBuilder nameBuilder = new StringBuilder();
-
-        nameBuilder.append( nullHandler(firstName).trim() );
-        nameBuilder.append(" ");
-        nameBuilder.append( nullHandler(lastName).trim() );
-
-        this.name = nameBuilder.toString().trim();
+        String nameBuilder = nullHandler(firstName).trim() +
+                " " +
+                nullHandler(lastName).trim();
+        this.name = nameBuilder.trim();
     }
 
     public String getName() {

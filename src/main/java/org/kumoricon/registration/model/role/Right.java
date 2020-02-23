@@ -71,7 +71,7 @@ public class Right implements Comparable, GrantedAuthority {
 
     @Override
     public int compareTo(Object o) {
-        if (o != null && o instanceof Right) {
+        if (o instanceof Right) {
             Right other = (Right)o;
             return name.compareTo(other.getName());
         }
