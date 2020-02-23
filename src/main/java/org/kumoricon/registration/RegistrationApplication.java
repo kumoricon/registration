@@ -26,9 +26,7 @@ public class RegistrationApplication {
 
     @Bean
     CommandLineRunner loadDefaultData(BaseDataService baseDataService) {
-        return (args) -> {
-            baseDataService.createDefaultData();
-        };
+        return (args) -> baseDataService.createDefaultData();
     }
 
     @Configuration

@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
  * implements the GrantedAuthority interface.
  */
 
-public class Right implements Comparable, GrantedAuthority {
+public class Right implements Comparable<Right>, GrantedAuthority {
     private Integer id;
     private String name;
     private String description;
@@ -69,17 +69,17 @@ public class Right implements Comparable, GrantedAuthority {
         }
     }
 
-    @Override
-    public int compareTo(Object o) {
-        if (o instanceof Right) {
-            Right other = (Right)o;
-            return name.compareTo(other.getName());
-        }
-        return 0;
-    }
 
     @Override
     public String getAuthority() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Right o) {
+        if (o != null) {
+            return name.compareTo(o.getName());
+        }
+        return 0;
     }
 }
