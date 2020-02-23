@@ -29,7 +29,7 @@ class BadgeRepository {
         try {
             return jdbcTemplate.query(
                     "select * from badges where visible= true order by id",
-                    new BadgeRepository.BadgeRowMapper());
+                    new BadgeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -40,7 +40,7 @@ class BadgeRepository {
         try {
             return jdbcTemplate.query(
                     "select * from badges order by id",
-                    new BadgeRepository.BadgeRowMapper());
+                    new BadgeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -80,7 +80,7 @@ class BadgeRepository {
                 new Object[]{badgeId}, new BadgeRowMapper());
     }
 
-    class BadgeRowMapper implements RowMapper<Badge> {
+    static class BadgeRowMapper implements RowMapper<Badge> {
         @Override
         public Badge mapRow(ResultSet rs, int rowNum) throws SQLException {
             Badge badge = new Badge();

@@ -118,7 +118,7 @@ public class GuestRepository {
 
 
 
-    class GuestRowMapper implements RowMapper<Guest>
+    static class GuestRowMapper implements RowMapper<Guest>
     {
         @Override
         public Guest mapRow(ResultSet rs, int rowNum) throws SQLException {

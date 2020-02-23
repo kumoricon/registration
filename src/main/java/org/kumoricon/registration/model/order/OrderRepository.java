@@ -136,7 +136,7 @@ public class OrderRepository {
                 new OrderDTORowMapper());
     }
 
-    private class OrderRowMapper implements RowMapper<Order>
+    private static class OrderRowMapper implements RowMapper<Order>
     {
         @Override
         public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -151,7 +151,7 @@ public class OrderRepository {
     }
 
 
-    private class OrderDTORowMapper implements RowMapper<OrderDTO>
+    private static class OrderDTORowMapper implements RowMapper<OrderDTO>
     {
         @Override
         public OrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {

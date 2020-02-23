@@ -242,7 +242,7 @@ public class AttendeeRepository {
         }
     }
 
-    private class AttendeeRowMapper implements RowMapper<Attendee>
+    private static class AttendeeRowMapper implements RowMapper<Attendee>
     {
         @Override
         public Attendee mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -294,7 +294,7 @@ public class AttendeeRepository {
         }
     }
 
-    private class AttendeeOrderDTORowMapper implements RowMapper<AttendeeOrderDTO> {
+    private static class AttendeeOrderDTORowMapper implements RowMapper<AttendeeOrderDTO> {
         @Override
         public AttendeeOrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             AttendeeOrderDTO a = new AttendeeOrderDTO();
@@ -317,7 +317,7 @@ public class AttendeeRepository {
         }
     }
 
-    private class CheckInByBadgeTypeDTORowMapper implements RowMapper<CheckInByBadgeTypeDTO> {
+    private static class CheckInByBadgeTypeDTORowMapper implements RowMapper<CheckInByBadgeTypeDTO> {
         @Override
         public CheckInByBadgeTypeDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new CheckInByBadgeTypeDTO(rs.getString("name"),

@@ -28,7 +28,7 @@ public class RoleRepository {
         try {
             Role result = jdbcTemplate.queryForObject(
                     "select * from roles where name=?",
-                    new Object[]{name}, new RoleRepository.RoleRowMapper());
+                    new Object[]{name}, new RoleRowMapper());
             result.setRights(getRightIdsForRole(result.getId()));
             return result;
         } catch (EmptyResultDataAccessException e) {
@@ -41,7 +41,7 @@ public class RoleRepository {
         try {
             Role result = jdbcTemplate.queryForObject(
                     "select * from roles where id=?",
-                    new Object[]{id}, new RoleRepository.RoleRowMapper());
+                    new Object[]{id}, new RoleRowMapper());
             result.setRights(getRightIdsForRole(result.getId()));
             return result;
         } catch (EmptyResultDataAccessException e) {
@@ -89,7 +89,7 @@ public class RoleRepository {
         }
     }
 
-    class RoleRowMapper implements RowMapper<Role> {
+    static class RoleRowMapper implements RowMapper<Role> {
         @Override
         public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
             Role role = new Role();

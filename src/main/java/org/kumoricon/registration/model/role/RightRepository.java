@@ -26,7 +26,7 @@ public class RightRepository {
         try {
             return jdbcTemplate.queryForObject(
                     "select * from rights where name=?",
-                    new Object[]{name}, new RightRepository.RightRowMapper());
+                    new Object[]{name}, new RightRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -103,7 +103,7 @@ public class RightRepository {
         jdbcTemplate.batchUpdate("INSERT INTO roles_rights (role_id, rights_id) VALUES (?, ?)", data);
     }
 
-    class RightRowMapper implements RowMapper<Right>
+    static class RightRowMapper implements RowMapper<Right>
     {
         @Override
         public Right mapRow(ResultSet rs, int rowNum) throws SQLException {

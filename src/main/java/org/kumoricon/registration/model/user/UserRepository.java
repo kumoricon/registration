@@ -84,7 +84,7 @@ public class UserRepository {
         }
     }
 
-    class UserRowMapper implements RowMapper<User>
+    static class UserRowMapper implements RowMapper<User>
     {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {

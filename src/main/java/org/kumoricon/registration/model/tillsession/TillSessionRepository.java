@@ -249,7 +249,7 @@ public class TillSessionRepository {
     }
 
 
-    class TillSessionRowMapper implements RowMapper<TillSession>
+    static class TillSessionRowMapper implements RowMapper<TillSession>
     {
         @Override
         public TillSession mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -295,7 +295,7 @@ public class TillSessionRepository {
         }
     }
 
-    class TillSessionPaymentTotalDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionPaymentTotalDTO> {
+    static class TillSessionPaymentTotalDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionPaymentTotalDTO> {
         @Override
         public TillSessionDetailDTO.TillSessionPaymentTotalDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new TillSessionDetailDTO.TillSessionPaymentTotalDTO(
@@ -305,7 +305,7 @@ public class TillSessionRepository {
         }
     }
 
-    class TillSessionOrderDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionOrderDTO> {
+    static class TillSessionOrderDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionOrderDTO> {
         @Override
         public TillSessionDetailDTO.TillSessionOrderDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new TillSessionDetailDTO.TillSessionOrderDTO(
@@ -317,7 +317,7 @@ public class TillSessionRepository {
 
     }
 
-    class TillSessionBadgeCountDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionBadgeCountDTO>
+    static class TillSessionBadgeCountDTORowMapper implements RowMapper<TillSessionDetailDTO.TillSessionBadgeCountDTO>
     {
         @Override
         public TillSessionDetailDTO.TillSessionBadgeCountDTO mapRow(ResultSet rs, int rowNum) throws SQLException {

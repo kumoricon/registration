@@ -90,7 +90,7 @@ public class AttendeeHistoryRepository {
         }
     }
 
-    class AttendeeHistoryRowMapper implements RowMapper<AttendeeHistory>
+    static class AttendeeHistoryRowMapper implements RowMapper<AttendeeHistory>
     {
         @Override
         public AttendeeHistory mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -118,7 +118,7 @@ public class AttendeeHistoryRepository {
     }
 
 
-    private class CheckInByUserDTORowMapper implements RowMapper<CheckInByUserDTO> {
+    private static class CheckInByUserDTORowMapper implements RowMapper<CheckInByUserDTO> {
         @Override
         public CheckInByUserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new CheckInByUserDTO(
