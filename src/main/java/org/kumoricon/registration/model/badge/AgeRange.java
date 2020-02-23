@@ -40,22 +40,14 @@ public class AgeRange {
     public void setMinAge(int minAge) {
         if (minAge < 0) {
             this.minAge = 0;
-        } else if (minAge > 255) {
-            this.minAge = 255;
-        } else {
-            this.minAge = minAge;
-        }
+        } else this.minAge = Math.min(minAge, 255);
     }
 
     public int getMaxAge() { return maxAge; }
     public void setMaxAge(int maxAge) {
         if (maxAge < 0) {
             this.maxAge = 0;
-        } else if (maxAge > 255) {
-            this.maxAge = 255;
-        } else {
-            this.maxAge = maxAge;
-        }
+        } else this.maxAge = Math.min(maxAge, 255);
     }
 
     public BigDecimal getCost() { return cost; }

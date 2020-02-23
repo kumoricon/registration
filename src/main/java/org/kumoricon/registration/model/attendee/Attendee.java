@@ -227,7 +227,6 @@ public class Attendee {
         }
     }
 
-    @SuppressWarnings("Duplicates")
     public String getNameOrFanName() {
         StringBuilder sb = new StringBuilder();
         if (firstName != null && !firstName.trim().isEmpty())
