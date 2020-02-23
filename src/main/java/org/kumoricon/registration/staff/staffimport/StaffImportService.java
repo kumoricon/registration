@@ -165,34 +165,36 @@ public class StaffImportService {
         } else {
             dept = department.toLowerCase();
         }
-        if ("treasury".equals(dept)) {
-            return "#0a8141";
-        } else if ("department of the treasurer".equals(dept)) {
-            return "#0a8141";
-        } else if ("secretarial".equals(dept)) {
-            return "#3a53a5";
-        } else if ("department of the secretary".equals(dept)) {
-            return "#3953a4"; // Not sure which color code is correct, this is from 2016
+        switch (dept) {
+            case "treasury":
+                return "#0a8141";
+            case "department of the treasurer":
+                return "#0a8141";
+            case "secretarial":
+                return "#3a53a5";
+            case "department of the secretary":
+                return "#3953a4"; // Not sure which color code is correct, this is from 2016
+
 //            return "#3a53a5";
-        } else if ("relations".equals(dept)) {
-            return "#f282b4";
-        } else if ("publicity".equals(dept)) {
-            return "#e0e0e0";
-        } else if ("programming".equals(dept)) {
-            return "#6b52a2";
-        } else if ("operations".equals(dept)) {
-            return "#ec2426";
-        } else if ("membership".equals(dept)) {
-            return "#f57f20";
-        } else if ("infrastructure".equals(dept)) {
-            return "#414242";
-        } else if ("chair".equals(dept)) {
-            return "#f99f1d";
-        } else if ("department of the chair".equals(dept)) {
-            return "#f99f1d";
-        } else {
-            log.warn("Warning, couldn't find color code for " + department);
-            return "#FFFFFF";
+            case "relations":
+                return "#f282b4";
+            case "publicity":
+                return "#e0e0e0";
+            case "programming":
+                return "#6b52a2";
+            case "operations":
+                return "#ec2426";
+            case "membership":
+                return "#f57f20";
+            case "infrastructure":
+                return "#414242";
+            case "chair":
+                return "#f99f1d";
+            case "department of the chair":
+                return "#f99f1d";
+            default:
+                log.warn("Warning, couldn't find color code for " + department);
+                return "#FFFFFF";
         }
     }
 
