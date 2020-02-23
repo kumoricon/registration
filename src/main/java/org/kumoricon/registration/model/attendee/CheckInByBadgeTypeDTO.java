@@ -1,11 +1,11 @@
 package org.kumoricon.registration.model.attendee;
 
 public class CheckInByBadgeTypeDTO {
-    private String badgeName;
-    private Integer checkedInPreReg;
-    private Integer notCheckedInPreReg;
-    private Integer checkedInAtCon;
-    private Integer notCheckedInAtCon;
+    private final String badgeName;
+    private final Integer checkedInPreReg;
+    private final Integer notCheckedInPreReg;
+    private final Integer checkedInAtCon;
+    private final Integer notCheckedInAtCon;
 
     public CheckInByBadgeTypeDTO(String badgeName, Integer checkedInPreReg, Integer notCheckedInPreReg, Integer checkedInAtCon, Integer notCheckedInAtCon) {
         this.badgeName = badgeName;

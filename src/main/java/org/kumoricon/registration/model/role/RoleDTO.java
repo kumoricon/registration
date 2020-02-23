@@ -3,9 +3,9 @@ package org.kumoricon.registration.model.role;
 import java.util.Set;
 
 public class RoleDTO {
-    private Integer id;
-    private String name;
-    private Set<Integer> rightIds;
+    private final Integer id;
+    private final String name;
+    private final Set<Integer> rightIds;
 
     public RoleDTO(Integer id, String name, Set<Integer> rightIds) {
         this.id = id;

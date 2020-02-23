@@ -5,9 +5,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import java.awt.*;
 
 public class BadgeResource {
-    private PDDocument background;
-    private Font badgeFont;
-    private Font nameFont;
+    private final PDDocument background;
+    private final Font badgeFont;
+    private final Font nameFont;
 
     public BadgeResource(PDDocument background, Font badgeFont, Font nameFont) {
         this.background = background;

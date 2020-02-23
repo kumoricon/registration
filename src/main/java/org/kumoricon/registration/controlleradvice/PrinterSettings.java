@@ -5,9 +5,9 @@ package org.kumoricon.registration.controlleradvice;
  * cookie, see CookieControllerAdvice.java. It is also responsible for serializing to/from cookie values.
  */
 public class PrinterSettings {
-    private String printerName;
-    private Integer xOffset;
-    private Integer yOffset;
+    private final String printerName;
+    private final Integer xOffset;
+    private final Integer yOffset;
 
     public PrinterSettings(String printerName, Integer xOffset, Integer yOffset) {
         if (printerName != null && printerName.trim().isEmpty()) {

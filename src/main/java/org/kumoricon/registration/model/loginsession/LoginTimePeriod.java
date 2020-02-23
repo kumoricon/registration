@@ -3,8 +3,8 @@ package org.kumoricon.registration.model.loginsession;
 import java.time.Instant;
 
 public class LoginTimePeriod {
-    private Instant startTime;
-    private String user;
+    private final Instant startTime;
+    private final String user;
 
     public LoginTimePeriod(Instant startTime, String user) {
         this.startTime = startTime;

@@ -87,8 +87,8 @@ public class TillSessionDetailDTO {
 
 
     public static class TillSessionPaymentTotalDTO {
-        private String type;
-        private BigDecimal total;
+        private final String type;
+        private final BigDecimal total;
 
         public TillSessionPaymentTotalDTO(String type, BigDecimal total) {
             this.type = type;
@@ -105,8 +105,8 @@ public class TillSessionDetailDTO {
     }
 
     public static class TillSessionBadgeCountDTO {
-        private String badgeName;
-        private Integer count;
+        private final String badgeName;
+        private final Integer count;
 
         public TillSessionBadgeCountDTO(String badgeName, Integer count) {
             this.badgeName = badgeName;
@@ -123,9 +123,9 @@ public class TillSessionDetailDTO {
     }
 
     public static class TillSessionOrderDTO {
-        private Integer orderId;
-        private String badges;
-        private String payments;
+        private final Integer orderId;
+        private final String badges;
+        private final String payments;
 
         public TillSessionOrderDTO(Integer orderId, String badges, String payments) {
             this.orderId = orderId;

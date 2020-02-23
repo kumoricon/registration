@@ -3,11 +3,11 @@ package org.kumoricon.registration.model.attendee;
 import java.time.ZonedDateTime;
 
 public class AttendeeHistoryDTO {
-    private ZonedDateTime timestamp;
-    private String username;
-    private String message;
-    private Integer attendeeId;
-    private String attendeeName;
+    private final ZonedDateTime timestamp;
+    private final String username;
+    private final String message;
+    private final Integer attendeeId;
+    private final String attendeeName;
 
     public AttendeeHistoryDTO(ZonedDateTime timestamp, String username, String message, Integer attendeeId, String attendeeName) {
         this.timestamp = timestamp;

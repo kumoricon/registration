@@ -50,13 +50,12 @@ public class TillSessionRepository {
             parameters.put("till_name", tillSession.getTillName());
             Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
             tillSession.setId(key.intValue());
-            return tillSession;
 
         } else {
             jdbcTemplate.update("UPDATE tillsessions SET end_time = ?, open = ?, start_time = ?, user_id = ?, till_name = ? WHERE id = ?",
                     translate(tillSession.getEndTime()), tillSession.isOpen(), translate(tillSession.getStartTime()), tillSession.getUserId(), tillSession.getTillName(), tillSession.getId());
-            return tillSession;
         }
+        return tillSession;
     }
 
 

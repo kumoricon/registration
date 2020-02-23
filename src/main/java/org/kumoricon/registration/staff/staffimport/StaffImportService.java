@@ -35,7 +35,7 @@ public class StaffImportService {
     private Path inputPath;
     private Path dlqPath;
 
-    private StaffRepository staffRepository;
+    private final StaffRepository staffRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired

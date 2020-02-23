@@ -3,8 +3,8 @@ package org.kumoricon.registration.model.loginsession;
 import java.time.Instant;
 
 public class LoginSessionRecord {
-    private Instant start;
-    private Integer userId;
+    private final Instant start;
+    private final Integer userId;
 
     public LoginSessionRecord(Instant start, Integer userId) {
         this.start = start;

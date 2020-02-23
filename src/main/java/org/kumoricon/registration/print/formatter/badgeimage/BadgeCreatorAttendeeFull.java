@@ -6,8 +6,8 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
     private static final int DPI = 300;
     private static final int BADGE_WIDTH = 5*DPI;
     private static final int BADGE_HEIGHT = 4*DPI;
-    private Font badgeFont;
-    private Font nameFont;
+    private final Font badgeFont;
+    private final Font nameFont;
 
     public BadgeCreatorAttendeeFull(Font badgeFont, Font nameFont) {
         this.badgeFont = badgeFont;

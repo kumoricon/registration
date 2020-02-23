@@ -6,18 +6,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StaffBadgeDTO {
-    private String firstName;
-    private String lastName;
-    private String fanName;
-    private String preferredPronoun;
-    private String[] positions;
-    private String department;
-    private String departmentBackgroundColor;
-    private Boolean hideDepartment;
-    private String ageRange;
-    private String ageBackgroundColor;
-    private Image badgeImage;          // User supplied image or generic mascot image
-    private Image ageImage;             // Color coded seal/chop image
+    private final String firstName;
+    private final String lastName;
+    private final String fanName;
+    private final String preferredPronoun;
+    private final String[] positions;
+    private final String department;
+    private final String departmentBackgroundColor;
+    private final Boolean hideDepartment;
+    private final String ageRange;
+    private final String ageBackgroundColor;
+    private final Image badgeImage;          // User supplied image or generic mascot image
+    private final Image ageImage;             // Color coded seal/chop image
 
     private StaffBadgeDTO(Builder builder) {
         firstName = builder.firstName;

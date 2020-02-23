@@ -3,9 +3,9 @@ package org.kumoricon.registration.model.attendee;
 import java.time.ZonedDateTime;
 
 public class CheckInByHourDTO {
-    private ZonedDateTime start;
-    private Integer preregCheckIn;
-    private Integer atConCheckIn;
+    private final ZonedDateTime start;
+    private final Integer preregCheckIn;
+    private final Integer atConCheckIn;
 
     public CheckInByHourDTO(ZonedDateTime start, Integer preregCheckIn, Integer atConCheckIn) {
         this.start = start;

@@ -1,8 +1,8 @@
 package org.kumoricon.registration.model.attendee;
 
 public class CheckInByUserDTO {
-    private String name;
-    private Integer count;
+    private final String name;
+    private final Integer count;
 
     public CheckInByUserDTO(String name, Integer count) {
         this.name = name;
