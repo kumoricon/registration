@@ -167,14 +167,11 @@ public class StaffImportService {
         }
         switch (dept) {
             case "treasury":
-                return "#0a8141";
             case "department of the treasurer":
                 return "#0a8141";
             case "secretarial":
-                return "#3a53a5";
             case "department of the secretary":
                 return "#3953a4"; // Not sure which color code is correct, this is from 2016
-
 //            return "#3a53a5";
             case "relations":
                 return "#f282b4";
@@ -189,7 +186,6 @@ public class StaffImportService {
             case "infrastructure":
                 return "#414242";
             case "chair":
-                return "#f99f1d";
             case "department of the chair":
                 return "#f99f1d";
             default:
