@@ -29,9 +29,9 @@ public class LocalDateToStringFormatterTest {
 
     @Test
     public void convertInvalidDateReturnsNull() {
-        assertEquals(null, converter.parse("bob", Locale.US));
-        assertEquals(null, converter.parse(null, Locale.US));
-        assertEquals(null, converter.parse("12/32/90", Locale.US));
+        assertNull(converter.parse("bob", Locale.US));
+        assertNull(converter.parse(null, Locale.US));
+        assertNull(converter.parse("12/32/90", Locale.US));
     }
 
 }
