@@ -17,8 +17,8 @@ public class CookieControllerAdvice {
 
     /**
      * Provides the currently selected printer name, or null if the cookie is missing or malformed.
-     * @param request
-     * @return
+     * @param request Current HTTP request
+     * @return Value from the cookie PRINTERNAME {@link #PRINTER_COOKIE_NAME}
      */
     @ModelAttribute("selectedPrinter")
     public String selectedPrinter(final HttpServletRequest request) {
@@ -43,8 +43,8 @@ public class CookieControllerAdvice {
 
     /**
      * Provides the till name, or null if empty. Till is typically just a number
-     * @param request
-     * @return
+     * @param request Current HTTP request
+     * @return Value from cookie TILLNAME {@link #TILL_COOKIE_NAME}
      */
     @ModelAttribute("selectedTill")
     public String selectedTill(final HttpServletRequest request) {

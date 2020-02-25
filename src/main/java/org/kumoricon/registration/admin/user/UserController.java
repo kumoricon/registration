@@ -54,8 +54,7 @@ public class UserController {
     /**
      * Display a given user from the database, or a blank form if the user id from the URL is "new"
      * @param userId User ID or "new"
-     * @param model
-     * @return
+     * @param model Spring MVC response model
      */
     @RequestMapping(value = "/admin/users/{userId}")
     @PreAuthorize("hasAuthority('manage_users')")

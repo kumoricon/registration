@@ -160,7 +160,7 @@ public class BadgeResourceService {
      * Load a PDF for background of Attendee badges. If it can't be loaded, return a document
      * with a single page, rotated to landscape
      * @param filename Filename to load, without path
-     * @return
+     * @return PDF document
      */
     private PDDocument loadBackground(String filename) {
         Path filePath = Paths.get(badgeResourcePath.toAbsolutePath().toString(), filename);

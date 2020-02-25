@@ -42,7 +42,7 @@ public class BadgeImageService {
 
     /**
      * Get the mascot image or fall back to a blank PNG if it can't be loaded
-     * @return
+     * @return Mascot image
      */
     public Image getMascotImage() {
         Path filePath = Paths.get(badgeImagePath.toAbsolutePath().toString(), mascotFilename);

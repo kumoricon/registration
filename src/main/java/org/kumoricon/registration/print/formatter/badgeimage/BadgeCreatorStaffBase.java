@@ -65,8 +65,8 @@ class BadgeCreatorStaffBase {
 
     /**
      * Builds an array of Strings from the input strings, excluding any that are null or blank
-     * @param strings
-     * @return
+     * @param strings Input Strings
+     * @return Array
      */
     String[] buildNameList(String...strings) {
         java.util.List<String> names = new ArrayList<>();
