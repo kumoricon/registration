@@ -1,7 +1,6 @@
 package org.kumoricon.registration.controlleradvice;
 
 import org.junit.Test;
-import org.springframework.security.core.parameters.P;
 
 import static org.junit.Assert.*;
 
