@@ -1,17 +1,11 @@
 package org.kumoricon.registration.guest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.kumoricon.registration.model.ImportService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,44 +13,19 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Component
-public class GuestImportService {
-    private static final Logger log = LoggerFactory.getLogger(GuestImportService.class);
-
-    @Value("${registration.guestinputpath}")
-    private String onlineImportInputPath;
-
-    @Value("${registration.onlinedlqpath}")
-    private String onlineDLQPath;
-
-    private Path inputPath;
-    private Path dlqPath;
+public class GuestImportService extends ImportService {
 
     private final GuestRepository guestRepository;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    public GuestImportService(GuestRepository guestRepository) {
+    public GuestImportService(@Value("${registration.guestinputpath}") String onlineImportInputPath,
+                              @Value("${registration.onlinedlqpath}") String onlineDLQPath,
+                              GuestRepository guestRepository) {
+        this.onlineImportInputPath = onlineImportInputPath;
+        this.onlineDLQPath = onlineDLQPath;
         this.guestRepository = guestRepository;
     }
 
-    @Scheduled(fixedDelay = 10000)
-    public void doWork() {
-//        log.info("Reading files from " + onlineImportInputPath);
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, "*.{json}")) {
-            for (Path entry : stream) {
-                long start = System.currentTimeMillis();
-                importFile(entry);
-                Files.delete(entry);
-                long finish = System.currentTimeMillis();
-                log.info("Imported {} in {} ms", entry, finish-start);
-            }
-        } catch (IOException ex) {
-            log.error("Error reading files", ex);
-        }
-    }
-
-
-    private void importFile(Path filepath) {
+    protected void importFile(Path filepath) {
         try {
             GuestImportFile importFile = objectMapper.readValue(filepath.toFile(), GuestImportFile.class);
             log.info("{}: Actions: {}   Persons: {}", filepath, importFile.getActions().size(), importFile.getPersons().size());
@@ -137,18 +106,5 @@ public class GuestImportService {
         guest.setBadgeImageFileType(person.getBadgeImageFileType());
 
         return changed;
-    }
-
-
-    @PostConstruct
-    public void createDirectories() {
-        try {
-            inputPath = Files.createDirectories(Paths.get(onlineImportInputPath));
-            dlqPath = Files.createDirectories(Paths.get(onlineDLQPath));
-            log.info("Monitoring input path: " + inputPath.toAbsolutePath().toString());
-            log.info("DLQ path: " + dlqPath.toAbsolutePath().toString());
-        } catch (IOException ex) {
-            log.error("Error creating directory", ex);
-        }
     }
 }
