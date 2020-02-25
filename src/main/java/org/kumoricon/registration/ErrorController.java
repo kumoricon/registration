@@ -32,7 +32,7 @@ public class ErrorController {
 
         }
 
-        String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");
+        String errorMessage = throwable.getMessage();
         model.addAttribute("err", errorMessage);
         model.addAttribute("exception", throwable);
         return "error";
