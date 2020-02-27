@@ -104,11 +104,9 @@ public class PaymentController {
         if( !payment.getPaymentType().equals("cash") )
         {
             if(payment.getAuthNumber().length() <= 10)
-            {
                 paymentData.setAuthNumber(payment.getAuthNumber());
-            } else {
+            else
                 throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
-            }
         }
 
         try {
@@ -146,7 +144,15 @@ public class PaymentController {
         model.addAttribute("totalPaid", paymentRepository.getTotalPaidForOrder(orderId));
         model.addAttribute("totalDue", orderRepository.getTotalByOrderId(orderId));
         model.addAttribute("order", order);
-        return "reg/atcon-order-payment";
+
+        if(paymentType.equals("card"))
+            return "reg/atcon-order-card-payment";
+        else if(paymentType.equals("cash"))
+            return "reg/atcon-order-cash-payment";
+        else if(paymentType.equals("check"))
+            return "reg/atcon-order-check-payment";
+        else
+            return "reg/atcon-order-payment";
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/payment/new", method = RequestMethod.POST)
@@ -189,13 +195,11 @@ public class PaymentController {
         if( !payment.getPaymentType().equals("cash") )
         {
             if(payment.getAuthNumber().length() <= 10)
-            {
                 paymentData.setAuthNumber(payment.getAuthNumber());
-            } else {
+            else
                 throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
-            }
-        }
 
+        }
 
         switch (payment.getPaymentType()) {
             case "cash":
@@ -217,6 +221,7 @@ public class PaymentController {
                 throw new RuntimeException("Invalid payment type: " + payment.getPaymentType());
         }
 
+
         log.info("saving new payment {} for order {}", paymentData, order);
         paymentRepository.save(paymentData);
 
@@ -227,7 +232,6 @@ public class PaymentController {
         return "redirect:/reg/atconorder/" + order.getId() + "/payment?msg=Added+" + payment.getPaymentType();
 
     }
-
 
     private boolean isValidPaymentType(String paymentType) {
         for (String type : PAYMENT_TYPES) {
