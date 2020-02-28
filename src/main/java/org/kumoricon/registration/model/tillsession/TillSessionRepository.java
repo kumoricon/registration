@@ -215,9 +215,9 @@ public class TillSessionRepository {
                 " GROUP BY id) as t1" +
                 "  left outer join (" +
 //                "-- select payments in order" +
-                "select id, array_to_string(array_agg(type || auth || ': $' || amount), ', ') as payments from (" +
+                "select id, array_to_string(array_agg(taken_at || ' - ' || type || auth || ': $' || amount), ', ') as payments from (" +
                 "select" +
-                "  o.id," +
+                "  o.id, date_trunc('second', p.payment_taken_at AT TIME ZONE 'America/Los_Angeles') as taken_at, " +
                 "  (CASE" +
                 "    WHEN p.payment_type = 0 THEN '" + Payment.PaymentType.CASH + "'" +
                 "    WHEN p.payment_type = 1 THEN '" + Payment.PaymentType.CHECK + "'" +
