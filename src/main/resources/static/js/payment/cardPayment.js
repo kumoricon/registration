@@ -25,11 +25,8 @@ function setState() {
     }
 
     // Make sure auth number is filled in if the field exists (cash and check payment types)
-    var inputAuth = document.getElementById('inputCheckAuth');
+    var inputAuth = document.getElementById('inputAuthNumber');
 
-    if (inputAuth == null) {
-        inputAuth =  document.getElementById('inputAuthNumber');
-    }
     if (inputAuth != null) {
         if (!inputAuth.value || inputAuth.value.length < 5) {
             btnSave.attr("disabled", true);
@@ -53,6 +50,5 @@ function setState() {
 function addListeners() {
     $('#inputAmount').keyup(setState);
 
-    $('#inputCheckAuth').keyup(setState);
     $('#inputAuthNumber').keyup(setState);
 }
