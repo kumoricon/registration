@@ -27,26 +27,40 @@ public class DateTimeService {
     }
 
     public String epochToDuration(Long milliseconds) {
-        Instant now = Instant.now();
+        return epochToDuration(milliseconds, Instant.now().toEpochMilli());
+    }
 
-        Duration duration = Duration.between(now, Instant.ofEpochMilli(milliseconds));
+    public String epochToDuration(Long start, Long end) {
+        assert(start != null && end != null) : "start and end may not be null";
+        assert(start <= end) : "start must be <= end";
+
+        if (end-start < 1000) { return "Now"; } // Less than 1 second is pretty much now
+
+        Duration duration = Duration.between(Instant.ofEpochMilli(start), Instant.ofEpochMilli(end));
 
         StringBuilder output = new StringBuilder();
 
-        if (duration.toDaysPart() != 0) {
-            output.append(Math.abs(duration.toDaysPart())).append(" days ");
+        if (duration.toDaysPart() > 1) {
+            output.append(duration.toDaysPart()).append(" days ");
+        } else if (duration.toDaysPart() == 1) {
+            output.append("1 day ");
         }
 
-        if (duration.toHoursPart() != 0) {
-            output.append(String.format("%2d", Math.abs(duration.toHoursPart()))).append(":");
+        if (duration.toHoursPart() > 0) {
+            output.append(duration.toHoursPart()).append(":");
+            output.append(String.format("%02d", duration.toMinutesPart())).append(":");
+            output.append(String.format("%02d", duration.toSecondsPart()));
+        } else if (duration.toMinutesPart() > 1) {
+            output.append(duration.toMinutesPart()).append(" minutes");
+        } else if (duration.toMinutesPart() == 1) {
+            output.append("1 minute");
+        } else if (duration.toSecondsPart() > 1) {
+            output.append(duration.toSecondsPart()).append(" seconds");
+        } else if (duration.toSecondsPart() == 1) {
+            output.append("1 second");
         }
 
-        output.append(String.format("%02d", Math.abs(duration.toMinutesPart()))).append(":");
-        output.append(String.format("%02d", Math.abs(duration.toSecondsPart())));
-
-        if (duration.toDaysPart() < 0 || duration.toHoursPart() < 0 || duration.toMinutesPart() < 0 || duration.toSecondsPart() < 0) {
-            output.append(" ago");
-        }
+        output.append(" ago");
         return output.toString();
     }
 }
