@@ -1,26 +1,28 @@
 package org.kumoricon.registration.model.badge;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 // This should not be used by classes other than BadgeService, use that to get badges
 @Repository
 class BadgeRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public BadgeRepository(JdbcTemplate jdbcTemplate) {
+    public BadgeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -28,7 +30,7 @@ class BadgeRepository {
     List<Badge> findByVisibleTrue() {
         try {
             return jdbcTemplate.query(
-                    "select * from badges where visible= true order by id",
+                    "select * from badges where visible=true order by id",
                     new BadgeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -48,22 +50,35 @@ class BadgeRepository {
 
     @Transactional
     public Integer save(Badge badge) {
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(badge) {
+            @Override
+            public Object getValue(String paramName) throws IllegalArgumentException {
+                Object value = super.getValue(paramName);
+                if (value instanceof Enum) {
+                    return ((Enum) value).ordinal();
+                }
+
+                return value;
+            }
+        };
+
         if (badge.getId() == null) {
-            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-            jdbcInsert.withTableName("badges").usingGeneratedKeyColumns("id");
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("badge_type", badge.getBadgeType().ordinal());
-            parameters.put("badge_type_background_color", badge.getBadgeTypeBackgroundColor());
-            parameters.put("badge_type_text", badge.getBadgeTypeText());
-            parameters.put("name", badge.getName());
-            parameters.put("required_right", badge.getRequiredRight());
-            parameters.put("visible", badge.isVisible());
-            parameters.put("warning_message", badge.getWarningMessage());
-            Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-            return key.intValue();
+            KeyHolder holder = new GeneratedKeyHolder();
+            jdbcTemplate.update("INSERT INTO badges (badge_type, badge_type_background_color, badge_type_text, " +
+                    "name, required_right, visible, warning_message) " +
+                    "VALUES (:badgeType, :badgeTypeBackgroundColor, :badgeTypeText, :name, :requiredRight, :visible, " +
+                    ":warningMessage)", parameterSource, holder);
+            String key = holder.getKeys().get("id").toString();
+            if (key != null) {
+                return Integer.parseInt(key);
+            }
+            throw new RuntimeException("Database didn't return a saved row key");
         } else {
-            jdbcTemplate.update("UPDATE badges SET badge_type = ?, badge_type_background_color = ?, badge_type_text = ?, name = ?, required_right = ?, visible = ?, warning_message = ? WHERE id = ?",
-                badge.getBadgeType().ordinal(), badge.getBadgeTypeBackgroundColor(), badge.getBadgeTypeText(), badge.getName(), badge.getRequiredRight(), badge.isVisible(), badge.getWarningMessage(), badge.getId());
+            jdbcTemplate.update("UPDATE badges SET badge_type = :badgeType, " +
+                    "badge_type_background_color = :badgeTypeBackgroundColor, badge_type_text = :badgeTypeText, " +
+                    "name = :name, required_right = :requiredRight, visible = :visible, " +
+                    "warning_message = :warningMessage " +
+                    "WHERE id = :id", parameterSource);
             return badge.getId();
         }
     }
@@ -71,13 +86,14 @@ class BadgeRepository {
     @Transactional(readOnly = true)
     public Integer count() {
         String sql = "select count(*) from badges";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Transactional(readOnly = true)
     public Badge findById(Integer badgeId) {
-        return jdbcTemplate.queryForObject("SELECT * from badges where badges.id=?",
-                new Object[]{badgeId}, new BadgeRowMapper());
+        SqlParameterSource params = new MapSqlParameterSource("id", badgeId);
+        return jdbcTemplate.queryForObject("SELECT * from badges where badges.id=:id",
+                params, new BadgeRowMapper());
     }
 
     static class BadgeRowMapper implements RowMapper<Badge> {

@@ -57,7 +57,12 @@ public class BadgeService {
     @Transactional
     public void save(Badge badge) {
         Integer savedId = badgeRepository.save(badge);
-        ageRangeRepository.save(badge.getAgeRanges(), savedId);
+        if (badge.getId() == null) {                    // Badge hasn't been saved in the database, so set its new ID
+            for (AgeRange r : badge.getAgeRanges()) {   // on the AgeRange objects before saving them
+                r.setBadgeId(savedId);
+            }
+        }
+        ageRangeRepository.save(badge.getAgeRanges());
     }
 
     @Transactional(readOnly = true)

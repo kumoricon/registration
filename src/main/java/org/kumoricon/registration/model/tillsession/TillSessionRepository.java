@@ -3,9 +3,10 @@ package org.kumoricon.registration.model.tillsession;
 import org.kumoricon.registration.model.order.Payment;
 import org.kumoricon.registration.model.user.User;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +27,10 @@ import static org.kumoricon.registration.model.SqlHelper.translate;
 
 @Repository
 public class TillSessionRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ZoneId timezone;
 
-    public TillSessionRepository(JdbcTemplate jdbcTemplate) {
+    public TillSessionRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -38,21 +38,23 @@ public class TillSessionRepository {
 
     @Transactional
     public TillSession save(TillSession tillSession) {
+        SqlParameterSource params = new MapSqlParameterSource("id", tillSession.getId())
+                .addValue("end_time", translate(tillSession.getEndTime()))
+                .addValue("open", tillSession.isOpen())
+                .addValue("start_time", translate(tillSession.getStartTime()))
+                .addValue("user_id", tillSession.getUserId())
+                .addValue("till_name", tillSession.getTillName());
+
         if (tillSession.getId() == null) {
-            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate());
             jdbcInsert.withTableName("tillsessions").usingGeneratedKeyColumns("id");
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("end_time", translate(tillSession.getEndTime()));
-            parameters.put("open", tillSession.isOpen());
-            parameters.put("start_time", translate(tillSession.getStartTime()));
-            parameters.put("user_id", tillSession.getUserId());
-            parameters.put("till_name", tillSession.getTillName());
-            Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+            Number key = jdbcInsert.executeAndReturnKey(params);
             tillSession.setId(key.intValue());
 
         } else {
-            jdbcTemplate.update("UPDATE tillsessions SET end_time = ?, open = ?, start_time = ?, user_id = ?, till_name = ? WHERE id = ?",
-                    translate(tillSession.getEndTime()), tillSession.isOpen(), translate(tillSession.getStartTime()), tillSession.getUserId(), tillSession.getTillName(), tillSession.getId());
+            final String SQL ="UPDATE tillsessions SET end_time = :end_time, open = :open, start_time = :start_time, " +
+                    "user_id = :user_id, till_name = :till_name WHERE id = :id";
+            jdbcTemplate.update(SQL, params);
         }
         return tillSession;
     }
@@ -62,8 +64,8 @@ public class TillSessionRepository {
     TillSession findOneById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT * from tillsessions where tillsessions.id=?",
-                    new Object[]{id}, new TillSessionRowMapper());
+                    "SELECT * from tillsessions where tillsessions.id=:id",
+                    Map.of("id", id), new TillSessionRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -73,8 +75,8 @@ public class TillSessionRepository {
     TillSession getOpenSessionForUser(User user) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT * from tillsessions where tillsessions.open = true and tillsessions.user_id=?",
-                    new Object[]{user.getId()}, new TillSessionRowMapper());
+                    "SELECT * from tillsessions where tillsessions.open = true and tillsessions.user_id=:id",
+                    Map.of("id", user.getId()), new TillSessionRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -130,8 +132,8 @@ public class TillSessionRepository {
     TillSessionDTO getOpenTillSessionDTOforUser(User user) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.open = true and tillsessions.user_id=? GROUP BY tillsessions.id, users.first_name, users.last_name",
-                    new Object[]{user.getId()},
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.open = true and tillsessions.user_id=:id GROUP BY tillsessions.id, users.first_name, users.last_name",
+                    Map.of("id", user.getId()),
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -142,8 +144,8 @@ public class TillSessionRepository {
     TillSessionDTO getTillSessionDTOById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.id=? GROUP BY tillsessions.id, users.first_name, users.last_name",
-                    new Object[]{id},
+                    "SELECT tillsessions.*, users.first_name, users.last_name, sum(payments.amount) as total from tillsessions join users on tillsessions.user_id = users.id join payments on payments.till_session_id = tillsessions.id where tillsessions.id=:id GROUP BY tillsessions.id, users.first_name, users.last_name",
+                    Map.of("id", id),
                     new TillSessionDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -153,8 +155,8 @@ public class TillSessionRepository {
     public List<TillSessionDetailDTO.TillSessionPaymentTotalDTO> getPaymentTotals(Integer id) {
         try {
             return jdbcTemplate.query(
-                    "select payment_type, sum(amount) as total from payments where till_session_id = ? group by payment_type order by payment_type",
-                    new Object[] {id},
+                    "select payment_type, sum(amount) as total from payments where till_session_id = :tillSessionId group by payment_type order by payment_type",
+                    Map.of("tillSessionId", id),
                     new TillSessionPaymentTotalDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -176,13 +178,13 @@ public class TillSessionRepository {
                 " from attendees" +
                 "       JOIN orders o on attendees.order_id = o.id" +
                 "       JOIN badges b on attendees.badge_id = b.id" +
-                " WHERE o.id in (select order_id from payments where till_session_id = ?)" +
+                " WHERE o.id in (select order_id from payments where till_session_id = :id)" +
                 " GROUP BY b.name, ageRange" +
                 " ORDER BY b.name, ageRange;";
         try {
             return jdbcTemplate.query(
                     sql,
-                    new Object[] {id},
+                    Map.of("id", id),
                     new TillSessionBadgeCountDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -209,7 +211,7 @@ public class TillSessionRepository {
                 "  from attendees" +
                 "        JOIN orders o on attendees.order_id = o.id" +
                 "        JOIN badges b on attendees.badge_id = b.id" +
-                "  WHERE o.id in (select order_id from payments where till_session_id = ?)" +
+                "  WHERE o.id in (select order_id from payments where till_session_id = :id)" +
                 "  GROUP BY o.id, b.name, ageRange" +
                 "  ORDER BY o.id, b.name, ageRange) as counts" +
                 " GROUP BY id) as t1" +
@@ -232,14 +234,14 @@ public class TillSessionRepository {
                 "  p.amount" +
                 "  from orders o" +
                 "       JOIN payments p on o.id = p.order_id" +
-                "  WHERE p.till_session_id = ?" +
+                "  WHERE p.till_session_id = :id" +
                 "  ORDER BY o.id, p.payment_type) as a" +
                 " group by id) as t2 on t1.id = t2.id;";
 
         try {
             return jdbcTemplate.query(
                     sql,
-                    new Object[] {id, id},
+                    Map.of("id", id),
                     new TillSessionOrderDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();

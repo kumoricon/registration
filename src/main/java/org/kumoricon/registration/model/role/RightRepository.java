@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +18,10 @@ import java.util.*;
 
 @Service
 public class RightRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public RightRepository(JdbcTemplate jdbcTemplate) {
+    public RightRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -25,8 +29,8 @@ public class RightRepository {
     public Right findByNameIgnoreCase(String name) {
         try {
             return jdbcTemplate.queryForObject(
-                    "select * from rights where name=?",
-                    new Object[]{name}, new RightRowMapper());
+                    "select * from rights where name=:name",
+                    Map.of("name", name), new RightRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -36,7 +40,7 @@ public class RightRepository {
     public Map<Integer, Set<Integer>> findAllRightsByRoleId() {
         try {
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                    "select roles_rights.* FROM roles_rights");
+                    "select roles_rights.* FROM roles_rights", Map.of());
 
             Map<Integer, Set<Integer>> data = new HashMap<>();
             for (Map<String, Object> row : rows) {
@@ -58,8 +62,8 @@ public class RightRepository {
     public Set<Right> findAllRightsByUserId(Integer id) {
         try {
             List<Right> data = jdbcTemplate.query(
-                    "select * from rights where rights.id in (select roles_rights.rights_id from roles_rights join users on roles_rights.role_id = users.role_id where users.id = ? ); ",
-                    new Object[]{id}, new RightRowMapper());
+                    "select * from rights where rights.id in (select roles_rights.rights_id from roles_rights join users on roles_rights.role_id = users.role_id where users.id = :id ); ",
+                    Map.of("id", id), new RightRowMapper());
 
             return new HashSet<>(data);
         } catch (EmptyResultDataAccessException e) {
@@ -69,14 +73,15 @@ public class RightRepository {
 
     @Transactional
     public void save(Right right) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(right);
         if (right.getId() == null) {
             jdbcTemplate.update("INSERT INTO rights " +
                             "(name, description) " +
-                            "VALUES(?,?)",
-                    right.getName(), right.getDescription());
+                            "VALUES(:name, :description)",
+                    params);
         } else {
-            jdbcTemplate.update("UPDATE rights SET name = ?, description = ? WHERE id = ?",
-                    right.getName(), right.getDescription(), right.getId());
+            jdbcTemplate.update("UPDATE rights SET name = :name, description = :description WHERE id = :id",
+                    params);
         }
     }
 
@@ -89,18 +94,21 @@ public class RightRepository {
     @Transactional(readOnly = true)
     public Integer count() {
         String sql = "select count(*) from rights";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Transactional
     public void saveRightsForRole(Role role) {
-        List<Object[]> data = new ArrayList<>();
-        for (Integer rightId : role.getRightIds()) {
-            data.add(new Integer[]{role.getId(), rightId});
+        Set<Integer> rightIds = role.getRightIds();
+        SqlParameterSource[] params = new SqlParameterSource[rightIds.size()];
+        int i = 0;
+        for (Integer rId : rightIds) {
+            params[i] = new MapSqlParameterSource("roleId", role.getId()).addValue("rightId", rId);
+            i++;
         }
 
-        jdbcTemplate.update("DELETE from roles_rights WHERE role_id = ?", role.getId());
-        jdbcTemplate.batchUpdate("INSERT INTO roles_rights (role_id, rights_id) VALUES (?, ?)", data);
+        jdbcTemplate.update("DELETE from roles_rights WHERE role_id = :id", Map.of("id", role.getId()));
+        jdbcTemplate.batchUpdate("INSERT INTO roles_rights (role_id, rights_id) VALUES (:roleId, :rightId)", params);
     }
 
     static class RightRowMapper implements RowMapper<Right>
