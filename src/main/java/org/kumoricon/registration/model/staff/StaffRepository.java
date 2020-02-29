@@ -1,8 +1,10 @@
 package org.kumoricon.registration.model.staff;
 import org.kumoricon.registration.model.SqlHelper;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +15,9 @@ import java.util.*;
 
 @Repository
 public class StaffRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public StaffRepository(JdbcTemplate jdbcTemplate) {
+    public StaffRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -29,13 +31,14 @@ public class StaffRepository {
         }
     }
 
-    private String[] searchStringToQueryTerms(String search) {
+    private SqlParameterSource searchStringToQueryTerms(String search) {
         String[] terms = search.trim().split(" ", 2);
 
-        for (int i = 0; i < terms.length; i++) {
-            terms[i] = terms[i] + "%";
+        if (terms.length == 1) {
+            return new MapSqlParameterSource("first", terms[0]);
+        } else {
+            return new MapSqlParameterSource("first", terms[0]).addValue("second", terms[1]);
         }
-        return terms;
     }
 
     /**
@@ -52,16 +55,16 @@ public class StaffRepository {
         if (search == null || search.isBlank()) {
             return new ArrayList<>();
         }
-        String[] searchTerm = searchStringToQueryTerms(search);
+        SqlParameterSource params = searchStringToQueryTerms(search);
 
-        final String multiSQL  = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE ? AND last_name ILIKE ?) OR (legal_first_name ILIKE ? AND legal_last_name ILIKE ?) ORDER BY first_name, last_name";
-        final String singleSQL = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE ? OR last_name ILIKE ?) OR (legal_first_name ILIKE ? OR legal_last_name ILIKE ?) ORDER BY first_name, last_name";
+        final String singleSQL = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE :first||'%' OR last_name ILIKE :first||'%') OR (legal_first_name ILIKE :first||'%' OR legal_last_name ILIKE :first||'%') ORDER BY first_name, last_name";
+        final String multiSQL  = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE :first||'%' AND last_name ILIKE :second||'%') OR (legal_first_name ILIKE :first||'%' AND legal_last_name ILIKE :second||'%') ORDER BY first_name, last_name";
         try {
             List<Staff> staffList;
-            if (searchTerm.length > 1) {
-                staffList = jdbcTemplate.query(multiSQL, new StaffRowMapper(), searchTerm[0], searchTerm[1], searchTerm[0], searchTerm[1]);
+            if (params.getParameterNames() != null && params.getParameterNames().length == 1) {
+                staffList = jdbcTemplate.query(singleSQL, params, new StaffRowMapper());
             } else {
-                staffList = jdbcTemplate.query(singleSQL, new StaffRowMapper(), searchTerm[0], searchTerm[0], searchTerm[0], searchTerm[0]);
+                staffList = jdbcTemplate.query(multiSQL, params, new StaffRowMapper());
             }
             for (Staff s : staffList) {
                 s.setPositions(findPositions(s.getId()));
@@ -79,9 +82,9 @@ public class StaffRepository {
      */
     @Transactional(readOnly = true)
     public List<Staff> findAllWithPositions(Integer start) {
-        final String sql = "SELECT * FROM staff WHERE deleted = FALSE ORDER BY last_name, first_name OFFSET ? LIMIT 50";
+        final String sql = "SELECT * FROM staff WHERE deleted = FALSE ORDER BY last_name, first_name OFFSET :offset LIMIT 50";
         try {
-            List<Staff> staffList = jdbcTemplate.query(sql, new StaffRowMapper(), start);
+            List<Staff> staffList = jdbcTemplate.query(sql, Map.of("offset", start), new StaffRowMapper());
             for (Staff s : staffList) {
                 s.setPositions(findPositions(s.getId()));
             }
@@ -94,10 +97,12 @@ public class StaffRepository {
 
     @Transactional(readOnly = true)
     public Staff findByUuid(String uuid) {
-        final String sql = "select * from staff where uuid = ?";
+        final String sql = "select * from staff where uuid = :uuid";
         try {
-            Staff s = jdbcTemplate.queryForObject(sql, new Object[]{uuid}, new StaffRowMapper());
-            s.setPositions(findPositions(s.getId()));
+            Staff s = jdbcTemplate.queryForObject(sql, Map.of("uuid", uuid), new StaffRowMapper());
+            if (s != null) {
+                s.setPositions(findPositions(s.getId()));
+            }
             return s;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -106,9 +111,9 @@ public class StaffRepository {
 
     @Transactional(readOnly = true)
     public List<String> findPositions(Integer id) {
-        final String sql = "select position from staff_positions where id = ?";
+        final String sql = "select position from staff_positions where id = :id";
         try {
-            return jdbcTemplate.queryForList(sql, new Object[] {id}, String.class);
+            return jdbcTemplate.queryForList(sql, Map.of("id", id), String.class);
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -116,75 +121,85 @@ public class StaffRepository {
 
     @Transactional(readOnly = true)
     public Integer countByCheckedIn(boolean checkedIn) {
-        final String sql = "select count(*) from staff where checked_in = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[] {checkedIn}, Integer.class);
+        final String sql = "select count(*) from staff where checked_in = :checkedIn";
+        return jdbcTemplate.queryForObject(sql, Map.of("checkedIn", checkedIn), Integer.class);
     }
 
     @Transactional(readOnly = true)
     public Integer count() {
         final String sql = "select count(*) from staff";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Transactional
     public void savePositions(Integer id, List<String> positions) {
-        final String clearSql = "DELETE FROM staff_positions where id = ?";
-        final String insertSql = "INSERT INTO staff_positions (id, position) VALUES (?, ?)";
+        final String clearSql = "DELETE FROM staff_positions where id = :id";
+        final String insertSql = "INSERT INTO staff_positions (id, position) VALUES (:id, :position)";
 
-        jdbcTemplate.update(clearSql, id);
-        if (positions != null) {
-            for (String position : positions) {
-                jdbcTemplate.update(insertSql, id, position);
+        jdbcTemplate.update(clearSql, Map.of("id", id));
+        if (positions != null && positions.size() > 0) {
+            SqlParameterSource[] params = new SqlParameterSource[positions.size()];
+            for (int i = 0; i < positions.size(); i++) {
+                params[i] = new MapSqlParameterSource("id", id).addValue("position", positions.get(i));
             }
+            jdbcTemplate.batchUpdate(insertSql, params);
         }
     }
 
     @Transactional
     public void save(Staff staff) {
-//        SqlParameterSource namedParameters = new MapSqlParameterSource(
-//                "id", staff.getId())
-//                .addValue("age_category_at_con", staff.getAgeCategoryAtCon())
-//                .addValue("badge_image_file_type", staff.getBadgeImageFileType())
-//                .addValue("badge_print_count", staff.getBadgePrintCount())
-//                .addValue("badge_printed", staff.getBadgePrinted())
-//                .addValue("birth_date", staff.getBirthDate())
-//                .addValue("checked_in", staff.getCheckedIn())
-//                .addValue("checked_in_at", staff.getCheckedInAt())
-//                .addValue("deleted", staff.getDeleted())
-//                .addValue("department", staff.getDepartment())
-//                .addValue("department_color_code", staff.getDepartmentColorCode())
-//                .addValue("first_name", staff.getFirstName())
-//                .addValue("has_badge_image", staff.getHasBadgeImage())
-//                .addValue("last_modified_ms", staff.getLastModifiedMS())
-//                .addValue("last_name", staff.getLastName())
-//                .addValue("legal_first_name", staff.getLegalFirstName())
-//                .addValue("legal_last_name", staff.getLegalLastName())
-//                .addValue("shirt_size", staff.getShirtSize())
-//                .addValue("suppress_printing_department", staff.getSuppressPrintingDepartment())
-//                .addValue("uuid", staff.getUuid())
-//                .addValue("information_verified", staff.getInformationVerified())
-//                .addValue("picture_saved", staff.getPictureSaved())
-//                .addValue("signature_saved", staff.getSignatureSaved());
+        SqlParameterSource namedParameters = new MapSqlParameterSource(
+                "id", staff.getId())
+                .addValue("age_category_at_con", staff.getAgeCategoryAtCon())
+                .addValue("badge_image_file_type", staff.getBadgeImageFileType())
+                .addValue("badge_print_count", staff.getBadgePrintCount())
+                .addValue("badge_printed", staff.getBadgePrinted())
+                .addValue("birth_date", staff.getBirthDate())
+                .addValue("checked_in", staff.getCheckedIn())
+                .addValue("checked_in_at", SqlHelper.translate(staff.getCheckedInAt()))
+                .addValue("deleted", staff.getDeleted())
+                .addValue("department", staff.getDepartment())
+                .addValue("department_color_code", staff.getDepartmentColorCode())
+                .addValue("first_name", staff.getFirstName())
+                .addValue("has_badge_image", staff.getHasBadgeImage())
+                .addValue("last_modified_ms", staff.getLastModifiedMS())
+                .addValue("last_name", staff.getLastName())
+                .addValue("legal_first_name", staff.getLegalFirstName())
+                .addValue("legal_last_name", staff.getLegalLastName())
+                .addValue("preferred_pronoun", staff.getPreferredPronoun())
+                .addValue("shirt_size", staff.getShirtSize())
+                .addValue("suppress_printing_department", staff.getSuppressPrintingDepartment())
+                .addValue("uuid", staff.getUuid())
+                .addValue("information_verified", staff.getInformationVerified())
+                .addValue("picture_saved", staff.getPictureSaved())
+                .addValue("signature_saved", staff.getSignatureSaved());
 
         if (staff.getId() == null) {
-            Integer id = jdbcTemplate.queryForObject("INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, picture_saved, signature_saved) " +
-                            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id",
-                    new Object[] {staff.getAgeCategoryAtCon(), staff.getBadgeImageFileType(), staff.getBadgePrintCount(),
-                    staff.getBadgePrinted(), staff.getBirthDate(), staff.getCheckedIn(), SqlHelper.translate(staff.getCheckedInAt()),
-                    staff.getDeleted(), staff.getDepartment(), staff.getDepartmentColorCode(), staff.getFirstName(),
-                    staff.getHasBadgeImage(), staff.getLastModifiedMS(), staff.getLastName(), staff.getLegalFirstName(),
-                    staff.getLegalLastName(), staff.getPreferredPronoun(), staff.getShirtSize(), staff.getSuppressPrintingDepartment(),
-                    staff.getUuid(), staff.getInformationVerified(), staff.getPictureSaved(), staff.getSignatureSaved()}, Integer.class);
+            final String SQL = "INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, " +
+                    "badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, " +
+                    "first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, " +
+                    "preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, " +
+                    "picture_saved, signature_saved) " +
+                    "VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed," +
+                    ":birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, " +
+                    ":first_name, :has_badge_image, :last_modified_ms, :last_name, :legal_first_name, :legal_last_name," +
+                    ":preferred_pronoun, :shirt_size, :suppress_printing_department, :uuid, :information_verified, " +
+                    ":picture_saved, :signature_saved) RETURNING id";
+            Integer id = jdbcTemplate.queryForObject(SQL, namedParameters, Integer.class);
             staff.setId(id);
         } else {
-            jdbcTemplate.update("UPDATE staff SET age_category_at_con = ?, badge_image_file_type = ?, badge_print_count = ?, badge_printed = ?, birth_date = ?, checked_in = ?, checked_in_at = ?, deleted = ?, department = ?, department_color_code = ?, first_name = ?, has_badge_image = ?, last_modified_ms = ?, last_name = ?, legal_first_name = ?, legal_last_name = ?, preferred_pronoun = ?, shirt_size = ?, suppress_printing_department = ?, uuid = ?, information_verified = ?, picture_saved = ?, signature_saved = ? WHERE id = ?",
-                    staff.getAgeCategoryAtCon(), staff.getBadgeImageFileType(), staff.getBadgePrintCount(),
-                    staff.getBadgePrinted(), staff.getBirthDate(), staff.getCheckedIn(), SqlHelper.translate(staff.getCheckedInAt()),
-                    staff.getDeleted(), staff.getDepartment(), staff.getDepartmentColorCode(), staff.getFirstName(),
-                    staff.getHasBadgeImage(), staff.getLastModifiedMS(), staff.getLastName(), staff.getLegalFirstName(),
-                    staff.getLegalLastName(), staff.getPreferredPronoun(), staff.getShirtSize(), staff.getSuppressPrintingDepartment(),
-                    staff.getUuid(), staff.getInformationVerified(), staff.getPictureSaved(), staff.getSignatureSaved(),
-                    staff.getId());
+            final String SQL = "UPDATE staff SET age_category_at_con = :age_category_at_con, " +
+                    "badge_image_file_type = :badge_image_file_type, badge_print_count = :badge_print_count, " +
+                    "badge_printed = :badge_printed, birth_date = :birth_date, checked_in = :checked_in, " +
+                    "checked_in_at = :checked_in_at, deleted = :deleted, department = :department, " +
+                    "department_color_code = :department_color_code, first_name = :first_name, " +
+                    "has_badge_image = :has_badge_image, last_modified_ms = :last_modified_ms, " +
+                    "last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, " +
+                    "preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, " +
+                    "suppress_printing_department = :suppress_printing_department, uuid = :uuid, " +
+                    "information_verified = :information_verified, picture_saved = :picture_saved, " +
+                    "signature_saved = :signature_saved WHERE id = :id";
+            jdbcTemplate.update(SQL, namedParameters);
         }
         savePositions(staff.getId(), staff.getPositions());
     }

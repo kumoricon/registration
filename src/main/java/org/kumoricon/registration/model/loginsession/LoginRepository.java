@@ -1,8 +1,10 @@
 package org.kumoricon.registration.model.loginsession;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * I found it easier to just query the database for active sessions instead of trying to read from the Spring
@@ -20,9 +23,9 @@ import java.util.List;
  */
 @Repository
 public class LoginRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public LoginRepository(JdbcTemplate jdbcTemplate) {
+    public LoginRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -61,7 +64,7 @@ public class LoginRepository {
                 "as idexp " +
                 "WHERE idexp.expiration > now() at time zone 'utc' " +
                 "on conflict do nothing;";
-        jdbcTemplate.update(sql);
+        jdbcTemplate.update(sql, Map.of());
     }
 
     /**
@@ -70,8 +73,9 @@ public class LoginRepository {
      */
     @Transactional
     public void deleteLoginSessionsForUsername(String username) {
-        final String sql = "DELETE FROM spring_session WHERE principal_name = ?";
-        jdbcTemplate.update(sql, username);
+        SqlParameterSource params = new MapSqlParameterSource("username", username);
+        final String sql = "DELETE FROM spring_session WHERE principal_name = :username";
+        jdbcTemplate.update(sql, params);
     }
 
     @Transactional(readOnly = true)
@@ -82,8 +86,10 @@ public class LoginRepository {
 
     @Transactional(readOnly = true)
     public List<LoginTimePeriod> getLoginTimePeriods(OffsetDateTime startTime, OffsetDateTime endTime) {
-        final String sql = "select loginsessions.start, u.first_name, u.last_name from loginsessions join users u on loginsessions.users_id = u.id where start >= ? and start <= ? order by u.first_name, u.last_name;";
-        return jdbcTemplate.query(sql, new Object[]{startTime, endTime}, new LoginTimePeriodRowMapper());
+        SqlParameterSource params = new MapSqlParameterSource("startTime", startTime)
+                .addValue("endTime", endTime);
+        final String sql = "select loginsessions.start, u.first_name, u.last_name from loginsessions join users u on loginsessions.users_id = u.id where start >= :startTime and start <= :endTime order by u.first_name, u.last_name;";
+        return jdbcTemplate.query(sql, params, new LoginTimePeriodRowMapper());
     }
 
     private static class LocalDateRowMapper implements RowMapper<LocalDate> {

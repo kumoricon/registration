@@ -2,9 +2,10 @@ package org.kumoricon.registration.model.role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,10 @@ import java.util.*;
 @Service
 public class RoleRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public RoleRepository(JdbcTemplate jdbcTemplate) {
+    public RoleRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -27,8 +28,8 @@ public class RoleRepository {
     public Role findByNameIgnoreCase(String name) {
         try {
             Role result = jdbcTemplate.queryForObject(
-                    "select * from roles where name=?",
-                    new Object[]{name}, new RoleRowMapper());
+                    "select * from roles where name=:name",
+                    Map.of("name", name), new RoleRowMapper());
             result.setRights(getRightIdsForRole(result.getId()));
             return result;
         } catch (EmptyResultDataAccessException e) {
@@ -39,9 +40,8 @@ public class RoleRepository {
     @Transactional(readOnly = true)
     public Role findById(Integer id) {
         try {
-            Role result = jdbcTemplate.queryForObject(
-                    "select * from roles where id=?",
-                    new Object[]{id}, new RoleRowMapper());
+            Role result = jdbcTemplate.queryForObject("select * from roles where id=:id",
+                    Map.of("id", id), new RoleRowMapper());
             result.setRights(getRightIdsForRole(result.getId()));
             return result;
         } catch (EmptyResultDataAccessException e) {
@@ -59,21 +59,19 @@ public class RoleRepository {
     @Transactional(readOnly = true)
     public Integer count() {
         String sql = "select count(*) from roles";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Transactional
     public Integer save(Role role) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(role);
         if (role.getId() == null) {
-            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate());
             jdbcInsert.withTableName("roles").usingGeneratedKeyColumns("id");
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("name", role.getName());
-            Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+            Number key = jdbcInsert.executeAndReturnKey(params);
             return (key).intValue();
         } else {
-            jdbcTemplate.update("UPDATE roles SET name = ? WHERE id = ?",
-                    role.getName(), role.getId());
+            jdbcTemplate.update("UPDATE roles SET name = :name WHERE id = :id", params);
             return role.getId();
         }
     }
@@ -81,8 +79,8 @@ public class RoleRepository {
     private Set<Integer> getRightIdsForRole(Integer roleId) {
         try {
             List<Integer> data = jdbcTemplate.queryForList(
-                    "select roles_rights.rights_id from roles_rights where role_id = ?",
-                    new Object[]{roleId}, Integer.class);
+                    "select roles_rights.rights_id from roles_rights where role_id = :roleId",
+                    Map.of("roleId", roleId), Integer.class);
             return new HashSet<>(data);
         } catch (EmptyResultDataAccessException e) {
             return new HashSet<>();
