@@ -9,7 +9,7 @@
 <div layout:fragment="content" class="container">
     <div class="row">
         <div class="col-sm-6">
-            <span th:text="|${staff.firstName} ${staff.lastName} checked in at ${#temporals.format(staff.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')}|">
+            <span th:text="|${staff.firstName} ${staff.lastName} checked in at ${dts.format(staff.checkedInAt)}|">
                 Checked in at...
             </span><br>
             <span th:text="|T-Shirt Size: ${staff.shirtSize}|"></span><br>

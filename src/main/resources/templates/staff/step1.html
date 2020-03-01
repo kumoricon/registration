@@ -24,7 +24,7 @@
                 </tr>
                 <tr>
                     <td>Date of Birth</td>
-                    <td th:text="|${#temporals.format(staff.birthDate , 'MM/dd/yyyy')} (${staff.getAgeCategoryAtCon()})|">01/01/1990 (Adult)</td>
+                    <td th:text="|${dts.format(staff.birthDate )} (${staff.getAgeCategoryAtCon()})|">01/01/1990 (Adult)</td>
                 </tr>
                 <tr>
                     <td>Department</td>
@@ -43,7 +43,7 @@
                 </tr>
                 <tr th:if="${staff.checkedIn}">
                     <td>Check In Time</td>
-                    <td th:text="${staff.checkedInAt} ? ${#temporals.format(staff.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                    <td th:text="${staff.checkedInAt} ? ${dts.format(staff.checkedInAt)} : ''"></td>
                 </tr>
             </table>
         </div>

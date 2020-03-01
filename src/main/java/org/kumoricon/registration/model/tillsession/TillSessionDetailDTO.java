@@ -1,14 +1,14 @@
 package org.kumoricon.registration.model.tillsession;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TillSessionDetailDTO {
     private Integer id;
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime;
+    private OffsetDateTime startTime;
+    private OffsetDateTime endTime;
     private String username;
     private Integer userId;
     private BigDecimal total;
@@ -27,11 +27,11 @@ public class TillSessionDetailDTO {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public ZonedDateTime getStartTime() { return startTime; }
-    public void setStartTime(ZonedDateTime startTime) { this.startTime = startTime; }
+    public OffsetDateTime getStartTime() { return startTime; }
+    public void setStartTime(OffsetDateTime startTime) { this.startTime = startTime; }
 
-    public ZonedDateTime getEndTime() { return endTime; }
-    public void setEndTime(ZonedDateTime endTime) { this.endTime = endTime; }
+    public OffsetDateTime getEndTime() { return endTime; }
+    public void setEndTime(OffsetDateTime endTime) { this.endTime = endTime; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

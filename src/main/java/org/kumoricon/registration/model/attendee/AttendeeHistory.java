@@ -2,8 +2,7 @@ package org.kumoricon.registration.model.attendee;
 
 import org.kumoricon.registration.model.user.User;
 
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 
 /**
  * Represents a timestamped message or event that is associated with an attendee. May be
@@ -11,7 +10,7 @@ import java.time.Instant;
  */
 public class AttendeeHistory {
     private Integer id;
-    private Instant timestamp;
+    private OffsetDateTime timestamp;
     private Integer userId;
     private Integer attendeeId;
     private String message;
@@ -22,17 +21,17 @@ public class AttendeeHistory {
         this.userId = user.getId();
         this.attendeeId = attendeeId;
         this.message = message;
-        this.timestamp = Instant.now();
+        this.timestamp = OffsetDateTime.now();
     }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Instant getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Instant timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -55,14 +54,6 @@ public class AttendeeHistory {
             return String.format("[History %s: %s %s]", id, timestamp, truncatedMessage);
         } else {
             return String.format("[History: %s %s]", timestamp, truncatedMessage);
-        }
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        if (timestamp == null) {
-            this.timestamp = null;
-        } else {
-            this.timestamp = timestamp.toInstant();
         }
     }
 }

@@ -62,6 +62,15 @@ Handy examples when using Thymeleaf:
 <span th:text="|(${attendee.age} years old)|"></span>
 ```
 
+- Date formatting using DateTimeService (*preferred*)
+
+```html
+<td th:text="${dts.format(tillSession.startTime)}"></td>
+```
+
+(See `DateTimeService.java` for more details. It is included in the model with the
+name `dts`.)
+
 - Date formatting using [thymeleaf-extras-java8time](https://github.com/thymeleaf/thymeleaf-extras-java8time)
 
 ```html

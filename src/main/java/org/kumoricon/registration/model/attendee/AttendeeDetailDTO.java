@@ -2,7 +2,7 @@ package org.kumoricon.registration.model.attendee;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 public class AttendeeDetailDTO {
     private Integer id;
@@ -33,7 +33,7 @@ public class AttendeeDetailDTO {
     private String badgeType;
     private Integer orderId;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
-    private ZonedDateTime checkInTime;          // Timestamp when checked in
+    private OffsetDateTime checkInTime;         // Timestamp when checked in
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
@@ -268,11 +268,11 @@ public class AttendeeDetailDTO {
         this.checkedIn = checkedIn;
     }
 
-    public ZonedDateTime getCheckInTime() {
+    public OffsetDateTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(ZonedDateTime checkInTime) {
+    public void setCheckInTime(OffsetDateTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 

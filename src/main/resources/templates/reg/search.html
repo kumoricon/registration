@@ -44,7 +44,7 @@
                         th:text="|${attendee.getFirstName()} ${attendee.lastName}|">John Doe</a></td>
                 <td th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|">John Doe</td>
                 <td th:text="${attendee.fanName}">Fan Name</td>
-                <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1990 (29)</td>
+                <td th:text="|${dts.format(attendee.birthDate )} (${attendee.getAge()})|">01/01/1990 (29)</td>
                 <td th:text="${attendee.badgeType}"></td>
                 <td>
                     <a th:if="${!attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm" th:href="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">Check In</a>

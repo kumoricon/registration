@@ -23,8 +23,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -177,7 +177,7 @@ class AttendeeImporterService {
             // we just provide badges. Add a note in the record below in createNotes()
             if (record.membershipType != null && record.membershipType.toLowerCase().equals("guest")) {
                 attendee.setCheckedIn(true);
-                attendee.setCheckInTime(Instant.now());
+                attendee.setCheckInTime(OffsetDateTime.now());
             }
 
             attendee.setPreRegistered(true);
@@ -245,7 +245,7 @@ class AttendeeImporterService {
             Payment p = new Payment();
             p.setAmount(total);
             p.setPaymentType(Payment.PaymentType.PREREG);
-            p.setPaymentTakenAt(Instant.now());
+            p.setPaymentTakenAt(OffsetDateTime.now());
             p.setPaymentLocation("kumoricon.org");
             p.setPaymentTakenBy(user);
             p.setTillSession(session);

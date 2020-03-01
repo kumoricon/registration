@@ -1,8 +1,8 @@
 package org.kumoricon.registration.model.attendee;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
@@ -17,7 +17,7 @@ public class AttendeeListDTO {
     private LocalDate birthDate;
     private String badgeType;
     private Boolean checkedIn;
-    private Instant checkInTime;
+    private OffsetDateTime checkInTime;
     private Integer orderId;
     private BigDecimal paidAmount;
     private Boolean membershipRevoked;
@@ -49,8 +49,8 @@ public class AttendeeListDTO {
     public Boolean getCheckedIn() { return checkedIn; }
     public void setCheckedIn(Boolean checkedIn) { this.checkedIn = checkedIn; }
 
-    public Instant getCheckInTime() { return checkInTime; }
-    public void setCheckInTime(Instant checkInTime) { this.checkInTime = checkInTime; }
+    public OffsetDateTime getCheckInTime() { return checkInTime; }
+    public void setCheckInTime(OffsetDateTime checkInTime) { this.checkInTime = checkInTime; }
 
     public Integer getOrderId() { return orderId; }
     public void setOrderId(Integer orderId) { this.orderId = orderId; }

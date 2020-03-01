@@ -4,8 +4,8 @@ package org.kumoricon.registration.model.attendee;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.order.Order;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class Attendee {
     private Integer badgeId;
     private Integer orderId;
     private Boolean checkedIn;                  // Has attendee checked in and received badge?
-    private Instant checkInTime;                // Timestamp when checked in
+    private OffsetDateTime checkInTime;         // Timestamp when checked in
     private boolean preRegistered;              // Did attendee register before con?
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
@@ -197,23 +197,24 @@ public class Attendee {
         this.checkedIn = checkedIn;
         if (checkedIn) {
             if (checkInTime == null) {
-                checkInTime = Instant.now();
+                checkInTime = OffsetDateTime.now();
             }
         } else {
             checkInTime = null;
         }
     }
 
-    public void setCheckInTime(Instant checkInTime) {
+    public void setCheckInTime(OffsetDateTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public Instant getCheckInTime() {
+    public OffsetDateTime getCheckInTime() {
         return checkInTime;
     }
 
     public void setPreRegistered(boolean preRegistered) { this.preRegistered = preRegistered; }
     public Boolean isPreRegistered() { return preRegistered; }
+    public Boolean getPreRegistered() { return preRegistered; }
 
     public void setMembershipRevoked(boolean membershipRevoked) { this.membershipRevoked = membershipRevoked; }
     public boolean isMembershipRevoked() { return membershipRevoked; }

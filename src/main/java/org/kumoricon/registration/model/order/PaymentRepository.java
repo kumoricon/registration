@@ -1,80 +1,100 @@
 package org.kumoricon.registration.model.order;
 
-import org.kumoricon.registration.model.SqlHelper;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class PaymentRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public PaymentRepository(JdbcTemplate jdbcTemplate) {
+    public PaymentRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Transactional(readOnly = true)
     public List<Payment> findByTillSessionIdAndPaymentType(Integer tillSessionId, Payment.PaymentType paymentType) {
-        return jdbcTemplate.query("select * from payments where till_session_id = ? and payment_type = ?",
-                new Object[]{tillSessionId, paymentType.getValue()},
+        return jdbcTemplate.query("select * from payments where till_session_id = :tillSessionId and payment_type = :paymentType",
+                Map.of("tillSessionId", tillSessionId, "paymentType", paymentType.getValue()),
                 new PaymentRowMapper());
     }
 
 
     @Transactional(readOnly = true)
     public BigDecimal getTotalForSessionId(Integer id) {
-        String sql = "select sum(amount) from payments WHERE till_session_id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, BigDecimal.class);
+        String sql = "select sum(amount) from payments WHERE till_session_id = :id";
+        return jdbcTemplate.queryForObject(sql, Map.of("id", id), BigDecimal.class);
     }
 
     @Transactional(readOnly = true)
     public BigDecimal getTotalByPaymentTypeForSessionId(Integer id, Integer paymentType) {
-        String sql = "select sum(amount) from payments WHERE till_session_id = ? AND payment_type = ?";
+        String sql = "select sum(amount) from payments WHERE till_session_id = :tillSessionId AND payment_type = :paymentType";
         return jdbcTemplate.queryForObject(sql,
-                new Object[]{id, paymentType}, BigDecimal.class);
+                Map.of("tillSessionId", id, "paymentType", paymentType),
+                BigDecimal.class);
     }
 
     @Transactional(readOnly = true)
     public BigDecimal getTotalPaidForOrder(Integer orderId) {
-        String sql = "select sum(amount) from payments WHERE order_id = ?";
-        BigDecimal result = jdbcTemplate.queryForObject(sql, new Object[]{orderId}, BigDecimal.class);
+        String sql = "select sum(amount) from payments WHERE order_id = :orderId";
+        BigDecimal result = jdbcTemplate.queryForObject(sql, Map.of("orderId", orderId), BigDecimal.class);
         return result == null ? BigDecimal.ZERO : result;
     }
 
     @Transactional
     public void deleteById(Integer id) {
         if (id != null) {
-            jdbcTemplate.update("DELETE FROM payments WHERE id = ?", id);
+            jdbcTemplate.update("DELETE FROM payments WHERE id = :id", Map.of("id", id));
         }
     }
 
     @Transactional
     public void save(Payment payment) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(payment) {
+            @Override
+            public Object getValue(String paramName) throws IllegalArgumentException {
+                Object value = super.getValue(paramName);
+                if (value instanceof Payment.PaymentType)  {
+                    return ((Payment.PaymentType) value).getValue();
+                }
+                if (value instanceof Enum) {
+                    return ((Enum) value).ordinal();
+                }
+                return value;
+            }
+        };
+
         if (payment.getId() == null) {
-            jdbcTemplate.update("INSERT INTO payments (amount, auth_number, payment_location, payment_taken_at, payment_taken_by, payment_type, till_session_id, order_id) VALUES(?,?,?,?,?,?,?,?)",
-                    payment.getAmount(), payment.getAuthNumber(), payment.getPaymentLocation(), SqlHelper.translate(payment.getPaymentTakenAt()),
-                    payment.getPaymentTakenBy(), payment.getPaymentType().getValue(), payment.getTillSessionId(), payment.getOrderId());
+            final String SQL ="INSERT INTO payments " +
+                    "(amount, auth_number, payment_location, payment_taken_at, payment_taken_by, payment_type, till_session_id, order_id) " +
+                    "VALUES(:amount,:authNumber,:paymentLocation,:paymentTakenAt,:paymentTakenBy,:paymentType,:tillSessionId,:orderId)";
+            jdbcTemplate.update(SQL, params);
         } else {
-            jdbcTemplate.update("UPDATE payments SET amount = ?, auth_number = ?, payment_location = ?, payment_taken_at = ?, payment_taken_by = ?, payment_type = ?, till_session_id = ?, order_id = ? WHERE id = ?",
-                    payment.getAmount(), payment.getAuthNumber(), payment.getPaymentLocation(), SqlHelper.translate(payment.getPaymentTakenAt()),
-                    payment.getPaymentTakenBy(), payment.getPaymentType().getValue(), payment.getTillSessionId(), payment.getOrderId(),
-                    payment.getId());
+            final String SQL = "UPDATE payments SET amount = :amount, auth_number = :authNumber, " +
+                    "payment_location = :paymentLocation, payment_taken_at = :paymentTakenAt, " +
+                    "payment_taken_by = :paymentTakenBy, payment_type = :paymentType, " +
+                    "till_session_id = :tillSessionId, order_id = :orderId WHERE id = :id";
+            jdbcTemplate.update(SQL, params);
         }
     }
 
     @Transactional(readOnly = true)
     public List<Payment> findByOrderId(Integer orderId) {
         try {
-            return jdbcTemplate.query("select * from payments where order_id = ?",
-                    new Object[]{orderId},
+            return jdbcTemplate.query("select * from payments where order_id = :orderId",
+                    Map.of("orderId", orderId),
                     new PaymentRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -86,8 +106,8 @@ public class PaymentRepository {
         try {
             return jdbcTemplate.query("select payments.*, u.first_name, u.last_name, t.till_name from payments" +
                             "    LEFT OUTER JOIN users u on payments.payment_taken_by = u.id " +
-                            "    LEFT OUTER JOIN tillsessions t ON payments.till_session_id = t.id where order_id = ?",
-                    new Object[]{orderId},
+                            "    LEFT OUTER JOIN tillsessions t ON payments.till_session_id = t.id where order_id = :orderId",
+                    Map.of("orderId", orderId),
                     new PaymentDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -102,8 +122,8 @@ public class PaymentRepository {
     }
 
     public Payment findById(Integer paymentId) {
-        return jdbcTemplate.queryForObject("select * from payments where id = ?",
-                new Object[]{paymentId},
+        return jdbcTemplate.queryForObject("select * from payments where id = :paymentId",
+                Map.of("paymentId", paymentId),
                 new PaymentRowMapper());
     }
 
@@ -117,7 +137,7 @@ public class PaymentRepository {
             p.setAuthNumber(rs.getString("auth_number"));
             p.setPaymentType(Payment.PaymentType.fromInteger(rs.getInt("payment_type")));
             p.setPaymentLocation(rs.getString("payment_location"));
-            p.setPaymentTakenAt(rs.getTimestamp("payment_taken_at").toInstant());
+            p.setPaymentTakenAt(rs.getObject("payment_taken_at", OffsetDateTime.class));
             p.setPaymentTakenBy(rs.getInt("payment_taken_by"));
             p.setTillSessionId(rs.getInt("till_session_id"));
             p.setOrderId(rs.getInt("order_id"));
@@ -135,7 +155,7 @@ public class PaymentRepository {
             p.setAuthNumber(rs.getString("auth_number"));
             p.setPaymentType(Payment.PaymentType.fromInteger(rs.getInt("payment_type")));
             p.setPaymentLocation(rs.getString("payment_location"));
-            p.setPaymentTakenAt(rs.getTimestamp("payment_taken_at").toInstant());
+            p.setPaymentTakenAt(rs.getObject("payment_taken_at", OffsetDateTime.class));
             p.setPaymentTakenBy(rs.getInt("payment_taken_by"));
             p.setPaymentTakenByUsername(rs.getString("first_name") + " " + rs.getString("last_name"));
             p.setTillName(rs.getString("till_name"));

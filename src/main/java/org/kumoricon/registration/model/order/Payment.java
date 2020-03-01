@@ -4,7 +4,7 @@ import org.kumoricon.registration.model.tillsession.TillSession;
 import org.kumoricon.registration.model.user.User;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 
 public class Payment {
     private Integer id;
@@ -13,7 +13,7 @@ public class Payment {
 
     private Integer paymentTakenBy;
     private PaymentType paymentType;
-    private Instant paymentTakenAt;
+    private OffsetDateTime paymentTakenAt;
     private String paymentLocation;
     private String authNumber;
     private Integer tillSessionId;
@@ -88,10 +88,10 @@ public class Payment {
         this.paymentType = paymentType;
     }
 
-    public Instant getPaymentTakenAt() {
+    public OffsetDateTime getPaymentTakenAt() {
         return paymentTakenAt;
     }
-    public void setPaymentTakenAt(Instant paymentTakenAt) {
+    public void setPaymentTakenAt(OffsetDateTime paymentTakenAt) {
         this.paymentTakenAt = paymentTakenAt;
     }
 

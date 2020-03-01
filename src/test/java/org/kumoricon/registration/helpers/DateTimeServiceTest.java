@@ -3,6 +3,9 @@ package org.kumoricon.registration.helpers;
 import org.junit.Test;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static org.junit.Assert.*;
 
@@ -11,12 +14,24 @@ public class DateTimeServiceTest {
 
     @Test
     public void format() {
-        assertEquals("12/31/1969 04:00:00 PM", dateTimeService.format(Instant.ofEpochMilli(0L)));
+        assertEquals("12/31/1969 04:00:00 PM PST", dateTimeService.format(Instant.ofEpochMilli(0L)));
+    }
+
+    @Test
+    public void formatOffsetDateTime() {
+        assertEquals("02/29/2020 04:13:14 AM PST",
+                dateTimeService.format(OffsetDateTime.of(2020, 2, 29, 12, 13, 14, 0, ZoneOffset.UTC)));
+    }
+
+    @Test
+    public void formatLocalDate() {
+        assertEquals("02/29/2020",
+                dateTimeService.format(LocalDate.of(2020, 2, 29)));
     }
 
     @Test
     public void epochToDateString() {
-        assertEquals("12/31/1969 04:00:00 PM", dateTimeService.epochToDateString(0L));
+        assertEquals("12/31/1969 04:00:00 PM PST", dateTimeService.epochToDateString(0L));
     }
 
     @Test

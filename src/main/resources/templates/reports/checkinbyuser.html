@@ -7,7 +7,7 @@
 
 <div layout:fragment="content" class="container">
 
-    <p>Check Ins by User in last 15 minutes (since <span th:text="${#temporals.format(since, 'hh:mm a')}"></span>)</p>
+    <p>Check Ins by User in last 15 minutes (since <span th:text="${dts.format(since)}"></span>)</p>
 
     <table class="table table-bordered table-striped table-sm table-fit">
         <thead class="thead-dark">

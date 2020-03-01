@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 
 @Controller
 public class CheckInController {
@@ -152,7 +152,7 @@ public class CheckInController {
 
         s.setSignatureSaved(true);
         s.setCheckedIn(true);
-        s.setCheckedInAt(Instant.now());
+        s.setCheckedInAt(OffsetDateTime.now());
         staffRepository.save(s);
         return "redirect:/staff/checkin4/" + uuid;
     }

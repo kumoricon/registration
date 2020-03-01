@@ -1,6 +1,5 @@
 package org.kumoricon.registration.reports;
 
-import org.kumoricon.registration.helpers.DateTimeService;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.attendee.CheckInByBadgeTypeDTO;
 import org.kumoricon.registration.model.staff.StaffRepository;
@@ -16,15 +15,12 @@ import java.util.List;
 @Controller
 public class CheckInReportController {
     private final AttendeeRepository attendeeRepository;
-    private final DateTimeService dateTimeService;
     private final StaffRepository staffRepository;
 
     @Autowired
     public CheckInReportController(AttendeeRepository attendeeRepository,
-                                   DateTimeService dateTimeService,
                                    StaffRepository staffRepository) {
         this.attendeeRepository = attendeeRepository;
-        this.dateTimeService = dateTimeService;
         this.staffRepository = staffRepository;
     }
 
@@ -37,7 +33,6 @@ public class CheckInReportController {
         model.addAttribute("byBadgeType", checkInByBadge);
         model.addAttribute("totalCount", attendeeRepository.findTotalAttendeeCount());
         model.addAttribute("warmBodyCount", attendeeRepository.findWarmBodyCount());
-        model.addAttribute("fmt", dateTimeService);
         model.addAttribute("staffNotCheckedIn", staffRepository.countByCheckedIn(false));
         model.addAttribute("staffCheckedIn", staffRepository.countByCheckedIn(true));
         return "reports/checkinbybadgetype";

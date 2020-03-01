@@ -35,7 +35,7 @@
         <div class="col-sm-2">Zip Code:</div><div class="col-sm-3" th:text="${attendee.zip}"></div>
         <div class="col-sm-2">Date of Birth:</div>
         <div class="col-sm-3">
-            <span th:text="${attendee.birthDate} ? ${#temporals.format(attendee.birthDate, 'MM/dd/yyyy')} : ''"></span>
+            <span th:text="${dts.format(attendee.birthDate)}"></span>
             <span th:text="|(${attendee.age} years old)|"></span>
         </div>
     </div>
@@ -60,7 +60,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-3">Checked In:</div><div class="col-sm-4" th:text="${attendee.checkInTime} ? ${#temporals.format(attendee.checkInTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : 'No'"></div>
+        <div class="col-sm-3">Checked In:</div><div class="col-sm-4" th:text="${attendee.checkInTime} ? ${dts.format(attendee.checkInTime)} : 'No'"></div>
     </div>
 
     <div class="row">
@@ -78,7 +78,7 @@
                        th:href="@{/orders/{orderId}/attendees/${attendeeId}/addnote(orderId=${attendee.orderId},attendeeId=${attendee.id})}">Add Note</a></th>
             </tr>
             <tr th:each="ah : ${notes}">
-                <td class="col-2" th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                <td class="col-2" th:text="${dts.format(ah.timestamp)}"></td>
                 <td class="col-1" th:text="${ah.username}"></td>
                 <td class="col-4" th:text="${ah.message}"></td>
             </tr>
