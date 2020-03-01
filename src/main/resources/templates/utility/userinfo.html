@@ -20,8 +20,12 @@
             <td th:text="${clientIp}"></td>
         </tr>
         <tr>
-            <td>Authorities</td>
-            <td sec:authentication="principal.authorities">Rights</td>
+            <td>Current Rights</td>
+            <td class="container">
+                <ul class="list-unstyled card-columns">
+                    <li  th:each="r : ${rights}" th:text="${r.name}"></li>
+                </ul>
+            </td>
         </tr>
     </table>
 </div>
