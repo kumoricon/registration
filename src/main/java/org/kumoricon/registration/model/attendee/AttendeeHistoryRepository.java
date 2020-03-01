@@ -1,26 +1,26 @@
 package org.kumoricon.registration.model.attendee;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.ZoneId;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class AttendeeHistoryRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final ZoneId timezone;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public AttendeeHistoryRepository(JdbcTemplate jdbcTemplate) {
-        this.timezone = ZoneId.of("America/Los_Angeles");
+    public AttendeeHistoryRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -28,8 +28,8 @@ public class AttendeeHistoryRepository {
     public List<AttendeeHistoryDTO> findAllDTObyAttendeeId(int id) {
         try {
             return jdbcTemplate.query(
-                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id = ? order by timestamp desc",
-                    new Object[]{id}, new AttendeeHistoryDTORowMapper());
+                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id = :id order by timestamp desc",
+                    Map.of("id", id), new AttendeeHistoryDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -39,25 +39,30 @@ public class AttendeeHistoryRepository {
     public List<AttendeeHistoryDTO> findAllDTObyOrderId(Integer orderId) {
         try {
             return jdbcTemplate.query(
-                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id IN (select id from attendees where attendees.order_id = ?) order by timestamp desc",
-                    new Object[]{orderId}, new AttendeeHistoryDTORowMapper());
+                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id IN (select id from attendees where attendees.order_id = :orderId) order by timestamp desc",
+                    Map.of("orderId", orderId), new AttendeeHistoryDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
     }
 
     @Transactional
-    public void save(AttendeeHistory attendeeHistory) {
-        if (attendeeHistory.getId() == null) {
-            jdbcTemplate.update("INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) VALUES(?,?,?,?)",
-                    attendeeHistory.getMessage(), Timestamp.from(attendeeHistory.getTimestamp()), attendeeHistory.getUserId(), attendeeHistory.getAttendeeId());
+    public void save(AttendeeHistory ah) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(ah);
+//        SqlParameterSource params = new MapSqlParameterSource()
+//                .addValue("message", ah.getMessage())
+//                .addValue("timestamp", Timestamp.from(ah.getTimestamp()))
+//                .addValue("userId", ah.getUserId())
+//                .addValue("attendeeId", ah.getAttendeeId())
+//                .addValue("id", ah.getId());
+
+        if (ah.getId() == null) {
+            jdbcTemplate.update("INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) " +
+                    "VALUES(:message, :timestamp, :userId, :attendeeId)", params);
         } else {
-            jdbcTemplate.update("UPDATE attendeehistory SET message = ?, timestamp = ?, user_id = ?, attendee_id = ? WHERE id = ?",
-                    attendeeHistory.getMessage(),
-                    Timestamp.from(attendeeHistory.getTimestamp()),
-                    attendeeHistory.getUserId(),
-                    attendeeHistory.getAttendeeId(),
-                    attendeeHistory.getId());
+            jdbcTemplate.update("UPDATE attendeehistory set message=:message, timestamp=:timestamp, " +
+                    "user_id=:userId, attendee_id=:attendeeId " +
+                    "where attendeehistory.id=:id)", params);
         }
     }
 
@@ -74,16 +79,30 @@ public class AttendeeHistoryRepository {
 
     @Transactional
     public void saveAll(List<AttendeeHistory> notes) {
+        SqlParameterSource[] params = new SqlParameterSource[notes.size()];
+        int i = 0;
         for (AttendeeHistory ah : notes) {
-            save(ah);
+            assert ah.getId() == null : "saveAll only works with objects that have NOT been saved to the database (id=null)";
+            params[i] = new BeanPropertySqlParameterSource(ah);
+            //            params[i] = new MapSqlParameterSource()
+//                    .addValue("message", ah.getMessage())
+//                    .addValue("timestamp", ah.getTimestamp())
+//                    .addValue("userId", ah.getUserId())
+//                    .addValue("attendeeId", ah.getAttendeeId())
+//                    .addValue("id", ah.getId());
+            i++;
         }
+
+        jdbcTemplate.batchUpdate("INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) " +
+                                      "VALUES(:message, :timestamp, :userId, :attendeeId)",
+                                    params);
     }
 
     private class AttendeeHistoryDTORowMapper implements RowMapper<AttendeeHistoryDTO> {
         @Override
         public AttendeeHistoryDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new AttendeeHistoryDTO(
-                    rs.getTimestamp("timestamp").toInstant().atZone(timezone),
+                    rs.getObject("timestamp", OffsetDateTime.class),
                     rs.getString("first_name") + " " + rs.getString("last_name"),
                     rs.getString("message"),
                     rs.getInt("attendee_id"),

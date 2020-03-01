@@ -2,12 +2,12 @@ package org.kumoricon.registration.model.tillsession;
 
 import org.kumoricon.registration.model.user.User;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 
 public class TillSession {
     private Integer id;
-    private Instant startTime;
-    private Instant endTime;
+    private OffsetDateTime startTime;
+    private OffsetDateTime endTime;
 
     private Integer userId;
     private String tillName;        // The name of the till or computer the session was at. Usually "1", "2", etc
@@ -21,7 +21,7 @@ public class TillSession {
      */
     public TillSession(User user, String tillName) {
         setUserId(user.getId());
-        setStartTime(Instant.now());
+        setStartTime(OffsetDateTime.now());
         setTillName(tillName);
         setOpen(true);
     }
@@ -29,15 +29,15 @@ public class TillSession {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Instant getStartTime() { return startTime; }
-    public void setStartTime(Instant startTime) {
+    public OffsetDateTime getStartTime() { return startTime; }
+    public void setStartTime(OffsetDateTime startTime) {
         if (this.startTime == null) {
             this.startTime = startTime;
         }
     }
 
-    public Instant getEndTime() { return endTime; }
-    public void setEndTime(Instant endTime) {
+    public OffsetDateTime getEndTime() { return endTime; }
+    public void setEndTime(OffsetDateTime endTime) {
         if (this.endTime == null) {
             this.endTime = endTime;
         }

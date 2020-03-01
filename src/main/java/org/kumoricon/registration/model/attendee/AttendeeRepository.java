@@ -1,29 +1,26 @@
 package org.kumoricon.registration.model.attendee;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.kumoricon.registration.model.SqlHelper.translate;
+import java.util.Map;
 
 @Repository
 public class AttendeeRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final ZoneId timezone;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public AttendeeRepository(JdbcTemplate jdbcTemplate) {
-        this.timezone = ZoneId.of("America/Los_Angeles");
+    public AttendeeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -31,8 +28,8 @@ public class AttendeeRepository {
     public List<Attendee> findByOrderNumber(String orderNumber) {
         try {
             return jdbcTemplate.query(
-                    "select * from attendees join orders on attendees.order_id = orders.id where orders.order_id = ? order by attendees.id desc",
-                    new Object[]{orderNumber}, new AttendeeRowMapper());
+                    "select * from attendees join orders on attendees.order_id = orders.id where orders.order_id = :orderNumber order by attendees.id desc",
+                    Map.of("orderNumber", orderNumber), new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -40,11 +37,11 @@ public class AttendeeRepository {
 
 
     @Transactional(readOnly = true)
-    public List<Attendee> findAllByOrderId(int id) {
+    public List<Attendee> findAllByOrderId(int orderId) {
         try {
             return jdbcTemplate.query(
-                    "select * from attendees where order_id = ? order by id desc",
-                    new Object[]{id}, new AttendeeRowMapper());
+                    "select * from attendees where order_id = :orderId order by id desc",
+                    Map.of("orderId", orderId), new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -90,6 +87,7 @@ public class AttendeeRepository {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) FROM (SELECT DISTINCT first_name, last_name, zip, birth_date FROM attendees WHERE checked_in=TRUE) as t",
+                    Map.of(),
                     Integer.class);
         } catch (EmptyResultDataAccessException e) {
             return 0;
@@ -108,6 +106,7 @@ public class AttendeeRepository {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) FROM (SELECT DISTINCT first_name, last_name, zip, birth_date FROM attendees WHERE checked_in=TRUE AND paid_amount > 0) as t",
+                    Map.of(),
                     Integer.class);
         } catch (EmptyResultDataAccessException e) {
             return 0;
@@ -117,15 +116,15 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public Integer count() {
         String sql = "select count(*) from attendees";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Transactional(readOnly = true)
     public Attendee findByOrderId(int orderId) {
         try {
             return jdbcTemplate.queryForObject(
-                    "select * from attendees where order_id=?",
-                    new Object[]{orderId}, new AttendeeRowMapper());
+                    "select * from attendees where order_id=:orderId",
+                    Map.of("orderId", orderId), new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -136,8 +135,8 @@ public class AttendeeRepository {
     public Attendee findById(int id) {
         try {
             return jdbcTemplate.queryForObject(
-                    "select * from attendees where id=?",
-                    new Object[]{id}, new AttendeeRowMapper());
+                    "select * from attendees where id=:id",
+                    Map.of("id", id), new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -146,47 +145,53 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public Attendee findByIdAndOrderId(int id, int orderId) {
         return jdbcTemplate.queryForObject(
-                "select * from attendees where id=? and order_id = ?",
-                new Object[]{id, orderId}, new AttendeeRowMapper());
+                "select * from attendees where id=:id and order_id = :orderId",
+                Map.of("id", id, "orderId", orderId), new AttendeeRowMapper());
     }
 
 
     @Transactional
     public void delete(Integer attendeeId) {
         if (attendeeId != null) {
-            jdbcTemplate.update("DELETE FROM attendees WHERE id = ?", attendeeId);
+            jdbcTemplate.update("DELETE FROM attendees WHERE id = :id", Map.of("id", attendeeId));
         }
     }
 
     /**
      * Saves or updates an Attendee record. Note that some fields are only inserted, NOT updated. Eg, badge number or
      * pre_registered. This is on purpose - badge numbers should not change.
-     * @param attendee
+     * @param attendee Attendee to save
      */
     @Transactional
     public void save(Attendee attendee) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(attendee);
         if (attendee.getId() == null) {
-            jdbcTemplate.update("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, birth_date, check_in_time, checked_in, comped_badge, country, email, emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                    attendee.getBadgeId(), attendee.getBadgeNumber(), attendee.isBadgePrePrinted(),
-                    attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
-                    attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
-                    attendee.getEmergencyContactFullName(), attendee.getEmergencyContactPhone(), attendee.getFanName(),
-                    attendee.getFirstName(), attendee.getLastName(), attendee.getLegalFirstName(),
-                    attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
-                    attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
-                    attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
-                    attendee.isPreRegistered(), attendee.getZip(), attendee.getOrderId(), attendee.isMembershipRevoked());
+            jdbcTemplate.update("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, " +
+                            "birth_date, check_in_time, checked_in, comped_badge, country, email, " +
+                            "emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, " +
+                            "legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, " +
+                            "paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, " +
+                            "parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES " +
+                            "(:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted," +
+                            " :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email, " +
+                            " :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName," +
+                            " :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid," +
+                            " :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact, " +
+                            " :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked)",
+                        params);
         } else {
-            jdbcTemplate.update("UPDATE attendees SET badge_id = ?, badge_pre_printed = ?, badge_printed = ?, birth_date = ?, check_in_time = ?, checked_in=?, comped_badge=?, country=?, email=?, emergency_contact_full_name=?, emergency_contact_phone=?, fan_name=?, first_name=?, last_name=?, legal_first_name=?, legal_last_name=?, name_is_legal_name=?, preferred_pronoun=?, paid=?, paid_amount=?, parent_form_received=?, parent_full_name=?, parent_is_emergency_contact=?, parent_phone=?, phone_number=?, zip=?, order_id=?, membership_revoked=? WHERE id = ?",
-                    attendee.getBadgeId(), attendee.isBadgePrePrinted(),
-                    attendee.isBadgePrinted(), attendee.getBirthDate(), translate(attendee.getCheckInTime()),
-                    attendee.getCheckedIn(), attendee.getCompedBadge(), attendee.getCountry(), attendee.getEmail(),
-                    attendee.getEmergencyContactFullName(), attendee.getEmergencyContactPhone(), attendee.getFanName(),
-                    attendee.getFirstName(), attendee.getLastName(), attendee.getLegalFirstName(),
-                    attendee.getLegalLastName(), attendee.getNameIsLegalName(), attendee.getPreferredPronoun(), attendee.getPaid(),
-                    attendee.getPaidAmount(), attendee.getParentFormReceived(), attendee.getParentFullName(),
-                    attendee.getParentIsEmergencyContact(), attendee.getParentPhone(), attendee.getPhoneNumber(),
-                    attendee.getZip(), attendee.getOrderId(), attendee.isMembershipRevoked(), attendee.getId());
+            jdbcTemplate.update("UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted, " +
+                            "badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime, " +
+                            "checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email, " +
+                            "emergency_contact_full_name=:emergencyContactFullName, " +
+                            "emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName, " +
+                            "last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName, " +
+                            "name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid, " +
+                            "paid_amount=:paidAmount, parent_form_received=:parentFormReceived, " +
+                            "parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact, " +
+                            "parent_phone=:parentPhone, phone_number=:phoneNumber, " +
+                            "zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id",
+                    params);
         }
     }
 
@@ -215,8 +220,8 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public List<Attendee> findByBadgeType(Integer badgeId, Integer page) {
         try {
-            return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY id desc LIMIT ? OFFSET ?",
-                    new Object[]{badgeId, 20, 20*page},
+            return jdbcTemplate.query("select * from attendees WHERE badge_id = :badgeId ORDER BY id desc LIMIT :limit OFFSET :offset",
+                    Map.of("badgeId", badgeId, "limit", 20, "offset", 20*page),
                     new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -226,8 +231,8 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public List<Attendee> findAllByBadgeType(Integer badgeId) {
         try {
-            return jdbcTemplate.query("select * from attendees WHERE badge_id = ? ORDER BY last_name, first_name, fan_name",
-                    new Object[]{badgeId},
+            return jdbcTemplate.query("select * from attendees WHERE badge_id = :badgeId ORDER BY last_name, first_name, fan_name",
+                    Map.of("badgeId", badgeId),
                     new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -235,10 +240,66 @@ public class AttendeeRepository {
     }
 
 
-    public void saveAll(List<Attendee> attendeesToAdd) {
-        // TODO: Replace with batch insert
-        for (Attendee a : attendeesToAdd) {
-            save(a);
+    /**
+     * Saves or updates multiple Attendee records. Note that some fields are only inserted, NOT updated. Eg, badge
+     * number or pre_registered. This is on purpose - badge numbers should not change.
+     * @param attendees Attendees to save
+     */
+    public void saveAll(List<Attendee> attendees) {
+        List<Attendee> toInsert = new ArrayList<>();
+        List<Attendee> toUpdate = new ArrayList<>();
+
+        for (Attendee a : attendees) {
+            if (a.getId() == null) {
+                toInsert.add(a);
+            } else {
+                toUpdate.add(a);
+            }
+        }
+
+        if (toInsert.size() > 0) {
+            SqlParameterSource[] toInsertParams = new SqlParameterSource[toInsert.size()];
+            int i = 0;
+            for (Attendee a : toInsert) {
+                toInsertParams[i] = new BeanPropertySqlParameterSource(a);
+                i++;
+            }
+
+            jdbcTemplate.batchUpdate("INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed, " +
+                            "birth_date, check_in_time, checked_in, comped_badge, country, email, " +
+                            "emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, " +
+                            "legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, " +
+                            "paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, " +
+                            "parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES " +
+                            "(:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted," +
+                            " :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email, " +
+                            " :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName," +
+                            " :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid," +
+                            " :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact, " +
+                            " :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked)",
+                    toInsertParams);
+        }
+
+        if (toUpdate.size() >0) {
+            SqlParameterSource[] toUpdateParams = new SqlParameterSource[toUpdate.size()];
+
+            int i = 0;
+            for (Attendee a : toUpdate) {
+                toUpdateParams[i] = new BeanPropertySqlParameterSource(a);
+                i++;
+            }
+            jdbcTemplate.batchUpdate("UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted, " +
+                            "badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime, " +
+                            "checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email, " +
+                            "emergency_contact_full_name=:emergencyContactFullName, " +
+                            "emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName, " +
+                            "last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName, " +
+                            "name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid, " +
+                            "paid_amount=:paidAmount, parent_form_received=:parentFormReceived, " +
+                            "parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact, " +
+                            "parent_phone=:parentPhone, phone_number=:phoneNumber, " +
+                            "zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id",
+                    toUpdateParams);
         }
     }
 
@@ -253,19 +314,8 @@ public class AttendeeRepository {
             a.setBadgeNumber(rs.getString("badge_number"));
             a.setBadgePrePrinted(rs.getBoolean("badge_pre_printed"));
             a.setBadgePrinted(rs.getBoolean("badge_printed"));
-            Date birthDate = rs.getDate("birth_date");
-            if (birthDate != null) {
-                a.setBirthDate(birthDate.toLocalDate());
-            } else {
-                a.setBirthDate(null);
-            }
-            Timestamp checkInTime = rs.getTimestamp("check_in_time");
-            if (checkInTime != null) {
-                a.setCheckInTime(checkInTime.toInstant());
-            } else {
-                a.setCheckInTime(null);
-            }
-
+            a.setBirthDate(rs.getObject("birth_date", LocalDate.class));
+            a.setCheckInTime(rs.getObject("check_in_time", OffsetDateTime.class));
             a.setCheckedIn(rs.getBoolean("checked_in"));
             a.setCompedBadge(rs.getBoolean("comped_badge"));
             a.setCountry(rs.getString("country"));
@@ -307,13 +357,13 @@ public class AttendeeRepository {
         }
     }
 
-    private class CheckInByHourDTORowMapper implements RowMapper<CheckInByHourDTO> {
+    private static class CheckInByHourDTORowMapper implements RowMapper<CheckInByHourDTO> {
         @Override
         public CheckInByHourDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Timestamp ts = rs.getTimestamp("checkindate");
-            ZonedDateTime start = ts == null ? null : ts.toInstant().atZone(timezone);
-
-            return new CheckInByHourDTO(start, rs.getInt("preregcheckedin"), rs.getInt("atconcheckedin"));
+            return new CheckInByHourDTO(
+                    rs.getObject("checkInDate", OffsetDateTime.class),
+                    rs.getInt("preregcheckedin"),
+                    rs.getInt("atconcheckedin"));
         }
     }
 

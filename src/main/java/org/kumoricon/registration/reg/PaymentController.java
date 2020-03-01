@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -185,7 +186,7 @@ public class PaymentController {
 
         paymentData.setOrderId(orderId);
         paymentData.setPaymentTakenBy(principal.getId());
-        paymentData.setPaymentTakenAt(Instant.now());
+        paymentData.setPaymentTakenAt(OffsetDateTime.now());
         paymentData.setPaymentLocation(request.getRemoteAddr());
         paymentData.setTillSessionId(currentTillSession.getId());
         paymentData.setAmount(payment.getAmount());

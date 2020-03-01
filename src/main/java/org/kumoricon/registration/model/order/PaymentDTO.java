@@ -3,9 +3,7 @@ package org.kumoricon.registration.model.order;
 import org.kumoricon.registration.model.tillsession.TillSession;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 public class PaymentDTO {
     private Integer id;
@@ -15,7 +13,7 @@ public class PaymentDTO {
     private String paymentTakenByUsername;
     private String tillName;
     private Payment.PaymentType paymentType;
-    private Instant paymentTakenAt;
+    private OffsetDateTime paymentTakenAt;
     private String paymentLocation;
     private String authNumber;
     private Integer tillSessionId;
@@ -57,18 +55,11 @@ public class PaymentDTO {
         this.paymentType = paymentType;
     }
 
-    public Instant getPaymentTakenAt() {
+    public OffsetDateTime getPaymentTakenAt() {
         return paymentTakenAt;
     }
-    public void setPaymentTakenAt(Instant paymentTakenAt) {
+    public void setPaymentTakenAt(OffsetDateTime paymentTakenAt) {
         this.paymentTakenAt = paymentTakenAt;
-    }
-    public ZonedDateTime getPaymentTakenAtLocal() {
-        if (this.paymentTakenAt == null) {
-            return null;
-        } else {
-            return this.paymentTakenAt.atZone(ZoneId.of("America/Los_Angeles"));
-        }
     }
 
     public String getAuthNumber() { return authNumber; }
@@ -76,7 +67,6 @@ public class PaymentDTO {
 
     public Integer getTillSessionId() { return tillSessionId; }
     public void setTillSessionId(Integer tillSessionId) { this.tillSessionId = tillSessionId; }
-    public void setTillSession(TillSession tillSession) { this.tillSessionId = tillSession.getId(); }
 
     public String toString() {
         if (id != null) {

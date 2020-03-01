@@ -1,5 +1,4 @@
 package org.kumoricon.registration.model.staff;
-import org.kumoricon.registration.model.SqlHelper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Repository
@@ -156,7 +156,7 @@ public class StaffRepository {
                 .addValue("badge_printed", staff.getBadgePrinted())
                 .addValue("birth_date", staff.getBirthDate())
                 .addValue("checked_in", staff.getCheckedIn())
-                .addValue("checked_in_at", SqlHelper.translate(staff.getCheckedInAt()))
+                .addValue("checked_in_at", staff.getCheckedInAt())
                 .addValue("deleted", staff.getDeleted())
                 .addValue("department", staff.getDepartment())
                 .addValue("department_color_code", staff.getDepartmentColorCode())
@@ -220,7 +220,7 @@ public class StaffRepository {
                 s.setBirthDate(null);
             }
             s.setCheckedIn(rs.getBoolean("checked_in"));
-            s.setCheckedInAt(SqlHelper.translate(rs.getTimestamp("checked_in_at")));
+            s.setCheckedInAt(rs.getObject("checked_in_at", OffsetDateTime.class));
             s.setDeleted(rs.getBoolean("deleted"));
             s.setDepartment(rs.getString("department"));
             s.setDepartmentColorCode(rs.getString("department_color_code"));

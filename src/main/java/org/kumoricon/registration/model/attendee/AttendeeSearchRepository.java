@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,19 +120,8 @@ public class AttendeeSearchRepository {
         public AttendeeListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             AttendeeListDTO a = new AttendeeListDTO();
             a.setId(rs.getInt("id"));
-            Date birthDate = rs.getDate("birth_date");
-            if (birthDate != null) {
-                a.setBirthDate(birthDate.toLocalDate());
-            } else {
-                a.setBirthDate(null);
-            }
-            Timestamp checkInTime = rs.getTimestamp("check_in_time");
-            if (checkInTime != null) {
-                a.setCheckInTime(checkInTime.toInstant());
-            } else {
-                a.setCheckInTime(null);
-            }
-
+            a.setBirthDate(rs.getObject("birth_date", LocalDate.class));
+            a.setCheckInTime(rs.getObject("check_in_time", OffsetDateTime.class));
             a.setCheckedIn(rs.getBoolean("checked_in"));
             a.setFanName(rs.getString("fan_name"));
             a.setFirstName(rs.getString("first_name"));

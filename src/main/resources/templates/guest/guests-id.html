@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                     <td>Birthdate</td>
-                    <td th:text="${#temporals.format(guest.birthDate, 'MM/dd/yyyy')}">01/01/1990</td>
+                    <td th:text="${dts.format(guest.birthDate)}">01/01/1990</td>
                 </tr>
                 </tbody>
             </table>

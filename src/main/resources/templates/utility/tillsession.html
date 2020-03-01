@@ -27,11 +27,11 @@
                     </tr>
                     <tr>
                         <td>Start</td>
-                        <td th:text="${tillSession.startTime} ? ${#temporals.format(tillSession.startTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                        <td th:text="${tillSession.startTime} ? ${dts.format(tillSession.startTime)} : ''"></td>
                     </tr>
                     <tr>
                         <td>End</td>
-                        <td th:text="${tillSession.endTime} ? ${#temporals.format(tillSession.endTime, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                        <td th:text="${tillSession.endTime} ? ${dts.format(tillSession.endTime)} : ''"></td>
                     </tr>
                 </table>
                 <br>

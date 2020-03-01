@@ -2,26 +2,51 @@ package org.kumoricon.registration.helpers;
 
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Helper to format dates in the correct timezone
+ * Helper to format dates in the correct timezone with the correct format. It's included in the `Model` object
+ * passed to Thymleaf templates under the name `dts` by
+ * {@link org.kumoricon.registration.controlleradvice.DateTimeServiceControllerAdvice}
+ *
+ * Thymeleaf usage example:
+ *
+ *                     <td th:text="${dts.format(tillSession.startTime)}">Mon 4/12/2019 8:00:00 AM</td>
+ *
+ *          (tillsession.startTime is an {@link OffsetDateTime} and will be converted to
+ *           Pacific time when it's displayed)
  */
 @Service
 public class DateTimeService {
 
     private static final ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a").withZone(zoneId);
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a zzz").withZone(zoneId);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+    public String format(OffsetDateTime offsetDateTime) {
+        if (offsetDateTime == null) return "";
+        ZonedDateTime zdt = offsetDateTime.toZonedDateTime();
+        return format(zdt);
+    }
+
+    public String format(LocalDate localDate) {
+        if (localDate == null) return "";
+        return DATE_FORMATTER.format(localDate);
+    }
 
     public String format(Instant instant) {
         if (instant == null) return "";
         return DATE_TIME_FORMATTER.format(instant.atZone(zoneId));
     }
 
+    public String format(ZonedDateTime zonedDateTime) {
+        if (zonedDateTime == null) return "";
+        return DATE_TIME_FORMATTER.format(zonedDateTime);
+    }
+
     public String epochToDateString(Long milliseconds) {
+        if (milliseconds == null) return "";
         Instant t = Instant.ofEpochMilli(milliseconds);
         return DATE_TIME_FORMATTER.format(t);
     }

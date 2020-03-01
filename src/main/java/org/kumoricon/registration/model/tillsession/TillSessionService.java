@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -65,7 +65,7 @@ public class TillSessionService {
     public TillSession closeSession(TillSession session) {
         if (session != null) {
             if (session.isOpen()) {
-                session.setEndTime(Instant.now());
+                session.setEndTime(OffsetDateTime.now());
                 session.setOpen(false);
                 repository.save(session);
             } else {

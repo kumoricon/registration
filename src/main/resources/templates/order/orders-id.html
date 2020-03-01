@@ -41,7 +41,7 @@
                                     <tr th:each="attendee : ${attendees}">
                                         <td> <a th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${attendee.orderId},attendeeId=${attendee.id})}" th:text="|${attendee.getFirstName()} ${attendee.lastName}|">Firstname Lastname</td>
                                         <td th:text="${attendee.getFanName()}"></td>
-                                        <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|"></td>
+                                        <td th:text="|${dts.format(attendee.birthDate )} (${attendee.getAge()})|"></td>
                                         <td th:text="${attendee.badgeType}"></td>
                                     </tr>
                                 </thead>
@@ -70,7 +70,7 @@
                                 <tr th:each="payment : ${payments}">
                                     <td th:text="${payment.paymentType}"></td>
                                     <td th:text="${payment.authNumber}"></td>
-                                    <td th:text="${payment.paymentTakenAt} ? ${#temporals.format(payment.paymentTakenAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                                    <td th:text="${dts.format(payment.paymentTakenAt)}"></td>
                                     <td th:text="${payment.paymentTakenByUsername}"></td>
                                     <td th:text="|${payment.tillName} - ${payment.tillSessionId}|"></td>
                                     <td class="text-right" th:text="|$${payment.amount}|"></td>

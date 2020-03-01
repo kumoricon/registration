@@ -1,6 +1,5 @@
 package org.kumoricon.registration.admin.loginsession;
 
-import org.kumoricon.registration.helpers.DateTimeService;
 import org.kumoricon.registration.model.loginsession.LoginRepository;
 import org.kumoricon.registration.model.loginsession.SessionInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,10 @@ import java.util.List;
 @Controller
 public class LoginSessionController {
     private final LoginRepository loginRepository;
-    private final DateTimeService dateTimeService;
 
     @Autowired
-    public LoginSessionController(LoginRepository loginRepository, DateTimeService dateTimeService) {
+    public LoginSessionController(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
-        this.dateTimeService = dateTimeService;
     }
 
     @RequestMapping(value = "/admin/loginsessions")
@@ -28,7 +25,6 @@ public class LoginSessionController {
         List<SessionInfoDTO> logins = loginRepository.findAll();
 
         model.addAttribute("loginSessions", logins);
-        model.addAttribute("fmt", dateTimeService);
         return "admin/loginsessions";
     }
 }

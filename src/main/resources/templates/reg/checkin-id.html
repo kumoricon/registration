@@ -31,13 +31,13 @@
                 </tr>
                 <tr>
                     <td>Date of Birth</td>
-                    <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1980 (39)</td>
+                    <td th:text="|${dts.format(attendee.birthDate )} (${attendee.getAge()})|">01/01/1980 (39)</td>
                 </tr>
                 <tr>
                     <td>Notes</td>
                     <td>
                         <p th:each="note : ${history}">
-                            <span th:text="${#temporals.format(note.timestamp, 'EEE MM/dd/yyyy h:mm:ss a')}">1/1/2019 5:33:01 PM</span> by
+                            <span th:text="${dts.format(note.timestamp)}">1/1/2019 5:33:01 PM</span> by
                             <span th:text="${note.username}">admin</span> <br>
                             <span th:text="${note.message}">Test message</span>
                         </p>

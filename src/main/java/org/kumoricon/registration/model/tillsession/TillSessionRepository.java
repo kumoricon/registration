@@ -4,56 +4,42 @@ import org.kumoricon.registration.model.order.Payment;
 import org.kumoricon.registration.model.user.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.ZoneId;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.kumoricon.registration.model.SqlHelper.translate;
-
 /**
  * Unlike most repositories, Till Session access should only happen through SessionService
  */
-
 @Repository
 public class TillSessionRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final ZoneId timezone;
 
     public TillSessionRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
 
 
     @Transactional
     public TillSession save(TillSession tillSession) {
-        SqlParameterSource params = new MapSqlParameterSource("id", tillSession.getId())
-                .addValue("end_time", translate(tillSession.getEndTime()))
-                .addValue("open", tillSession.isOpen())
-                .addValue("start_time", translate(tillSession.getStartTime()))
-                .addValue("user_id", tillSession.getUserId())
-                .addValue("till_name", tillSession.getTillName());
-
+        SqlParameterSource params = new BeanPropertySqlParameterSource(tillSession);
         if (tillSession.getId() == null) {
-            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate());
-            jdbcInsert.withTableName("tillsessions").usingGeneratedKeyColumns("id");
-            Number key = jdbcInsert.executeAndReturnKey(params);
-            tillSession.setId(key.intValue());
-
+            final String SQL = "INSERT INTO tillsessions (end_time, open, start_time, user_id, till_name) VALUES " +
+                    "(:endTime, :open, :startTime, :userId, :tillName) returning id";
+            Integer id = jdbcTemplate.queryForObject(SQL, params, Integer.class);
+            tillSession.setId(id);
         } else {
-            final String SQL ="UPDATE tillsessions SET end_time = :end_time, open = :open, start_time = :start_time, " +
-                    "user_id = :user_id, till_name = :till_name WHERE id = :id";
+            final String SQL ="UPDATE tillsessions SET end_time = :endTime, open = :open, start_time = :startTime, " +
+                    "user_id = :userId, till_name = :tillName WHERE id = :id";
             jdbcTemplate.update(SQL, params);
         }
         return tillSession;
@@ -256,37 +242,23 @@ public class TillSessionRepository {
         public TillSession mapRow(ResultSet rs, int rowNum) throws SQLException {
             TillSession tillSession = new TillSession();
             tillSession.setId(rs.getInt("id"));
-            Timestamp start = rs.getTimestamp("start_time");
-            if (start != null) {
-                tillSession.setStartTime(start.toInstant());
-            } else {
-                tillSession.setStartTime(null);
-            }
+            tillSession.setStartTime(rs.getObject("start_time", OffsetDateTime.class));
             tillSession.setOpen(rs.getBoolean("open"));
-            Timestamp end = rs.getTimestamp("end_time");
-            if (end != null) {
-                tillSession.setEndTime(end.toInstant());
-            } else {
-                tillSession.setEndTime(null);
-            }
+            tillSession.setEndTime(rs.getObject("end_time", OffsetDateTime.class));
             tillSession.setUserId(rs.getInt("user_id"));
             tillSession.setTillName(rs.getString("till_name"));
             return tillSession;
         }
     }
 
-    class TillSessionDTORowMapper implements RowMapper<TillSessionDTO>
+    static class TillSessionDTORowMapper implements RowMapper<TillSessionDTO>
     {
         @Override
         public TillSessionDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             TillSessionDTO t = new TillSessionDTO();
             t.setId(rs.getInt("id"));
-
-            Timestamp start = rs.getTimestamp("start_time");
-            Timestamp end = rs.getTimestamp("end_time");
-            t.setStartTime(start == null ? null: start.toInstant().atZone(timezone));
-            t.setEndTime(end == null ? null: end.toInstant().atZone(timezone));
-
+            t.setStartTime(rs.getObject("start_time", OffsetDateTime.class));
+            t.setEndTime(rs.getObject("end_time", OffsetDateTime.class));
             t.setOpen(rs.getBoolean("open"));
             t.setUserId(rs.getInt("user_id"));
             t.setUsername(rs.getString("first_name") + " " + rs.getString("last_name"));

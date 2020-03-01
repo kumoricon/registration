@@ -1,15 +1,15 @@
 package org.kumoricon.registration.model.attendee;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 public class AttendeeHistoryDTO {
-    private final ZonedDateTime timestamp;
+    private final OffsetDateTime timestamp;
     private final String username;
     private final String message;
     private final Integer attendeeId;
     private final String attendeeName;
 
-    public AttendeeHistoryDTO(ZonedDateTime timestamp, String username, String message, Integer attendeeId, String attendeeName) {
+    public AttendeeHistoryDTO(OffsetDateTime timestamp, String username, String message, Integer attendeeId, String attendeeName) {
         this.timestamp = timestamp;
         this.username = username;
         this.message = message;
@@ -17,7 +17,7 @@ public class AttendeeHistoryDTO {
         this.attendeeName = attendeeName;
     }
 
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 

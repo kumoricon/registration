@@ -25,7 +25,7 @@
                     <td th:text="|${attendee.firstName} ${attendee.lastName}|">Firstname Lastname</td>
                     <td th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|">Firstname Lastname</td>
                     <td th:text="${attendee.fanName}"></td>
-                    <td th:text="|${#temporals.format(attendee.birthDate , 'MM/dd/yyyy')} (${attendee.getAge()})|">01/01/1980 (39)</td>
+                    <td th:text="|${dts.format(attendee.birthDate)} (${attendee.getAge()})|">01/01/1980 (39)</td>
                     <td th:text="|${attendee.emergencyContactFullName} - ${attendee.emergencyContactPhone}|"></td>
                     <td th:text="${attendee.checkedIn}"></td>
                     <td>
@@ -53,7 +53,7 @@
                 <tr th:each="ah : ${notes}">
                     <td th:text="${ah.attendeeName}"></td>
                     <td th:text="${ah.message}"></td>
-                    <td th:text="${ah.timestamp} ? ${#temporals.format(ah.timestamp, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                    <td th:text="${dts.format(ah.timestamp)}"></td>
                     <td th:text="${ah.username}"></td>
                 </tr>
             </tbody>

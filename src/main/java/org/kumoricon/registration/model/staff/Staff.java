@@ -1,10 +1,8 @@
 package org.kumoricon.registration.model.staff;
 
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class Staff {
@@ -28,7 +26,7 @@ public class Staff {
     private Boolean deleted;
     private Boolean hasBadgeImage;
     private String badgeImageFileType;
-    private Instant checkedInAt;
+    private OffsetDateTime checkedInAt;
     private Long lastModifiedMS;
     private Boolean badgePrinted;
     private Integer badgePrintCount;
@@ -176,20 +174,12 @@ public class Staff {
         this.badgeImageFileType = badgeImageFileType;
     }
 
-    public Instant getCheckedInAt() {
+    public OffsetDateTime getCheckedInAt() {
         return checkedInAt;
     }
 
-    public void setCheckedInAt(Instant checkedInAt) {
+    public void setCheckedInAt(OffsetDateTime checkedInAt) {
         this.checkedInAt = checkedInAt;
-    }
-
-    public ZonedDateTime getCheckedInAtLocal() {
-        if (this.checkedInAt == null) {
-            return null;
-        } else {
-            return this.checkedInAt.atZone(ZoneId.of("America/Los_Angeles"));
-        }
     }
 
     public Long getLastModifiedMS() {

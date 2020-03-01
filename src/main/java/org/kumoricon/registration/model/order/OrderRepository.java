@@ -1,27 +1,24 @@
 package org.kumoricon.registration.model.order;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class OrderRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final Integer PAGE_SIZE = 20;
 
-    public OrderRepository(JdbcTemplate jdbcTemplate) {
+    public OrderRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -29,8 +26,8 @@ public class OrderRepository {
     public Order findById(Integer id) {
         try {
             return jdbcTemplate.queryForObject(
-                    "select * from orders where id=?",
-                    new Object[]{id}, new OrderRowMapper());
+                    "select * from orders where id=:id",
+                    Map.of("id", id), new OrderRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -40,8 +37,8 @@ public class OrderRepository {
     public BigDecimal getTotalByOrderId(Integer orderId) {
         try {
             BigDecimal result = jdbcTemplate.queryForObject(
-                    "select sum(attendees.paid_amount) from attendees where attendees.order_id = ?",
-                    new Object[]{orderId}, BigDecimal.class);
+                    "select sum(attendees.paid_amount) from attendees where attendees.order_id = :id",
+                    Map.of("id", orderId), BigDecimal.class);
             return result == null ? BigDecimal.ZERO: result;    // If there are no attendees in the order, the
                                                                 // above query will return null. That needs to be
                                                                 // sanitized - should be 0.
@@ -55,8 +52,8 @@ public class OrderRepository {
         try {
             BigDecimal result = jdbcTemplate.queryForObject(
                     "select sum(attendees.paid_amount) from attendees join orders o on attendees.order_id = o.id\n" +
-                            "where o.order_id = ?",
-                    new Object[]{orderNumber}, BigDecimal.class);
+                            "where o.order_id = :orderNumber",
+                    Map.of("orderNumber", orderNumber), BigDecimal.class);
             return result == null ? BigDecimal.ZERO: result;
         } catch (EmptyResultDataAccessException e) {
             return BigDecimal.ZERO;
@@ -65,9 +62,9 @@ public class OrderRepository {
 
 
     @Transactional(readOnly = true)
-    public List<Order> findAllBy(Integer page) {
-        return jdbcTemplate.query("select * from orders ORDER BY id desc LIMIT ? OFFSET ?",
-                new Object[]{PAGE_SIZE, PAGE_SIZE*page},
+    public List<Order> findAllBy(int page) {
+        return jdbcTemplate.query("select * from orders ORDER BY id desc LIMIT :limit OFFSET :offset",
+                Map.of("limit", PAGE_SIZE, "offset", PAGE_SIZE*page),
                 new OrderRowMapper());
     }
 
@@ -83,33 +80,37 @@ public class OrderRepository {
 
     @Transactional
     public void saveAll(List<Order> orders) {
+
+        SqlParameterSource[] params = new SqlParameterSource[orders.size()];
+        int i = 0;
         for (Order order : orders) {
-            save(order);
+            assert order.getId() == null : "saveAll only works with Orders that have NOT been saved to the database (id=null)";
+            params[i] = new BeanPropertySqlParameterSource(order);
+            i++;
         }
+        final String SQL = "INSERT INTO orders (order_id, order_taken_by_user, paid, notes) VALUES" +
+                "(:orderId, :orderTakenByUser, :paid, :notes)";
+
+        jdbcTemplate.batchUpdate(SQL, params);
     }
 
     @Transactional(readOnly = true)
     public Integer count() {
         String sql = "select count(*) from orders";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
     }
 
     @Transactional
     public Integer save(Order order) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(order);
         if (order.getId() == null) {
-            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-            jdbcInsert.withTableName("orders").usingGeneratedKeyColumns("id");
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("notes", order.getNotes());
-            parameters.put("order_id", order.getOrderId());
-            parameters.put("order_taken_by_user", order.getOrderTakenByUser());
-            parameters.put("paid", order.getPaid());
-            Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-            return (key).intValue();
+            final String SQL = "INSERT INTO orders (order_id, order_taken_by_user, paid, notes) " +
+                    "VALUES (:orderId, :orderTakenByUser, :paid, :notes) returning id";
+            return jdbcTemplate.queryForObject(SQL, params, Integer.class);
         } else {
-            jdbcTemplate.update("UPDATE orders SET notes = ?, order_id = ?, order_taken_by_user = ?, paid =? WHERE id = ?",
-                    order.getNotes(), order.getOrderId(), order.getOrderTakenByUser(), order.getPaid(), order.getId());
-            return order.getId();
+            final String SQL = "UPDATE orders SET notes = :notes, order_id = :orderId, order_taken_by_user = :orderTakenByUser, " +
+                    "paid =:paid WHERE orders.id = :id RETURNING id";
+            return jdbcTemplate.queryForObject(SQL, params, Integer.class);
         }
     }
 
@@ -120,8 +121,8 @@ public class OrderRepository {
                 " LEFT OUTER JOIN (SELECT attendees.order_id, sum(attendees.paid_amount) as total_due from attendees GROUP BY attendees.order_id) as t2 on orders.id = t2.order_id" +
                 " LEFT OUTER JOIN users on orders.order_taken_by_user = users.id" +
                 " GROUP BY orders.id, username, total_due, total_paid" +
-                " ORDER BY id desc LIMIT ? OFFSET ?",
-                new Object[]{PAGE_SIZE, PAGE_SIZE*page},
+                " ORDER BY id desc LIMIT :limit OFFSET :offset",
+                Map.of("limit", PAGE_SIZE, "offset", PAGE_SIZE*page),
                 new OrderDTORowMapper());
     }
 
@@ -130,9 +131,9 @@ public class OrderRepository {
                         " LEFT OUTER JOIN (SELECT payments.order_id, sum(payments.amount) as total_paid from payments GROUP BY payments.order_id) as t1 on orders.id = t1.order_id" +
                         " LEFT OUTER JOIN (SELECT attendees.order_id, sum(attendees.paid_amount) as total_due from attendees GROUP BY attendees.order_id) as t2 on orders.id = t2.order_id" +
                         " LEFT OUTER JOIN users on orders.order_taken_by_user = users.id" +
-                        " WHERE orders.id = ?" +
+                        " WHERE orders.id = :orderId" +
                         " GROUP BY orders.id, username, total_due, total_paid",
-                new Object[]{orderId},
+                Map.of("orderId", orderId),
                 new OrderDTORowMapper());
     }
 

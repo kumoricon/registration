@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <td>Birthdate</td>
-                    <td th:text="${#temporals.format(staff.birthDate, 'MM/dd/yyyy')}">01/01/1990</td>
+                    <td th:text="${dts.format(staff.birthDate)}">01/01/1990</td>
                 </tr>
                 <tr>
                     <td>Department</td>
@@ -46,7 +46,7 @@
                 </tr>
                 <tr th:if="${staff.checkedIn}">
                     <td>Check In Time</td>
-                    <td th:text="${staff.checkedInAt} ? ${#temporals.format(staff.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''"></td>
+                    <td th:text="${dts.format(staff.checkedInAt)}"></td>
                 </tr>
 
                 </tbody>

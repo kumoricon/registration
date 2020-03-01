@@ -1,24 +1,24 @@
 package org.kumoricon.registration.model.attendee;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 @Repository
 public class AttendeeDetailRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ZoneId timezone;
 
-    public AttendeeDetailRepository(JdbcTemplate jdbcTemplate) {
+    public AttendeeDetailRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.timezone = ZoneId.of("America/Los_Angeles");
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -27,8 +27,8 @@ public class AttendeeDetailRepository {
     @Transactional(readOnly = true)
     public AttendeeDetailDTO findByIdAndOrderId(int attendeeId, int orderId) {
         return jdbcTemplate.queryForObject(
-                "select attendees.*, b.name as badge_type from attendees JOIN badges b on attendees.badge_id = b.id  where attendees.id=? and attendees.order_id = ?",
-                new Object[]{attendeeId, orderId}, new AttendeeDetailDTORowMapper());
+                "select attendees.*, b.name as badge_type from attendees JOIN badges b on attendees.badge_id = b.id  where attendees.id=:attendeeId and attendees.order_id = :orderId",
+                Map.of("attendeeId", attendeeId, "orderId", orderId), new AttendeeDetailDTORowMapper());
     }
 
     @SuppressWarnings("Duplicates")
@@ -43,23 +43,14 @@ public class AttendeeDetailRepository {
             a.setBadgeNumber(rs.getString("badge_number"));
             a.setBadgePrePrinted(rs.getBoolean("badge_pre_printed"));
             a.setBadgePrinted(rs.getBoolean("badge_printed"));
-            Date birthDate = rs.getDate("birth_date");
-            if (birthDate != null) {
-                LocalDate localBirthDate = birthDate.toLocalDate();
-                a.setBirthDate(localBirthDate);
+            a.setBirthDate(rs.getObject("birth_date", LocalDate.class));
+            if (a.getBirthDate() != null) {
                 LocalDate now = LocalDate.now(timezone);
-                a.setAge(ChronoUnit.YEARS.between(localBirthDate, now));
+                a.setAge(ChronoUnit.YEARS.between(a.getBirthDate(), now));
             } else {
-                a.setBirthDate(null);
                 a.setAge(0L);
             }
-            Timestamp checkInTime = rs.getTimestamp("check_in_time");
-            if (checkInTime != null) {
-                a.setCheckInTime(checkInTime.toInstant().atZone(timezone));
-            } else {
-                a.setCheckInTime(null);
-            }
-
+            a.setCheckInTime(rs.getObject("check_in_time", OffsetDateTime.class));
             a.setCheckedIn(rs.getBoolean("checked_in"));
             a.setCompedBadge(rs.getBoolean("comped_badge"));
             a.setCountry(rs.getString("country"));

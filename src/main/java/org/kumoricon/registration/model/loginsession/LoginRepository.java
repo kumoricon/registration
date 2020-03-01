@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,10 +112,8 @@ public class LoginRepository {
     private static class LoginTimePeriodRowMapper implements RowMapper<LoginTimePeriod> {
         @Override
         public LoginTimePeriod mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Timestamp ts = rs.getTimestamp("start");
-            Instant i = ts == null ? null : ts.toInstant();
-
-            return new LoginTimePeriod(i, rs.getString("first_name") + " " + rs.getString("last_name"));
+            return new LoginTimePeriod(rs.getObject("start", OffsetDateTime.class),
+                    rs.getString("first_name") + " " + rs.getString("last_name"));
         }
     }
 }

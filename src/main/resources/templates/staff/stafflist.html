@@ -41,7 +41,7 @@
                         <td th:text="|${s.firstName} ${s.lastName}|">Firstname Lastname</td>
                         <td th:text="|${s.legalFirstName} ${s.legalLastName}|">Firstname Lastname</td>
                         <td th:text="${s.department}">Department</td>
-                        <td th:text="${s.checkedInAt} ? ${#temporals.format(s.checkedInAtLocal, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Check In Time</td>
+                        <td th:text="${dts.format(s.checkedInAt)}">Check In Time</td>
                         <td>
                             <a th:href="@{/staff/checkin/{uuid}(uuid=${s.uuid})}"
                                th:if="!${s.checkedIn}" class="btn btn-sm btn-primary">Check In</a>

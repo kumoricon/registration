@@ -85,7 +85,7 @@ public class UserRepository {
 
     @Transactional
     public void setPassword(Integer userId, boolean forcePasswordChange, String password) {
-        int rowsUpdated = jdbcTemplate.update("UPDATE users SET password = :password, force_password_change = :forcePasswordChange  WHERE id = :id",
+        int rowsUpdated = jdbcTemplate.update("UPDATE users SET password = :password, force_password_change = :forcePasswordChange  WHERE id = :userId",
                 Map.of("password", password,
                         "forcePasswordChange", forcePasswordChange,
                         "userId", userId));

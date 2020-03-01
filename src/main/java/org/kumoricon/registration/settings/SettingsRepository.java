@@ -1,7 +1,9 @@
 package org.kumoricon.registration.settings;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -9,7 +11,7 @@ import java.util.Map;
 
 @Repository
 public class SettingsRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     // Settings key names as stored in database
     public static final String TRAINING_MODE = "trainingMode";
@@ -20,14 +22,17 @@ public class SettingsRepository {
     public static final String DEFAULT_PASSWORD = "defaultPassword";
     public static final String FORCE_PASSWORD_CHANGE = "forcePasswordChange";
 
-    public SettingsRepository(JdbcTemplate jdbcTemplate) {
+    public SettingsRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void upsertSetting(String name, String value) {
-        final String SQL = "INSERT INTO settings(name, value) VALUES (?, ?) " +
-                "ON CONFLICT ON CONSTRAINT settings_pkey DO UPDATE set value=? WHERE settings.name = ?";
-        jdbcTemplate.update(SQL, name, value, value, name);
+        SqlParameterSource params = new MapSqlParameterSource("name", name)
+                .addValue("value", value);
+
+        final String SQL = "INSERT INTO settings(name, value) VALUES (:name, :value) " +
+                "ON CONFLICT ON CONSTRAINT settings_pkey DO UPDATE set value=:value WHERE settings.name = :name";
+        jdbcTemplate.update(SQL, params);
     }
 
     public void loadSettingsInto(Settings.Builder builder) {

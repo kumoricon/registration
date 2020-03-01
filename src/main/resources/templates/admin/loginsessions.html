@@ -21,9 +21,9 @@
             </tr>
             <tr th:each="s : ${loginSessions}">
                 <td th:text="${s.principalName}">Username</td>
-                <td th:text="${fmt.epochToDateString(s.getCreationTime())}">Creation Time</td>
-                <td th:text="${fmt.epochToDuration(s.getLastAccessTime())}">Last Access</td>
-                <td th:text="${fmt.epochToDateString(s.expiryTime)}">Expires</td>
+                <td th:text="${dts.epochToDateString(s.getCreationTime())}">Creation Time</td>
+                <td th:text="${dts.epochToDuration(s.getLastAccessTime())}">Last Access</td>
+                <td th:text="${dts.epochToDateString(s.expiryTime)}">Expires</td>
             </tr>
         </tbody>
     </table>

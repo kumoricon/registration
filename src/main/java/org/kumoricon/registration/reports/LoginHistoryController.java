@@ -37,7 +37,7 @@ public class LoginHistoryController {
             reportDate = availableDays.get(0);
         }
 
-        List<Instant> periods = new ArrayList<>();
+        List<ZonedDateTime> periods = new ArrayList<>();
         List<List<String>> history = new ArrayList<>();
 
         if (reportDate != null) {
@@ -45,25 +45,25 @@ public class LoginHistoryController {
             OffsetDateTime end = reportDate.atStartOfDay(TIMEZONE).plus(24, ChronoUnit.HOURS).toOffsetDateTime();
 
             for (int i = 0; i < 96; i++) {
-                periods.add(start.plusMinutes(i*15).toInstant());
+                periods.add(start.plus(i*15, ChronoUnit.MINUTES).atZoneSameInstant(TIMEZONE));
             }
 
             List<LoginTimePeriod> loginTimePeriods = loginRepository.getLoginTimePeriods(start, end);
 
-            Map<String, Set<Instant>> userIdToPeriodMap = new LinkedHashMap<>();
+            Map<String, Set<ZonedDateTime>> userIdToPeriodMap = new LinkedHashMap<>();
 
             for (LoginTimePeriod p : loginTimePeriods) {
                 if (!userIdToPeriodMap.containsKey(p.getUser())) {
                     userIdToPeriodMap.put(p.getUser(), new HashSet<>());
                 }
-                userIdToPeriodMap.get(p.getUser()).add(p.getStartTime());
+                userIdToPeriodMap.get(p.getUser()).add(p.getStartTime().atZoneSameInstant(TIMEZONE));
             }
 
             for (String userFullName : userIdToPeriodMap.keySet()) {
                 List<String> row = new ArrayList<>();
                 row.add(userFullName);
                 int minutesPresent = 0;
-                for (Instant p : periods) {
+                for (ZonedDateTime p : periods) {
                     if (userIdToPeriodMap.get(userFullName).contains(p)) {
                         row.add("background-color: green;");
                         minutesPresent += 15; // Each period is 15 minutes
