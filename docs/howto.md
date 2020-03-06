@@ -37,7 +37,10 @@ Handle Dates, Times, and Timestamps
 -----------------------------------
 
 Dates and times that represent a specific instant in time should be stored in the database in UTC, but should 
-generally be shown to the user in the user's time zone (currently PST is hardcoded).
+generally be shown to the user in the user's time zone (currently PST is hardcoded in `DateTimeService.java`.
+
+In Model objects, this is most easily achieved with `OffsetDateTime`, which is supported by modern JDBC libraries,
+making mapping to/from the database easy.
 
 The only notable exception is the attendee's date of birth, which is actually a LocalDate (stored without timezone
 information). Though technically not true, we generally want to assume that someone born on April 3rd at 1:00 AM on
@@ -85,3 +88,26 @@ name `dts`.)
 ...
 </div>
 ```
+
+
+Handle Configurable Options
+---------------------------
+
+Spring Boot (the framework this service is based on) has rich support for configuration via the `application.properties`
+file and environment variables.
+
+Read a value from configuration:
+
+```
+...
+   public GuestImportService(@Value("${registration.guestinputpath}") String onlineImportInputPath,
+                             @Value("${registration.onlinedlqpath}") String onlineDLQPath) {
+        this.onlineImportInputPath = onlineImportInputPath;
+        this.onlineDLQPath = onlineDLQPath;
+    }
+...
+```
+
+Some settings have default values set in the `application.properties` file, but may be configured at run time
+via the user interface. See `SettingsController.java` for more information. When set, configuration is cached in 
+memory and stored in the database, which takes precedence over default values configured in `application.properties`.
