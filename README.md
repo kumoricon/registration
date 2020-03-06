@@ -1,8 +1,18 @@
 # Kumoricon Registration
 
-This is a work-in-progress project that will eventually replace/merge with [Kumoreg](https://github.com/kumoregdev/kumoreg).
+Attendee registration management system. Think of it as a mix of attendee registration, point-of-sale, badge printing, 
+and staff management for [Kumoricon](https://www.kumoricon.org/).
 
-Think of it as a mix of point-of-sale, badge printing, and attendee management.
+- Preregistered attendee check in and badge printing
+- At event registration and badge printing
+- Guest of Honor badge printing
+- Staff check in, photo and signature capture, and badge printing
+- Attendee information search
+- Till reporting
+- Staff management/reporting
+
+This system has been in use since 2019, replacing its [predecessor](https://github.com/kumoregdev/kumoreg), though
+much of workflow and schema is the same.
 
 ### Screenshots
 - [Main Screen](docs/img/main.png?raw=true)
