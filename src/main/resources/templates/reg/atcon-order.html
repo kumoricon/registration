@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+<html layout:decorate="~{layout/basenomenu}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org">
 <head>
     <title>Order</title>
@@ -72,10 +72,16 @@
                 Take Payment</a>
             <form th:action="@{/reg/atconorder/{orderId}/complete(orderId=${order.id})}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="submit" value="Order Complete" class="btn mb2"
-                   th:classappend="${!canComplete} ? 'btn-secondary' : 'btn-primary'"
-                   th:disabled="${!canComplete}">
+                <input type="submit" value="Order Complete" class="btn mb-2"
+                    th:classappend="${!canComplete} ? 'btn-secondary' : 'btn-primary'"
+                    th:disabled="${!canComplete}">
             </form>
+            <form th:action="@{/reg/atconorder/{orderId}/handoff(orderId=${order.id})}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="submit" value="Hand Off Order" class="btn mb-2 btn-secondary"
+                       th:disabled="${order.paid}">
+            </form>
+
         </div>
     </div>
 </div>
