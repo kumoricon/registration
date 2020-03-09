@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Take Over Order</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+
+    <div class="row">
+        <div class="col-12">
+
+            <table class="table table-bordered table-striped table-sm">
+                <thead>
+                <tr>
+                    <td>Order ID</td>
+                    <td>From User</td>
+                    <td>Timestamp</td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${handoffs.size() == 0}">
+                    <td colspan="4">No orders flagged for hand off</td>
+                </tr>
+                <tr th:each="oh : ${handoffs}">
+                    <td th:text="${oh.orderId}"></td>
+                    <td th:text="${oh.fromUserName}"></td>
+                    <td th:text="${dts.format(oh.timestamp)}"></td>
+                    <td>
+                        <form th:action="@{/reg/atconorder/{orderId}/takeover(orderId=${oh.orderId})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input type="submit" value="Take Over" class="btn btn-sm btn-primary">
+                        </form>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

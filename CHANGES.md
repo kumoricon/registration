@@ -23,6 +23,8 @@ Version 1.1.0 (pending)
 - Allow fewer digits in check number field (at-con payment)
 - Added payment timestamp to till detail report
 - Reworked rights on Current User Info screen
+- Added Order Hand Off screen and buttons for at-con orders. (schema change)
+
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)

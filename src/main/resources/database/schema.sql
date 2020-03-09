@@ -188,6 +188,23 @@ create index if not exists payments_order_id_index
     on payments (order_id);
 
 
+create table if not exists orderhandoffs
+(
+    order_id integer not null
+        constraint orderhandoffs_order_id_orders_fk
+            references orders,
+    user_id integer not null
+        constraint orderhandoffs_user_id_users_fk
+            references users,
+    timestamp timestamp with time zone not null,
+    stage text not null
+);
+
+
+create unique index if not exists orderhandoffs_order_id_uindex
+    on orderhandoffs (order_id);
+
+
 
 create table if not exists attendees
 (
