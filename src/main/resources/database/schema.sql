@@ -348,3 +348,32 @@ create table if not exists staff_positions
 );
 
 
+create table if not exists inlineregistrations
+(
+    id bigserial not null
+        constraint inlineregistrations_pk
+            primary key,
+    first_name citext,
+    last_name citext,
+    legal_first_name citext,
+    legal_last_name citext,
+    name_is_legal_name boolean default true not null,
+    preferred_pronoun text,
+    zip text,
+    country text,
+    phone_number text,
+    email text,
+    birth_date date,
+    emergency_contact_fullname text,
+    emergency_contact_phone text,
+    parent_fullname text,
+    parent_phone text,
+    parent_is_emergency_contact boolean default false,
+    registration_code text not null,
+    membership_type text
+);
+
+
+create unique index if not exists inlineregistrations_registration_code_uindex
+    on inlineregistrations (registration_code);
+

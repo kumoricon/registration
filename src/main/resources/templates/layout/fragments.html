@@ -22,6 +22,7 @@
                             <input class="dropdown-item" type="submit" value="New At Con Order">
                         </form>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="/reg/atconorder/takeover">Take Over At Con Order</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''in_line_registration'')')}" href="/inlinereg/search">In-Line Registration</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/search">Attendee Search</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/searchbybadge">Search by Badge Type</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_guest_badge'')')}" href="/guests">Guest Badges</a>

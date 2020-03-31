@@ -31,12 +31,27 @@
                     <td>Attendees</td>
                     <td>
                         <table class="table table-borderless table-condensed table-hover">
+                            <tr>
+                                <th>Name</th>
+                                <th class="text-center">Cost</th>
+                                <th class="text-center">Parental Consent Form Received</th>
+                                <th></th>
+                            </tr>
                             <tr th:if="${attendees.empty}">
                                 <td colspan="3"> No Attendees Found </td>
                             </tr>
                             <tr th:each="a : ${attendees}">
                                 <td th:text="${a.getNameOrFanName()}">Attendee Name</td>
                                 <td class="text-right" th:text="|$${a.paidAmount}|">$65.00</td>
+                                <td class="text-center">
+                                    <form th:action="@{/reg/atconorder/{orderId}/attendee/{attendeeId}/parentconsentform(orderId=${order.id},attendeeId=${a.id})}"
+                                          method="post" th:if="${a.isMinor()}">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                        <input type="submit" th:value="${a.parentFormReceived} ? 'Yes' : 'No'" class="btn btn-sm"
+                                               th:classappend="${a.parentFormReceived} ? 'btn-success' : 'btn-danger'">
+                                        <input type="hidden" name="formReceived" th:value="!${a.parentFormReceived}">
+                                    </form>
+                                </td>
                                 <td><a class="btn btn-secondary btn-sm" th:href="@{/reg/atconorder/{orderId}/attendee/{attendeeId}(orderId=${order.id},attendeeId=${a.id})}" href="#">Edit</a></td>
                             </tr>
                         </table>

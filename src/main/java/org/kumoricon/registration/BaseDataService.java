@@ -127,6 +127,7 @@ public class BaseDataService {
                 {"at_con_registration", "Add new attendees via At-Con Registration and close till"},
                 {"at_con_registration_specialty", "Bypass most validation when creating at-con attendees"},
                 {"at_con_registration_blacklist", "Allow at-con registration for names on the blacklist"},
+                {"in_line_registration", "Allow creating orders from in-line registration data"},
                 {"pre_reg_check_in", "Check in preregistered attendees"},
                 {"pre_reg_check_in_edit", "Edit preregistered attendee information during check in"},
                 {"pre_reg_check_in_order", "Check in entire preregistered order at once"},
@@ -195,22 +196,22 @@ public class BaseDataService {
     private void createRoles() {
         Map<String, String[]> roles = new LinkedHashMap<>();
         roles.put("Staff", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search", "print_badge",
-                "badge_type_weekend", "badge_type_day", "attendee_add_note",
+                "badge_type_weekend", "badge_type_day", "attendee_add_note", "in_line_registration",
                 "attendee_edit_with_override", "reprint_badge_with_override", "menu_registration", "menu_utility"
         });
         roles.put("Coordinator", new String[] {"at_con_registration", "pre_reg_check_in", "attendee_search",
-                "badge_type_weekend", "badge_type_day", "print_badge", "attendee_edit",
+                "badge_type_weekend", "badge_type_day", "print_badge", "attendee_edit", "in_line_registration",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "pre_reg_check_in_edit", "menu_registration", "menu_utility",
                 "menu_report"});
         roles.put("Coordinator - VIP Badges", new String[] {"at_con_registration", "pre_reg_check_in",
-                "at_con_registration_specialty", "attendee_search", "print_badge", "attendee_edit",
+                "at_con_registration_specialty", "attendee_search", "print_badge", "attendee_edit", "in_line_registration",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_vip", "menu_registration", "menu_utility", "menu_report",
                 "pre_reg_check_in_edit", "print_guest_badge"});
         roles.put("Coordinator - Specialty Badges", new String[] {"at_con_registration",
                 "at_con_registration_specialty", "pre_reg_check_in", "pre_reg_check_in_order",
-                "attendee_search", "print_badge", "attendee_edit",
+                "attendee_search", "print_badge", "attendee_edit", "in_line_registration",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "badge_type_artist", "badge_type_weekend", "badge_type_day",
                 "badge_type_standard_press", "badge_type_emerging_press",
@@ -219,14 +220,14 @@ public class BaseDataService {
                 "badge_type_small_press", "menu_registration", "menu_utility", "menu_report",
                 "pre_reg_check_in_edit", "at_con_registration_specialty"});
         roles.put("MSO", new String[] {"pre_reg_check_in",
-                "attendee_search", "print_badge", "attendee_edit",
+                "attendee_search", "print_badge", "attendee_edit", "in_line_registration",
                 "attendee_add_note", "reprint_badge", "view_users_report", "view_login_history_report",
                 "view_check_in_by_hour_report", "view_check_in_by_department_report", "badge_type_staff",
                 "pre_reg_check_in_edit", "menu_registration", "menu_utility", "menu_report",
                 "staff_check_in"
         });
         roles.put("Manager", new String[] {"at_con_registration", "at_con_registration_specialty",
-                "pre_reg_check_in", "attendee_search", "print_guest_badge",
+                "pre_reg_check_in", "attendee_search", "print_guest_badge", "in_line_registration",
                 "print_badge", "attendee_edit", "attendee_add_note", "at_con_registration_blacklist",
                 "badge_type_weekend", "badge_type_day", "view_login_history_report",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
@@ -238,7 +239,7 @@ public class BaseDataService {
                 "menu_registration", "menu_utility", "menu_report", "menu_administration",
                 "staff_check_in", "view_attendance_report"});
         roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty", "print_guest_badge",
-                "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note",
+                "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note", "in_line_registration",
                 "at_con_registration_blacklist", "attendee_override_price", "reprint_badge", "manage_users",
                 "manage_pass_types", "badge_type_weekend", "badge_type_day", "attendee_revoke_membership",
                 "badge_type_vip", "badge_type_emerging_press", "badge_type_standard_press", "badge_type_artist",
