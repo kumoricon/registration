@@ -82,6 +82,17 @@ public class AtConAttendeeController {
         return chooseTemplate(principal, forceValidate);
     }
 
+    @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}/parentconsentform", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('at_con_registration')")
+    public String atConAttendeeParentalConsentForm(@PathVariable Integer orderId,
+                                @PathVariable Integer attendeeId,
+                                @RequestParam Boolean formReceived) {
+        Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        attendeeRepository.setParentFormReceived(attendeeId, orderId, formReceived);
+        log.info("parental consent form received: {} for {} in order ID {}", formReceived, attendee, orderId);
+        return "redirect:/reg/atconorder/" + orderId;
+    }
+
     @RequestMapping(value = "/reg/atconorder/{orderId}/attendee/{attendeeId}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String atConAttendee(Model model,

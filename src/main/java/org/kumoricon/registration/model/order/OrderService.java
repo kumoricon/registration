@@ -65,4 +65,13 @@ public class OrderService {
     private void checkOrderIsNotPaid(Order order) {
         if (order.getPaid()) throw new RuntimeException("Order " + order.getId() + " is already paid and can not be changed");
     }
+
+    @Transactional
+    public Integer saveNewOrderForUser(User user) {
+        Order order = new Order();
+        order.setOrderTakenByUser(user);
+        order.setOrderId(Order.generateOrderId());
+        order.setPaid(false);
+        return orderRepository.save(order);
+    }
 }

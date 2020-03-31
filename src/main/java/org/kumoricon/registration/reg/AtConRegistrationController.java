@@ -59,27 +59,34 @@ public class AtConRegistrationController {
             throw new RuntimeException("Order ID " + orderId + " not found");
         }
 
+        List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
+
         BigDecimal totalDue = orderRepository.getTotalByOrderId(orderId);
         BigDecimal totalPaid = paymentRepository.getTotalPaidForOrder(orderId);
-        Boolean canComplete = !order.getPaid() && (totalDue.compareTo(totalPaid) == 0);
+        Boolean canComplete = !order.getPaid() && (totalDue.compareTo(totalPaid) == 0) && allParentFormsReceived(attendees);
 
         model.addAttribute("order", order);
-        model.addAttribute("attendees", attendeeRepository.findAllByOrderId(orderId));
+        model.addAttribute("attendees", attendees);
         model.addAttribute("payments", paymentRepository.findByOrderId(orderId));
         model.addAttribute("canComplete", canComplete);
 
         return "reg/atcon-order";
     }
 
+    private Boolean allParentFormsReceived(List<Attendee> attendees) {
+        for (Attendee a : attendees) {
+            if (a.isMinor() && !a.getParentFormReceived()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @RequestMapping(value = "/reg/atconorder/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String newOrder(@AuthenticationPrincipal User principal) {
         log.info("creating new order");
-        Order order = new Order();
-        order.setOrderTakenByUser(principal);
-        order.setOrderId(Order.generateOrderId());
-        Integer newId = orderRepository.save(order);
-
+        Integer newId = orderService.saveNewOrderForUser(principal);
         return "redirect:/reg/atconorder/" + newId + "/attendee/new";
     }
 

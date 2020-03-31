@@ -3,6 +3,7 @@ package org.kumoricon.registration.model.attendee;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -300,6 +301,19 @@ public class AttendeeRepository {
                             "parent_phone=:parentPhone, phone_number=:phoneNumber, " +
                             "zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id",
                     toUpdateParams);
+        }
+    }
+
+    @Transactional
+    public void setParentFormReceived(Integer attendeeId, Integer orderId, Boolean formReceived) {
+        final String SQL = "UPDATE attendees SET parent_form_received = :parentFormReceived WHERE id=:attendeeId AND " +
+                "order_id = :orderId";
+        SqlParameterSource params = new MapSqlParameterSource("attendeeId", attendeeId)
+                .addValue("orderId", orderId)
+                .addValue("parentFormReceived", formReceived);
+        int rows = jdbcTemplate.update(SQL, params);
+        if (rows != 1) {
+            throw new RuntimeException("Attendee not found");
         }
     }
 
