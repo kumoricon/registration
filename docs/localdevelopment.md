@@ -1,7 +1,10 @@
+Kumoricon Registration
+----------------------
+Instructions for setting up a local development environment
 
 Technologies
 ------------
-Service built on:
+The service is built on:
   - [Spring Framework](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/) Server framework
   - [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html) Templating language
   - [CSS Bootstrap](https://getbootstrap.com/docs/3.4/css/) Front end formatting
@@ -9,9 +12,14 @@ Service built on:
   - [Maven](https://maven.apache.org/index.html) Build/dependency management
 
 
-Local Development
------------------
-Install Postgresql Server (commands vary)
+Setup
+-----
+**1. Install Postgresql Server (commands vary)**
+
+**MacOS Catalina:**
+```
+$ brew install postgres
+```
 
 **Fedora Linux 29:**
 ```
@@ -34,21 +42,27 @@ To:
 host    all             all             127.0.0.1/32            md5
 
 ```
-Then start and enable the service:
+**2. Start and enable the service:**
 ```
+Linux:
 $ sudo systemctl enable postgresql              # Enable service
 $ sudo systemctl start postgresql               # Start service
+
+MacOS:
+$ pg_ctl -D /usr/local/var/postgres start       # Start service
 ```
 
 
-By default, Postgres does not include case-insensitive searching. The commands below add the
-citext extension, which will enable that. Note that columns have to have the `citext` type.
+**3. Create a Postgresql user and database**
 
-Create a Postgresql database user "kumoreg" and database "registration" after installing server:
-Note: for Ubuntu installs, skip the "su" command
+The User name is "kumoreg" and the database name is "registration"
+Note: for Ubuntu installs, skip the "su" command below
 Note: the createdb parameter -O is the letter "oh" and not a "zero"
-
 ```
+MacOS:
+$ sudo dscl . -create /Users/postgres
+
+MacOS/Linux:
 $ su - postgres
 $ createuser --interactive -P kumoreg
     Enter password for new role:
@@ -58,6 +72,14 @@ $ createuser --interactive -P kumoreg
     Shall the new role be allowed to create more new roles? (y/n) n
 
 $ createdb -O kumoreg registration
+```
+
+**4. Enable case-insensitive searching**
+
+By default, Postgres does not include case-insensitive searching. The commands below add the
+citext extension, which will enable that. Note that columns have to have the `citext` type.
+
+```
 $ psql registration -c "CREATE EXTENSION citext;"
 ```
 
