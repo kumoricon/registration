@@ -20,6 +20,7 @@ function addListeners() {
     $('#inputPhone').bind('keyup', onPhoneNumberUpdate);
     $('#inputEmergencyContactPhone').bind('keyup', onPhoneNumberUpdate);
     $('#inputParentPhone').bind('keyup', onPhoneNumberUpdate);
+    $('#inputLastName').bind('keyup', updateNameField);
 }
 
 
@@ -154,6 +155,15 @@ function shouldRequirePhone() {
     return age >= 13;
 }
 
+function capitalize(name) {
+    console.log(name);
+    return name;
+}
+
+function updateNameField(event) {
+    event.target.value = capitalize(event.target.value);
+}
+
 function readyToSave() {
     return $("#inputFirstName").val() !== "" &&
         $("#inputLastName").val() !== "" &&
@@ -172,3 +182,4 @@ function readyToSaveSpeciality() {
     return ($("#inputFirstName").val() !== "" && $("#inputLastName").val() !== "") ||
         $("#inputFanName").val() !== "";
 }
+
