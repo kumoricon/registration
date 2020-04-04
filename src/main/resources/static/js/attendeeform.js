@@ -166,7 +166,6 @@ function capitalizeLastName(name) {
 
 function updateLastName(event) {
     event.target.value = capitalizeLastName(event.target.value);
-    console.log(event.target.value);
 }
 
 function readyToSave() {
