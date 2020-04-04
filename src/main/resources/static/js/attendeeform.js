@@ -20,7 +20,8 @@ function addListeners() {
     $('#inputPhone').bind('keyup', onPhoneNumberUpdate);
     $('#inputEmergencyContactPhone').bind('keyup', onPhoneNumberUpdate);
     $('#inputParentPhone').bind('keyup', onPhoneNumberUpdate);
-    $('#inputLastName').bind('keyup', updateNameField);
+    $('#inputLastName').bind('keyup', updateLastName);
+    $('#inputLegalLastName').bind('keyup', updateLastName);
 }
 
 
@@ -155,13 +156,16 @@ function shouldRequirePhone() {
     return age >= 13;
 }
 
-function capitalize(name) {
-    console.log(name);
-    return name;
+function capitalizeLastName(name) {
+  return name.replace(/(\w{1})(\w*)(\-)?(\w{1})?(\w*)?/g, (m, c1, c2, c3, c4, c5) => {
+    let string = `${c1.toUpperCase()}${/^mc/i.test(c1+c2) ? c2[0]+c2[1].toUpperCase()+c2.substring(2,) : c2}`;
+    return string;
+  });
 }
 
-function updateNameField(event) {
-    event.target.value = capitalize(event.target.value);
+function updateLastName(event) {
+    event.target.value = capitalizeLastName(event.target.value);
+    console.log(event.target.value);
 }
 
 function readyToSave() {
