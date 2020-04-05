@@ -20,8 +20,12 @@ function addListeners() {
     $('#inputPhone').bind('keyup', onPhoneNumberUpdate);
     $('#inputEmergencyContactPhone').bind('keyup', onPhoneNumberUpdate);
     $('#inputParentPhone').bind('keyup', onPhoneNumberUpdate);
-    $('#inputLastName').bind('keyup', updateLastName);
-    $('#inputLegalLastName').bind('keyup', updateLastName);
+    $('#inputFirstName').bind('keyup', updateName);
+    $('#inputLastName').bind('keyup', updateName);
+    $('#inputLegalFirstName').bind('keyup', updateName);
+    $('#inputLegalLastName').bind('keyup', updateName);
+    $('#inputParentFullName').bind('keyup', updateName);
+    $('#inputEmergencyContactName').bind('keyup', updateName);
 }
 
 
@@ -152,7 +156,7 @@ function shouldRequirePhone() {
     return age >= 13;
 }
 
-function capitalizeLastName(name) {
+function capitalizeName(name) {
   return name.replace(/(\w{1})(\w*)(\-)?(\w{1})?(\w*)?/g, (m, c1, c2, c3, c4, c5) => {
     let string = `${c1.toUpperCase()}${/^mc/i.test(c1+c2) ? c2[0]+c2[1].toUpperCase()+c2.substring(2,) : c2}`;
     string += c3 === '-' ? `-${c4 ? c4.toUpperCase() : ''}${c5 ? c5 : ''}` : '';
@@ -160,8 +164,8 @@ function capitalizeLastName(name) {
   });
 }
 
-function updateLastName(event) {
-    event.target.value = capitalizeLastName(event.target.value);
+function updateName(event) {
+    event.target.value = capitalizeName(event.target.value);
 }
 
 function readyToSave() {
