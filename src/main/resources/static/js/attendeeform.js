@@ -158,8 +158,8 @@ function shouldRequirePhone() {
 
 function capitalizeLastName(name) {
   return name.replace(/(\w{1})(\w*)(\-)?(\w{1})?(\w*)?/g, (m, c1, c2, c3, c4, c5) => {
-    let string = `${c1.toUpperCase()}${/^mc/i.test(c1+c2) ? c2[0]+c2[1].toUpperCase()+c2.substring(2,) : c2}`;
-    string += c3 === '-' ? `-${c4 ? c4.toUpperCase() : ''}${c5 ? c5 : ''}` : '';
+    let string = `${c1.toUpperCase()}${/^mc/i.test(c1+c2) ? c2[0]+(c2 && c2[1] ? c2[1].toUpperCase() : '')+c2.substring(2,) : c2}`;
+    string += c3 === '-' ? `-${c4 ? c4.toUpperCase() : ''}${c5 || ''}` : '';
     return string;
   });
 }
