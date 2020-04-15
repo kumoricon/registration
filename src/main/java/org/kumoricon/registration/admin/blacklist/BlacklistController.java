@@ -29,7 +29,7 @@ public class BlacklistController {
         this.blacklistValidator = blacklistValidator;
     }
 
-    @InitBinder
+    @InitBinder("blacklistName")
     public void initBinder(WebDataBinder binder) {
         binder.setValidator(blacklistValidator);
     }

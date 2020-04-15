@@ -29,7 +29,7 @@ public class RolesController {
         this.rightRepository = rightRepository;
     }
 
-    @InitBinder
+    @InitBinder("role")
     public void initBinder(WebDataBinder binder) {
         binder.setValidator(roleValidator);
     }
