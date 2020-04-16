@@ -105,7 +105,7 @@ public class CheckinController {
             log.info("reports badge printed successfully for {}", attendee);
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
-            return "redirect:/search?msg=Checked+in+" + attendee.getFirstName() + "&orderId=" + attendee.getOrderId();
+            return "redirect:/search?msg=Checked+in+&orderId=" + attendee.getOrderId();
         } else if (action != null && action.equals("reprintDuringCheckin")) {
             log.info("reprinting badge during check in for {}", attendee);
             try {
