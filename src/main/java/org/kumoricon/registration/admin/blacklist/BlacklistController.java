@@ -68,7 +68,7 @@ public class BlacklistController {
         if ("Delete".equals(action)) {
             log.info("deleted blacklist entry {}", blacklistName);
             blacklistRepository.delete(blacklistName);
-            return "redirect:/admin/blacklist?msg=Deleted%20" + blacklistName.getFirstName() + "%20" + blacklistName.getLastName();
+            return "redirect:/admin/blacklist?msg=Deleted";
         }
 
         if (bindingResult.hasErrors()) {
@@ -83,6 +83,6 @@ public class BlacklistController {
             return "admin/blacklist-id";
         }
 
-        return "redirect:/admin/blacklist?msg=Saved%20" + blacklistName.getFirstName() + "%20" + blacklistName.getLastName();
+        return "redirect:/admin/blacklist?msg=Saved";
     }
 }

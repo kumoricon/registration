@@ -126,7 +126,7 @@ public class AtConAttendeeController {
         log.info("Adding {} to order {}", attendee, orderId);
         orderService.saveAttendeeToOrder(orderId, attendee, principal);
 
-        return "redirect:/reg/atconorder/" + orderId + "?msg=Added+" + attendee.getNameOrFanName();
+        return "redirect:/reg/atconorder/" + orderId + "?msg=Added";
     }
 
     private Integer getIdFromParamter(String parameter) {
