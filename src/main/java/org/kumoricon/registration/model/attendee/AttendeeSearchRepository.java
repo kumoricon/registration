@@ -64,7 +64,7 @@ public class AttendeeSearchRepository {
         String sql = SELECT_COLUMNS + ", orders.order_id from attendees " +
                 "join orders on attendees.order_id = orders.id " +
                 "join badges on attendees.badge_id = badges.id " +
-                "where orders.order_id = ? order by attendees.first_name, attendees.last_name";
+                "where orders.order_id = :orderId order by attendees.first_name, attendees.last_name";
 
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
 
