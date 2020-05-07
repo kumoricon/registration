@@ -24,13 +24,23 @@ public class HomeController {
     @RequestMapping(value = "/")
     public String home(final Model model, final Authentication authentication) {
 
+
         List<Badge> badges = new ArrayList<>();
         for (Badge b : badgeService.findByVisibleTrue()) {
             if (AuthHelper.userHasAuthority(authentication, b.getRequiredRight()))
                 badges.add(b);
         }
-        model.addAttribute("badges", badges);
-        return "home";
+
+        // If the user has the ability to check in staff AND does not have a right for any
+        // badge types, assume they're only doing staff check in and show them a different
+        // homepage
+        if (AuthHelper.userHasAuthority(authentication, "staff_check_in") && badges.size() == 0) {
+            return "home-mso";
+        } else {
+            model.addAttribute("badges", badges);
+            return "home";
+        }
+
     }
 
 }
