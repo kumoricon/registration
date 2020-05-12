@@ -5,30 +5,85 @@
     <title>Home</title>
     <script src="/webjars/jQuery-Autocomplete/1.4.10/jquery.autocomplete.min.js"></script>
     <script src="/js/attendeeSuggest.js"></script>
+    <script src="/js/staff/staffSuggest.js"></script>
+    <script src="/js/inlineregcode.js"></script>
 </head>
 <body>
 
-<div layout:fragment="content" class="container">
+<div layout:fragment="content" class="container-fluid">
 
-    <div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
-        <div class="col-sm-8 mb-2">
-            <form class="form-inline justify-content-center" action="/search" method="get" id="searchForm">
-                <input class="form-control mr-2" type="text" id="search" name="q" placeholder="Attendee Name" autofocus>
-                <input class="btn btn-primary" type="submit" value="Search">
-            </form>
+    <div class="card-deck mb-2 justify-content-center">
+        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
+             th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}">
+            <div class="card-body">
+                <h5 class="card-title">At-Con Check In</h5>
+                <p class="card-text">Attendees buying registration here</p>
+                <form method="post" action="/reg/atconorder/new" class="form-inline justify-content-center">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input class="btn btn-primary" type="submit" value="New At Con Order">
+                </form>
+            </div>
+        </div>
+        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
+             th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
+            <div class="card-body">
+                <h5 class="card-title">Pre-Reg Check In</h5>
+                <p class="card-text">Attendees who pre-registered online</p>
+                <form class="form-inline justify-content-center" action="/search" method="get" id="attendeeSearchForm"
+                      style="position: relative; z-index:1000;">
+                    <div class="input-group md-form form-sm form-2 pl-0">
+                        <input class="form-control my-0 py-1" type="text"  id="attendeeSearch" name="q" placeholder="Attendee Name" autofocus aria-label="Search">
+                        <div class="input-group-append">
+                            <input class="btn btn-primary" type="submit" value="Search">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
+             th:if="${#authorization.expression('hasAuthority(''in_line_registration'')')}">
+            <div class="card-body">
+                <h5 class="card-title">In-Line Check In</h5>
+                <p class="card-text">Attendees that registered in line</p>
+
+                <form class="form-inline justify-content-center" action="/inlinereg/checkin" method="post" autocomplete="off"
+                      id="inLineSearchForm" style="position: relative; z-index:1000;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="input-group md-form form-sm form-2 pl-0">
+                        <input class="form-control my-0 py-1 text-uppercase" value="" type="text" name="code" id="inLineCodeSearch" placeholder="ABC123" minlength="6" maxlength="10">
+                        <div class="input-group-append">
+                            <input class="btn btn-primary" type="submit" id="inLineCodeCheckIn" value="Check In">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
+             th:if="${#authorization.expression('hasAuthority(''staff_check_in'')')}">
+            <div class="card-body">
+                <h5 class="card-title">Staff Check In</h5>
+                <p class="card-text">Kumoricon Staff</p>
+                <form class="form-inline justify-content-center" action="/staff" method="get" id="staffSearchForm"
+                      style="position: relative; z-index:1000;">
+                    <div class="input-group md-form form-sm form-2 pl-0">
+                        <input class="form-control my-0 py-1" type="text"  id="staffSearch" name="q" placeholder="Staff Name" aria-label="Search">
+                        <div class="input-group-append">
+                            <input class="btn btn-primary" type="submit" value="Search">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-2 mr-4" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}">
-            <form method="post" action="/reg/atconorder/new">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input class="btn btn-primary btn-sm" type="submit" value="New At Con Order">
-            </form>
-        </div>
 
-        <div class="col-sm-7">
-            <table class="table table-bordered table-striped table-sm">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+
+            <table class="table table-bordered table-striped table-sm" style="max-width: 60rem; min-width: 40rem;">
                 <thead class="thead-dark">
                 <tr>
                     <th class="text-nowrap">Badge Type</th>
@@ -40,7 +95,7 @@
                 </thead>
                 <tbody>
                 <tr th:if="${badges.empty}">
-                    <td colspan="4"> No Badges Found </td>
+                    <td colspan="5"> No Badges Found </td>
                 </tr>
                 <tr th:each="badge : ${badges}">
                     <td th:text="${badge.name}">Name</td>

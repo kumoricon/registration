@@ -59,3 +59,11 @@ table.table-fit tbody td, table.table-fit tfoot td {
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+.navbar-dark {
+    background: linear-gradient(355deg, rgba(55,55,55,1) 0%, rgba(0,0,0,1) 100%);
+}
+
+.card {
+    background: linear-gradient(355deg, rgba(254,254,255,1) 0%, rgba(244,244,254,1) 100%);
+}
