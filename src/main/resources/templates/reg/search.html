@@ -12,8 +12,8 @@
 
     <div class="row" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
         <div class="col-sm-12 mb-2">
-            <form class="form-inline justify-content-center" action="/search" method="get" autocomplete="off" id="searchForm">
-                <input class="form-control mr-2" th:value="${query}" type="text" name="q" id="search" placeholder="Attendee Name" autofocus>
+            <form class="form-inline justify-content-center" action="/search" method="get" autocomplete="off" id="attendeeSearchForm">
+                <input class="form-control mr-2" th:value="${query}" type="text" name="q" id="attendeeSearch" placeholder="Attendee Name" autofocus>
                 <input class="btn btn-primary" type="submit" value="Search">
             </form>
         </div>

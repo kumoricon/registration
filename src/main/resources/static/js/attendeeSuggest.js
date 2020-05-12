@@ -1,15 +1,15 @@
 $(document).ready(function(){
-    $("#clear").on("click", function() {
-        $("#search").val("").focus();
+    $("#attendeeClear").on("click", function() {
+        $("#attendeeSearch").val("").focus();
         return false;
     });
 
-    $("#search")
+    $("#attendeeSearch")
         .autocomplete({
             serviceUrl: '/search/suggest',
             onSelect: function (suggestion) {
-                $('#search').val(suggestion.value);
-                $('#searchForm').submit();
+                $('#attendeeSearch').val(suggestion.value);
+                $('#attendeeSearchForm').submit();
             }})
         .select();
 });

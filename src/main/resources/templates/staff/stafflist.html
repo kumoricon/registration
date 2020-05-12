@@ -4,15 +4,15 @@
 <head>
     <title>Home</title>
     <script src="/webjars/jQuery-Autocomplete/1.4.10/jquery.autocomplete.min.js"></script>
-    <script src="/js/staff/stafflist.js"></script>
+    <script src="/js/staff/staffSuggest.js"></script>
 </head>
 <body>
 
 <div layout:fragment="content" class="container">
     <div class="row">
         <div class="col-sm-11 form-inline">
-            <form method="get" class="form-inline col-sm-8" id="searchForm">
-                <input class="form-control col-sm-6 mr-2" id="search" name="q" type="text"
+            <form method="get" class="form-inline col-sm-8" id="staffSearchForm">
+                <input class="form-control col-sm-6 mr-2" id="staffSearch" name="q" type="text"
                        placeholder="Search by Name..."
                        th:value="${search}" autofocus>
                 <input class="btn btn-sm btn-primary mr-2" type="submit" value="Search">
