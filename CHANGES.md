@@ -27,7 +27,7 @@ Version 1.1.0 (pending)
 - Removed email field from at-con check in screen for regular attendees
 - Automatically capitalize first, last, and parent, and emergency contact names on at-con registration form
 - Added In-Line Registration check in workflow (schema change)
-- Added separate homepage for MSO with Staff Search box
+- Enabled server compression, browser caching headers, and HTTP/2
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
