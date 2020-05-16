@@ -17,10 +17,15 @@
         </div>
         <div class="col-sm-8 mb-2">
             <form class="form-inline justify-content-center" action="/searchbybadge" method="get">
-                <select class="form-control mr-2" name="badgeName">
-                    <option th:each="b : ${badgeTypes}" th:text="${b.name}" th:selected="${selected==b}">Badge Name</option>
-                </select>
-                <input class="btn btn-primary" type="submit" value="Search">
+                <div class="input-group md-form form-sm form-2 pl-0">
+                    <select class="form-control" name="badgeName">
+                        <option th:each="b : ${badgeTypes}" th:text="${b.name}" th:selected="${selected==b}">Badge Name</option>
+                    </select>
+                    <div class="input-group-append">
+                        <input class="btn btn-primary" type="submit" id="search" value="Search">
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
