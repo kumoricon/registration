@@ -5,8 +5,8 @@
 </head>
 <body>
 
-<div layout:fragment="content" class="container">
-    <table class="table table-bordered">
+<div layout:fragment="content" class="container-fluid">
+    <table class="table-responsive-md table-bordered">
         <tr>
             <td>Username</td>
             <td sec:authentication="name">Username</td>
@@ -22,9 +22,11 @@
         <tr>
             <td>Current Rights</td>
             <td class="container">
-                <ul class="list-unstyled card-columns">
-                    <li  th:each="r : ${rights}" th:text="${r.name}"></li>
-                </ul>
+                <div class="columns">
+                    <ul>
+                        <li th:each="r : ${rights}" th:text="${r.name}"></li>
+                    </ul>
+                </div>
             </td>
         </tr>
     </table>
