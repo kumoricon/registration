@@ -67,3 +67,29 @@ table.table-fit tbody td, table.table-fit tfoot td {
 .card {
     background: linear-gradient(355deg, rgba(254,254,255,1) 0%, rgba(244,244,254,1) 100%);
 }
+
+/* Add this to a <div> with a <ul> in it to display the list in responsive columns */
+.columns
+{
+    -moz-column-width: 16em;
+    -webkit-column-width: 16em;
+    column-width: 16em;
+}
+
+.columns ul
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.columns ul li:first-child
+{
+    margin-top:0px;
+}
+
+.list-columns {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px, 1fr));
+}
