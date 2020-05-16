@@ -2,7 +2,7 @@
 <html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>Staff List</title>
     <script src="/webjars/jQuery-Autocomplete/1.4.10/jquery.autocomplete.min.js"></script>
     <script src="/js/staff/staffSuggest.js"></script>
 </head>
@@ -12,11 +12,13 @@
     <div class="row">
         <div class="col-sm-11 form-inline">
             <form method="get" class="form-inline col-sm-8" id="staffSearchForm">
-                <input class="form-control col-sm-6 mr-2" id="staffSearch" name="q" type="text"
-                       placeholder="Search by Name..."
-                       th:value="${search}" autofocus>
-                <input class="btn btn-sm btn-primary mr-2" type="submit" value="Search">
-                <button class="btn btn-sm btn-secondary" id="clear">Clear</button>
+                <div class="input-group md-form form-sm form-2 pl-0">
+                    <input class="form-control my-0 py-1" type="text"  id="staffSearch" name="q"  autocomplete="off"
+                           placeholder="Staff Name" aria-label="Search" th:value="${search}" autofocus>
+                    <div class="input-group-append">
+                        <input class="btn btn-primary" type="submit" value="Search">
+                    </div>
+                </div>
             </form>
             <span class="ml-1" th:if="!${search.isEmpty()}"
                   th:text="|${staff.size()} results found|"></span>
