@@ -69,21 +69,15 @@ function onParentIsEmergencyContactUpdate(eventObject) {
     }
 }
 
-function showHideLegalName(show) {
-    if (show === false) {
-        $('#inputNameIsLegalName').hide();
-        $("label[for='inputNameIsLegalName']").hide();
-        $("label[for='inputLegalFirstName']").show();
-        $("label[for='inputLegalLastName']").show();
-        $('#inputLegalFirstName').show();
-        $('#inputLegalLastName').show();
+function showHideLegalName(showNameFields) {
+    if (showNameFields !== true) {
+        $('#inputNameIsLegalName').parent().hide();
+        $('#inputLegalFirstName').parent().show();
+        $('#inputLegalLastName').parent().show();
     } else {
-        $('#inputNameIsLegalName').show();
-        $("label[for='inputNameIsLegalName']").show();
-        $("label[for='inputLegalFirstName']").hide();
-        $("label[for='inputLegalLastName']").hide();
-        $('#inputLegalFirstName').hide();
-        $('#inputLegalLastName').hide();
+        $('#inputNameIsLegalName').parent().show();
+        $('#inputLegalFirstName').parent().hide();
+        $('#inputLegalLastName').parent().hide();
     }
 }
 
