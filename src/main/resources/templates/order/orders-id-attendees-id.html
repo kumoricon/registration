@@ -3,7 +3,6 @@
       xmlns:sec="http://www.thymeleaf.org">
 <head>
     <title>Attendee</title>
-    <script type="text/javascript" src="/js/attendeeform.js" defer></script>
 </head>
 <body>
 
@@ -41,64 +40,99 @@
         Membership has been revoked.
     </div>
 
-    <div class="row">
-        <div class="col-sm-2">Name:</div><div class="col-sm-3" th:text="${attendee.name}"></div>
-        <div class="col-sm-2">Preferred Pronoun:</div><div class="col-sm-3" th:text="${attendee.preferredPronoun}"></div>
+    <div class="container-fluid">
+        <form action="#" th:object="${attendee}" th:if="${attendee!=null}" class="form-row">
+
+            <div class="form-group col-md-3">
+                <label for="inputFirstName" class="col-form-label-sm">First Name</label>
+                <input type="text" th:field="*{firstName}" class="form-control" id="inputFirstName" readonly>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputLastName" class="col-form-label-sm">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="form-control" id="inputLastName" readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputLegalFirstName" class="col-form-label-sm">Legal First Name</label>
+                <input type="text" th:field="*{legalFirstName}" class="form-control<user" id="inputLegalFirstName" readonly>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputLegalLastName" class="col-form-label-sm">Legal Last Name</label>
+                <input type="text" th:field="*{legalLastName}" class="form-control<user" id="inputLegalLastName" readonly>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="inputFanName" class="col-form-label-sm">Fan Name</label>
+                <input type="text" th:field="*{fanName}" class="form-control" id="inputFanName" readonly>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPronoun" class="col-form-label-sm">Preferred Pronoun</label>
+                <input type="text" class="form-control" readonly th:field="*{preferredPronoun}" id="inputPronoun">
+            </div>
+
+            <div class="form-group col-md-12">
+                <label for="inputBirthDate" class="col-form-label-sm">Date of Birth</label>
+                <div class="input-group">
+                    <input type="text" th:value="${dts.format(attendee.birthDate)}" class="form-control col-md-2" id="inputBirthDate"
+                           readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="age" th:text="|(*{age} years old)|"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputPhone" id="inputPhoneLabel" class="col-form-label-sm">Phone Number</label>
+                <input type="tel" th:field="*{phoneNumber}" class="form-control" id="inputPhone" readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputEmail" id="inputEmailLabel" class="col-form-label-sm">or Email</label>
+                <input type="text" th:field="*{email}" class="form-control" id="inputEmail" readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputZip" class="col-form-label-sm">Zip Code</label>
+                <input type="text" th:field="*{zip}" class="form-control" id="inputZip" readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputCountry" class="col-form-label-sm">Country</label>
+                <input type="text" th:field="*{country}" class="form-control" id="inputCountry" readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputEmergencyContactName" class="col-form-label-sm">Emergency Contact Name</label>
+                <input type="text" th:field="*{emergencyContactFullName}" class="form-control" id="inputEmergencyContactName"  readonly>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputEmergencyContactPhone" class="col-form-label-sm">Emergency Contact Phone</label>
+                <input type="tel" th:field="*{emergencyContactPhone}" class="form-control" id="inputEmergencyContactPhone"  readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputParentFullName" class="col-form-label-sm">
+                    Parent Name
+                </label>
+                <input type="text" th:field="*{parentFullName}" class="form-control" id="inputParentFullName" readonly>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputParentPhone" class="col-form-label-sm">Parent Phone</label>
+                <input type="tel" th:field="*{parentPhone}" class="form-control" id="inputParentPhone" readonly>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="inputBadgeType" class="col-form-label-sm">Badge Type</label>
+                <input name="badgeId" th:field="*{badgeType}" class="form-control" id="inputBadgeType" type="text" readonly>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="inputParentFormReceived" class="col-form-label-sm">Parental Consent Form Received</label>
+                <input type="checkbox" th:field="*{parentFormReceived}" class="form-control disabled" id="inputParentFormReceived" disabled>
+            </div>
+        </form>
     </div>
 
-    <div class="row">
-        <div class="col-sm-2">Legal Name:</div><div class="col-sm-3" th:text="|${attendee.legalFirstName} ${attendee.legalLastName}|"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-2">Fan Name:</div><div class="col-sm-3" th:text="${attendee.fanName}"></div>
-        <div class="col-sm-2">Badge Number:</div><div class="col-sm-3" th:text="${attendee.badgeNumber}"></div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-sm-2">Phone Number:</div><div class="col-sm-3" th:text="${attendee.phoneNumber}"></div>
-        <div class="col-sm-2">Email:</div><div class="col-sm-3" th:text="${attendee.email}"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-2">Zip Code:</div><div class="col-sm-3" th:text="${attendee.zip}"></div>
-        <div class="col-sm-2">Date of Birth:</div>
-        <div class="col-sm-3">
-            <span th:text="${dts.format(attendee.birthDate)}"></span>
-            <span th:text="|(${attendee.age} years old)|"></span>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-2">Country:</div><div class="col-sm-3" th:text="${attendee.country}"></div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-sm-2">Emergency Contact:</div>
-        <div class="col-sm-6" th:text="|${attendee.emergencyContactFullName} - ${attendee.emergencyContactPhone}|"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-2">Parent Contact:</div>
-        <div class="col-sm-6" th:if="${attendee.isMinor()}" th:text="|${attendee.parentFullName} - ${attendee.parentPhone}|"></div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-sm-3">Badge Type:</div><div class="col-sm-4" th:text="${attendee.badgeType}"></div>
-        <div class="col-sm-2">Amount Paid:</div><div class="col-sm-3" th:text="|$${attendee.paidAmount}|"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3">Checked In:</div>
-        <div class="col-sm-4" th:text="${attendee.checkInTime} ? ${dts.format(attendee.checkInTime)} : 'No'"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3">Preregistered:</div><div class="col-sm-1" th:text="${attendee.preRegistered}"></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3">Parent Form Received:</div><div class="col-sm-1" th:text="${attendee.parentFormReceived}"></div>
-    </div>
 
     <div class="row">
         <table class="table table-sm table-bordered mt-4">

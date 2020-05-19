@@ -29,6 +29,7 @@ Version 1.1.0 (pending)
 - Added In-Line Registration check in workflow (schema change)
 - Added hero cards for different tasks on the homepage
 - Enabled server compression, browser caching headers, and HTTP/2
+- Homepage and attendee forms more mobile friendly
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
