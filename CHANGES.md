@@ -30,6 +30,7 @@ Version 1.1.0 (pending)
 - Added hero cards for different tasks on the homepage
 - Enabled server compression, browser caching headers, and HTTP/2
 - Homepage and attendee forms more mobile friendly
+- Upgraded Spring Boot to 2.1.1 -> 2.3.0, Java 11 -> 14
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
