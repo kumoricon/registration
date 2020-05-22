@@ -25,7 +25,7 @@
                     </form>
 
                     <span th:if="${a.isBadgePrinted()}">Already Checked In
-                    (<a th:href="@{/reg/atconorder/{orderId}/attendees/{attendeeId}(orderId=${a.orderId},attendeeId=${a.id})}">Reprint here</a>)</span>
+                    (<a th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${a.orderId},attendeeId=${a.id})}">Reprint here</a>)</span>
                 </td>
             </tr>
         </table>
