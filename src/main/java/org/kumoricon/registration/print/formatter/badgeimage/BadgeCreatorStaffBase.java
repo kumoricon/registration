@@ -31,7 +31,7 @@ class BadgeCreatorStaffBase {
     void drawBadgeTypeStripe(BadgeImage b, StaffBadgeDTO staff) {
         // Guests don't have a department color stripe, but staff do
         Color fgColor = Color.BLACK;
-        if (staff != null && staff.getDepartmentBackgroundColor() != null) {
+        if (staff != null && staff.getDepartmentBackgroundColor() != null && !staff.getDepartmentBackgroundColor().isBlank()) {
             Color bgColor = Color.decode(staff.getDepartmentBackgroundColor());
             fgColor = BadgeImage.getInverseColor(bgColor);
 
