@@ -19,7 +19,6 @@ public class InLineRegistrationController {
     private final Logger log = LoggerFactory.getLogger(InLineRegistrationController.class);
     private final InLineRegistrationService inLineRegistrationService;
 
-
     @Autowired
     public InLineRegistrationController(InLineRegistrationService inLineRegistrationService) {
         this.inLineRegistrationService = inLineRegistrationService;
@@ -27,8 +26,15 @@ public class InLineRegistrationController {
 
     @RequestMapping(value = "/inlinereg/search", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('in_line_registration')")
-    public String inLineCheckIn(Model model) {
-        log.info("viewed in-line registration search page");
+    public String inLineCheckIn(Model model,
+                                @RequestParam(value = "name", required = false) String name) {
+        if (name == null) {
+            log.info("viewed in-line registration search page");
+        } else {
+            log.info("searched in-line registration for {}", name);
+            model.addAttribute("name", name);
+            model.addAttribute("results", inLineRegistrationService.findMatchingByName(name));
+        }
         return "inlinereg/search";
     }
 
