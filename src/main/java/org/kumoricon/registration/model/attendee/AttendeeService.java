@@ -85,9 +85,11 @@ public class AttendeeService {
         BlacklistName name = new BlacklistName(attendee.getFirstName(), attendee.getLastName());
         BlacklistName legalName = new BlacklistName(attendee.getLegalFirstName(), attendee.getLegalLastName());
 
-        blacklistRepository.save(new BlacklistName(attendee.getFirstName(), attendee.getLastName()));
-        log.info("added {} to blacklist", name);
-        if (!name.equals(legalName)) {
+        if (!name.isBlank()) {
+            blacklistRepository.save(name);
+            log.info("added {} to blacklist", name);
+        }
+        if (!name.equals(legalName) && !legalName.isBlank()) {
             blacklistRepository.save(new BlacklistName(attendee.getLegalFirstName(), attendee.getLegalLastName()));
             log.info("added {} to blacklist", legalName);
         }
