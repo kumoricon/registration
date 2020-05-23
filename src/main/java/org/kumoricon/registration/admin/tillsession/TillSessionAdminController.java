@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,11 +34,23 @@ public class TillSessionAdminController {
     @RequestMapping(value = "/admin/tillsessions")
     @PreAuthorize("hasAuthority('manage_till_sessions')")
     public String admin(Model model,
-                                   @RequestParam(value = "filter", defaultValue = "open", required = false) String filter) {
+                        @RequestParam(value = "filter", defaultValue = "open", required = false) String filter) {
 
         model.addAttribute("tillSessions", getTillSessions(filter));
         model.addAttribute("filter", filter);
         return "admin/tillsessions";
+    }
+
+
+    @RequestMapping(value = "/admin/tillsessions/{id}")
+    @PreAuthorize("hasAuthority('manage_till_sessions')")
+    public String viewTillSessionReport(Model model,
+                                        @PathVariable Integer id,
+                                        @RequestParam(required = false, defaultValue = "false") Boolean showIndividualOrders) {
+        model.addAttribute("tillSession", tillSessionService.getTillDetailDTO(id));
+        model.addAttribute("showIndividualOrders", showIndividualOrders);
+
+        return "reports/tillsessions-id";
     }
 
 
