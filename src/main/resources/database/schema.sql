@@ -373,7 +373,6 @@ create table if not exists inlineregistrations
     membership_type text
 );
 
-
-create unique index if not exists inlineregistrations_registration_code_uindex
+create index if not exists inlineregistrations_registration_code_index
     on inlineregistrations (registration_code);
 

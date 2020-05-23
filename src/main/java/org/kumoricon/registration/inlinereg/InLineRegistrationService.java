@@ -1,37 +1,28 @@
 package org.kumoricon.registration.inlinereg;
 
 import org.kumoricon.registration.model.attendee.Attendee;
-import org.kumoricon.registration.model.attendee.AttendeeService;
 import org.kumoricon.registration.model.inlineregistration.InLineRegRepository;
 import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
-import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.OrderService;
 import org.kumoricon.registration.model.user.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class InLineRegistrationService {
     private final InLineRegRepository inLineRegRepository;
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
-    private final AttendeeService attendeeService;
-    private static final Logger log = LoggerFactory.getLogger(InLineRegistrationService.class);
 
     public InLineRegistrationService(InLineRegRepository inLineRegRepository,
-                                     OrderRepository orderRepository,
-                                     OrderService orderService,
-                                     AttendeeService attendeeService) {
+                                     OrderService orderService) {
         this.inLineRegRepository = inLineRegRepository;
-        this.orderRepository = orderRepository;
         this.orderService = orderService;
-        this.attendeeService = attendeeService;
     }
-
 
     @Transactional
     public int createOrder(String regCode, User user) throws InLineRegistrationException {
@@ -52,6 +43,19 @@ public class InLineRegistrationService {
         return orderId;
     }
 
+    @Transactional(readOnly = true)
+    public Map<String, List<InLineRegistration>> findMatchingByName(String name) {
+        List<InLineRegistration> ilr = inLineRegRepository.findByNameLike(name);
+
+        Map<String, List<InLineRegistration>> output = new HashMap<>();
+        for (InLineRegistration i : ilr) {
+            if (!output.containsKey(i.getRegistrationNumber())) {
+                output.put(i.getRegistrationNumber(), new ArrayList<>());
+            }
+            output.get(i.getRegistrationNumber()).add(i);
+        }
+        return output;
+    }
 
 
     private Attendee attendeeFromInLineReg(InLineRegistration ilr) {

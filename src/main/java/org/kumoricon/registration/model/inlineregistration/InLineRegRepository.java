@@ -32,6 +32,17 @@ public class InLineRegRepository {
         }
     }
 
+    public List<InLineRegistration> findByNameLike(String name) {
+        final String SQL = "select * from inlineregistrations where first_name ILIKE :term0 || '%' OR " +
+                "last_name ILIKE :term0";
+        try {
+            return jdbcTemplate.query(SQL, Map.of("term0", name), new InLineRegRowMapper());
+        } catch (
+                EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
     private static class InLineRegRowMapper implements RowMapper<InLineRegistration> {
         @Override
         public InLineRegistration mapRow(ResultSet rs, int rowNum) throws SQLException {
