@@ -71,7 +71,7 @@ public class TillSessionController {
                 model.addAttribute("tillName", tillName);
                 model.addAttribute("tillSession", tillSessionService.getOpenSessionForUser(currentUser));
 
-                log.error("Error setting printer to {}", sanitizedTillName, e);
+                log.error("Error setting till to {}", sanitizedTillName, e);
                 model.addAttribute("err", e.getMessage());
                 return "utility/tillsession";
             }
