@@ -50,4 +50,8 @@ public class BlacklistName {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         return result;
     }
+
+    public boolean isBlank() {
+        return (firstName == null || firstName.isBlank()) && (lastName == null || lastName.isBlank());
+    }
 }
