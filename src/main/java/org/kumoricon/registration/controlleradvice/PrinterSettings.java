@@ -49,7 +49,7 @@ public class PrinterSettings {
         try {
             return new PrinterSettings(values[0], Integer.parseInt(values[1]), Integer.parseInt(values[2]));
         } catch (NumberFormatException e) {
-            throw new RuntimeException("Error parsing intger from " + value);
+            throw new RuntimeException("Bad printer cookie value: error parsing integer from " + value);
         }
     }
 
