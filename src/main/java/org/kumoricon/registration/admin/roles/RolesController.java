@@ -4,7 +4,6 @@ import org.kumoricon.registration.model.role.RightRepository;
 import org.kumoricon.registration.model.role.Role;
 import org.kumoricon.registration.model.role.RoleRepository;
 import org.kumoricon.registration.model.role.RoleValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +21,6 @@ public class RolesController {
     private final RoleValidator roleValidator;
     private final RightRepository rightRepository;
 
-    @Autowired
     public RolesController(RoleRepository roleRepository, RoleValidator roleValidator, RightRepository rightRepository) {
         this.roleRepository = roleRepository;
         this.roleValidator = roleValidator;

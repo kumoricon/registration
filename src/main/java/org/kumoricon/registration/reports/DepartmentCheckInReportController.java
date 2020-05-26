@@ -1,7 +1,6 @@
 package org.kumoricon.registration.reports;
 
 import org.kumoricon.registration.model.staff.StaffReportRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import java.util.List;
 public class DepartmentCheckInReportController {
     private final StaffReportRepository staffReportRepository;
 
-    @Autowired
     public DepartmentCheckInReportController(StaffReportRepository staffReportRepository) {
         this.staffReportRepository = staffReportRepository;
     }

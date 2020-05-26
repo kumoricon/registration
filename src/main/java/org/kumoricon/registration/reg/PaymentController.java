@@ -11,7 +11,6 @@ import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -36,7 +35,6 @@ public class PaymentController {
     private final String[] PAYMENT_TYPES = {"cash", "card", "check"};
     private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
 
-    @Autowired
     public PaymentController(OrderRepository orderRepository,
                              PaymentRepository paymentRepository,
                              TillSessionService tillSessionService) {

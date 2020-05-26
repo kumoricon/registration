@@ -7,7 +7,6 @@ import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,6 @@ public class CheckinController {
 
     private static final Logger log = LoggerFactory.getLogger(CheckinController.class);
 
-    @Autowired
     public CheckinController(AttendeeRepository attendeeRepository,
                              AttendeeHistoryRepository attendeeHistoryRepository,
                              AttendeeService attendeeService,

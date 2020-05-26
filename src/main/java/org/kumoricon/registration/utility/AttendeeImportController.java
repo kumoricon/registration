@@ -1,7 +1,6 @@
 package org.kumoricon.registration.utility;
 
 import org.kumoricon.registration.model.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,6 @@ import java.io.InputStreamReader;
 public class AttendeeImportController {
     private final AttendeeImporterService attendeeImporterService;
 
-    @Autowired
     public AttendeeImportController(AttendeeImporterService attendeeImporterService) {
         this.attendeeImporterService = attendeeImporterService;
     }

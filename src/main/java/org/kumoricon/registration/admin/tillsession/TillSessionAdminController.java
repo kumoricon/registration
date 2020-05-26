@@ -6,7 +6,6 @@ import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +24,6 @@ public class TillSessionAdminController {
 
     private static final Logger log = LoggerFactory.getLogger(TillSessionAdminController.class);
 
-    @Autowired
     public TillSessionAdminController(TillSessionService tillSessionService, UserService userService) {
         this.tillSessionService = tillSessionService;
         this.userService = userService;

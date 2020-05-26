@@ -2,7 +2,6 @@ package org.kumoricon.registration.utility;
 
 import org.kumoricon.registration.model.role.Right;
 import org.kumoricon.registration.model.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,6 @@ import java.util.TreeSet;
 @Controller
 public class UserInfoController {
 
-    @Autowired
     public UserInfoController() {
     }
 

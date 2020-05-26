@@ -2,7 +2,6 @@ package org.kumoricon.registration.reports;
 
 import org.kumoricon.registration.model.attendee.AttendeeHistoryRepository;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +17,6 @@ public class CheckInByReportController {
     private final AttendeeRepository attendeeRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
 
-
-    @Autowired
     public CheckInByReportController(AttendeeRepository attendeeRepository, AttendeeHistoryRepository attendeeHistoryRepository) {
         this.attendeeRepository = attendeeRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;

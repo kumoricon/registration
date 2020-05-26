@@ -3,12 +3,10 @@ package org.kumoricon.registration.home;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.helpers.AuthHelper;
 import org.kumoricon.registration.model.badge.BadgeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,6 @@ import java.util.List;
 public class HomeController {
     private final BadgeService badgeService;
 
-    @Autowired
     public HomeController(BadgeService badgeService) {
         this.badgeService = badgeService;
     }

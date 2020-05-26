@@ -9,7 +9,6 @@ import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +25,6 @@ public class OrderAttendeeEditController {
     private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(OrderAttendeeEditController.class);
 
-    @Autowired
     public OrderAttendeeEditController(AttendeeRepository attendeeRepository,
                                        AttendeeHistoryRepository attendeeHistoryRepository,
                                        BadgeService badgeService,

@@ -3,7 +3,6 @@ package org.kumoricon.registration.inlinereg;
 import org.kumoricon.registration.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class InLineRegistrationController {
-
     private final Logger log = LoggerFactory.getLogger(InLineRegistrationController.class);
     private final InLineRegistrationService inLineRegistrationService;
 
-    @Autowired
     public InLineRegistrationController(InLineRegistrationService inLineRegistrationService) {
         this.inLineRegistrationService = inLineRegistrationService;
     }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginTrackerTask {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginTrackerTask.class);
     private final LoginRepository loginRepository;
 
     public LoginTrackerTask(LoginRepository loginRepository) {

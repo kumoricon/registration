@@ -1,6 +1,5 @@
 package org.kumoricon.registration.guest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +13,6 @@ import java.util.List;
 public class GuestController {
     private final GuestRepository guestRepository;
 
-    @Autowired
     public GuestController(GuestRepository guestRepository) {
         this.guestRepository = guestRepository;
     }

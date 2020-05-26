@@ -2,7 +2,6 @@ package org.kumoricon.registration.order;
 
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ public class OrderAttendeeRevokeController {
     private final AttendeeService attendeeService;
     private final AttendeeRepository attendeeRepository;
 
-    @Autowired
     public OrderAttendeeRevokeController(AttendeeService attendeeService,
                                          AttendeeRepository attendeeRepository) {
         this.attendeeService = attendeeService;
