@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.print.PrintException;
 import java.util.List;
 
@@ -43,13 +42,13 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}")
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String verifyData(Model model,
-                         @PathVariable Integer id) {
-        try {
-            Attendee attendee = attendeeRepository.findById(id);
+                             @PathVariable Integer id) {
+        Attendee attendee = attendeeRepository.findById(id);
+        if (attendee != null) {
             model.addAttribute("attendee", attendee);
             model.addAttribute("history", attendeeHistoryRepository.findAllDTObyAttendeeId(id));
-        } catch (NumberFormatException ex) {
-            model.addAttribute("err", ex.getMessage());
+        } else {
+            model.addAttribute("err", "Attendee " + id + " not found");
         }
 
         return "reg/checkin-id";
@@ -73,7 +72,7 @@ public class CheckinController {
             String result = badgePrintService.printBadgesForAttendees(List.of(attendee), printerSettings);
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=" + result;
         } catch (PrintException ex) {
-            log.error("Error printing", ex);
+            log.error("Error printing: {}", ex.getMessage());
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=" + ex.getMessage();
         }
     }
@@ -94,17 +93,17 @@ public class CheckinController {
     @RequestMapping(value = "/reg/checkin/{id}/printbadge", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('pre_reg_check_in')")
     public String printBadgeAction(@PathVariable Integer id,
-                                   @RequestParam(required=false , value = "action") String action,
+                                   @RequestParam(value = "action") String action,
                                    @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
         Attendee attendee = attendeeRepository.findById(id);
         PrinterSettings settings = PrinterSettings.fromCookieValue(printerCookie);
 
-        if (action != null && action.equals("badgePrintedSuccessfully") && attendee != null) {
+        if (action.equals("badgePrintedSuccessfully") && attendee != null) {
             log.info("reports badge printed successfully for {}", attendee);
             attendee.setBadgePrinted(true);
             attendeeRepository.save(attendee);
             return "redirect:/search?msg=Checked+in+&orderId=" + attendee.getOrderId();
-        } else if (action != null && action.equals("reprintDuringCheckin")) {
+        } else if (action.equals("reprintDuringCheckin")) {
             log.info("reprinting badge during check in for {}", attendee);
             try {
                 String result = badgePrintService.printBadgesForAttendees(List.of(attendee), settings);
