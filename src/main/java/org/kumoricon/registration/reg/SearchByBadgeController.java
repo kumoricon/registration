@@ -4,7 +4,6 @@ import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,6 @@ public class SearchByBadgeController {
     private final BadgeService badgeService;
     private final AttendeeSearchRepository attendeeSearchRepository;
 
-    @Autowired
     public SearchByBadgeController(BadgeService badgeService, AttendeeSearchRepository attendeeSearchRepository) {
         this.badgeService = badgeService;
         this.attendeeSearchRepository = attendeeSearchRepository;

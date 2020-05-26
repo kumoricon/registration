@@ -7,7 +7,6 @@ import org.kumoricon.registration.print.BadgePrintService;
 import org.kumoricon.registration.print.Sides;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ public class GuestPrintController {
 
     private static final Logger log = LoggerFactory.getLogger(GuestPrintController.class);
 
-    @Autowired
     public GuestPrintController(BadgePrintService badgePrintService, GuestRepository guestRepository) {
         this.badgePrintService = badgePrintService;
         this.guestRepository = guestRepository;

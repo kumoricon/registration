@@ -5,7 +5,6 @@ import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.order.OrderDTO;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +23,6 @@ public class OrderController {
     private final BadgeService badgeService;
     private final AttendeeSearchRepository attendeeSearchRepository;
 
-    @Autowired
     public OrderController(OrderRepository orderRepository,
                            AttendeeSearchRepository attendeeSearchRepository,
                            AttendeeDetailRepository attendeeDetailRepository,

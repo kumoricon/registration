@@ -5,7 +5,6 @@ import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.blacklist.BlacklistValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ public class BlacklistController {
     private final BlacklistValidator blacklistValidator;
     private static final Logger log = LoggerFactory.getLogger(BlacklistController.class);
 
-    @Autowired
     public BlacklistController(BlacklistRepository blacklistRepository, BlacklistValidator blacklistValidator) {
         this.blacklistRepository = blacklistRepository;
         this.blacklistValidator = blacklistValidator;

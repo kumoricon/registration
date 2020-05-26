@@ -4,7 +4,6 @@ import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,6 @@ public class AttendanceReportController {
     private final String[] ATTENDEE_BADGE_TYPES = {"wednesday", "thursday", "friday", "saturday", "sunday", "weekend", "vip"};
     private final String[] VENDOR_BADGE_TYPES = {"artist", "exhibitor"};
 
-    @Autowired
     public AttendanceReportController(AttendeeSearchRepository attendeeSearchRepository,
                                       StaffRepository staffRepository) {
         this.attendeeSearchRepository = attendeeSearchRepository;

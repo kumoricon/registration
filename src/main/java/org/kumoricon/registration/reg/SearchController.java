@@ -4,7 +4,6 @@ import org.kumoricon.registration.model.SearchSuggestion;
 import org.kumoricon.registration.model.attendee.AttendeeAutoSuggestRepository;
 import org.kumoricon.registration.model.attendee.AttendeeListDTO;
 import org.kumoricon.registration.model.attendee.AttendeeSearchRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ public class SearchController {
     private final AttendeeSearchRepository attendeeSearchRepository;
     private final AttendeeAutoSuggestRepository attendeeAutoSuggestRepository;
 
-    @Autowired
     public SearchController(AttendeeSearchRepository attendeeSearchRepository,
                             AttendeeAutoSuggestRepository attendeeAutoSuggestRepository) {
         this.attendeeSearchRepository = attendeeSearchRepository;

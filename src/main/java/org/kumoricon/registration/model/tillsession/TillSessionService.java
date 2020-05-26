@@ -1,7 +1,6 @@
 package org.kumoricon.registration.model.tillsession;
 
 import org.kumoricon.registration.model.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +12,6 @@ import java.util.List;
 public class TillSessionService {
     private final TillSessionRepository repository;
 
-    @Autowired
     public TillSessionService(TillSessionRepository repository) {
         this.repository = repository;
     }

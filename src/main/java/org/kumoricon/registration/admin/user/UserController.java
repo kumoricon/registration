@@ -4,7 +4,6 @@ import org.kumoricon.registration.model.role.RoleRepository;
 import org.kumoricon.registration.model.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +23,6 @@ public class UserController {
     private final UserValidator userValidator;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
     public UserController(UserRepository userRepository, RoleRepository roleRepository, UserService userService, UserValidator userValidator) {
         this.userRepository = userRepository;   // TODO: Refactor this so it only depends on UserService, not
         this.roleRepository = roleRepository;   // Repositories directly.

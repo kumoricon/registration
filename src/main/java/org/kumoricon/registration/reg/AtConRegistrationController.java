@@ -12,7 +12,6 @@ import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -34,7 +33,6 @@ public class AtConRegistrationController {
     private final Logger log = LoggerFactory.getLogger(AtConRegistrationController.class);
 
 
-    @Autowired
     public AtConRegistrationController(AttendeeRepository attendeeRepository,
                                        OrderRepository orderRepository,
                                        PaymentRepository paymentRepository,

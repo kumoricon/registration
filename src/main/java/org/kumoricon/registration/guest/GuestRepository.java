@@ -1,6 +1,5 @@
 package org.kumoricon.registration.guest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,7 +18,6 @@ import java.util.List;
 public class GuestRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
     public GuestRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

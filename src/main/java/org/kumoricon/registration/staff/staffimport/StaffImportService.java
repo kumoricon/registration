@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kumoricon.registration.model.ImportService;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,6 @@ public class StaffImportService extends ImportService {
     private final StaffRepository staffRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
     public StaffImportService(@Value("${staff.onlineinputpath}") String importInputPath,
                               @Value("${staff.onlinedlqpath}") String importDLQPath,
                               StaffRepository staffRepository) {

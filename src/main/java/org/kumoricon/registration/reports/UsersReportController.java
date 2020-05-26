@@ -2,7 +2,6 @@ package org.kumoricon.registration.reports;
 
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +14,9 @@ import java.util.List;
 public class UsersReportController {
     private final UserRepository userRepository;
 
-    @Autowired
     public UsersReportController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     @RequestMapping(value = "/reports/users")
     @PreAuthorize("hasAuthority('view_users_report')")

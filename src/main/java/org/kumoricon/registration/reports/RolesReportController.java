@@ -3,7 +3,6 @@ package org.kumoricon.registration.reports;
 import org.kumoricon.registration.model.role.Right;
 import org.kumoricon.registration.model.role.RoleDTO;
 import org.kumoricon.registration.model.role.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,6 @@ import java.util.List;
 public class RolesReportController {
     private final RoleService roleService;
 
-    @Autowired
     public RolesReportController(RoleService roleService) {
         this.roleService = roleService;
     }
