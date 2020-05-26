@@ -1,5 +1,7 @@
 package org.kumoricon.registration.controlleradvice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -14,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieControllerAdvice {
     public static final String PRINTER_COOKIE_NAME = "PRINTERNAME";
     public static final String TILL_COOKIE_NAME = "TILLNAME";
-
+    private static final Logger log = LoggerFactory.getLogger(CookieControllerAdvice.class);
     /**
      * Provides the currently selected printer name, or null if the cookie is missing or malformed.
      * @param request Current HTTP request
@@ -25,7 +27,7 @@ public class CookieControllerAdvice {
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
-            for (Cookie c : request.getCookies()) {
+            for (Cookie c : cookies) {
                 if (c.getName().equals(PRINTER_COOKIE_NAME)) {
                     // This has a try/catch around it so that the UI isn't broken if any weird values
                     // end up in the cookie and it fails to parse.
@@ -33,6 +35,7 @@ public class CookieControllerAdvice {
                         PrinterSettings settings = PrinterSettings.fromCookieValue(c.getValue());
                         return settings.getPrinterName();
                     } catch (Exception ex) {
+                        log.warn("Invalid printer settings in cookie {}: {}", PRINTER_COOKIE_NAME, c.getValue());
                         return null;
                     }
                 }
