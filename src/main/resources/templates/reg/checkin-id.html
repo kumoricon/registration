@@ -8,14 +8,14 @@
 
 <div layout:fragment="content" class="container">
 
-    <div class="row alert alert-warning" th:if="${attendee.checkedIn}">
+    <div class="row alert alert-warning" th:if="${attendee != null && attendee.checkedIn}">
         Attendee is already checked in
     </div>
 
-    <div class="row">
+    <div class="row" th:if="${attendee != null}">
         <div class="col-7">
 
-            <table class="table table-bordered table-striped table-fit table-sm">
+            <table class="table table-bordered table-striped table-fit table-sm" >
                 <tbody>
                 <tr>
                     <td>Name</td>

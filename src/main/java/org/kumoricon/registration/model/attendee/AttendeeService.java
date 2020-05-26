@@ -42,7 +42,7 @@ public class AttendeeService {
             throw new RuntimeException("membership was revoked for " + attendee.getName());
         }
 
-        if (attendee.isMinor() && !parentFormReceived) {
+        if (attendee.isMinor() && (parentFormReceived == null || !parentFormReceived)) {
             throw new RuntimeException("Parental consent form not received");
         }
 
