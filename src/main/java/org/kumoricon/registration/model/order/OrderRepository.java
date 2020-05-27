@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.order;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -29,7 +30,7 @@ public class OrderRepository {
                     "select * from orders where id=:id",
                     Map.of("id", id), new OrderRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("Order id " + id + " not found");
         }
     }
 

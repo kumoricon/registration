@@ -2,6 +2,7 @@ package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.print.BadgePrintService;
@@ -44,12 +45,8 @@ public class CheckinController {
     public String verifyData(Model model,
                              @PathVariable Integer id) {
         Attendee attendee = attendeeRepository.findById(id);
-        if (attendee != null) {
-            model.addAttribute("attendee", attendee);
-            model.addAttribute("history", attendeeHistoryRepository.findAllDTObyAttendeeId(id));
-        } else {
-            model.addAttribute("err", "Attendee " + id + " not found");
-        }
+        model.addAttribute("attendee", attendee);
+        model.addAttribute("history", attendeeHistoryRepository.findAllDTObyAttendeeId(id));
 
         return "reg/checkin-id";
     }
@@ -62,7 +59,6 @@ public class CheckinController {
                           @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
 
         Attendee attendee = attendeeService.checkInAttendee(id, user, parentFormReceived);
-
         if (attendee.isBadgePrePrinted()) {
             return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?err=Badge+is+pre-+printed";
         }
@@ -85,8 +81,8 @@ public class CheckinController {
         if (!attendee.getCheckedIn()) {
             return "redirect:/reg/checkin/" + attendee.getId() + "?err=attendee+not+checked+in";
         }
-
         model.addAttribute("attendee", attendee);
+
         return "reg/checkin-id-printbadge";
     }
 

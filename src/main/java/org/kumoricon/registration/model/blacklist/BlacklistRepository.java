@@ -1,5 +1,7 @@
 package org.kumoricon.registration.model.blacklist;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,10 +27,14 @@ public class BlacklistRepository {
     }
 
     @Transactional(readOnly = true)
-    public BlacklistName findById(int id) {
+    public BlacklistName findById(int id) throws NotFoundException {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject("select * from blacklist where id=:id",
-                namedParameters, new BlacklistRowMapper());
+        try {
+            return jdbcTemplate.queryForObject("select * from blacklist where id=:id",
+                    namedParameters, new BlacklistRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Blacklist id " + id + " not found");
+        }
     }
 
     @Transactional

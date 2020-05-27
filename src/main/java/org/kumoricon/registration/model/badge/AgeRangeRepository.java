@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.badge;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -23,24 +23,28 @@ class AgeRangeRepository {
     }
 
     @Transactional(readOnly = true)
-    public List<AgeRange> findAgeRangesForBadgeId(Integer id) {
+    public List<AgeRange> findAgeRangesForBadgeId(Integer id) throws NotFoundException {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
             return jdbcTemplate.query(
                     "select * from ageranges where badge_id = :id", params, new AgeRangeRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
+            throw new NotFoundException("No Age Ranges found for Badge id " + id);
         }
     }
 
 
     @Transactional(readOnly = true)
-    public AgeRange findAgeRangeForBadgeIdAndAge(Integer badgeId, Long age) {
+    public AgeRange findAgeRangeForBadgeIdAndAge(Integer badgeId, Long age) throws NotFoundException {
         MapSqlParameterSource params = new MapSqlParameterSource("id", badgeId)
                 .addValue("age", age);
-        return jdbcTemplate.queryForObject(
-                "select * from ageranges where badge_id = :id and :age >= min_age and :age <= max_age",
-                params, new AgeRangeRowMapper());
+        try {
+            return jdbcTemplate.queryForObject(
+                    "select * from ageranges where badge_id = :id and :age >= min_age and :age <= max_age",
+                    params, new AgeRangeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("No Age Range found for Badge id " + badgeId + " age " + age);
+        }
     }
 
 
@@ -74,7 +78,4 @@ class AgeRangeRepository {
             return ageRange;
         }
     }
-
-
-
 }

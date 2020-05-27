@@ -3,10 +3,10 @@ package org.kumoricon.registration.inlinereg;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.inlineregistration.InLineRegRepository;
 import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
-import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderService;
 import org.kumoricon.registration.model.user.User;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +16,6 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +68,7 @@ public class InLineRegistrationControllerTest {
         // Attempting to create an order returns an error when no registrations are found with
         // that code
         Model model = new ConcurrentModel();
-        when(inLineRegRepository.findByRegistrationNumber("ABC123")).thenReturn(List.of());
+        when(inLineRegRepository.findByRegistrationNumber("ABC123")).thenThrow(new NotFoundException("Code Not Found"));
 
         String template = inLineRegistrationController.inLineCheckInPost(model, "ABC123", buildUser());
         assertEquals("inlinereg/search", template);

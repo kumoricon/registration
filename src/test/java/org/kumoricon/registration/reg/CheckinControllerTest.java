@@ -3,6 +3,7 @@ package org.kumoricon.registration.reg;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.user.User;
@@ -66,15 +67,6 @@ public class CheckinControllerTest {
         assertEquals((Integer)1, ((Attendee)model.getAttribute("attendee")).getId());
         assertEquals(0, ((List<AttendeeHistoryDTO>) model.getAttribute("history")).size());
     }
-
-    @Test
-    public void verifyDataNoAttendeeFound() {
-        Model model = new ConcurrentModel();
-        String template = controller.verifyData(model, 99);
-        assertEquals("reg/checkin-id", template);
-        assertEquals("Attendee 99 not found", model.getAttribute("err"));
-    }
-
 
     @Test
     public void checkInHappyPathAdult() {

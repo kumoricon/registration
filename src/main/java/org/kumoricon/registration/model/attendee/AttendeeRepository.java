@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.attendee;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -8,8 +9,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.*;
@@ -24,18 +23,6 @@ public class AttendeeRepository {
     public AttendeeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    @Transactional(readOnly = true)
-    public List<Attendee> findByOrderNumber(String orderNumber) {
-        try {
-            return jdbcTemplate.query(
-                    "select * from attendees join orders on attendees.order_id = orders.id where orders.order_id = :orderNumber order by attendees.id desc",
-                    Map.of("orderNumber", orderNumber), new AttendeeRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
-        }
-    }
-
 
     @Transactional(readOnly = true)
     public List<Attendee> findAllByOrderId(int orderId) {
@@ -65,12 +52,6 @@ public class AttendeeRepository {
             return new ArrayList<>();
         }
     }
-
-//    @Query(value = "SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as CheckInDate, COUNT(id) AS cnt, SUM(paid_amount) as Amount FROM attendees WHERE checked_in = TRUE AND pre_registered = FALSE GROUP BY CheckInDate ORDER BY CheckInDate;", nativeQuery = true)
-//    List<Object[]> findAtConCheckInCountsByDate();
-//
-//    @Query(value = "SELECT DATE(check_in_time at time zone 'America/Los_Angeles') as CheckInDate, COUNT(id) AS cnt, SUM(paid_amount) as Amount FROM attendees WHERE checked_in = TRUE AND pre_registered = TRUE GROUP BY CheckInDate ORDER BY CheckInDate;", nativeQuery = true)
-//    List<Object[]> findPreRegCheckInCountsByDate();
 
     @Transactional(readOnly = true)
     public List<CheckInByHourDTO> findCheckInCountsByHour() {
@@ -121,33 +102,25 @@ public class AttendeeRepository {
     }
 
     @Transactional(readOnly = true)
-    public Attendee findByOrderId(int orderId) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "select * from attendees where order_id=:orderId",
-                    Map.of("orderId", orderId), new AttendeeRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-
-    @Transactional(readOnly = true)
-    public Attendee findById(int id) {
+    public Attendee findById(int id) throws NotFoundException {
         try {
             return jdbcTemplate.queryForObject(
                     "select * from attendees where id=:id",
                     Map.of("id", id), new AttendeeRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("Attendee " + id + " not found");
         }
     }
 
     @Transactional(readOnly = true)
-    public Attendee findByIdAndOrderId(int id, int orderId) {
-        return jdbcTemplate.queryForObject(
-                "select * from attendees where id=:id and order_id = :orderId",
-                Map.of("id", id, "orderId", orderId), new AttendeeRowMapper());
+    public Attendee findByIdAndOrderId(int id, int orderId) throws NotFoundException {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "select * from attendees where id=:id and order_id = :orderId",
+                    Map.of("id", id, "orderId", orderId), new AttendeeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Attendee id " + id + " in Order id " + orderId + " not found");
+        }
     }
 
 
@@ -217,17 +190,6 @@ public class AttendeeRepository {
         }
     }
 
-
-    @Transactional(readOnly = true)
-    public List<Attendee> findByBadgeType(Integer badgeId, Integer page) {
-        try {
-            return jdbcTemplate.query("select * from attendees WHERE badge_id = :badgeId ORDER BY id desc LIMIT :limit OFFSET :offset",
-                    Map.of("badgeId", badgeId, "limit", 20, "offset", 20*page),
-                    new AttendeeRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
-        }
-    }
 
     @Transactional(readOnly = true)
     public List<Attendee> findAllByBadgeType(Integer badgeId) {

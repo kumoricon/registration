@@ -37,8 +37,6 @@ public class TillSessionController {
         User currentUser = userService.findByUsername(user.getName());
         if (currentUser == null) throw new RuntimeException("User not found");
 
-
-
         TillSessionDTO s = tillSessionService.getOpenSessionForUser(currentUser);
 
         model.addAttribute("tillName", tillName);

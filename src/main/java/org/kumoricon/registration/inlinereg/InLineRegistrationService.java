@@ -25,11 +25,8 @@ public class InLineRegistrationService {
     }
 
     @Transactional
-    public int createOrder(String regCode, User user) throws InLineRegistrationException {
+    public int createOrder(String regCode, User user) {
         List<InLineRegistration> inLineRegistrations = inLineRegRepository.findByRegistrationNumber(regCode);
-        if (inLineRegistrations.size() == 0) {
-            throw new InLineRegistrationException("No attendees found for code " + regCode);
-        }
 
         Integer orderId = orderService.saveNewOrderForUser(user);
 

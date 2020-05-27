@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.role;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,7 +23,7 @@ public class RoleRepository {
     }
 
     @Transactional(readOnly = true)
-    public Role findByNameIgnoreCase(String name) {
+    public Role findByNameIgnoreCase(String name) throws NotFoundException {
         try {
             Role result = jdbcTemplate.queryForObject(
                     "select * from roles where name=:name",
@@ -30,19 +31,19 @@ public class RoleRepository {
             result.setRights(getRightIdsForRole(result.getId()));
             return result;
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("Role named " + name + " not found");
         }
     }
 
     @Transactional(readOnly = true)
-    public Role findById(Integer id) {
+    public Role findById(Integer id) throws NotFoundException {
         try {
             Role result = jdbcTemplate.queryForObject("select * from roles where id=:id",
                     Map.of("id", id), new RoleRowMapper());
             result.setRights(getRightIdsForRole(result.getId()));
             return result;
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("Role id " + id + " not found");
         }
     }
 

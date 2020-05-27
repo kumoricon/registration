@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.user;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -33,13 +34,13 @@ public class UserRepository {
     }
 
     @Transactional(readOnly = true)
-    User findOneById(Integer id) {
+    User findOneById(Integer id) throws NotFoundException {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id where users.id=:id",
                     Map.of("id", id), new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("User id " + id + " not found");
         }
     }
 
