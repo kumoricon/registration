@@ -1,5 +1,7 @@
 package org.kumoricon.registration.model.attendee;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,12 +25,15 @@ public class AttendeeDetailRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Transactional(readOnly = true)
     public AttendeeDetailDTO findByIdAndOrderId(int attendeeId, int orderId) {
-        return jdbcTemplate.queryForObject(
-                "select attendees.*, b.name as badge_type from attendees JOIN badges b on attendees.badge_id = b.id  where attendees.id=:attendeeId and attendees.order_id = :orderId",
-                Map.of("attendeeId", attendeeId, "orderId", orderId), new AttendeeDetailDTORowMapper());
+        try {
+            return jdbcTemplate.queryForObject(
+                    "select attendees.*, b.name as badge_type from attendees JOIN badges b on attendees.badge_id = b.id  where attendees.id=:attendeeId and attendees.order_id = :orderId",
+                    Map.of("attendeeId", attendeeId, "orderId", orderId), new AttendeeDetailDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Attendee id " + attendeeId + " not found in Order id " + orderId);
+        }
     }
 
     @SuppressWarnings("Duplicates")

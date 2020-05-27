@@ -1,4 +1,5 @@
 package org.kumoricon.registration.model.staff;
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -96,7 +97,7 @@ public class StaffRepository {
 
 
     @Transactional(readOnly = true)
-    public Staff findByUuid(String uuid) {
+    public Staff findByUuid(String uuid) throws NotFoundException {
         final String sql = "select * from staff where uuid = :uuid";
         try {
             Staff s = jdbcTemplate.queryForObject(sql, Map.of("uuid", uuid), new StaffRowMapper());
@@ -105,7 +106,7 @@ public class StaffRepository {
             }
             return s;
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("Staff uuid " + uuid + " not found");
         }
     }
 

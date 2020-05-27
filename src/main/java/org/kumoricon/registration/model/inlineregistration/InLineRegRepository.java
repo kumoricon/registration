@@ -26,8 +26,7 @@ public class InLineRegRepository {
             return jdbcTemplate.query(
                     "select * from inlineregistrations where registration_code = :regCode",
                     Map.of("regCode", registrationCode), new InLineRegRowMapper());
-        } catch (
-        EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
     }

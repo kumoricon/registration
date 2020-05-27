@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.tillsession;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.order.Payment;
 import org.kumoricon.registration.model.user.User;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -47,13 +48,13 @@ public class TillSessionRepository {
 
 
     @Transactional(readOnly = true)
-    TillSession findOneById(Integer id) {
+    TillSession findOneById(Integer id) throws NotFoundException {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT * from tillsessions where tillsessions.id=:id",
                     Map.of("id", id), new TillSessionRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new NotFoundException("Till Session id " + id + " not found");
         }
     }
 
@@ -68,28 +69,6 @@ public class TillSessionRepository {
         }
     }
 
-    @Transactional(readOnly = true)
-    List<TillSession> findAllOpenSessions() {
-        try {
-            return jdbcTemplate.query(
-                    "SELECT * from tillsessions where tillsessions.open = true",
-                    new TillSessionRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
-        }
-    }
-
-
-    @Transactional(readOnly = true)
-    List<TillSession> findAllOrderByEnd() {
-        try {
-            return jdbcTemplate.query(
-                    "SELECT * from tillsessions ORDER BY tillsessions.end_time DESC",
-                    new TillSessionRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
-        }
-    }
 
     @Transactional(readOnly = true)
     List<TillSessionDTO> findAllTillSessionDTO() {

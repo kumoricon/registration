@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.badge;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -90,10 +91,14 @@ class BadgeRepository {
     }
 
     @Transactional(readOnly = true)
-    public Badge findById(Integer badgeId) {
+    public Badge findById(Integer badgeId) throws NotFoundException {
         SqlParameterSource params = new MapSqlParameterSource("id", badgeId);
-        return jdbcTemplate.queryForObject("SELECT * from badges where badges.id=:id",
-                params, new BadgeRowMapper());
+        try {
+            return jdbcTemplate.queryForObject("SELECT * from badges where badges.id=:id",
+                    params, new BadgeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Badge id " + badgeId + " not found");
+        }
     }
 
     static class BadgeRowMapper implements RowMapper<Badge> {

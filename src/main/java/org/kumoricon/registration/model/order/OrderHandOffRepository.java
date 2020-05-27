@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.order;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -50,9 +51,13 @@ public class OrderHandOffRepository {
         jdbcTemplate.update(SQL, params);
     }
 
-    public OrderHandOffDTO findByOrderId(Integer orderId) {
-        return jdbcTemplate.queryForObject("select orderhandoffs.*, u.username from orderhandoffs join users u on orderhandoffs.user_id = u.id WHERE order_id = :orderId",
-                Map.of("orderId", orderId), new OrderHandOffRowMapper());
+    public OrderHandOffDTO findByOrderId(Integer orderId) throws NotFoundException {
+        try {
+            return jdbcTemplate.queryForObject("select orderhandoffs.*, u.username from orderhandoffs join users u on orderhandoffs.user_id = u.id WHERE order_id = :orderId",
+                    Map.of("orderId", orderId), new OrderHandOffRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Hand Off for order id " + orderId + " not found");
+        }
     }
 
 

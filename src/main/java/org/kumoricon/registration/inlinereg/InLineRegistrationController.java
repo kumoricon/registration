@@ -1,5 +1,6 @@
 package org.kumoricon.registration.inlinereg;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,8 @@ public class InLineRegistrationController {
         try {
             int orderId = inLineRegistrationService.createOrder(code, user);
             return "redirect:/reg/atconorder/" + orderId;
-        } catch (InLineRegistrationException ex) {
+        } catch (NotFoundException ex) {
+            // Instead of bubbling up to the error page, stay on this page and display the search box
             log.warn("Error creating order: {}", ex.getMessage());
             model.addAttribute("err", "No attendees found for registration code " + code);
             return "inlinereg/search";

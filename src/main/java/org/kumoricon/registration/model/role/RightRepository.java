@@ -1,7 +1,6 @@
 package org.kumoricon.registration.model.role;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,17 +21,6 @@ public class RightRepository {
     }
 
     @Transactional(readOnly = true)
-    public Right findByNameIgnoreCase(String name) {
-        try {
-            return jdbcTemplate.queryForObject(
-                    "select * from rights where name=:name",
-                    Map.of("name", name), new RightRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-    @Transactional(readOnly = true)
     public Map<Integer, Set<Integer>> findAllRightsByRoleId() {
         try {
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(
@@ -49,7 +37,7 @@ public class RightRepository {
             return data;
 
         } catch (EmptyResultDataAccessException e) {
-            return new HashMap<>();
+            return Map.of();
         }
     }
 
@@ -63,7 +51,7 @@ public class RightRepository {
 
             return new HashSet<>(data);
         } catch (EmptyResultDataAccessException e) {
-            return new HashSet<>();
+            return Set.of();
         }
     }
 

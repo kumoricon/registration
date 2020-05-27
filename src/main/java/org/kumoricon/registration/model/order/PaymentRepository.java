@@ -1,5 +1,6 @@
 package org.kumoricon.registration.model.order;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,28 +23,6 @@ public class PaymentRepository {
 
     public PaymentRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Payment> findByTillSessionIdAndPaymentType(Integer tillSessionId, Payment.PaymentType paymentType) {
-        return jdbcTemplate.query("select * from payments where till_session_id = :tillSessionId and payment_type = :paymentType",
-                Map.of("tillSessionId", tillSessionId, "paymentType", paymentType.getValue()),
-                new PaymentRowMapper());
-    }
-
-
-    @Transactional(readOnly = true)
-    public BigDecimal getTotalForSessionId(Integer id) {
-        String sql = "select sum(amount) from payments WHERE till_session_id = :id";
-        return jdbcTemplate.queryForObject(sql, Map.of("id", id), BigDecimal.class);
-    }
-
-    @Transactional(readOnly = true)
-    public BigDecimal getTotalByPaymentTypeForSessionId(Integer id, Integer paymentType) {
-        String sql = "select sum(amount) from payments WHERE till_session_id = :tillSessionId AND payment_type = :paymentType";
-        return jdbcTemplate.queryForObject(sql,
-                Map.of("tillSessionId", id, "paymentType", paymentType),
-                BigDecimal.class);
     }
 
     @Transactional(readOnly = true)
@@ -121,10 +100,14 @@ public class PaymentRepository {
         }
     }
 
-    public Payment findById(Integer paymentId) {
-        return jdbcTemplate.queryForObject("select * from payments where id = :paymentId",
-                Map.of("paymentId", paymentId),
-                new PaymentRowMapper());
+    public Payment findById(Integer paymentId) throws NotFoundException {
+        try {
+            return jdbcTemplate.queryForObject("select * from payments where id = :paymentId",
+                    Map.of("paymentId", paymentId),
+                    new PaymentRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Payment id " + paymentId + " not found");
+        }
     }
 
     private static class PaymentRowMapper implements RowMapper<Payment>
