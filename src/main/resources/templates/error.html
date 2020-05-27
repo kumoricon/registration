@@ -7,7 +7,7 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div class="alert alert-danger">Error</div>
+
     <table class="table table-bordered">
         <tr>
             <td>Date</td>
@@ -19,25 +19,7 @@
         </tr>
         <tr>
             <td>Error</td>
-            <td th:text="${error}"/>
-        </tr>
-        <tr>
-            <td>Status</td>
-            <td th:text="${status}"/>
-        </tr>
-        <tr>
-            <td>Message</td>
-            <td th:text="${message}"/>
-        </tr>
-        <tr>
-            <td>Exception</td>
-            <td th:text="${exception}"/>
-        </tr>
-        <tr>
-            <td>Trace</td>
-            <td>
-                <pre th:text="${trace}"/>
-            </td>
+            <td th:text="${err}"/>
         </tr>
     </table>
     <a class="btn btn-secondary" data-toggle="collapse" href="#errorDetails" role="button"
