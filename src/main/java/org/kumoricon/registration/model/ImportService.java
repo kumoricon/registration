@@ -19,7 +19,7 @@ public abstract class ImportService {
     protected Path inputPath;
     protected Path dlqPath;
 
-    protected static ObjectMapper objectMapper = new ObjectMapper();
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Scheduled(fixedDelay = 10000)
     public void doWork() {

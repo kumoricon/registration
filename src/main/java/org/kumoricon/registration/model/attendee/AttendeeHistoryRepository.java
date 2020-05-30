@@ -98,7 +98,7 @@ public class AttendeeHistoryRepository {
                                     params);
     }
 
-    private class AttendeeHistoryDTORowMapper implements RowMapper<AttendeeHistoryDTO> {
+    private static class AttendeeHistoryDTORowMapper implements RowMapper<AttendeeHistoryDTO> {
         @Override
         public AttendeeHistoryDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new AttendeeHistoryDTO(
