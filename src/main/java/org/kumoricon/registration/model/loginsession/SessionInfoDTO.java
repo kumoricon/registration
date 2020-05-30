@@ -6,11 +6,11 @@ package org.kumoricon.registration.model.loginsession;
  * objects will never be written back to the database, they're just for reporting.
  */
 public class SessionInfoDTO {
-    private String primaryId;
-    private String principalName;
-    private Long creationTime;
-    private Long lastAccessTime;
-    private Long expiryTime;
+    private final String primaryId;
+    private final String principalName;
+    private final Long creationTime;
+    private final Long lastAccessTime;
+    private final Long expiryTime;
 
     public SessionInfoDTO(String primaryId, String principalName, Long creationTime, Long lastAccessTime, Long expiryTime) {
         this.primaryId = primaryId;

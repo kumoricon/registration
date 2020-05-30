@@ -2,7 +2,6 @@ package org.kumoricon.registration.reg;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
-import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.print.BadgePrintService;

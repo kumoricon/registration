@@ -1,7 +1,5 @@
 package org.kumoricon.registration.model.order;
 
-import org.kumoricon.registration.model.tillsession.TillSession;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
