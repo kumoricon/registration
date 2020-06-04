@@ -1,6 +1,7 @@
 package org.kumoricon.registration.staff.staffimport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.ImportService;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
@@ -49,8 +50,10 @@ public class StaffImportService extends ImportService {
     private void importPerson(StaffImportFile.Person person) {
 
         log.info("Importing {}", person);
-        Staff existing = staffRepository.findByUuid(person.getId());
-        if (existing == null) {
+        Staff existing;
+        try {
+            existing = staffRepository.findByUuid(person.getId());
+        } catch (NotFoundException ex) {
             existing = new Staff();
             existing.setCheckedIn(false);
             existing.setDeleted(false);
