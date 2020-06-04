@@ -38,7 +38,9 @@ public class CheckInController {
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String staffList(Model model,
                             @RequestParam(required = false, name = "q", defaultValue = "") String search) {
-        log.info("searching staff list for {}", search);
+        if (!search.isBlank()) {
+            log.info("searching staff list for {}", search);
+        }
 
         model.addAttribute("staff", staffRepository.findByNameLike(search));
         model.addAttribute("totalCount", staffRepository.count());
@@ -79,6 +81,7 @@ public class CheckInController {
         if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
         staff.setInformationVerified(true);
         staffRepository.save(staff);
+        log.info("verified information for {}", staff);
         return "redirect:/staff/checkin2/" + uuid;
     }
 
@@ -106,6 +109,7 @@ public class CheckInController {
             imageData = NO_DATA_SAVED_IMAGE;    // A blank image will be saved if the incoming image is blank AND
         }                                       // the staff photo isn't required
 
+        log.info("saved staff photo for {}", staff);
 
         try {
             fileStorageService.storeFile(staff.getFirstName() + "_" + staff.getLastName() + "_" + staff.getUuid() + "-photo", imageData);
@@ -136,6 +140,7 @@ public class CheckInController {
     public String checkIn3Post(@PathVariable(name = "uuid") String uuid,
                                @RequestParam("imageData") String imageData) {
         Staff s = staffRepository.findByUuid(uuid);
+        log.info("saved signature and checked in {}", s);
         if (imageData.isEmpty() && !settingsService.getCurrentSettings().getRequireStaffSignature()) {
             imageData = NO_DATA_SAVED_IMAGE;    // A blank image will be sent if the signature pad software isn't
                                                 // installed or the option to not require a signature was enabled and
