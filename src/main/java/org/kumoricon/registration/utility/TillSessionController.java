@@ -6,6 +6,7 @@ import org.kumoricon.registration.model.tillsession.TillSessionDTO;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
+import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,11 +24,13 @@ import java.security.Principal;
 public class TillSessionController {
     private final TillSessionService tillSessionService;
     private final UserService userService;
+    private final SettingsService settingsService;
     private static final Logger log = LoggerFactory.getLogger(TillSessionController.class);
 
-    public TillSessionController(TillSessionService tillSessionService, UserService userService) {
+    public TillSessionController(TillSessionService tillSessionService, UserService userService, SettingsService settingsService) {
         this.tillSessionService = tillSessionService;
         this.userService = userService;
+        this.settingsService = settingsService;
     }
 
     @RequestMapping(value = "/utility/till")
@@ -38,7 +41,8 @@ public class TillSessionController {
         if (currentUser == null) throw new RuntimeException("User not found");
 
         TillSessionDTO s = tillSessionService.getOpenSessionForUser(currentUser);
-
+        String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
+        model.addAttribute("reportPrinterName", reportPrinterName);
         model.addAttribute("tillName", tillName);
         model.addAttribute("tillSession", s);
         return "utility/tillsession";
