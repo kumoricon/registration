@@ -79,8 +79,10 @@ public class TillSessionController {
             }
         } else if (action.equals("Close Till")) {
             tillSessionService.closeSessionForUser(currentUser, tillName);
-
-            return "redirect:/utility/till?msg=Till%20Session%20Closed";
+            String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
+            String msg = "Till Session Closed. Report printed to '" + reportPrinterName + "'.";
+            msg = msg.replace(" ", "%20");
+            return "redirect:/utility/till?msg=" + msg;
         }
 
         throw new RuntimeException("Action not specified");
