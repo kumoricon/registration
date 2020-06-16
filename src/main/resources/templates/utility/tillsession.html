@@ -35,6 +35,8 @@
                     </tr>
                 </table>
                 <br>
+                <div class="alert alert-info"><span class="badge badge-primary">NOTE:</span> Closing the till will print a report to: <span class="badge badge-info" th:text="${reportPrinterName}"></span></div>
+                <br>
                 <input th:if="${tillSession != null}" class="btn btn-danger" name="action" type="submit" value="Close Till">
             </div>
         </form>
