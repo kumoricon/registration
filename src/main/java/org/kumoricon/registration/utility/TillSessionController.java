@@ -3,9 +3,11 @@ package org.kumoricon.registration.utility;
 
 import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.model.tillsession.TillSessionDTO;
+import org.kumoricon.registration.model.tillsession.TillSessionDetailDTO;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
+import org.kumoricon.registration.print.ReportPrintService;
 import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,21 +18,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.print.PrintException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Principal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class TillSessionController {
     private final TillSessionService tillSessionService;
     private final UserService userService;
     private final SettingsService settingsService;
+    private final ReportPrintService reportService;
     private static final Logger log = LoggerFactory.getLogger(TillSessionController.class);
 
-    public TillSessionController(TillSessionService tillSessionService, UserService userService, SettingsService settingsService) {
+    public TillSessionController(TillSessionService tillSessionService, UserService userService, SettingsService settingsService, ReportPrintService reportService) {
         this.tillSessionService = tillSessionService;
         this.userService = userService;
         this.settingsService = settingsService;
+        this.reportService = reportService;
     }
 
     @RequestMapping(value = "/utility/till")
@@ -53,7 +62,7 @@ public class TillSessionController {
                             Principal user,
                             @RequestParam String action,
                             @RequestParam String tillName,
-                            HttpServletResponse response) {
+                            HttpServletResponse response) throws IOException, PrintException {
 
         User currentUser = userService.findByUsername(user.getName());
         if (currentUser == null) throw new RuntimeException("User not found");
@@ -78,8 +87,28 @@ public class TillSessionController {
                 return "utility/tillsession";
             }
         } else if (action.equals("Close Till")) {
+            TillSessionDTO s = tillSessionService.getOpenSessionForUser(currentUser);
+            int tillSessionId = s.getId();
             tillSessionService.closeSessionForUser(currentUser, tillName);
+            TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(tillSessionId);
+            String startTime = s2.getStartTime().toString();
+            String endTime = s2.getEndTime().toString();
+            List<TillSessionDetailDTO.TillSessionOrderDTO> orders = s2.getOrderDTOs();
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
+            ArrayList<String> stringArray = new ArrayList<>();
+            stringArray.add("Username: " + currentUser);
+            stringArray.add("Tillname: " + tillName);
+            stringArray.add("Start Time: " + startTime);
+            stringArray.add("End Time: " + endTime);
+            stringArray.add(" ");
+            stringArray.add("Orders:");
+            for (int i = 0; i < orders.size(); i++) {
+                String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
+                stringArray.add(orderString);
+            }
+            String[] data = new String[stringArray.size()];
+            stringArray.toArray(data);
+            reportService.printReport(data, "Till Report", reportPrinterName);
             String msg = "Till Session Closed. Report printed to '" + reportPrinterName + "'.";
             msg = msg.replace(" ", "%20");
             return "redirect:/utility/till?msg=" + msg;
