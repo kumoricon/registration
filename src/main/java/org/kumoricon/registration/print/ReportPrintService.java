@@ -92,7 +92,7 @@ public class ReportPrintService extends PrintService {
             // Add page number
             String pageNum = "Page " + i + " / " + numPages;
             int PGNUM_X = PAGE_WIDTH_DPI/2 - (int)(font.getStringBounds(pageNum, frc).getWidth())/2;
-            int PGNUM_Y = 2*FONT_LEADING;
+            int PGNUM_Y = 3*FONT_LEADING;
             contentStream.beginText();
             contentStream.newLineAtOffset(PGNUM_X, PGNUM_Y);
             contentStream.showText(pageNum);
@@ -110,13 +110,13 @@ public class ReportPrintService extends PrintService {
             contentStream.showText(title);
             contentStream.endText();
 
-
+            // Add content
             for (int j = 0; j < MAX_LINES_PER_PAGE; j++) {
                 if (numLinesProcessed < numLines) {
                     String line = stringArray.get(numLinesProcessed);
                     if (line != null && line != "") {
                         contentStream.beginText();
-                        contentStream.newLineAtOffset(MARGIN_DPI, PAGE_HEIGHT_DPI - MARGIN_DPI - j*FONT_LEADING - FONT_LEADING);
+                        contentStream.newLineAtOffset(MARGIN_DPI, PAGE_HEIGHT_DPI - MARGIN_DPI - j*FONT_LEADING - 2*FONT_LEADING);
                         contentStream.showText(line);
                         contentStream.endText();
                     }
