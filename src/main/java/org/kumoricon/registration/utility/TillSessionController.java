@@ -90,30 +90,35 @@ public class TillSessionController {
             TillSessionDTO s = tillSessionService.getOpenSessionForUser(currentUser);
             int tillSessionId = s.getId();
             tillSessionService.closeSessionForUser(currentUser, tillName);
-            TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(tillSessionId);
-            String startTime = s2.getStartTime().toString();
-            String endTime = s2.getEndTime().toString();
-            List<TillSessionDetailDTO.TillSessionOrderDTO> orders = s2.getOrderDTOs();
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
-            ArrayList<String> stringArray = new ArrayList<>();
-            stringArray.add("Username: " + currentUser);
-            stringArray.add("Tillname: " + tillName);
-            stringArray.add("Start Time: " + startTime);
-            stringArray.add("End Time: " + endTime);
-            stringArray.add(" ");
-            stringArray.add("Orders:");
-            for (int i = 0; i < orders.size(); i++) {
-                String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
-                stringArray.add(orderString);
-            }
-            String[] data = new String[stringArray.size()];
-            stringArray.toArray(data);
-            reportService.printReport(data, "Till Report", reportPrinterName);
+            printTillReport(currentUser, tillSessionId, reportPrinterName);
             String msg = "Till Session Closed. Report printed to '" + reportPrinterName + "'.";
             msg = msg.replace(" ", "%20");
             return "redirect:/utility/till?msg=" + msg;
         }
 
         throw new RuntimeException("Action not specified");
+    }
+
+    private void printTillReport(User currentUser, int tillSessionId, String printerName) throws IOException, PrintException {
+        TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(tillSessionId);
+        String tillName = s2.getTillName();
+        String startTime = s2.getStartTime().toString();
+        String endTime = s2.getEndTime().toString();
+        List<TillSessionDetailDTO.TillSessionOrderDTO> orders = s2.getOrderDTOs();
+        ArrayList<String> stringArray = new ArrayList<>();
+        stringArray.add("Username: " + currentUser);
+        stringArray.add("Tillname: " + tillName);
+        stringArray.add("Start Time: " + startTime);
+        stringArray.add("End Time: " + endTime);
+        stringArray.add(" ");
+        stringArray.add("Orders:");
+        for (int i = 0; i < orders.size(); i++) {
+            String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
+            stringArray.add(orderString);
+        }
+        String[] data = new String[stringArray.size()];
+        stringArray.toArray(data);
+        reportService.printReport(data, "Till Report", printerName);
     }
 }
