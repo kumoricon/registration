@@ -47,14 +47,12 @@ public class ReportPrintService extends PrintService {
         AffineTransform affinetransform = new AffineTransform();
         FontRenderContext frc = new FontRenderContext(affinetransform,true,true);
         Font font = new Font(FONT.getName(), Font.PLAIN, FONT_SIZE);
-        int WIDTH_LETTER_W_DPI = (int)(font.getStringBounds("W", frc).getWidth());
         int FONT_LEADING = (int)(font.getStringBounds("W", frc).getHeight());
         if (FONT_LEADING <= 0) { FONT_LEADING = 14; }
-        if (WIDTH_LETTER_W_DPI <= 0) { WIDTH_LETTER_W_DPI = 12; }
         int PAGE_HEIGHT_DPI = (int)Math.round(PAGE_HEIGHT_INCHES * PRINTER_DPI);
         int PAGE_WIDTH_DPI = (int)Math.round(PAGE_WIDTH_INCHES * PRINTER_DPI);
         int MAX_LINES_PER_PAGE = (int)(PAGE_HEIGHT_DPI - 2 * MARGIN_DPI) / FONT_LEADING;
-        int MAX_LINE_LENGTH = (int)Math.round((PAGE_WIDTH_DPI - 2 * MARGIN_DPI) / WIDTH_LETTER_W_DPI);
+        MAX_LINES_PER_PAGE -= 3;
         int TITLE_X = PAGE_WIDTH_DPI/2 - (int)(font.getStringBounds(title, frc).getWidth())/2;
         int TITLE_Y = PAGE_HEIGHT_DPI - 3*FONT_LEADING;
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -63,16 +61,30 @@ public class ReportPrintService extends PrintService {
         int DATE_X = PAGE_WIDTH_DPI - (int)(font.getStringBounds(dateString, frc).getWidth()) - MARGIN_DPI;
         int DATE_Y = PAGE_HEIGHT_DPI - 2*FONT_LEADING;
 
-        // Wrap any lines greater than MAX_LINE_LENGTH characters in length
+        // Wrap lines that don't fit between margins
+        int USABLE_SPACE_DPI = PAGE_WIDTH_DPI - 2*MARGIN_DPI;
+        int CHAR_COUNT_THRESHOLD = (int)(USABLE_SPACE_DPI / font.getStringBounds("W", frc).getWidth());
         ArrayList<String> stringArray = new ArrayList<>();
         for (int i = 0; i < text.length; i++) {
-            int lineLength = text[i].length();
-            int numLineCharsProcessed = 0;
-            while (numLineCharsProcessed < lineLength) {
-                int numCharsLeft = lineLength - numLineCharsProcessed;
-                if (numCharsLeft > MAX_LINE_LENGTH) { numCharsLeft = MAX_LINE_LENGTH; }
-                stringArray.add(text[i].substring(numLineCharsProcessed, numLineCharsProcessed + numCharsLeft));
-                numLineCharsProcessed += numCharsLeft;
+            String line = text[i];
+            int numChars = text[i].length();
+            if (numChars < CHAR_COUNT_THRESHOLD) {
+                stringArray.add(line);
+            }
+            else {
+                int index = CHAR_COUNT_THRESHOLD;
+                while (index < numChars) {
+                    if (index+1 == numChars) {
+                        stringArray.add(line.substring(0, index+1));
+                    }
+                    else if ((int)(font.getStringBounds(line.substring(0, index), frc).getWidth()) > USABLE_SPACE_DPI) {
+                        stringArray.add(line.substring(0, index));
+                        line = line.substring(index);
+                        index = -1;
+                        numChars = line.length();
+                    }
+                    index++;
+                }
             }
         }
 
@@ -116,7 +128,8 @@ public class ReportPrintService extends PrintService {
                     String line = stringArray.get(numLinesProcessed);
                     if (line != null && line != "") {
                         contentStream.beginText();
-                        contentStream.newLineAtOffset(MARGIN_DPI, PAGE_HEIGHT_DPI - MARGIN_DPI - j*FONT_LEADING - 2*FONT_LEADING);
+                        contentStream.newLineAtOffset(MARGIN_DPI,
+                                PAGE_HEIGHT_DPI - MARGIN_DPI - j*FONT_LEADING - 3*FONT_LEADING);
                         contentStream.showText(line);
                         contentStream.endText();
                     }
