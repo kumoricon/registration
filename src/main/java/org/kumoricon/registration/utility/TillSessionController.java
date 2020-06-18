@@ -122,16 +122,10 @@ public class TillSessionController {
         }
         stringArray.add(" ");
         stringArray.add("Orders:");
-        for (int j = 0; j < 100; j++) {
-            for (int i = 0; i < orders.size(); i++) {
-                String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
-                stringArray.add(orderString);
-            }
+        for (int i = 0; i < orders.size(); i++) {
+            String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
+            stringArray.add(orderString);
         }
-//        for (int i = 0; i < orders.size(); i++) {
-//            String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
-//            stringArray.add(orderString);
-//        }
         String[] data = new String[stringArray.size()];
         stringArray.toArray(data);
         reportService.printReport(data, "Till Report", printerName);
