@@ -54,8 +54,10 @@ public class TillSessionAdminController {
     public String viewTillSessionReport(Model model,
                                         @PathVariable Integer id,
                                         @RequestParam(required = false, defaultValue = "false") Boolean showIndividualOrders,
-                                        @RequestParam(required = false, defaultValue = "false") Boolean printTillReport) throws IOException, PrintException {
+                                        @RequestParam(required = false, defaultValue = "false") Boolean printTillReport,
+                                        @RequestParam(required = false, defaultValue = "false") Boolean saveTillReport) throws IOException, PrintException {
 
+        // Handle requests to print a till report
         if (printTillReport != null && printTillReport == true) {
             TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(id);
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
@@ -67,6 +69,20 @@ public class TillSessionAdminController {
         }
         else {
             model.addAttribute("printTillReport", false);
+        }
+
+        // Handle requests to save a till report
+        if (saveTillReport != null && saveTillReport == true) {
+            TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(id);
+            if (!s2.isOpen()) {
+                String savePath = "/Volumes/Data/Kumoreg/test.pdf";
+                reportService.saveTillReport(s2.getUserId(), s2.getId(), savePath, s2);
+                model.addAttribute("saveTillReport", true);
+                model.addAttribute("savePath", savePath);
+            }
+        }
+        else {
+            model.addAttribute("saveTillReport", false);
         }
 
         model.addAttribute("tillSession", tillSessionService.getTillDetailDTO(id));

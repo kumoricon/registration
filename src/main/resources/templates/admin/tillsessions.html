@@ -41,6 +41,7 @@
                         <a class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id})}">View</a>
                         <a class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id},showIndividualOrders=true)}">Detail</a>
                         <a th:if="${!s.isOpen()}" class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id},printTillReport=true)}">Print</a>
+                        <a th:if="${!s.isOpen()}" class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id},saveTillReport=true)}">Save</a>
                     </form>
                 </td>
             </tr>
