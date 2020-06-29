@@ -41,7 +41,7 @@
                 </div>
                 <div th:if="${reportPrinterName != null and !reportPrinterName.isBlank()}">
                     <br>
-                    <div class="alert alert-info"><span class="badge badge-primary">NOTE:</span> Closing the till will print a report to: <span class="badge badge-info" th:text="${reportPrinterName}"></span></div>
+                    <div class="alert alert-info"><strong>Note:</strong> Closing the till will print a report to: <span class="badge badge-info" th:text="${reportPrinterName}"></span></div>
                     <br>
                 </div>
                 <input th:if="${tillSession != null}" class="btn btn-danger" name="action" type="submit" value="Close Till">

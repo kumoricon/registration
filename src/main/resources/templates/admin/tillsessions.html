@@ -40,7 +40,7 @@
                         <input th:if="${s.isOpen()}"  class="btn btn-sm btn-danger ml-1 mb-1" type="submit" value="Close">
                         <a class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id})}">View</a>
                         <a class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id},showIndividualOrders=true)}">Detail</a>
-                        <a th:if="${!s.open}" class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id},printTillReport=true)}">Print</a>
+                        <a th:if="${!s.isOpen()}" class="btn btn-info btn-sm ml-1 mb-1" th:href="@{/admin/tillsessions/{id}(id=${s.id},printTillReport=true)}">Print</a>
                     </form>
                 </td>
             </tr>
