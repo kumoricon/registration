@@ -9,6 +9,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.kumoricon.registration.model.tillsession.TillSessionDetailDTO;
+import org.kumoricon.registration.model.user.User;
+import org.kumoricon.registration.model.user.UserService;
 import org.kumoricon.registration.settings.SettingsService;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,48 @@ import java.awt.Font;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ReportPrintService extends PrintService {
     private final SettingsService settingsService;
-    public ReportPrintService(SettingsService settingsService, PrinterInfoService printerInfoService) {
+    private final UserService userService;
+
+    public ReportPrintService(SettingsService settingsService, PrinterInfoService printerInfoService, UserService userService) {
         super(printerInfoService);
         this.settingsService = settingsService;
+        this.userService = userService;
+    }
+
+    public void printTillReport(int currentUserId, int tillSessionId, String printerName, TillSessionDetailDTO s) throws IOException, PrintException {
+        String tillName = s.getTillName();
+        User currentUser = userService.findById(currentUserId);
+        String startTime = s.getStartTime().toString();
+        String endTime = s.getEndTime().toString();
+        List<TillSessionDetailDTO.TillSessionPaymentTotalDTO> totals = s.getPaymentTotals();
+        List<TillSessionDetailDTO.TillSessionOrderDTO> orders = s.getOrderDTOs();
+        ArrayList<String> stringArray = new ArrayList<>();
+        stringArray.add("Name: " + currentUser.getFirstName() + " " + currentUser.getLastName());
+        stringArray.add("Username: " + currentUser.getUsername());
+        stringArray.add("Tillname: " + tillName);
+        stringArray.add("Session ID: " + tillSessionId);
+        stringArray.add("Start Time: " + startTime);
+        stringArray.add("End Time: " + endTime);
+        stringArray.add(" ");
+        stringArray.add("Totals: ");
+        for (int i = 0; i < totals.size(); i++) {
+            String totalString = totals.get(i).getTotal().toString() + ": " + totals.get(i).getType().toString();
+            stringArray.add(totalString);
+        }
+        stringArray.add(" ");
+        stringArray.add("Orders:");
+        for (int i = 0; i < orders.size(); i++) {
+            String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
+            stringArray.add(orderString);
+        }
+        String[] data = new String[stringArray.size()];
+        stringArray.toArray(data);
+        printReport(data, "Till Report", printerName);
     }
 
     public void printReport(String[] text, String title, String printerName) throws IOException, PrintException {
