@@ -33,7 +33,7 @@ public class ReportPrintService extends PrintService {
         this.userService = userService;
     }
 
-    public void printTillReport(int currentUserId, int tillSessionId, String printerName, TillSessionDetailDTO s) throws IOException, PrintException {
+    private String[] populateTillReport(int currentUserId, int tillSessionId, TillSessionDetailDTO s) {
         String tillName = s.getTillName();
         User currentUser = userService.findById(currentUserId);
         String startTime = s.getStartTime().toString();
@@ -61,7 +61,23 @@ public class ReportPrintService extends PrintService {
         }
         String[] data = new String[stringArray.size()];
         stringArray.toArray(data);
+        return data;
+    }
+
+    public void printTillReport(int currentUserId, int tillSessionId, String printerName, TillSessionDetailDTO s) throws IOException, PrintException {
+        String[] data = populateTillReport(currentUserId, tillSessionId, s);
         printReport(data, "Till Report", printerName);
+    }
+
+    public void saveTillReport(int currentUserId, int tillSessionId, String path, TillSessionDetailDTO s) throws IOException, PrintException {
+        String[] data = populateTillReport(currentUserId, tillSessionId, s);
+        saveReport(data, "Till Report", "/Volumes/Data/Kumoreg/test.pdf");
+    }
+
+    public void saveReport(String[] text, String title, String path) throws IOException, PrintException {
+        PDDocument document = textToPDF(text, title);
+        document.save(path);
+        document.close();
     }
 
     public void printReport(String[] text, String title, String printerName) throws IOException, PrintException {
