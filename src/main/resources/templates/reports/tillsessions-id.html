@@ -7,6 +7,13 @@
 
 <div layout:fragment="content" class="container">
 
+    <div th:if="${printTillReport}">
+        <br/>
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-success text-center"><strong>Printed!</strong> Report successfully sent to the printer <span class="badge badge-info" th:text="${reportPrinterName}"></span></div>
+        </div>
+        <br/>
+    </div>
     <div class="row">
         <div class="col-4">
             <h2 th:text="${tillSession.username}">Firstname Lastname</h2>

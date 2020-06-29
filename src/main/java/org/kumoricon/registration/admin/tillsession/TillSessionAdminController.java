@@ -1,9 +1,12 @@
 package org.kumoricon.registration.admin.tillsession;
 
 import org.kumoricon.registration.model.tillsession.TillSessionDTO;
+import org.kumoricon.registration.model.tillsession.TillSessionDetailDTO;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
+import org.kumoricon.registration.print.ReportPrintService;
+import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.print.PrintException;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -21,12 +26,16 @@ import java.util.List;
 public class TillSessionAdminController {
     private final TillSessionService tillSessionService;
     private final UserService userService;
+    private final ReportPrintService reportService;
+    private final SettingsService settingsService;
 
     private static final Logger log = LoggerFactory.getLogger(TillSessionAdminController.class);
 
-    public TillSessionAdminController(TillSessionService tillSessionService, UserService userService) {
+    public TillSessionAdminController(TillSessionService tillSessionService, UserService userService, ReportPrintService reportService, SettingsService settingsService) throws IOException, PrintException {
         this.tillSessionService = tillSessionService;
         this.userService = userService;
+        this.reportService = reportService;
+        this.settingsService = settingsService;
     }
 
     @RequestMapping(value = "/admin/tillsessions")
@@ -44,7 +53,20 @@ public class TillSessionAdminController {
     @PreAuthorize("hasAuthority('manage_till_sessions')")
     public String viewTillSessionReport(Model model,
                                         @PathVariable Integer id,
-                                        @RequestParam(required = false, defaultValue = "false") Boolean showIndividualOrders) {
+                                        @RequestParam(required = false, defaultValue = "false") Boolean showIndividualOrders,
+                                        @RequestParam(required = false, defaultValue = "false") Boolean printTillReport) throws IOException, PrintException {
+
+        if (printTillReport != null && printTillReport == true) {
+            TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(id);
+            String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
+            reportService.printTillReport(s2.getUserId(), s2.getId(), reportPrinterName, s2);
+            model.addAttribute("printTillReport", true);
+            model.addAttribute("reportPrinterName", reportPrinterName);
+        }
+        else {
+            model.addAttribute("printTillReport", false);
+        }
+
         model.addAttribute("tillSession", tillSessionService.getTillDetailDTO(id));
         model.addAttribute("showIndividualOrders", showIndividualOrders);
 
