@@ -91,8 +91,20 @@ public class TillSessionController {
             int tillSessionId = s.getId();
             tillSessionService.closeSessionForUser(currentUser, tillName);
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
-            printTillReport(currentUser, tillSessionId, reportPrinterName);
-            String msg = "Till Session Closed. Report printed to '" + reportPrinterName + "'.";
+            String msg = "";
+            if (reportPrinterName != null && !reportPrinterName.isEmpty()) {
+                try {
+                    printTillReport(currentUser, tillSessionId, reportPrinterName);
+                    msg = "Till Session Closed. Report printed to '" + reportPrinterName + "'.";
+                }
+                catch(Exception e) {
+                    msg = "Till Session Closed. The report failed to print. The till report must be printed manually.";
+                }
+            }
+            else {
+                msg = "Till Session Closed. No report printer available. The till report must be printed manually.";
+            }
+
             msg = msg.replace(" ", "%20");
             return "redirect:/utility/till?msg=" + msg;
         }
