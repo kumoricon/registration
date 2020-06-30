@@ -60,8 +60,8 @@
                 </tr>
                 <tr th:each="o : ${tillSession.orderDTOs}">
                     <td th:text="${o.orderId}">123</td>
-                    <td class="text-nowrap" th:text="${o.badges}">3 adult weekend, 2 child weekend</td>
-                    <td class="text-nowrap" th:text="${o.payments}">$30 cash, $20 check<br></td>
+                    <td th:text="${o.badges}">3 adult weekend, 2 child weekend</td>
+                    <td th:text="${o.payments}">$30 cash, $20 check<br></td>
                 </tr>
             </table>
         </div>
