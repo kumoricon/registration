@@ -4,6 +4,7 @@ import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.user.User;
+import org.kumoricon.registration.model.user.UserService;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +27,20 @@ public class CheckinController {
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final AttendeeService attendeeService;
     private final BadgePrintService badgePrintService;
+    private final UserService userService;
 
     private static final Logger log = LoggerFactory.getLogger(CheckinController.class);
 
     public CheckinController(AttendeeRepository attendeeRepository,
                              AttendeeHistoryRepository attendeeHistoryRepository,
                              AttendeeService attendeeService,
-                             BadgePrintService badgePrintService) {
+                             BadgePrintService badgePrintService,
+                             UserService userService) {
         this.attendeeRepository = attendeeRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;
         this.attendeeService = attendeeService;
         this.badgePrintService = badgePrintService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/reg/checkin/{id}")
@@ -110,5 +114,15 @@ public class CheckinController {
         } else {
             throw new RuntimeException("No action found");
         }
+    }
+
+    @RequestMapping(value = "/reg/uncheckin/{id}")
+    @PreAuthorize("hasAuthority('attendee_revert_check_in')")
+    public String unCheckin(Model model, @PathVariable Integer id, @AuthenticationPrincipal User principal) {
+        Attendee attendee = attendeeRepository.findById(id);
+        model.addAttribute("attendee", attendee);
+        User user = userService.findByUsername(principal.getUsername());
+        attendeeService.revertAttendeeCheckin(attendee, user);
+        return "redirect:/search?q=" + attendee.getName();
     }
 }

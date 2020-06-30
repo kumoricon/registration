@@ -7,6 +7,7 @@ import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.user.User;
+import org.kumoricon.registration.model.user.UserService;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -43,12 +44,14 @@ public class CheckinControllerTest {
     CheckinController controller;
     User user;
 
+    UserService userService;
+
     @Before
     public void setUp() throws Exception {
         this.controller = new CheckinController(attendeeRepository,
                 attendeeHistoryRepository,
                 new AttendeeService(attendeeRepository, attendeeHistoryRepository, blacklistRepository),
-                badgePrintService);
+                badgePrintService, userService);
 
         attendees.put(1, buildTestAttendee(1, "Some", "Body", 18));
         attendees.put(2, buildTestAttendee(2, "Youth", "Bodyson", 15));
@@ -61,7 +64,7 @@ public class CheckinControllerTest {
 
     @Test
     public void verifyDataHappyPath() {
-        Model model = new ConcurrentModel();
+        ConcurrentModel model = new ConcurrentModel();
         String template = controller.verifyData(model, 1);
         assertEquals("reg/checkin-id", template);
         assertEquals((Integer)1, ((Attendee)model.getAttribute("attendee")).getId());
