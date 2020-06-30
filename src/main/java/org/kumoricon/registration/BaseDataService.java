@@ -133,6 +133,7 @@ public class BaseDataService {
                 {"pre_reg_check_in_order", "Check in entire preregistered order at once"},
                 {"attendee_search", "Search for and view attendees"},
                 {"attendee_edit", "Edit attendees from mySearch results"},
+                {"attendee_revert_check_in", "Reverts a pre-registered attendee to a not-checked-in state"},
                 {"attendee_add_note", "Edit notes field on attendees, but no other fields"},
                 {"attendee_edit_with_override", "Edit attendee if a user with attendee_edit right approves it"},
                 {"attendee_override_price", "Manually set price for attendee"},
@@ -237,7 +238,7 @@ public class BaseDataService {
                 "view_check_in_by_user_report", "view_check_in_by_department_report", "pre_reg_check_in_edit",
                 "manage_orders", "manage_till_sessions", "at_con_registration_specialty",
                 "menu_registration", "menu_utility", "menu_report", "menu_administration",
-                "staff_check_in", "view_attendance_report"});
+                "staff_check_in", "view_attendance_report", "attendee_revert_check_in"});
         roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty", "print_guest_badge",
                 "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note", "in_line_registration",
                 "at_con_registration_blacklist", "attendee_override_price", "reprint_badge", "manage_users",
@@ -250,7 +251,7 @@ public class BaseDataService {
                 "view_check_in_by_user_report", "view_check_in_by_department_report", "view_export", "manage_orders",
                 "manage_till_sessions", "pre_print_badges", "at_con_registration_specialty",
                 "menu_registration", "menu_utility", "menu_report",
-                "menu_administration", "manage_blacklist", "staff_check_in", "view_attendance_report"});
+                "menu_administration", "manage_blacklist", "staff_check_in", "view_attendance_report", "attendee_revert_check_in"});
         roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "menu_registration"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
