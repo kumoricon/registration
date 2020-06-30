@@ -54,7 +54,7 @@
                 <td>
                     <a th:if="${!attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''pre_reg_check_in'')')}" class="btn btn-primary btn-sm m-1" th:href="@{/reg/checkin/{attendeeId}(attendeeId=${attendee.id})}">Check In</a>
                     <a th:if="${!attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''pre_reg_check_in_order'')')}" class="btn btn-primary btn-sm m-1" th:href="@{/reg/checkinorder/{orderId}(orderId=${attendee.orderId})}">Check In Order</a>
-                    <a th:if="${attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''attendee_edit'')')}" class="btn btn-primary btn-sm m-1" th:href="@{/reg/uncheckin/{attendeeId}(attendeeId=${attendee.id})}">Un-Check In</a>
+                    <a th:if="${attendee.checkedIn && !attendee.membershipRevoked} and ${#authorization.expression('hasAuthority(''attendee_revert_check_in'')')}" class="btn btn-primary btn-sm m-1" th:href="@{/reg/uncheckin/{attendeeId}(attendeeId=${attendee.id})}">Un-Check In</a>
                 </td>
             </tr>
             </tbody>
