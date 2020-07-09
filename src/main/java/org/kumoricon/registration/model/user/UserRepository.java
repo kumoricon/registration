@@ -34,7 +34,7 @@ public class UserRepository {
     }
 
     @Transactional(readOnly = true)
-    User findOneById(Integer id) throws NotFoundException {
+    public User findOneById(Integer id) throws NotFoundException {
         try {
             return jdbcTemplate.queryForObject(
                     "SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id where users.id=:id",

@@ -4,9 +4,16 @@ import org.kumoricon.registration.helpers.DateTimeService;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
 import org.kumoricon.registration.model.badge.Badge;
+import org.kumoricon.registration.model.order.Order;
+import org.kumoricon.registration.model.order.OrderRepository;
+import org.kumoricon.registration.model.order.Payment;
+import org.kumoricon.registration.model.order.PaymentRepository;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
+import org.kumoricon.registration.model.tillsession.TillSessionRepository;
+import org.kumoricon.registration.model.user.User;
+import org.kumoricon.registration.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -21,16 +29,28 @@ import java.util.*;
 public class ExportFileController {
     private static final Logger log = LoggerFactory.getLogger(ExportFileController.class);
     private final StaffRepository staffRepository;
+    private final OrderRepository orderRepository;
+    private final TillSessionRepository tillSessionRepository;
     private final AttendeeRepository attendeeRepository;
+    private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
     private final BadgeService badgeService;
     private final DateTimeService dateTimeService;
 
     public ExportFileController(StaffRepository staffRepository,
                                 AttendeeRepository attendeeRepository,
+                                UserRepository userRepository,
+                                PaymentRepository paymentRepository,
+                                OrderRepository orderRepository,
+                                TillSessionRepository tillSessionRepository,
                                 BadgeService badgeService,
                                 DateTimeService dateTimeService) {
         this.staffRepository = staffRepository;
         this.attendeeRepository = attendeeRepository;
+        this.userRepository = userRepository;
+        this.paymentRepository = paymentRepository;
+        this.orderRepository = orderRepository;
+        this.tillSessionRepository = tillSessionRepository;
         this.badgeService = badgeService;
         this.dateTimeService = dateTimeService;
     }
@@ -93,6 +113,47 @@ public class ExportFileController {
                     .append(dateTimeService.format(s.getCheckedInAt())).append("\n");
         }
 
+
+        return sb.toString();
+    }
+
+    @RequestMapping(value = "/admin/export/orders.csv", produces = "text/csv")
+    @PreAuthorize("hasAuthority('manage_export')")
+    public String exportOrders() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Order ID, Payments, Badges\n");
+        List<Order> orders = orderRepository.findAll();
+
+        for (Order o : orders) {
+            StringBuilder badgeTypes = new StringBuilder();
+            List<Attendee> attendees = attendeeRepository.findAllByOrderId(o.getId());
+            for (Attendee a : attendees) {
+                int badgeId = a.getBadgeId();
+                String type = badgeService.findById(badgeId).getBadgeTypeText();
+                badgeTypes.append(a.getFirstName() + " " + a.getLastName() + " - " + type + "  ");
+            }
+
+            StringBuilder paymentString = new StringBuilder();
+            List<Payment> payments = paymentRepository.findByOrderId(o.getId());
+            for (Payment p : payments) {
+                User takenByUser = userRepository.findOneById(p.getPaymentTakenBy());
+                String tillSession = String.valueOf(p.getTillSessionId());
+                String takenBy = takenByUser.getFirstName() + ' ' + takenByUser.getLastName();
+                String takenAt = p.getPaymentTakenAt().format(DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss"));
+                String amount = p.getAmount().toString();
+                Payment.PaymentType type = p.getPaymentType();
+                String paymentType = type.name();
+                String paymentSummary = paymentType + ": " + amount + " by " + takenBy + " at " + takenAt + " session " + tillSession + "  ";
+                paymentString.append(paymentSummary);
+                if (type == Payment.PaymentType.CREDIT)
+                    paymentString.append("auth " + p.getAuthNumber() + "  ");
+            }
+
+            sb.append(o.getId().toString()).append(",")
+            .append(paymentString.toString()).append(",")
+            .append(badgeTypes.toString())
+            .append("\n");
+        }
 
         return sb.toString();
     }
