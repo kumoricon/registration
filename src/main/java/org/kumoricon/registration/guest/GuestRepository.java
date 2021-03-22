@@ -79,18 +79,21 @@ public class GuestRepository {
                 .addValue("badge_image_file_type", guest.getBadgeImageFileType());
 
         if (guest.getId() == null) {
-            jdbcTemplate.update("INSERT INTO guests(online_id, first_name, last_name, legal_first_name, " +
-                            "legal_last_name, preferred_pronoun, fan_name, birth_date, age_category_at_con, has_badge_image, badge_image_file_type) " +
-                            "VALUES(:online_id, :first_name, :last_name, :legal_first_name, :legal_last_name, :preferred_pronoun, " +
-                            ":fan_name, :birth_date, :age_category_at_con, :has_badge_image, :badge_image_file_type)",
-                    namedParameters);
+            jdbcTemplate.update("""
+                                    INSERT INTO guests(online_id, first_name, last_name, legal_first_name, 
+                                    legal_last_name, preferred_pronoun, fan_name, birth_date, age_category_at_con, has_badge_image, badge_image_file_type) 
+                                    VALUES(:online_id, :first_name, :last_name, :legal_first_name, :legal_last_name, :preferred_pronoun,
+                                    :fan_name, :birth_date, :age_category_at_con, :has_badge_image, :badge_image_file_type)
+                                    """, namedParameters);
         } else {
-            jdbcTemplate.update("UPDATE guests SET online_id = :online_id, first_name = :first_name, " +
-                            "last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, " +
-                            "preferred_pronoun = :preferred_pronoun, fan_name = :fan_name, birth_date = :birth_date, " +
-                            "age_category_at_con = :age_category_at_con, has_badge_image = :has_badge_image, " +
-                            "badge_image_file_type = :badge_image_file_type WHERE id = :id",
-                    namedParameters);
+            jdbcTemplate.update("""
+                                    UPDATE guests SET online_id = :online_id, first_name = :first_name, 
+                                    last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name,
+                                    preferred_pronoun = :preferred_pronoun, fan_name = :fan_name, birth_date = :birth_date, 
+                                    age_category_at_con = :age_category_at_con, has_badge_image = :has_badge_image, 
+                                    badge_image_file_type = :badge_image_file_type WHERE id = :id
+                                    """,
+                                    namedParameters);
         }
     }
 

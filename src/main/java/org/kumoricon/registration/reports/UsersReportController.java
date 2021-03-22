@@ -1,4 +1,4 @@
-package org.kumoricon.registration.reports;
+package org.kumoricon.registration.reports;;
 
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;

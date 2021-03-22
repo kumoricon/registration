@@ -28,7 +28,11 @@ public class AttendeeHistoryRepository {
     public List<AttendeeHistoryDTO> findAllDTObyAttendeeId(int id) {
         try {
             return jdbcTemplate.query(
-                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id = :id order by timestamp desc",
+                    """
+                    select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name 
+                    as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id 
+                    JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id = :id order by timestamp desc
+                    """,
                     Map.of("id", id), new AttendeeHistoryDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -39,7 +43,12 @@ public class AttendeeHistoryRepository {
     public List<AttendeeHistoryDTO> findAllDTObyOrderId(Integer orderId) {
         try {
             return jdbcTemplate.query(
-                    "select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id IN (select id from attendees where attendees.order_id = :orderId) order by timestamp desc",
+                    """
+                        select attendeehistory.*, users.first_name, users.last_name, attendees.first_name 
+                        as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id 
+                        JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id 
+                        IN (select id from attendees where attendees.order_id = :orderId) order by timestamp desc
+                        """,
                     Map.of("orderId", orderId), new AttendeeHistoryDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
@@ -57,18 +66,30 @@ public class AttendeeHistoryRepository {
 //                .addValue("id", ah.getId());
 
         if (ah.getId() == null) {
-            jdbcTemplate.update("INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) " +
-                    "VALUES(:message, :timestamp, :userId, :attendeeId)", params);
+            jdbcTemplate.update("""
+                                    INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) 
+                                    VALUES(:message, :timestamp, :userId, :attendeeId)
+                                    """, params);
         } else {
-            jdbcTemplate.update("UPDATE attendeehistory set message=:message, timestamp=:timestamp, " +
-                    "user_id=:userId, attendee_id=:attendeeId " +
-                    "where attendeehistory.id=:id)", params);
+            jdbcTemplate.update("""
+                                    UPDATE attendeehistory set message=:message, timestamp=:timestamp, 
+                                    user_id=:userId, attendee_id=:attendeeId 
+                                    where attendeehistory.id=:id)
+                                    """, params);
         }
     }
 
     @Transactional(readOnly = true)
     public List<CheckInByUserDTO> checkInCountByUsers() {
-        String sql = "SELECT users.first_name, users.last_name, COUNT(attendeehistory.id) as count FROM attendeehistory JOIN users ON attendeehistory.user_id = users.id WHERE attendeehistory.message='Attendee Checked In' AND timestamp >= (NOW() - (15 * interval '1 minute')) AND attendeehistory.timestamp <= NOW() GROUP BY user_id, first_name, last_name";
+        String sql = """
+                    SELECT users.first_name, users.last_name, 
+                    COUNT(attendeehistory.id) as count FROM attendeehistory 
+                    JOIN users ON attendeehistory.user_id = users.id 
+                    WHERE attendeehistory.message='Attendee Checked In' 
+                    AND timestamp >= (NOW() - (15 * interval '1 minute')) 
+                    AND attendeehistory.timestamp <= NOW() 
+                    GROUP BY user_id, first_name, last_name
+                    """;
 
         try {
             return jdbcTemplate.query(sql, new CheckInByUserDTORowMapper());
@@ -93,9 +114,10 @@ public class AttendeeHistoryRepository {
             i++;
         }
 
-        jdbcTemplate.batchUpdate("INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) " +
-                                      "VALUES(:message, :timestamp, :userId, :attendeeId)",
-                                    params);
+        jdbcTemplate.batchUpdate("""
+                                      INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id)
+                                      VALUES(:message, :timestamp, :userId, :attendeeId)
+                                      """, params);
     }
 
     private static class AttendeeHistoryDTORowMapper implements RowMapper<AttendeeHistoryDTO> {
