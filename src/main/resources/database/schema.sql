@@ -45,6 +45,7 @@ create table if not exists users
   id serial not null
     constraint users_pkey
       primary key,
+  online_id citext,
   account_non_expired boolean not null,
   account_non_locked boolean not null,
   force_password_change boolean not null default false,

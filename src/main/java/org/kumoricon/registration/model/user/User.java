@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class User implements UserDetails {
     private Integer id;
+    private String onlineId;
     private String username;
     private String password;
     private String firstName;
@@ -30,6 +31,9 @@ public class User implements UserDetails {
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    public String getOnlineId() { return onlineId; }
+    public void setOnlineId(String onlineId) { this.onlineId = onlineId; }
 
     public Integer getRoleId() { return roleId; }
 

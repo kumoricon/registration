@@ -20,12 +20,15 @@ import java.util.Objects;
 public class StaffImportService extends ImportService {
 
     private final StaffRepository staffRepository;
+    private final StaffImportUserCreateService staffUserCreate;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public StaffImportService(@Value("${staff.onlineinputpath}") String importInputPath,
                               @Value("${staff.onlinedlqpath}") String importDLQPath,
-                              StaffRepository staffRepository) {
+                              StaffRepository staffRepository,
+                              StaffImportUserCreateService staffUserCreate) {
         this.staffRepository = staffRepository;
+        this.staffUserCreate = staffUserCreate;
         onlineImportInputPath = importInputPath;
         onlineDLQPath = importDLQPath;
     }
@@ -104,6 +107,10 @@ public class StaffImportService extends ImportService {
         staff.setPositions(positions);
         staff.setHasBadgeImage(person.getHasBadgeImage());
         staff.setBadgeImageFileType(person.getBadgeImageFileType());
+
+        if (person.getPositions().get(0).title.equals("Attendee Registration Staff")) {
+            staffUserCreate.createUserFromStaff(person);
+        }
 
         if (person.getPositions().size() >0) {
             staff.setDepartment(person.getPositions().get(0).department);
