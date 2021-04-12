@@ -68,7 +68,7 @@ public class InLineRegistrationControllerTest {
         // Attempting to create an order returns an error when no registrations are found with
         // that code
         Model model = new ConcurrentModel();
-        when(inLineRegRepository.findByRegistrationNumber("ABC123")).thenThrow(new NotFoundException("Code Not Found"));
+        when(inLineRegRepository.findByConfirmationCode("ABC123")).thenThrow(new NotFoundException("Code Not Found"));
 
         String template = inLineRegistrationController.inLineCheckInPost(model, "ABC123", buildUser());
         assertEquals("inlinereg/search", template);
@@ -83,7 +83,7 @@ public class InLineRegistrationControllerTest {
         ArgumentCaptor<Attendee> attendeeCaptor = ArgumentCaptor.forClass(Attendee.class);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         List<InLineRegistration> inLineData = buildTestData();
-        when(inLineRegRepository.findByRegistrationNumber("ABC123")).thenReturn(inLineData);
+        when(inLineRegRepository.findByConfirmationCode("ABC123")).thenReturn(inLineData);
         when(orderService.saveNewOrderForUser(any())).thenReturn(10);
 
         String template = inLineRegistrationController.inLineCheckInPost(model, "ABC123", buildUser());
@@ -118,7 +118,7 @@ public class InLineRegistrationControllerTest {
         ilr.setLegalFirstName(firstName);
         ilr.setLegalLastName(lastName);
         ilr.setNameIsLegalName(true);
-        ilr.setRegistrationNumber("ABC123");
+        ilr.setConfirmationCode("ABC123");
         ilr.setBirthDate(birthDate);
         ilr.setCountry("United States of America");
         ilr.setEmergencyContactFullName("Mom");

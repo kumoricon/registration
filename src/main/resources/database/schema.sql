@@ -354,6 +354,7 @@ create table if not exists inlineregistrations
     id bigserial not null
         constraint inlineregistrations_pk
             primary key,
+    uuid citext not null UNIQUE,
     first_name citext,
     last_name citext,
     legal_first_name citext,
@@ -370,10 +371,10 @@ create table if not exists inlineregistrations
     parent_fullname text,
     parent_phone text,
     parent_is_emergency_contact boolean default false,
-    registration_code text not null,
+    confirmation_code text not null,
     membership_type text
 );
 
 create index if not exists inlineregistrations_registration_code_index
-    on inlineregistrations (registration_code);
+    on inlineregistrations (confirmation_code);
 
