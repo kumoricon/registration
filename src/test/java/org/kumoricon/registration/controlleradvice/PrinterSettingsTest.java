@@ -1,8 +1,10 @@
 package org.kumoricon.registration.controlleradvice;
 
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class PrinterSettingsTest {
 

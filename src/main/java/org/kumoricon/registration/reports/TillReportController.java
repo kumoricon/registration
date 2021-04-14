@@ -2,7 +2,6 @@ package org.kumoricon.registration.reports;
 
 import org.kumoricon.registration.model.tillsession.TillSessionDetailDTO;
 import org.kumoricon.registration.model.tillsession.TillSessionService;
-import org.kumoricon.registration.model.user.UserService;
 import org.kumoricon.registration.print.ReportPrintService;
 import org.kumoricon.registration.settings.SettingsService;
 import org.springframework.security.access.prepost.PreAuthorize;

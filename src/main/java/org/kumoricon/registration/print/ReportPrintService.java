@@ -49,14 +49,14 @@ public class ReportPrintService extends PrintService {
         stringArray.add("End Time: " + endTime);
         stringArray.add(" ");
         stringArray.add("Totals: ");
-        for (int i = 0; i < totals.size(); i++) {
-            String totalString = totals.get(i).getTotal().toString() + ": " + totals.get(i).getType().toString();
+        for (TillSessionDetailDTO.TillSessionPaymentTotalDTO total : totals) {
+            String totalString = total.getTotal().toString() + ": " + total.getType();
             stringArray.add(totalString);
         }
         stringArray.add(" ");
         stringArray.add("Orders:");
-        for (int i = 0; i < orders.size(); i++) {
-            String orderString = orders.get(i).getOrderId().toString() + ": " + orders.get(i).getPayments();
+        for (TillSessionDetailDTO.TillSessionOrderDTO order : orders) {
+            String orderString = order.getOrderId().toString() + ": " + order.getPayments();
             stringArray.add(orderString);
         }
         String[] data = new String[stringArray.size()];
@@ -105,7 +105,7 @@ public class ReportPrintService extends PrintService {
         if (FONT_LEADING <= 0) { FONT_LEADING = 14; }
         int PAGE_HEIGHT_DPI = (int)Math.round(PAGE_HEIGHT_INCHES * PRINTER_DPI);
         int PAGE_WIDTH_DPI = (int)Math.round(PAGE_WIDTH_INCHES * PRINTER_DPI);
-        int MAX_LINES_PER_PAGE = (int)(PAGE_HEIGHT_DPI - 2 * MARGIN_DPI) / FONT_LEADING;
+        int MAX_LINES_PER_PAGE = (PAGE_HEIGHT_DPI - 2 * MARGIN_DPI) / FONT_LEADING;
         MAX_LINES_PER_PAGE -= 3;
         int TITLE_X = PAGE_WIDTH_DPI/2 - (int)(font.getStringBounds(title, frc).getWidth())/2;
         int TITLE_Y = PAGE_HEIGHT_DPI - 3*FONT_LEADING;
@@ -119,19 +119,17 @@ public class ReportPrintService extends PrintService {
         int USABLE_SPACE_DPI = PAGE_WIDTH_DPI - 2*MARGIN_DPI;
         int CHAR_COUNT_THRESHOLD = (int)(USABLE_SPACE_DPI / font.getStringBounds("W", frc).getWidth());
         ArrayList<String> stringArray = new ArrayList<>();
-        for (int i = 0; i < text.length; i++) {
-            String line = text[i];
-            int numChars = text[i].length();
+        for (String s : text) {
+            String line = s;
+            int numChars = s.length();
             if (numChars < CHAR_COUNT_THRESHOLD) {
                 stringArray.add(line);
-            }
-            else {
+            } else {
                 int index = CHAR_COUNT_THRESHOLD;
                 while (index < numChars) {
-                    if (index+1 == numChars) {
-                        stringArray.add(line.substring(0, index+1));
-                    }
-                    else if ((int)(font.getStringBounds(line.substring(0, index), frc).getWidth()) > USABLE_SPACE_DPI) {
+                    if (index + 1 == numChars) {
+                        stringArray.add(line.substring(0, index + 1));
+                    } else if ((int) (font.getStringBounds(line.substring(0, index), frc).getWidth()) > USABLE_SPACE_DPI) {
                         stringArray.add(line.substring(0, index));
                         line = line.substring(index);
                         index = -1;
@@ -180,7 +178,7 @@ public class ReportPrintService extends PrintService {
             for (int j = 0; j < MAX_LINES_PER_PAGE; j++) {
                 if (numLinesProcessed < numLines) {
                     String line = stringArray.get(numLinesProcessed);
-                    if (line != null && line != "") {
+                    if (line != null && !line.equals("")) {
                         contentStream.beginText();
                         contentStream.newLineAtOffset(MARGIN_DPI,
                                 PAGE_HEIGHT_DPI - MARGIN_DPI - j*FONT_LEADING - 3*FONT_LEADING);

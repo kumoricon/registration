@@ -7,9 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.InputStreamReader;
-
+import java.io.InputStream;
 
 @Controller
 public class AttendeeImportController {
@@ -29,8 +27,8 @@ public class AttendeeImportController {
         model.addAttribute("filename", file.getOriginalFilename());
         model.addAttribute("filesize", file.getSize());
 
-        try {
-            String result = attendeeImporterService.importFromJSON(new InputStreamReader(file.getInputStream()), (User) auth.getPrincipal());
+        try (InputStream input = file.getInputStream()) {
+            String result = attendeeImporterService.importFromJSON(input, (User) auth.getPrincipal());
             model.addAttribute("result", result);
         } catch (Exception e) {
             model.addAttribute("err", e.getMessage());

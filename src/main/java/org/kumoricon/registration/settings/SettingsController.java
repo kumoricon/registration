@@ -29,28 +29,14 @@ public class SettingsController {
                                 @RequestParam String value) {
 
         log.info("set {} to {}", name, value);
-        switch(name) {
-            case "enablePrinting":
-                settingsService.setPrintingEnabled(Boolean.parseBoolean(value));
-                break;
-            case "trainingMode":
-                settingsService.setTrainingMode(Boolean.parseBoolean(value));
-                break;
-            case "reportPrinterName":
-                settingsService.setReportPrinterName(value);
-                break;
-            case "requireStaffSignature":
-                settingsService.setRequireStaffSignature(Boolean.parseBoolean(value));
-                break;
-            case "requireStaffPhoto":
-                settingsService.setRequireStaffPhoto(Boolean.parseBoolean(value));
-                break;
-            case "forcePasswordChange":
-                settingsService.setForcePasswordChange(Boolean.parseBoolean(value));
-                break;
-            case "defaultPassword":
-                settingsService.setDefaultPassword(value);
-                break;
+        switch (name) {
+            case "enablePrinting" -> settingsService.setPrintingEnabled(Boolean.parseBoolean(value));
+            case "trainingMode" -> settingsService.setTrainingMode(Boolean.parseBoolean(value));
+            case "reportPrinterName" -> settingsService.setReportPrinterName(value);
+            case "requireStaffSignature" -> settingsService.setRequireStaffSignature(Boolean.parseBoolean(value));
+            case "requireStaffPhoto" -> settingsService.setRequireStaffPhoto(Boolean.parseBoolean(value));
+            case "forcePasswordChange" -> settingsService.setForcePasswordChange(Boolean.parseBoolean(value));
+            case "defaultPassword" -> settingsService.setDefaultPassword(value);
         }
         return "redirect:/admin/settings";
     }

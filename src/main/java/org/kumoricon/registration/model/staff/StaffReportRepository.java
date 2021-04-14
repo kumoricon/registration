@@ -21,9 +21,10 @@ public class StaffReportRepository {
 
     @Transactional(readOnly = true)
     public List<DepartmentReportDTO> findAll() {
-        final String sql = "select department, SUM(CASE WHEN checked_in = true THEN 1 ELSE 0 END) as checkedIn,\n" +
-                "       SUM(CASE WHEN checked_in = false THEN 1 ELSE 0 END) as notCheckedIn,\n" +
-                "       count(id) as total from staff where deleted != true group by department order by department;";
+        final String sql = """
+                select department, SUM(CASE WHEN checked_in = true THEN 1 ELSE 0 END) as checkedIn,
+                       SUM(CASE WHEN checked_in = false THEN 1 ELSE 0 END) as notCheckedIn,
+                       count(id) as total from staff where deleted != true group by department order by department;""";
         try {
             return jdbcTemplate.query(sql, new DepartmentReportDTORowMapper());
         } catch (EmptyResultDataAccessException e) {

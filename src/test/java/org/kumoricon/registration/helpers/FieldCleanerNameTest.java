@@ -1,40 +1,25 @@
 package org.kumoricon.registration.helpers;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import static org.junit.Assert.*;
-
-@RunWith(Parameterized.class)
 public class FieldCleanerNameTest {
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                {"Alice", "Alice"},
-                {"alice", "Alice"},
-                {"  Alice  ", "Alice"},
-                {"McGregor", "McGregor"},
-                {"mcGregor", "McGregor"},
-                {" alice jones ", "Alice Jones"},
-                {null, null}
-        });
-    }
-
-    private String input;
-    private String expected;
-
-    public FieldCleanerNameTest(String input, String expected) {
-        this.input = input;
-        this.expected = expected;
+    @ParameterizedTest
+    @CsvSource(value = {"Alice:Alice",
+                        "alice:Alice",
+                        "  Alice  :Alice",
+                        "McGregor:McGregor",
+                        "mcGregor:McGregor",
+                        " alice jones :Alice Jones"}, delimiter = ':')
+    public void cleanName(String input, String expected) {
+        assertEquals(expected, FieldCleaner.cleanName(input));
     }
 
     @Test
-    public void cleanName() {
-        assertEquals(expected, FieldCleaner.cleanName(input));
+    public void cleanNameNull() {
+        assertNull(FieldCleaner.cleanName(null));
     }
 }

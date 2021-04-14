@@ -1,16 +1,15 @@
 package org.kumoricon.registration.reg;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.kumoricon.registration.exceptions.NotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
 import org.kumoricon.registration.print.BadgePrintService;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
@@ -20,23 +19,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith({MockitoExtension.class})
 public class CheckinControllerTest {
 
-    @Mock
+    @Mock(lenient = true)
     AttendeeRepository attendeeRepository;
 
-    @Mock
+    @Mock(lenient = true)
     AttendeeHistoryRepository attendeeHistoryRepository;
 
-    @Mock
+    @Mock(lenient = true)
     BadgePrintService badgePrintService;
 
-    @Mock
+    @Mock(lenient = true)
     BlacklistRepository blacklistRepository;
 
     Map<Integer, Attendee> attendees = new HashMap<>();
@@ -46,8 +45,8 @@ public class CheckinControllerTest {
 
     UserService userService;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         this.controller = new CheckinController(attendeeRepository,
                 attendeeHistoryRepository,
                 new AttendeeService(attendeeRepository, attendeeHistoryRepository, blacklistRepository),
@@ -90,14 +89,14 @@ public class CheckinControllerTest {
         assertTrue(template.startsWith("redirect:/reg/checkin/2/printbadge?msg="));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void checkInMinorFailsWithNullConsentForm() {
-        String template = controller.checkIn(2, null, user, "test|0|0");
+        assertThrows(RuntimeException.class, () -> controller.checkIn(2, null, user, "test|0|0"));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void checkInMinorFailsWithoutConsentForm() {
-        String template = controller.checkIn(2, false, user, "test|0|0");
+        assertThrows(RuntimeException.class, () -> controller.checkIn(2, false, user, "test|0|0"));
     }
 
     @Test

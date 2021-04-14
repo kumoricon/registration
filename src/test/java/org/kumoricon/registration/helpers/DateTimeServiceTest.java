@@ -1,13 +1,16 @@
 package org.kumoricon.registration.helpers;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class DateTimeServiceTest {
     private final DateTimeService dateTimeService = new DateTimeService();
@@ -45,14 +48,14 @@ public class DateTimeServiceTest {
         assertEquals("1 second ago", dateTimeService.epochToDuration(0L, 1000L));
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void epochToDurationBackwards() {
-        assertEquals("", dateTimeService.epochToDuration(10L, 0L));
+        assertThrows(AssertionError.class, () -> dateTimeService.epochToDuration(10L, 0L));
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void epochToDurationNull() {
-        dateTimeService.epochToDuration(null);
+        assertThrows(AssertionError.class, () -> dateTimeService.epochToDuration(null));
     }
 
     @Test

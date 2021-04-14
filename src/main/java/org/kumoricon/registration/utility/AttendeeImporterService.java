@@ -1,7 +1,7 @@
 package org.kumoricon.registration.utility;
 
-import com.google.gson.*;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kumoricon.registration.helpers.FieldCleaner;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.Badge;
@@ -18,9 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,6 +29,7 @@ import java.util.*;
 
 @Service
 class AttendeeImporterService {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     public static final String IMPORT_TILL_NAME = "Attendee Import";
     private final TillSessionService sessionService;
 
@@ -88,14 +88,6 @@ class AttendeeImporterService {
 
     private String generateBadgeNumber(Integer badgeNumber) {
         return String.format("VN%1$05d", badgeNumber);
-    }
-
-    private List<AttendeeRecord> loadFile(BufferedReader bufferedReader) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class,
-                (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ISO_LOCAL_DATE)).create();
-        AttendeeRecord[] output = gson.fromJson(bufferedReader, AttendeeRecord[].class);
-
-        return Arrays.asList(output);
     }
 
     protected Integer createOrders(List<AttendeeRecord> attendeeRecords, User user) {
@@ -263,13 +255,14 @@ class AttendeeImporterService {
     }
 
     @Transactional
-    public String importFromJSON(InputStreamReader reader, User user) {
+    public String importFromJSON(InputStream is, User user) {
         long start = System.currentTimeMillis();
         log.info("{} starting data import", user);
-        BufferedReader jsonFile = new BufferedReader(reader);
+
         Integer orderCount, attendeeCount, noteCount,paymentCount;
-        try {
-            List<AttendeeRecord> attendees = loadFile(jsonFile);
+        try (InputStreamReader isr = new InputStreamReader(is);
+             BufferedReader jsonFile = new BufferedReader(isr)) {
+            List<AttendeeRecord> attendees = objectMapper.readValue(jsonFile, new TypeReference<>() {});
 
             badgeMap = getBadgeMap();
 
@@ -289,12 +282,6 @@ class AttendeeImporterService {
         } catch (Exception ex) {
             log.error("Error parsing file: {}", ex.getMessage(), ex);
             throw new RuntimeException(ex);
-        } finally {
-            try {
-                jsonFile.close();
-            } catch (IOException ex) {
-                log.error("Error closing file", ex);
-            }
         }
         return String.format("Saved %s orders, %s attendees, %s notes, %s payments in %s ms",
                 orderCount, attendeeCount, noteCount, paymentCount, System.currentTimeMillis() - start);

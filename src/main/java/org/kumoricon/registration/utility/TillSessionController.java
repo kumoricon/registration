@@ -23,9 +23,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class TillSessionController {
@@ -91,7 +88,7 @@ public class TillSessionController {
             int tillSessionId = s.getId();
             tillSessionService.closeSessionForUser(currentUser, tillName);
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
-            String msg = "";
+            String msg;
             if (reportPrinterName != null && !reportPrinterName.isEmpty()) {
                 try {
                     TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(tillSessionId);
