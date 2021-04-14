@@ -83,6 +83,7 @@ public class BaseDataService {
         Role adminRole = roleRepository.findByNameIgnoreCase("Administrator");
         defaultUser.setUsername("admin");
         defaultUser.setRoleId(adminRole.getId());
+        defaultUser.setOnlineId(String.valueOf(adminRole.getId()));
         userRepository.save(defaultUser);
     }
 
@@ -113,6 +114,7 @@ public class BaseDataService {
                 continue;
             }
             user.setRoleId(role.getId());
+            user.setOnlineId(String.valueOf(role.getId()));
             userRepository.save(user);
 
 

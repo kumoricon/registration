@@ -44,22 +44,35 @@ public class UserRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public User findOneByOnlineId(String onlineId) throws NotFoundException {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT users.*, roles.name as rolename from users join roles on users.role_id = roles.id where users.online_id=:online_id",
+                    Map.of("online_id", onlineId), new UserRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     @Transactional
     public void save(User user) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(user);
         if (user.getId() == null) {
-            jdbcTemplate.update("INSERT INTO users " +
-                            "(account_non_expired, account_non_locked, force_password_change, enabled, first_name, " +
-                            "last_name, last_badge_number_created, password, username, role_id) " +
-                            "VALUES(:accountNonExpired, :accountNonLocked, :forcePasswordChange, :enabled, :firstName," +
-                            ":lastName, :lastBadgeNumberCreated, :password, :username, :roleId)",
+            jdbcTemplate.update("""
+                            INSERT INTO users 
+                            (online_id, account_non_expired, account_non_locked, force_password_change, enabled, first_name, 
+                            last_name, last_badge_number_created, password, username, role_id) 
+                            VALUES(:onlineId, :accountNonExpired, :accountNonLocked, :forcePasswordChange, :enabled, :firstName,
+                            :lastName, :lastBadgeNumberCreated, :password, :username, :roleId)""",
                     params);
         } else {
-            jdbcTemplate.update("UPDATE users SET account_non_expired = :accountNonExpired, " +
-                            "account_non_locked = :accountNonLocked, force_password_change = :forcePasswordChange, " +
-                            "enabled = :enabled, first_name = :firstName, last_name = :lastName, " +
-                            "last_badge_number_created = :lastBadgeNumberCreated, password = :password, " +
-                            "username = :username, role_id = :roleId WHERE id = :id",
+            jdbcTemplate.update("""
+                            UPDATE users SET online_id = :onlineId, account_non_expired = :accountNonExpired, 
+                            account_non_locked = :accountNonLocked, force_password_change = :forcePasswordChange, 
+                            enabled = :enabled, first_name = :firstName, last_name = :lastName, 
+                            last_badge_number_created = :lastBadgeNumberCreated, password = :password, 
+                            username = :username, role_id = :roleId WHERE id = :id""",
                     params);
         }
     }
@@ -100,6 +113,7 @@ public class UserRepository {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
             user.setId(rs.getInt("id"));
+            user.setOnlineId(rs.getString("online_id"));
             user.setFirstName(rs.getString("first_name"));
             user.setLastName(rs.getString("last_name"));
             user.setUsername(rs.getString("username"));

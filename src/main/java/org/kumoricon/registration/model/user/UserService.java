@@ -106,6 +106,7 @@ public class UserService implements UserDetailsService {
     public User newUser() {
         User user = new User();
         user.setId(null);
+        user.setOnlineId(null);
         user.setEnabled(true);
         user.setPassword(passwordEncoder.encode(settingsService.getCurrentSettings().getDefaultPassword()));
         user.setAccountNonExpired(true);
