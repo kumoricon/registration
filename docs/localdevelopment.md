@@ -5,7 +5,7 @@ Instructions for setting up a local development environment
 Technologies
 ------------
 The service is built on:
-  - [Java 14](https://openjdk.java.net/projects/jdk/14/)
+  - [Java 15](https://openjdk.java.net/projects/jdk/15/)
   - [Spring Framework](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/) Server framework
   - [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html) Templating language
   - [CSS Bootstrap](https://getbootstrap.com/docs/3.4/css/) Front end formatting
