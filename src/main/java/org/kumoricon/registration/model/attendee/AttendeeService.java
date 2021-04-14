@@ -3,10 +3,8 @@ package org.kumoricon.registration.model.attendee;
 import org.kumoricon.registration.model.blacklist.BlacklistName;
 import org.kumoricon.registration.model.blacklist.BlacklistRepository;
 import org.kumoricon.registration.model.user.User;
-import org.kumoricon.registration.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

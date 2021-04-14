@@ -1,9 +1,8 @@
 package org.kumoricon.registration.model.role;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class RightTest {
     private Right r1 = new Right(1, "test", "first right");

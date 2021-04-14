@@ -1,40 +1,26 @@
 package org.kumoricon.registration.helpers;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Arrays;
-import java.util.Collection;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-@RunWith(Parameterized.class)
 public class FieldCleanerPhoneNumberTest {
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                {"(123) 123-1234", "(123) 123-1234"},
-                {" (123) 123-1234 ", "(123) 123-1234"},
-                {"1231231234", "(123) 123-1234"},
-                {"123-1234", "123-1234"},
-                {"1231234", "1231234"},
-                {"1231231234 x104", "1231231234 x104"},
-                {null, null}
-        });
-    }
-
-    private String input;
-    private String expected;
-
-    public FieldCleanerPhoneNumberTest(String input, String expected) {
-        this.input = input;
-        this.expected = expected;
+    @ParameterizedTest
+    @CsvSource(value = {"(123) 123-1234:(123) 123-1234",
+            " (123) 123-1234 :(123) 123-1234",
+            "1231231234:(123) 123-1234",
+            "123-1234:123-1234",
+            "1231234:1231234",
+            "1231231234 x104:1231231234 x104"}, delimiter = ':')
+    public void cleanPhoneNumber(String input, String expected) {
+        assertEquals(expected, FieldCleaner.cleanPhoneNumber(input));
     }
 
     @Test
-    public void cleanPhoneNumber() {
-        assertEquals(expected, FieldCleaner.cleanPhoneNumber(input));
+    public void cleanPhoneNumberNull() {
+        assertNull(FieldCleaner.cleanPhoneNumber(null));
     }
 }

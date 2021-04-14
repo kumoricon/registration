@@ -1,8 +1,9 @@
 package org.kumoricon.registration.inlinereg;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.inlineregistration.InLineRegRepository;
@@ -11,32 +12,31 @@ import org.kumoricon.registration.model.order.OrderService;
 import org.kumoricon.registration.model.user.User;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class InLineRegistrationControllerTest {
 
-    @Mock
+    @Mock(lenient = true)
     private InLineRegRepository inLineRegRepository;
 
-    @Mock
+    @Mock(lenient = true)
     private OrderService orderService;
 
     private InLineRegistrationController inLineRegistrationController;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.inLineRegistrationController = new InLineRegistrationController(
                 new InLineRegistrationService(inLineRegRepository, orderService));
@@ -59,7 +59,7 @@ public class InLineRegistrationControllerTest {
         assertEquals("inlinereg/search", template);
         assertEquals("Person", model.getAttribute("name"));
         Map<String, List<InLineRegistration>> results = (Map<String, List<InLineRegistration>>) model.getAttribute("results");
-        assertNotNull(results);
+        assertTrue(null != results);
         assertEquals(1, results.size());
     }
 

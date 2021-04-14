@@ -1,11 +1,13 @@
 package org.kumoricon.registration.converters;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 public class LocalDateToStringFormatterTest {
     LocalDateToStringFormatter converter = new LocalDateToStringFormatter();
