@@ -143,14 +143,12 @@ public class PaymentController {
         model.addAttribute("totalDue", orderRepository.getTotalByOrderId(orderId));
         model.addAttribute("order", order);
 
-        if(paymentType.equals("card"))
-            return "reg/atcon-order-card-payment";
-        else if(paymentType.equals("cash"))
-            return "reg/atcon-order-cash-payment";
-        else if(paymentType.equals("check"))
-            return "reg/atcon-order-check-payment";
-        else
-            return "reg/atcon-order-payment";
+        return switch (paymentType) {
+            case "card" -> "reg/atcon-order-card-payment";
+            case "cash" -> "reg/atcon-order-cash-payment";
+            case "check" -> "reg/atcon-order-check-payment";
+            default -> "reg/atcon-order-payment";
+        };
     }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/payment/new", method = RequestMethod.POST)
@@ -199,24 +197,19 @@ public class PaymentController {
 
         }
 
+        // For cash, don't record a payment of more than the amount due in the order. The user should
+        // be giving change. However, we should NOT be giving change for card or check transactions.
         switch (payment.getPaymentType()) {
-            case "cash":
+            case "cash" -> {
                 paymentData.setPaymentType(Payment.PaymentType.CASH);
-                // For cash, don't record a payment of more than the amount due in the order. The user should
-                // be giving change. However, we should NOT be giving change for card or check transactions.
                 BigDecimal amountLeftToPay = totalDue.subtract(paidSoFar);
                 if (payment.getAmount().compareTo(amountLeftToPay) > 0) {
                     paymentData.setAmount(amountLeftToPay);
                 }
-                break;
-            case "card":
-                paymentData.setPaymentType(Payment.PaymentType.CREDIT);
-                break;
-            case "check":
-                paymentData.setPaymentType(Payment.PaymentType.CHECK);
-                break;
-            default:
-                throw new RuntimeException("Invalid payment type: " + payment.getPaymentType());
+            }
+            case "card" -> paymentData.setPaymentType(Payment.PaymentType.CREDIT);
+            case "check" -> paymentData.setPaymentType(Payment.PaymentType.CHECK);
+            default -> throw new RuntimeException("Invalid payment type: " + payment.getPaymentType());
         }
 
 
