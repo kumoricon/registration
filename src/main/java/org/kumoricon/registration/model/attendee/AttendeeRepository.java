@@ -58,22 +58,22 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public List<CheckInByHourDTO> findCheckInCountsByHour() {
         String sql = """
-                    SELECT date_trunc('hour', check_in_time) at time zone 'utc' as checkInDate, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn, 
-                    COUNT(checked_in) as Total FROM attendees 
-                    LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt 
-                    FROM attendees  WHERE attendees.checked_in = TRUE 
-                    AND attendees.pre_registered = TRUE 
-                    GROUP BY aCheckInDate) as preRegCheckedIn 
-                    ON date_trunc('hour', check_in_time) = preRegCheckedIn.aCheckInDate 
-                    LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, 
-                    COUNT(attendees.checked_in) as cnt 
-                    FROM attendees 
-                    WHERE attendees.checked_in = TRUE 
-                    AND attendees.pre_registered = FALSE 
-                    GROUP BY aCheckInDate) as atConCheckedIn 
-                    ON date_trunc('hour', check_in_time) = atConCheckedIn.aCheckInDate 
-                    WHERE checked_in = TRUE 
-                    GROUP BY date_trunc('hour', check_in_time), checkInDate, atConCheckedIn.cnt, preRegCheckedIn.cnt 
+                    SELECT date_trunc('hour', check_in_time) at time zone 'utc' as checkInDate, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn,
+                    COUNT(checked_in) as Total FROM attendees
+                    LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt
+                    FROM attendees  WHERE attendees.checked_in = TRUE
+                    AND attendees.pre_registered = TRUE
+                    GROUP BY aCheckInDate) as preRegCheckedIn
+                    ON date_trunc('hour', check_in_time) = preRegCheckedIn.aCheckInDate
+                    LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate,
+                    COUNT(attendees.checked_in) as cnt
+                    FROM attendees
+                    WHERE attendees.checked_in = TRUE
+                    AND attendees.pre_registered = FALSE
+                    GROUP BY aCheckInDate) as atConCheckedIn
+                    ON date_trunc('hour', check_in_time) = atConCheckedIn.aCheckInDate
+                    WHERE checked_in = TRUE
+                    GROUP BY date_trunc('hour', check_in_time), checkInDate, atConCheckedIn.cnt, preRegCheckedIn.cnt
                     ORDER BY checkInDate DESC;
                     """;
 
@@ -176,16 +176,16 @@ public class AttendeeRepository {
                             """, params);
         } else {
             jdbcTemplate.update("""
-                            UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted, 
-                            badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime, 
-                            checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email, 
-                            emergency_contact_full_name=:emergencyContactFullName, 
-                            emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName, 
-                            last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName, 
-                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid, 
-                            paid_amount=:paidAmount, parent_form_received=:parentFormReceived, 
-                            parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact, 
-                            parent_phone=:parentPhone, phone_number=:phoneNumber, 
+                            UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted,
+                            badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime,
+                            checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email,
+                            emergency_contact_full_name=:emergencyContactFullName,
+                            emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName,
+                            last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName,
+                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid,
+                            paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
+                            parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact,
+                            parent_phone=:parentPhone, phone_number=:phoneNumber,
                             zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id
                             """, params);
         }
@@ -252,16 +252,16 @@ public class AttendeeRepository {
 
             jdbcTemplate.batchUpdate("""
                             INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed,
-                            birth_date, check_in_time, checked_in, comped_badge, country, email, 
-                            emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name, 
-                            legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid, 
-                            paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact, 
-                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES 
+                            birth_date, check_in_time, checked_in, comped_badge, country, email,
+                            emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
+                            legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid,
+                            paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
+                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES
                             (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
-                             :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email, 
+                             :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
                              :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName,
                              :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid,
-                             :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact, 
+                             :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact,
                              :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked)
                             """, toInsertParams);
         }
@@ -275,16 +275,16 @@ public class AttendeeRepository {
                 i++;
             }
             jdbcTemplate.batchUpdate("""
-                            UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted, 
-                            badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime, 
-                            checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email, 
-                            emergency_contact_full_name=:emergencyContactFullName, 
-                            emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName, 
-                            last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName, 
-                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid, 
-                            paid_amount=:paidAmount, parent_form_received=:parentFormReceived, 
-                            parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact, 
-                            parent_phone=:parentPhone, phone_number=:phoneNumber, 
+                            UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted,
+                            badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime,
+                            checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email,
+                            emergency_contact_full_name=:emergencyContactFullName,
+                            emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName,
+                            last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName,
+                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid,
+                            paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
+                            parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact,
+                            parent_phone=:parentPhone, phone_number=:phoneNumber,
                             zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id
                             """, toUpdateParams);
         }
@@ -293,7 +293,7 @@ public class AttendeeRepository {
     @Transactional
     public void setParentFormReceived(Integer attendeeId, Integer orderId, Boolean formReceived) {
         final String SQL = """
-                UPDATE attendees SET parent_form_received = :parentFormReceived 
+                UPDATE attendees SET parent_form_received = :parentFormReceived
                 WHERE id=:attendeeId AND order_id = :orderId
                 """;
         SqlParameterSource params = new MapSqlParameterSource("attendeeId", attendeeId)
