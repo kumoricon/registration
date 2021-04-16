@@ -1,7 +1,7 @@
-var extensionDataElement;
-var msg;
-var saveBtn;
-var requireSignature;
+let extensionDataElement;
+let msg;
+let saveBtn;
+let requireSignature;
 
 $(document).ready(function() {
     extensionDataElement = document.createElement("MyExtensionDataElement");
