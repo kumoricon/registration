@@ -31,7 +31,7 @@ public class TillSessionAdminController {
 
     private static final Logger log = LoggerFactory.getLogger(TillSessionAdminController.class);
 
-    public TillSessionAdminController(TillSessionService tillSessionService, UserService userService, ReportPrintService reportService, SettingsService settingsService) throws IOException, PrintException {
+    public TillSessionAdminController(TillSessionService tillSessionService, UserService userService, ReportPrintService reportService, SettingsService settingsService) {
         this.tillSessionService = tillSessionService;
         this.userService = userService;
         this.reportService = reportService;

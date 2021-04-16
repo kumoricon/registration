@@ -74,7 +74,7 @@ public class ReportPrintService extends PrintService {
         saveReport(data, "Till Report", "/Volumes/Data/Kumoreg/test.pdf");
     }
 
-    public void saveReport(String[] text, String title, String path) throws IOException, PrintException {
+    public void saveReport(String[] text, String title, String path) throws IOException {
         PDDocument document = textToPDF(text, title);
         document.save(path);
         document.close();
