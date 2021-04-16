@@ -240,9 +240,9 @@ public class BadgePrintService extends PrintService {
 
     private String getAgeStripeColor(String ageRangeAtCon) {
         if (ageRangeAtCon == null) { ageRangeAtCon = "child"; }
-        if ("adult".equals(ageRangeAtCon.toLowerCase())) {
+        if ("adult".equalsIgnoreCase(ageRangeAtCon)) {
             return "#323E99";
-        } else if ("youth".equals(ageRangeAtCon.toLowerCase())) {
+        } else if ("youth".equalsIgnoreCase(ageRangeAtCon)) {
             return  "#FFFF00";
         } else {
             return  "#CC202A";
@@ -251,9 +251,9 @@ public class BadgePrintService extends PrintService {
 
     private Image getAgeImage(String ageRangeAtCon) {
         if (ageRangeAtCon == null) { ageRangeAtCon = "child"; }
-        if ("adult".equals(ageRangeAtCon.toLowerCase())) {
+        if ("adult".equalsIgnoreCase(ageRangeAtCon)) {
             return badgeResourceService.getAdultSeal();
-        } else if ("youth".equals(ageRangeAtCon.toLowerCase())) {
+        } else if ("youth".equalsIgnoreCase(ageRangeAtCon)) {
             return badgeResourceService.getYouthSeal();
         } else {
             return badgeResourceService.getChildSeal();

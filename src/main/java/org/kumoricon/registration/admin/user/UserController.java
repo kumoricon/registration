@@ -60,7 +60,7 @@ public class UserController {
                            final Model model) {
         log.info("viewing user id {}", userId);
         User user;
-        if (userId.toLowerCase().equals("new")) {
+        if (userId.equalsIgnoreCase("new")) {
             user = userService.newUser();
         } else {
             try {

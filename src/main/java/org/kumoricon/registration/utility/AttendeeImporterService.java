@@ -167,7 +167,7 @@ class AttendeeImporterService {
 
             // Treat guests as always being checked in since they don't check in through Registration,
             // we just provide badges. Add a note in the record below in createNotes()
-            if (record.membershipType != null && record.membershipType.toLowerCase().equals("guest")) {
+            if (record.membershipType != null && record.membershipType.equalsIgnoreCase("guest")) {
                 attendee.setCheckedIn(true);
                 attendee.setCheckInTime(OffsetDateTime.now());
             }
@@ -208,7 +208,7 @@ class AttendeeImporterService {
                 AttendeeHistory note = new AttendeeHistory(user, attendeeId, "VIP T-Shirt size: " + record.vipTShirtSize);
                 notes.add(note);
             }
-            if (record.membershipType != null && record.membershipType.toLowerCase().equals("guest")) {
+            if (record.membershipType != null && record.membershipType.equalsIgnoreCase("guest")) {
                 AttendeeHistory note = new AttendeeHistory(user, attendeeId, "Guest marked checked in during import");
                 notes.add(note);
             }

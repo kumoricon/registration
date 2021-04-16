@@ -46,7 +46,7 @@ public class BlacklistController {
     public String editBlacklistName(@PathVariable String id, final Model model) {
         BlacklistName blacklistName;
 
-        if (id.toLowerCase().equals("new")) {
+        if (id.equalsIgnoreCase("new")) {
             blacklistName = new BlacklistName();
         } else {
             blacklistName = blacklistRepository.findById(Integer.parseInt(id));
