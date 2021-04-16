@@ -45,7 +45,7 @@ public class SearchByBadgeController {
         Badge selected = null;
         if (badgeName != null) {
             for (Badge b : badgeTypes) {
-                if (badgeName.trim().toLowerCase().equals(b.getName().toLowerCase())) {
+                if (badgeName.trim().equalsIgnoreCase(b.getName())) {
                     selected = b;
                 }
             }

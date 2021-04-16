@@ -34,18 +34,18 @@ public class AttendeeSearchRepository {
     public List<AttendeeListDTO> searchFor(String[] searchWords) {
         String sqlMulti = SELECT_COLUMNS +
                             """
-                            from attendees 
-                            join badges on attendees.badge_id = badges.id where 
-                            (first_name ILIKE :term0 || '%' and last_name ILIKE :term1 || '%') or 
-                            (legal_first_name ILIKE :term0 || '%' and legal_last_name ILIKE :term1 || '%') or 
+                            from attendees
+                            join badges on attendees.badge_id = badges.id where
+                            (first_name ILIKE :term0 || '%' and last_name ILIKE :term1 || '%') or
+                            (legal_first_name ILIKE :term0 || '%' and legal_last_name ILIKE :term1 || '%') or
                             fan_name ILIKE '%' || :term0 || '%' AND fan_name ILIKE '%' || :term1 || '%' order by attendees.first_name, attendees.last_name
                             """;
         String sqlSingle = SELECT_COLUMNS +
                             """
-                            from attendees 
-                            join badges on attendees.badge_id = badges.id where 
-                            first_name ILIKE :term0 || '%' or last_name ILIKE :term0 || '%' or 
-                            legal_first_name ILIKE :term0 || '%' or legal_last_name ILIKE :term0 || '%' or 
+                            from attendees
+                            join badges on attendees.badge_id = badges.id where
+                            first_name ILIKE :term0 || '%' or last_name ILIKE :term0 || '%' or
+                            legal_first_name ILIKE :term0 || '%' or legal_last_name ILIKE :term0 || '%' or
                             fan_name ILIKE '%' || :term0 || '%' order by attendees.first_name, attendees.last_name
                             """;
 
@@ -69,9 +69,9 @@ public class AttendeeSearchRepository {
     public List<AttendeeListDTO> searchByOrderNumber(String orderId) {
         String sql = SELECT_COLUMNS +
                 """
-                , orders.order_id from attendees 
-                join orders on attendees.order_id = orders.id 
-                join badges on attendees.badge_id = badges.id 
+                , orders.order_id from attendees
+                join orders on attendees.order_id = orders.id
+                join badges on attendees.badge_id = badges.id
                 where orders.order_id = :orderId order by attendees.first_name, attendees.last_name
                 """;
 

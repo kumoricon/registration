@@ -63,7 +63,7 @@ public class FileStorageService {
     public void createDirectories() {
         try {
             uploadPath = Files.createDirectories(Paths.get(uploadPathString));
-            log.info("Impage upload path: " + uploadPath.toAbsolutePath().toString());
+            log.info("Impage upload path: " + uploadPath.toAbsolutePath());
         } catch (IOException ex) {
             log.error("Error creating directory", ex);
         }

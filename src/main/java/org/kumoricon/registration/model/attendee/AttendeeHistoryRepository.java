@@ -29,8 +29,8 @@ public class AttendeeHistoryRepository {
         try {
             return jdbcTemplate.query(
                     """
-                    select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name 
-                    as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id 
+                    select attendeehistory.*, users.first_name, users.last_name, attendees.first_name as a_first_name, attendees.last_name
+                    as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id
                     JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id = :id order by timestamp desc
                     """,
                     Map.of("id", id), new AttendeeHistoryDTORowMapper());
@@ -44,9 +44,9 @@ public class AttendeeHistoryRepository {
         try {
             return jdbcTemplate.query(
                     """
-                        select attendeehistory.*, users.first_name, users.last_name, attendees.first_name 
-                        as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id 
-                        JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id 
+                        select attendeehistory.*, users.first_name, users.last_name, attendees.first_name
+                        as a_first_name, attendees.last_name as a_last_name from attendeehistory join users on attendeehistory.user_id = users.id
+                        JOIN attendees on attendeehistory.attendee_id = attendees.id where attendee_id
                         IN (select id from attendees where attendees.order_id = :orderId) order by timestamp desc
                         """,
                     Map.of("orderId", orderId), new AttendeeHistoryDTORowMapper());
@@ -58,22 +58,16 @@ public class AttendeeHistoryRepository {
     @Transactional
     public void save(AttendeeHistory ah) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(ah);
-//        SqlParameterSource params = new MapSqlParameterSource()
-//                .addValue("message", ah.getMessage())
-//                .addValue("timestamp", Timestamp.from(ah.getTimestamp()))
-//                .addValue("userId", ah.getUserId())
-//                .addValue("attendeeId", ah.getAttendeeId())
-//                .addValue("id", ah.getId());
 
         if (ah.getId() == null) {
             jdbcTemplate.update("""
-                                    INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id) 
+                                    INSERT INTO attendeehistory(message, timestamp, user_id, attendee_id)
                                     VALUES(:message, :timestamp, :userId, :attendeeId)
                                     """, params);
         } else {
             jdbcTemplate.update("""
-                                    UPDATE attendeehistory set message=:message, timestamp=:timestamp, 
-                                    user_id=:userId, attendee_id=:attendeeId 
+                                    UPDATE attendeehistory set message=:message, timestamp=:timestamp,
+                                    user_id=:userId, attendee_id=:attendeeId
                                     where attendeehistory.id=:id)
                                     """, params);
         }
@@ -82,12 +76,12 @@ public class AttendeeHistoryRepository {
     @Transactional(readOnly = true)
     public List<CheckInByUserDTO> checkInCountByUsers() {
         String sql = """
-                    SELECT users.first_name, users.last_name, 
-                    COUNT(attendeehistory.id) as count FROM attendeehistory 
-                    JOIN users ON attendeehistory.user_id = users.id 
-                    WHERE attendeehistory.message='Attendee Checked In' 
-                    AND timestamp >= (NOW() - (15 * interval '1 minute')) 
-                    AND attendeehistory.timestamp <= NOW() 
+                    SELECT users.first_name, users.last_name,
+                    COUNT(attendeehistory.id) as count FROM attendeehistory
+                    JOIN users ON attendeehistory.user_id = users.id
+                    WHERE attendeehistory.message='Attendee Checked In'
+                    AND timestamp >= (NOW() - (15 * interval '1 minute'))
+                    AND attendeehistory.timestamp <= NOW()
                     GROUP BY user_id, first_name, last_name
                     """;
 
@@ -105,12 +99,6 @@ public class AttendeeHistoryRepository {
         for (AttendeeHistory ah : notes) {
             assert ah.getId() == null : "saveAll only works with objects that have NOT been saved to the database (id=null)";
             params[i] = new BeanPropertySqlParameterSource(ah);
-            //            params[i] = new MapSqlParameterSource()
-//                    .addValue("message", ah.getMessage())
-//                    .addValue("timestamp", ah.getTimestamp())
-//                    .addValue("userId", ah.getUserId())
-//                    .addValue("attendeeId", ah.getAttendeeId())
-//                    .addValue("id", ah.getId());
             i++;
         }
 

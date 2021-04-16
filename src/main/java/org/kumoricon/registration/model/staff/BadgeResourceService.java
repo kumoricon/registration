@@ -118,7 +118,7 @@ public class BadgeResourceService {
     public void createDirectoriesAndLoadData() {
         try {
             badgeResourcePath = Files.createDirectories(Paths.get(badgeResourcePathString));
-            log.info("Badge Resource path: " + badgeResourcePath.toAbsolutePath().toString());
+            log.info("Badge Resource path: " + badgeResourcePath.toAbsolutePath());
             adultSeal = loadImage("staffadult.png");
             youthSeal = loadImage("staffyouth.png");
             childSeal = loadImage("staffchild.png");

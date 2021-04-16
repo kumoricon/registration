@@ -59,7 +59,7 @@ public class TillSessionController {
                             Principal user,
                             @RequestParam String action,
                             @RequestParam String tillName,
-                            HttpServletResponse response) throws IOException, PrintException {
+                            HttpServletResponse response) {
 
         User currentUser = userService.findByUsername(user.getName());
         if (currentUser == null) throw new RuntimeException("User not found");

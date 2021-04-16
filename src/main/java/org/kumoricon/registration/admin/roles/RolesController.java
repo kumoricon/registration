@@ -45,7 +45,7 @@ public class RolesController {
     @PreAuthorize("hasAuthority('manage_roles')")
     public String editRole(@PathVariable String roleId, final Model model) {
         Role role;
-        if (roleId.toLowerCase().equals("new")) {
+        if (roleId.equalsIgnoreCase("new")) {
             role = new Role();
         } else {
             role = roleRepository.findById(Integer.parseInt(roleId));

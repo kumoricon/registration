@@ -87,15 +87,15 @@ public class StaffBadgeDTO {
     }
 
     public boolean isAdult() {
-        return "adult".equals(ageRange.toLowerCase());
+        return "adult".equalsIgnoreCase(ageRange);
     }
 
     public boolean isYouth() {
-        return "youth".equals(ageRange.toLowerCase());
+        return "youth".equalsIgnoreCase(ageRange);
     }
 
     public boolean isChild() {
-        return "child".equals(ageRange.toLowerCase());
+        return "child".equalsIgnoreCase(ageRange);
     }
 
     public static final class Builder {

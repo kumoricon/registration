@@ -5,15 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
+import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
 @Component
-public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
+public class ResetPasswordInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(ResetPasswordInterceptor.class);
 
     private final String[] IGNORE_PATHS = {"/webjars", "/css/", "/img", "/js", "/favicon.ico", "/resetpassword"};
@@ -32,8 +31,7 @@ public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
         // Get the current user. If their forcePasswordChange property is true, redirect to /resetpassword
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof User) {
-            User user = (User) principal;
+        if (principal instanceof User user) {
             if (user.getForcePasswordChange()) {
                 try {
                     log.info("forcePasswordChange set, redirecting to /resetpassword");

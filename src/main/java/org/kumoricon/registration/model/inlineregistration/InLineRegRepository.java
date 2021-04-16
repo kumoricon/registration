@@ -47,16 +47,16 @@ public class InLineRegRepository {
     public void upsert(InLineRegistration inLineRegistration) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(inLineRegistration);
         final String SQL = """
-                INSERT INTO inlineregistrations (uuid, order_uuid, first_name, last_name, legal_first_name, legal_last_name, 
-                name_is_legal_name, preferred_pronoun, zip, country, phone_number, email, birth_date, emergency_contact_fullname, 
-                emergency_contact_phone, parent_is_emergency_contact, parent_fullname, parent_phone, confirmation_code, membership_type)  VALUES 
+                INSERT INTO inlineregistrations (uuid, order_uuid, first_name, last_name, legal_first_name, legal_last_name,
+                name_is_legal_name, preferred_pronoun, zip, country, phone_number, email, birth_date, emergency_contact_fullname,
+                emergency_contact_phone, parent_is_emergency_contact, parent_fullname, parent_phone, confirmation_code, membership_type)  VALUES
                 (:uuid, :orderUuid, :firstName, :lastName, :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :zip,
-                :country, :phoneNumber, :email, :birthDate, :emergencyContactFullName, :emergencyContactPhone, 
-                :parentIsEmergencyContact, :parentFullName, :parentPhone, :confirmationCode, :membershipType) ON CONFLICT (uuid) 
-                DO UPDATE SET first_name=:firstName, last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName, 
-                name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, zip=:zip, country=:country, phone_number=:phoneNumber, email=:email, birth_date=:birthDate, 
-                emergency_contact_fullname=:emergencyContactFullName, emergency_contact_phone=:emergencyContactPhone, 
-                parent_is_emergency_contact=:parentIsEmergencyContact, parent_fullname=:parentFullName, parent_phone=:parentPhone, 
+                :country, :phoneNumber, :email, :birthDate, :emergencyContactFullName, :emergencyContactPhone,
+                :parentIsEmergencyContact, :parentFullName, :parentPhone, :confirmationCode, :membershipType) ON CONFLICT (uuid)
+                DO UPDATE SET first_name=:firstName, last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName,
+                name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, zip=:zip, country=:country, phone_number=:phoneNumber, email=:email, birth_date=:birthDate,
+                emergency_contact_fullname=:emergencyContactFullName, emergency_contact_phone=:emergencyContactPhone,
+                parent_is_emergency_contact=:parentIsEmergencyContact, parent_fullname=:parentFullName, parent_phone=:parentPhone,
                 confirmation_code=:confirmationCode, order_uuid=:orderUuid, membership_type=:membershipType WHERE inlineregistrations.uuid=:uuid""";
         jdbcTemplate.update(SQL, params);
     }

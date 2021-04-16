@@ -7,12 +7,12 @@ $(document).ready(
 
 function setState() 
 {
-    var inputChange = $('#inputChange');
-    var btnSave = $('#btnSave');
-    var inputAmount = $('#inputAmount');
+    const inputChange = $('#inputChange');
+    const btnSave = $('#btnSave');
+    const inputAmount = $('#inputAmount');
 
-    var amount = parseFloat(inputAmount.val());
-    var due = parseFloat($('#amountDue').val());
+    const amount = parseFloat(inputAmount.val());
+    const due = parseFloat($('#amountDue').val());
 
     inputChange.val("");
 
@@ -30,7 +30,7 @@ function setState()
         return;
     }
 
-    var change = ((amount*100)-(due*100))/100;
+    let change = ((amount * 100) - (due * 100)) / 100;
     if (change < 0) { change = 0; }
 
     inputChange.val(change);

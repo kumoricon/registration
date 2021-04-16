@@ -6,11 +6,11 @@ $(document).ready(
 );
 
 function setState() {
-    var btnSave = $('#btnSave');
-    var inputAmount = $('#inputAmount');
+    const btnSave = $('#btnSave');
+    const inputAmount = $('#inputAmount');
 
-    var amount = parseFloat(inputAmount.val());
-    var due = parseFloat($('#amountDue').val());
+    const amount = parseFloat(inputAmount.val());
+    const due = parseFloat($('#amountDue').val());
 
     if (isNaN(amount) || isNaN(due)) {
         btnSave.attr("disabled", true);
@@ -25,7 +25,7 @@ function setState() {
     }
 
     // Make sure auth number is filled in if the field exists (cash and check payment types)
-    var inputAuth = document.getElementById('inputCheckAuth');
+    const inputAuth = document.getElementById('inputCheckAuth');
 
     if (inputAuth != null) {
         if (!inputAuth.value || inputAuth.value.length < 1) {

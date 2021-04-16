@@ -60,18 +60,18 @@ public class UserRepository {
         SqlParameterSource params = new BeanPropertySqlParameterSource(user);
         if (user.getId() == null) {
             jdbcTemplate.update("""
-                            INSERT INTO users 
-                            (online_id, account_non_expired, account_non_locked, force_password_change, enabled, first_name, 
-                            last_name, last_badge_number_created, password, username, role_id) 
+                            INSERT INTO users
+                            (online_id, account_non_expired, account_non_locked, force_password_change, enabled, first_name,
+                            last_name, last_badge_number_created, password, username, role_id)
                             VALUES(:onlineId, :accountNonExpired, :accountNonLocked, :forcePasswordChange, :enabled, :firstName,
                             :lastName, :lastBadgeNumberCreated, :password, :username, :roleId)""",
                     params);
         } else {
             jdbcTemplate.update("""
-                            UPDATE users SET online_id = :onlineId, account_non_expired = :accountNonExpired, 
-                            account_non_locked = :accountNonLocked, force_password_change = :forcePasswordChange, 
-                            enabled = :enabled, first_name = :firstName, last_name = :lastName, 
-                            last_badge_number_created = :lastBadgeNumberCreated, password = :password, 
+                            UPDATE users SET online_id = :onlineId, account_non_expired = :accountNonExpired,
+                            account_non_locked = :accountNonLocked, force_password_change = :forcePasswordChange,
+                            enabled = :enabled, first_name = :firstName, last_name = :lastName,
+                            last_badge_number_created = :lastBadgeNumberCreated, password = :password,
                             username = :username, role_id = :roleId WHERE id = :id""",
                     params);
         }

@@ -15,9 +15,9 @@ public enum Sides {
             return Sides.BOTH;
         }
 
-        if (val.toLowerCase().equals("front")) {
+        if (val.equalsIgnoreCase("front")) {
             return Sides.FRONT;
-        } else if (val.toLowerCase().equals("back")) {
+        } else if (val.equalsIgnoreCase("back")) {
             return Sides.BACK;
         } else {
             return Sides.BOTH;

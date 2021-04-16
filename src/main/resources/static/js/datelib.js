@@ -19,29 +19,29 @@ function parseDate(dateString) {
 
     let re = MMDDYYYY.exec(testString);
     if (re) {
-        return new Date(re[3], re[1]-1, re[2]);
+        return new Date(parseInt(re[3]), parseInt(re[1])-1, parseInt(re[2]));
     }
 
     re = MMdashDDdashYYYY.exec(testString);
     if (re) {
-        return new Date(re[3], re[1]-1, re[2]);
+        return new Date(parseInt(re[3]), parseInt(re[1])-1, parseInt(re[2]));
     }
 
     re = YYYYdashMMdashDD.exec(testString);
     if (re) {
-        return new Date(re[1], re[2]-1, re[3]);
+        return new Date(parseInt(re[1]), parseInt(re[2])-1, parseInt(re[3]));
     }
 
     re = MMDDYY.exec(testString);
     if (re) {
         let year = toFullYear(parseInt(re[3]));
-        return new Date(year, re[1]-1, re[2]);
+        return new Date(year, parseInt(re[1])-1, parseInt(re[2]));
     }
 
     re = MMdashDDdashYY.exec(testString);
     if (re) {
         let year = toFullYear(parseInt(re[3]));
-        return new Date(year, re[1]-1, re[2]);
+        return new Date(year, re[1]-1, parseInt(re[2]));
     }
 
     return null;
@@ -80,13 +80,13 @@ function calculateAge(dob) {
 
     let yearAge = yearNow - yearDob;
 
-    let monthAge = null;
-    let dateAge = null;
+    let monthAge;
+    let dateAge;
     if (monthNow >= monthDob)
         monthAge = monthNow - monthDob;
     else {
         yearAge--;
-        monthAge = 12 + monthNow -monthDob;
+        monthAge = 12 + monthNow - monthDob;
     }
 
     if (dateNow >= dateDob)

@@ -75,6 +75,6 @@ public class AgeRange {
     }
 
     public String toString() {
-        return String.format("[AgeRange: %s (%s-%s): $%s]", name, minAge, maxAge, cost.setScale(2, RoundingMode.HALF_UP).toString());
+        return String.format("[AgeRange: %s (%s-%s): $%s]", name, minAge, maxAge, cost.setScale(2, RoundingMode.HALF_UP));
     }
 }
