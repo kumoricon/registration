@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class InLineRegistrationFile {
-    private Boolean success;
-    private List<InLineRegistrationRecord> data;
-    private String message;
+    private final Boolean success;
+    private final List<InLineRegistrationRecord> data;
+    private final String message;
 
     @JsonCreator
     public InLineRegistrationFile(@JsonProperty(value="success", required = true) Boolean success,

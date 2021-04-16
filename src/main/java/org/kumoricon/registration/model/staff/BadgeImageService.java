@@ -58,7 +58,7 @@ public class BadgeImageService {
     public void createDirectories() {
         try {
             badgeImagePath = Files.createDirectories(Paths.get(badgeImagePathString));
-            log.info("Badge Image path: " + badgeImagePath.toAbsolutePath().toString());
+            log.info("Badge Image path: " + badgeImagePath.toAbsolutePath());
             log.info("Mascot Image: " + mascotFilename);
         } catch (IOException ex) {
             log.error("Error creating directory", ex);

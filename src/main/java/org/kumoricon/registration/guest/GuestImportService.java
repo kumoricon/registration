@@ -42,7 +42,7 @@ public class GuestImportService extends ImportService {
                 log.info("  Action: {}: {}", action.getActionsVersion(), action.getDeleted());
             }
         } catch (IOException ex) {
-            log.error("Error loading {}", filepath.toString(), ex);
+            log.error("Error loading {}", filepath, ex);
             try {
                 Path dest = Paths.get(dlqPath.toString(), filepath.getFileName().toString());
                 Files.move(filepath, dest);

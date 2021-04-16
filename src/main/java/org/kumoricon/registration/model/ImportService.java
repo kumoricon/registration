@@ -56,8 +56,8 @@ public abstract class ImportService {
         try {
             inputPath = Files.createDirectories(Paths.get(onlineImportInputPath));
             dlqPath = Files.createDirectories(Paths.get(onlineDLQPath));
-            log.info("{} monitoring input path: {}", this.getClass().getSimpleName(), inputPath.toAbsolutePath().toString());
-            log.info("{} DLQ path: {}", this.getClass().getSimpleName(), dlqPath.toAbsolutePath().toString());
+            log.info("{} monitoring input path: {}", this.getClass().getSimpleName(), inputPath.toAbsolutePath());
+            log.info("{} DLQ path: {}", this.getClass().getSimpleName(), dlqPath.toAbsolutePath());
         } catch (IOException ex) {
             log.error("Error creating directory", ex);
         }

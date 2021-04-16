@@ -150,8 +150,8 @@ public class ExportFileController {
             }
 
             sb.append(o.getId().toString()).append(",")
-            .append(paymentString.toString()).append(",")
-            .append(badgeTypes.toString())
+            .append(paymentString).append(",")
+            .append(badgeTypes)
             .append("\n");
         }
 
