@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class InLineRegistration {
     private Long id;
+    private String uuid;        // Unique ID for this member's record
+    private String orderUuid;     // Unique ID for a particular order (collection of members)
     private String firstName;
     private String lastName;
     private String legalFirstName;
@@ -20,7 +22,8 @@ public class InLineRegistration {
     private Boolean parentIsEmergencyContact;
     private String parentFullName;
     private String parentPhone;
-    private String registrationNumber;
+    private String confirmationCode;    // Short code given to members after they complete in line registration.
+                                        // NOT necessarily unique across all orders!
     private String membershipType;
 
     public Long getId() {
@@ -30,6 +33,14 @@ public class InLineRegistration {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getUuid() { return uuid; }
+
+    public void setUuid(String uuid) { this.uuid = uuid; }
+
+    public String getOrderUuid() { return orderUuid; }
+
+    public void setOrderUuid(String orderId) { this.orderUuid = orderId; }
 
     public String getFirstName() {
         return firstName;
@@ -159,12 +170,12 @@ public class InLineRegistration {
         this.parentPhone = parentPhone;
     }
 
-    public String getRegistrationNumber() {
-        return registrationNumber;
+    public String getConfirmationCode() {
+        return confirmationCode;
     }
 
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
     }
 
     public String getMembershipType() {
@@ -182,20 +193,20 @@ public class InLineRegistration {
 
         InLineRegistration inLineReg = (InLineRegistration) o;
 
-        return id.equals(inLineReg.id);
+        return uuid.equals(inLineReg.uuid);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return uuid.hashCode();
     }
 
     @Override
     public String toString() {
         if (id != null) {
-            return String.format("[InLineReg %s: %s %s]", id, firstName, lastName);
+            return String.format("[InLineReg %s: %s %s %s]", id, uuid, firstName, lastName);
         } else {
-            return String.format("[InLineReg: %s %s]", firstName, lastName);
+            return String.format("[InLineReg: %s %s %s]", uuid, firstName, lastName);
         }
     }
 }

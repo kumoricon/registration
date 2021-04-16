@@ -27,5 +27,4 @@
 .mvn/
 mvnw
 mvnw.cmd
-
 *.pem

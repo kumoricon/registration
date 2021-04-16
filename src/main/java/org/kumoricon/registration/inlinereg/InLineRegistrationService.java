@@ -26,7 +26,7 @@ public class InLineRegistrationService {
 
     @Transactional
     public int createOrder(String regCode, User user) {
-        List<InLineRegistration> inLineRegistrations = inLineRegRepository.findByRegistrationNumber(regCode);
+        List<InLineRegistration> inLineRegistrations = inLineRegRepository.findByConfirmationCode(regCode);
 
         Integer orderId = orderService.saveNewOrderForUser(user);
 
@@ -46,10 +46,10 @@ public class InLineRegistrationService {
 
         Map<String, List<InLineRegistration>> output = new HashMap<>();
         for (InLineRegistration i : ilr) {
-            if (!output.containsKey(i.getRegistrationNumber())) {
-                output.put(i.getRegistrationNumber(), new ArrayList<>());
+            if (!output.containsKey(i.getConfirmationCode())) {
+                output.put(i.getConfirmationCode(), new ArrayList<>());
             }
-            output.get(i.getRegistrationNumber()).add(i);
+            output.get(i.getConfirmationCode()).add(i);
         }
         return output;
     }
