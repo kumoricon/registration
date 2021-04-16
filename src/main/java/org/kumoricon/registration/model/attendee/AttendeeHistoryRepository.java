@@ -58,12 +58,6 @@ public class AttendeeHistoryRepository {
     @Transactional
     public void save(AttendeeHistory ah) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(ah);
-//        SqlParameterSource params = new MapSqlParameterSource()
-//                .addValue("message", ah.getMessage())
-//                .addValue("timestamp", Timestamp.from(ah.getTimestamp()))
-//                .addValue("userId", ah.getUserId())
-//                .addValue("attendeeId", ah.getAttendeeId())
-//                .addValue("id", ah.getId());
 
         if (ah.getId() == null) {
             jdbcTemplate.update("""
@@ -105,12 +99,6 @@ public class AttendeeHistoryRepository {
         for (AttendeeHistory ah : notes) {
             assert ah.getId() == null : "saveAll only works with objects that have NOT been saved to the database (id=null)";
             params[i] = new BeanPropertySqlParameterSource(ah);
-            //            params[i] = new MapSqlParameterSource()
-//                    .addValue("message", ah.getMessage())
-//                    .addValue("timestamp", ah.getTimestamp())
-//                    .addValue("userId", ah.getUserId())
-//                    .addValue("attendeeId", ah.getAttendeeId())
-//                    .addValue("id", ah.getId());
             i++;
         }
 
