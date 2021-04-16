@@ -32,8 +32,7 @@ public class ResetPasswordInterceptor extends HandlerInterceptorAdapter {
         // Get the current user. If their forcePasswordChange property is true, redirect to /resetpassword
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof User) {
-            User user = (User) principal;
+        if (principal instanceof User user) {
             if (user.getForcePasswordChange()) {
                 try {
                     log.info("forcePasswordChange set, redirecting to /resetpassword");

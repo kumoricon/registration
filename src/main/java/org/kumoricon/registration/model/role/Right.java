@@ -34,9 +34,7 @@ public class Right implements Comparable<Right>, GrantedAuthority {
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if ( !(other instanceof Right) ) return false;
-
-        final Right right = (Right) other;
+        if ( !(other instanceof final Right right) ) return false;
 
         return right.getName().equals(getName());
     }
