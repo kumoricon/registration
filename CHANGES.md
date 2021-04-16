@@ -33,6 +33,7 @@ Version 1.1.0 (pending)
 - Upgraded Spring Boot to 2.1.1 -> 2.3.0, Java 11 -> 14
 - Added View Till Report links to Administration / Till Sessions
 - Upgraded Spring Boot 2.3.0 -> 2.4.4, Java 14 -> 15, Junit 5, other library versions
+- Upgraded Java 15 -> 16
 
 Version 1.0.1 (11/14/2019)
 - Staff check in: don't search staff list until 2 characters have been entered in search (for performance)
