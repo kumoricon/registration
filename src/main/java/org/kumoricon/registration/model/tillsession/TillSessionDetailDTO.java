@@ -74,14 +74,14 @@ public class TillSessionDetailDTO {
 
     public static TillSessionDetailDTO fromTillSessionDTO(TillSessionDTO tillSessionDTO) {
         TillSessionDetailDTO t = new TillSessionDetailDTO();
-        t.setId(tillSessionDTO.getId());
-        t.setOpen(tillSessionDTO.isOpen());
-        t.setUserId(tillSessionDTO.getUserId());
-        t.setUsername(tillSessionDTO.getUsername());
-        t.setTotal(tillSessionDTO.getTotal());
-        t.setTillName(tillSessionDTO.getTillName());
-        t.setStartTime(tillSessionDTO.getStartTime());
-        t.setEndTime(tillSessionDTO.getEndTime());
+        t.setId(tillSessionDTO.id());
+        t.setOpen(tillSessionDTO.open());
+        t.setUserId(tillSessionDTO.userId());
+        t.setUsername(tillSessionDTO.username());
+        t.setTotal(tillSessionDTO.total());
+        t.setTillName(tillSessionDTO.tillName());
+        t.setStartTime(tillSessionDTO.startTime());
+        t.setEndTime(tillSessionDTO.endTime());
         return t;
     }
 
