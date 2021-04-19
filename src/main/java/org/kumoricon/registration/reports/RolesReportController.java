@@ -27,7 +27,7 @@ public class RolesReportController {
             List<String> columns = new ArrayList<>();
             columns.add("Right");
             for (RoleDTO roleDTO : roles) {
-                columns.add(roleDTO.getName());
+                columns.add(roleDTO.name());
             }
 
             List<List<String>> rows = new ArrayList<>();
