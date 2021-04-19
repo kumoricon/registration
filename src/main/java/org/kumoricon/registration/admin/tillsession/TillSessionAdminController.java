@@ -61,8 +61,8 @@ public class TillSessionAdminController {
         if (printTillReport != null && printTillReport == true) {
             TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(id);
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
-            if (!s2.isOpen()) {
-                reportService.printTillReport(s2.getUserId(), s2.getId(), reportPrinterName, s2);
+            if (!s2.open()) {
+                reportService.printTillReport(s2.userId(), s2.id(), reportPrinterName, s2);
                 model.addAttribute("printTillReport", true);
                 model.addAttribute("reportPrinterName", reportPrinterName);
             }
@@ -74,9 +74,9 @@ public class TillSessionAdminController {
         // Handle requests to save a till report
         if (saveTillReport != null && saveTillReport == true) {
             TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(id);
-            if (!s2.isOpen()) {
+            if (!s2.open()) {
                 String savePath = "/Volumes/Data/Kumoreg/test.pdf";
-                reportService.saveTillReport(s2.getUserId(), s2.getId(), savePath, s2);
+                reportService.saveTillReport(s2.userId(), s2.id(), savePath, s2);
                 model.addAttribute("saveTillReport", true);
                 model.addAttribute("savePath", savePath);
             }

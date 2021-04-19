@@ -234,16 +234,14 @@ public class TillSessionRepository {
     {
         @Override
         public TillSessionDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            TillSessionDTO t = new TillSessionDTO();
-            t.setId(rs.getInt("id"));
-            t.setStartTime(rs.getObject("start_time", OffsetDateTime.class));
-            t.setEndTime(rs.getObject("end_time", OffsetDateTime.class));
-            t.setOpen(rs.getBoolean("open"));
-            t.setUserId(rs.getInt("user_id"));
-            t.setUsername(rs.getString("first_name") + " " + rs.getString("last_name"));
-            t.setTotal(rs.getBigDecimal("total"));
-            t.setTillName(rs.getString("till_name"));
-            return t;
+            return new TillSessionDTO(rs.getInt("id"),
+                    rs.getObject("start_time", OffsetDateTime.class),
+                    rs.getObject("end_time", OffsetDateTime.class),
+                    rs.getString("first_name") + " " + rs.getString("last_name"),
+                    rs.getInt("user_id"),
+                    rs.getBigDecimal("total"),
+                    rs.getString("till_name"),
+                    rs.getBoolean("open"));
         }
     }
 

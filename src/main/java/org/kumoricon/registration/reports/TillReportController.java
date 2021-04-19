@@ -47,8 +47,8 @@ public class TillReportController {
         if (printTillReport != null && printTillReport == true) {
             TillSessionDetailDTO s2 = tillSessionService.getTillDetailDTO(id);
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
-            if (!s2.isOpen()) {
-                reportService.printTillReport(s2.getUserId(), s2.getId(), reportPrinterName, s2);
+            if (!s2.open()) {
+                reportService.printTillReport(s2.userId(), s2.id(), reportPrinterName, s2);
                 model.addAttribute("printTillReport", true);
                 model.addAttribute("reportPrinterName", reportPrinterName);
             }

@@ -34,12 +34,12 @@ public class ReportPrintService extends PrintService {
     }
 
     private String[] populateTillReport(int currentUserId, int tillSessionId, TillSessionDetailDTO s) {
-        String tillName = s.getTillName();
+        String tillName = s.tillName();
         User currentUser = userService.findById(currentUserId);
-        String startTime = s.getStartTime().toString();
-        String endTime = s.getEndTime().toString();
-        List<TillSessionDetailDTO.TillSessionPaymentTotalDTO> totals = s.getPaymentTotals();
-        List<TillSessionDetailDTO.TillSessionOrderDTO> orders = s.getOrderDTOs();
+        String startTime = s.startTime().toString();
+        String endTime = s.endTime().toString();
+        List<TillSessionDetailDTO.TillSessionPaymentTotalDTO> totals = s.paymentTotals();
+        List<TillSessionDetailDTO.TillSessionOrderDTO> orders = s.orderDTOs();
         ArrayList<String> stringArray = new ArrayList<>();
         stringArray.add("Name: " + currentUser.getFirstName() + " " + currentUser.getLastName());
         stringArray.add("Username: " + currentUser.getUsername());
@@ -50,13 +50,13 @@ public class ReportPrintService extends PrintService {
         stringArray.add(" ");
         stringArray.add("Totals: ");
         for (TillSessionDetailDTO.TillSessionPaymentTotalDTO total : totals) {
-            String totalString = total.getTotal().toString() + ": " + total.getType();
+            String totalString = total.total().toString() + ": " + total.type();
             stringArray.add(totalString);
         }
         stringArray.add(" ");
         stringArray.add("Orders:");
         for (TillSessionDetailDTO.TillSessionOrderDTO order : orders) {
-            String orderString = order.getOrderId().toString() + ": " + order.getPayments();
+            String orderString = order.orderId().toString() + ": " + order.payments();
             stringArray.add(orderString);
         }
         String[] data = new String[stringArray.size()];
@@ -69,7 +69,7 @@ public class ReportPrintService extends PrintService {
         printReport(data, "Till Report", printerName);
     }
 
-    public void saveTillReport(int currentUserId, int tillSessionId, String path, TillSessionDetailDTO s) throws IOException, PrintException {
+    public void saveTillReport(int currentUserId, int tillSessionId, String path, TillSessionDetailDTO s) throws IOException {
         String[] data = populateTillReport(currentUserId, tillSessionId, s);
         saveReport(data, "Till Report", "/Volumes/Data/Kumoreg/test.pdf");
     }

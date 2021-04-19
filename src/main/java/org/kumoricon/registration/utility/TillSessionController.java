@@ -85,7 +85,7 @@ public class TillSessionController {
             }
         } else if (action.equals("Close Till")) {
             TillSessionDTO s = tillSessionService.getOpenSessionForUser(currentUser);
-            int tillSessionId = s.getId();
+            int tillSessionId = s.id();
             tillSessionService.closeSessionForUser(currentUser, tillName);
             String reportPrinterName = settingsService.getCurrentSettings().getReportPrinterName();
             String msg;

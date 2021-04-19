@@ -1,6 +1,8 @@
 package org.kumoricon.registration.reports;
 
 import org.kumoricon.registration.model.staff.StaffReportRepository;
+import org.kumoricon.registration.reports.attendance.ChartDataDTO;
+import org.kumoricon.registration.reports.attendance.ChartDataSetDTO;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -41,8 +43,8 @@ public class DepartmentCheckInReportController {
         }
 
         ChartDataDTO chartDataDTO = new ChartDataDTO(departmentNames);
-        chartDataDTO.addData(new ChartDataDTO.DataSet("Checked In", "#9999FF", "#000000", 1.0F, checkedIn));
-        chartDataDTO.addData(new ChartDataDTO.DataSet("Not Checked In", "#776666", "#000000", 1.0F, notCheckedIn));
+        chartDataDTO.addData(new ChartDataSetDTO("Checked In", "#9999FF", "#000000", 1.0F, checkedIn));
+        chartDataDTO.addData(new ChartDataSetDTO("Not Checked In", "#776666", "#000000", 1.0F, notCheckedIn));
         return chartDataDTO;
     }
 

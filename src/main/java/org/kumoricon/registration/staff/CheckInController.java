@@ -34,7 +34,7 @@ public class CheckInController {
         this.settingsService = settingsService;
     }
 
-    @RequestMapping(value="/staff")
+    @RequestMapping(value = "/staff")
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String staffList(Model model,
                             @RequestParam(required = false, name = "q", defaultValue = "") String search) {
@@ -50,10 +50,10 @@ public class CheckInController {
         return "staff/stafflist";
     }
 
-    @RequestMapping(value="/staff/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/staff/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('staff_check_in')")
     @ResponseBody
-    public SearchSuggestion suggest(@RequestParam(name="query") String query) {
+    public SearchSuggestion suggest(@RequestParam(name = "query") String query) {
         return new SearchSuggestion(query, staffAutoSuggestRepository.findNamesLike(query));
     }
 
@@ -76,7 +76,7 @@ public class CheckInController {
 
     @RequestMapping(value = "/staff/checkin/{uuid}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('staff_check_in')")
-    public String checkIn1Post(Model model, @PathVariable(name = "uuid") String uuid) {
+    public String checkIn1Post(@PathVariable(name = "uuid") String uuid) {
         Staff staff = staffRepository.findByUuid(uuid);
         if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
         staff.setInformationVerified(true);
@@ -99,8 +99,7 @@ public class CheckInController {
 
     @RequestMapping(value = "/staff/checkin2/{uuid}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('staff_check_in')")
-    public String checkIn2Post(Model model,
-                               @PathVariable(name = "uuid") String uuid,
+    public String checkIn2Post(@PathVariable(name = "uuid") String uuid,
                                @RequestParam("imageData") String imageData) {
         Staff staff = staffRepository.findByUuid(uuid);
         if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
@@ -143,9 +142,9 @@ public class CheckInController {
         log.info("saved signature and checked in {}", s);
         if (imageData.isEmpty() && !settingsService.getCurrentSettings().getRequireStaffSignature()) {
             imageData = NO_DATA_SAVED_IMAGE;    // A blank image will be sent if the signature pad software isn't
-                                                // installed or the option to not require a signature was enabled and
-                                                // the user just skipped saving the signature. Add an indicator that
-                                                // _something_ was saved, just not anything useful.
+            // installed or the option to not require a signature was enabled and
+            // the user just skipped saving the signature. Add an indicator that
+            // _something_ was saved, just not anything useful.
         }
 
         try {
@@ -187,6 +186,5 @@ public class CheckInController {
             jxC1IkrjvUEsFVkBxZNcW5BeQpQvL8UIJObQGwYW1IdlaGpHYB4gzqx8DGnsdrDFW3RYisejCkKDmWSw5SAtNXpyEtpTYoQmDeRXM9j+ok
             XEyUomNkEiQOMMirQE4mXjNOPtshgdgmiD6iXgeQthPiOCYlwE0P32kprheJ/SXIg5nGWw2WFWUnObrF6L1TdrJutgcPVQhyV48EeDxTPQ
             mbps55AoG9ZgPF6g61BApd/mJKXqpd20m5Vy64+V/+4rHPUL9d+XdVIN+Id/zXQJnVUxn4AAAAAElFTkSuQmCC
-            """;
-
+            """.replace("\n", "");
 }
