@@ -55,13 +55,12 @@
 
         <div class="col-4">
             <table class="table table-sm table-bordered">
-                <tr th:each="p : ${tillSession.getPaymentTotals()}">
+                <tr th:each="p : ${tillSession.paymentTotals}">
                     <td th:text="|Total ${p.type}|">Total Cash</td>
                     <td class="text-right" th:text="|$${p.total}|">$300</td>
                 </tr>
             </table>
         </div>
-
     </div>
 
     <div class="row" th:if="${showIndividualOrders}">

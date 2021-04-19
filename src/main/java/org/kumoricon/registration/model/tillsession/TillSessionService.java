@@ -91,12 +91,13 @@ public class TillSessionService {
     @Transactional(readOnly = true)
     public TillSessionDetailDTO getTillDetailDTO(Integer id) {
         TillSessionDTO tillSessionDTO = repository.getTillSessionDTOById(id);
-        TillSessionDetailDTO detailDTO = TillSessionDetailDTO.fromTillSessionDTO(tillSessionDTO);
 
-        detailDTO.setPaymentTotals(repository.getPaymentTotals(id));
-        detailDTO.setBadgeCounts(repository.getBadgeCounts(id));
-        detailDTO.setOrderDTOs(repository.getOrderDetails(id));
-
-        return detailDTO;
+        List<TillSessionDetailDTO.TillSessionOrderDTO> orders = repository.getOrderDetails(id);
+        List<TillSessionDetailDTO.TillSessionPaymentTotalDTO> paymentTotals = repository.getPaymentTotals(id);
+        List<TillSessionDetailDTO.TillSessionBadgeCountDTO> badgeCounts =  repository.getBadgeCounts(id);
+        return TillSessionDetailDTO.fromTillSessionDTO(tillSessionDTO,
+                orders,
+                paymentTotals,
+                badgeCounts);
     }
 }

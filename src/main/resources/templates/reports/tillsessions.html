@@ -27,7 +27,7 @@
             <td colspan="9"> No Till Sessions Found </td>
         </tr>
         <tr th:each="t : ${tills}">
-            <td class="text-left" th:text="${t.getUsername()}"></td>
+            <td class="text-left" th:text="${t.username}"></td>
             <td th:text="${t.tillName != null ? t.tillName : 'not specified'}"></td>
             <td class="text-left" th:text="${t.id}"></td>
             <td class="text-left" th:text="${t.open}"></td>
@@ -38,7 +38,7 @@
                 <form method="post"class="form-inline">
                     <a class="btn btn-primary btn-sm" th:href="@{/reports/tillsessions/{tillSessionId}(tillSessionId=${t.id})}">View</a>
                     <a class="btn btn-primary btn-sm ml-2" th:href="@{/reports/tillsessions/{tillSessionId}(tillSessionId=${t.id},showIndividualOrders=True)}">Detail</a>
-                    <a th:if="${!t.isOpen()}" class="btn btn-primary btn-sm ml-2" th:href="@{/reports/tillsessions/{tillSessionId}(tillSessionId=${t.id},printTillReport=true)}">Print</a>
+                    <a th:if="${!t.open}" class="btn btn-primary btn-sm ml-2" th:href="@{/reports/tillsessions/{tillSessionId}(tillSessionId=${t.id},printTillReport=true)}">Print</a>
                 </form>
             </td>
         </tr>
