@@ -5,7 +5,7 @@ Instructions for setting up a local development environment
 Technologies
 ------------
 The service is built on:
-  - [Java 15](https://openjdk.java.net/projects/jdk/15/)
+  - [Java 16](https://openjdk.java.net/projects/jdk/16/)
   - [Spring Framework](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/) Server framework
   - [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html) Templating language
   - [CSS Bootstrap](https://getbootstrap.com/docs/3.4/css/) Front end formatting
@@ -28,7 +28,7 @@ $ sudo dnf install postgresql postgresql-contrib postgresql-server     # Install
 $ sudo postgresql-setup --initdb                # Initialize database
 ```
 
-**Ubuntu Linux 18.04:**
+**Ubuntu Linux 20.04:**
 ```
 $ sudo apt -y install postgresql postgresql-contrib
 $ sudo -i -u postgres

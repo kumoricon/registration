@@ -1,6 +1,6 @@
 # Installation Notes
 
-On Ubuntu 18.04 (or newer)
+On Ubuntu 20.04 (or newer)
 
 ### Install Registration Services
 ```

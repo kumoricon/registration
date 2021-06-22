@@ -1,6 +1,6 @@
 Operational Notes
 
-*Assumes Ubuntu 18.04*
+*Assumes Ubuntu 20.04*
 
 - System users must be a member of the group lpadmin to manage cups: 
 
