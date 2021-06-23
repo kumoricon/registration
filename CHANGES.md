@@ -1,5 +1,7 @@
 # Change History
-Version 1.1.0 (pending)
+Version 1.2.0 (Pending)
+
+Version 1.1.0 (6/22/2021)
 - Search staff list server-side for performance on slow clients
 - Added each user's total logged in time for the displayed day to the Login History report
 - Time period is displayed when you hover over a cell in the Login History Report
