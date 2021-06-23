@@ -1,5 +1,7 @@
 # Change History
 Version 1.2.0 (Pending)
+- Update schema creation script with order_uuid column
+- Update default configuration files with in-line registration paths
 
 Version 1.1.0 (6/22/2021)
 - Search staff list server-side for performance on slow clients

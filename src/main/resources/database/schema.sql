@@ -372,7 +372,8 @@ create table if not exists inlineregistrations
     parent_phone text,
     parent_is_emergency_contact boolean default false,
     confirmation_code text not null,
-    membership_type text
+    membership_type text,
+    order_uuid uuid
 );
 
 create index if not exists inlineregistrations_registration_code_index
