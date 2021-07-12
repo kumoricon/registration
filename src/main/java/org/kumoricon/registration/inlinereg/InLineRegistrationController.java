@@ -25,13 +25,23 @@ public class InLineRegistrationController {
     @RequestMapping(value = "/inlinereg/search", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('in_line_registration')")
     public String inLineCheckIn(Model model,
-                                @RequestParam(value = "name", required = false) String name) {
-        if (name == null) {
+                                @RequestParam(value = "q", required = false) String q,
+                                @AuthenticationPrincipal User user) {
+        if (q == null) {
             log.info("viewed in-line registration search page");
         } else {
-            log.info("searched in-line registration for {}", name);
-            model.addAttribute("name", name);
-            model.addAttribute("results", inLineRegistrationService.findMatchingByName(name));
+            log.info("searched in-line registration for {}", q);
+
+            // TODO: Handle non-unique confirmation codes (two orders with matching confirmation codes)
+
+            if(inLineRegistrationService.findMatchingBySearch(q).keySet().size() == 1 &&
+                    inLineRegistrationService.findMatchingBySearch(q).containsKey(q) &&
+                    q.equals(inLineRegistrationService.findMatchingBySearch(q).get(q).get(0).getConfirmationCode())) {
+                return "redirect:/reg/atconorder/" + inLineRegistrationService.createOrder(q, user);
+            }
+
+            model.addAttribute("name", q);
+            model.addAttribute("results", inLineRegistrationService.findMatchingBySearch(q));
         }
         return "inlinereg/search";
     }

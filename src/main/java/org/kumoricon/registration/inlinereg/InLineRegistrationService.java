@@ -41,11 +41,19 @@ public class InLineRegistrationService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, List<InLineRegistration>> findMatchingByName(String name) {
-        List<InLineRegistration> ilr = inLineRegRepository.findByNameLike(name);
+    public Map<String, List<InLineRegistration>> findMatchingBySearch(String search) {
+        List<InLineRegistration> ilrName = inLineRegRepository.findByNameLike(search);
+        List<InLineRegistration> ilrCode = inLineRegRepository.findByConfirmationCode(search);
 
         Map<String, List<InLineRegistration>> output = new HashMap<>();
-        for (InLineRegistration i : ilr) {
+        for(InLineRegistration i : ilrName) {
+            if (!output.containsKey(i.getConfirmationCode())) {
+                output.put(i.getConfirmationCode(), new ArrayList<>());
+            }
+            output.get(i.getConfirmationCode()).add(i);
+        }
+
+        for(InLineRegistration i : ilrCode) {
             if (!output.containsKey(i.getConfirmationCode())) {
                 output.put(i.getConfirmationCode(), new ArrayList<>());
             }
@@ -53,7 +61,6 @@ public class InLineRegistrationService {
         }
         return output;
     }
-
 
     private Attendee attendeeFromInLineReg(InLineRegistration ilr) {
         Attendee attendee = new Attendee();
@@ -84,4 +91,3 @@ public class InLineRegistrationService {
     }
 
 }
-

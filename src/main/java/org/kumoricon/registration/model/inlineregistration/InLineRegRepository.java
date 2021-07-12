@@ -67,7 +67,7 @@ public class InLineRegRepository {
             InLineRegistration reg = new InLineRegistration();
             reg.setId(rs.getLong("id"));
             reg.setUuid(rs.getString("uuid"));
-            reg.setOrderUuid(rs.getString("orderUuid"));
+            reg.setOrderUuid(rs.getString("order_uuid"));
             reg.setFirstName(rs.getString("first_name"));
             reg.setLastName(rs.getString("last_name"));
             reg.setLegalFirstName(rs.getString("legal_first_name"));

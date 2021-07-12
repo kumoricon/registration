@@ -45,7 +45,7 @@ public class InLineRegistrationControllerTest {
     @Test
     public void inLineCheckInSearch() {
         Model model = new ConcurrentModel();
-        String template = inLineRegistrationController.inLineCheckIn(model, null);
+        String template = inLineRegistrationController.inLineCheckIn(model, null, null);
         assertEquals("inlinereg/search", template);
         assertNull(model.getAttribute("name"));
     }
@@ -55,7 +55,7 @@ public class InLineRegistrationControllerTest {
         Model model = new ConcurrentModel();
         when(inLineRegRepository.findByNameLike("Person")).thenReturn(buildTestData());
 
-        String template = inLineRegistrationController.inLineCheckIn(model, "Person");
+        String template = inLineRegistrationController.inLineCheckIn(model, "Person", null);
         assertEquals("inlinereg/search", template);
         assertEquals("Person", model.getAttribute("name"));
         Map<String, List<InLineRegistration>> results = (Map<String, List<InLineRegistration>>) model.getAttribute("results");
