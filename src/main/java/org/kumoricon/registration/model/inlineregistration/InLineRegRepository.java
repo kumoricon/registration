@@ -33,6 +33,16 @@ public class InLineRegRepository {
         }
     }
 
+    public List<InLineRegistration> findByOrderUuid(String orderUuid) {
+        try {
+            return jdbcTemplate.query(
+                    "select * from inlineregistrations where order_uuid = :orderUuid",
+                    Map.of("orderUuid", orderUuid), new InLineRegRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
     public List<InLineRegistration> findByNameLike(String name) {
         final String SQL = "select * from inlineregistrations where first_name ILIKE :term0 || '%' OR " +
                 "last_name ILIKE :term0";

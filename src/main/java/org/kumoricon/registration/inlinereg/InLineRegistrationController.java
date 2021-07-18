@@ -1,6 +1,7 @@
 package org.kumoricon.registration.inlinereg;
 
 import org.kumoricon.registration.exceptions.NotFoundException;
+import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
 import org.kumoricon.registration.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -32,12 +36,13 @@ public class InLineRegistrationController {
         } else {
             log.info("searched in-line registration for {}", q);
 
-            // TODO: Handle non-unique confirmation codes (two orders with matching confirmation codes)
+            Map<String, List<InLineRegistration>> results = inLineRegistrationService.findMatchingBySearch(q);
 
-            if(inLineRegistrationService.findMatchingBySearch(q).keySet().size() == 1 &&
-                    inLineRegistrationService.findMatchingBySearch(q).containsKey(q) &&
-                    q.equals(inLineRegistrationService.findMatchingBySearch(q).get(q).get(0).getConfirmationCode())) {
-                return "redirect:/reg/atconorder/" + inLineRegistrationService.createOrder(q, user);
+            if(results.keySet().size() == 1) {
+                for(String order_uuid : results.keySet()) {
+                    if(results.get(order_uuid).get(0).getConfirmationCode().equals(q))
+                        return "redirect:/reg/atconorder/" + inLineRegistrationService.createOrder(order_uuid, user);
+                }
             }
 
             model.addAttribute("name", q);
