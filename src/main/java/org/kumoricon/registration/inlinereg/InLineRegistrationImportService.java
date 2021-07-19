@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @Service
@@ -77,8 +78,8 @@ public class InLineRegistrationImportService extends ImportService {
                     attendeeCount += 1;
                     try {
                         InLineRegistration ilr = new InLineRegistration();
-                        ilr.setUuid(a.getUuid().strip());
-                        ilr.setOrderUuid(order.getOrderUuid());
+                        ilr.setUuid(UUID.fromString(a.getUuid().strip()));
+                        ilr.setOrderUuid(UUID.fromString(order.getOrderUuid()));
                         ilr.setFirstName(FieldCleaner.cleanName(a.getFirstName()));
                         ilr.setLastName(FieldCleaner.cleanName(a.getLastName()));
                         ilr.setLegalFirstName(FieldCleaner.cleanName(a.getFirstNameOnId()));

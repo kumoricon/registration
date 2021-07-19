@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,26 +68,28 @@ public class InLineRegistrationControllerTest {
     public void inLineCheckInPostNoCodeFound() {
         // Attempting to create an order returns an error when no registrations are found with
         // that code
+        UUID randomId = UUID.randomUUID();
         Model model = new ConcurrentModel();
-        when(inLineRegRepository.findByConfirmationCode("ABC123")).thenThrow(new NotFoundException("Code Not Found"));
+        when(inLineRegRepository.findByConfirmationCode(any())).thenThrow(new NotFoundException("Code Not Found"));
 
-        String template = inLineRegistrationController.inLineCheckInPost(model, "ABC123", buildUser());
+        String template = inLineRegistrationController.inLineCheckInPost(model, randomId, buildUser());
         assertEquals("inlinereg/search", template);
-        assertEquals("No attendees found for registration code ABC123", model.getAttribute("err"));
+        assertEquals("No attendees found for orderUuid " + randomId, model.getAttribute("err"));
     }
 
 
     @Test
     public void inLineCheckInPost() {
+        UUID randomOrderId = UUID.randomUUID();
         // Happy path, creating attendees and an order for attendees who have registered in line
         Model model = new ConcurrentModel();
         ArgumentCaptor<Attendee> attendeeCaptor = ArgumentCaptor.forClass(Attendee.class);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         List<InLineRegistration> inLineData = buildTestData();
-        when(inLineRegRepository.findByConfirmationCode("ABC123")).thenReturn(inLineData);
+        when(inLineRegRepository.findByOrderUuid(randomOrderId)).thenReturn(inLineData);
         when(orderService.saveNewOrderForUser(any())).thenReturn(10);
 
-        String template = inLineRegistrationController.inLineCheckInPost(model, "ABC123", buildUser());
+        String template = inLineRegistrationController.inLineCheckInPost(model, randomOrderId, buildUser());
         assertEquals("redirect:/reg/atconorder/10", template);
 
         // Make sure createOrder was called

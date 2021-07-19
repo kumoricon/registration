@@ -61,7 +61,7 @@
             <td>
                 <form action="/inlinereg/checkin" method="post" autocomplete="off">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="hidden" name="code" th:value="${p.key}">
+                    <input type="hidden" name="orderUuid" th:value="${p.key}">
                     <input class="btn btn-primary" type="submit" value="Check In">
                 </form>
             </td>

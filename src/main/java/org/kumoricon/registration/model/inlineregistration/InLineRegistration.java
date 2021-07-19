@@ -1,11 +1,12 @@
 package org.kumoricon.registration.model.inlineregistration;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class InLineRegistration {
     private Long id;
-    private String uuid;        // Unique ID for this member's record
-    private String orderUuid;     // Unique ID for a particular order (collection of members)
+    private UUID uuid;        // Unique ID for this member's record
+    private UUID orderUuid;     // Unique ID for a particular order (collection of members)
     private String firstName;
     private String lastName;
     private String legalFirstName;
@@ -34,13 +35,13 @@ public class InLineRegistration {
         this.id = id;
     }
 
-    public String getUuid() { return uuid; }
+    public UUID getUuid() { return uuid; }
 
-    public void setUuid(String uuid) { this.uuid = uuid; }
+    public void setUuid(UUID uuid) { this.uuid = uuid; }
 
-    public String getOrderUuid() { return orderUuid; }
+    public UUID getOrderUuid() { return orderUuid; }
 
-    public void setOrderUuid(String orderId) { this.orderUuid = orderId; }
+    public void setOrderUuid(UUID orderId) { this.orderUuid = orderId; }
 
     public String getFirstName() {
         return firstName;

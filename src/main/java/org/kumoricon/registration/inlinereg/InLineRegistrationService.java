@@ -1,5 +1,6 @@
 package org.kumoricon.registration.inlinereg;
 
+import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.inlineregistration.InLineRegRepository;
 import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
@@ -8,10 +9,7 @@ import org.kumoricon.registration.model.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class InLineRegistrationService {
@@ -25,8 +23,12 @@ public class InLineRegistrationService {
     }
 
     @Transactional
-    public int createOrder(String orderUuid, User user) {
+    public int createOrder(UUID orderUuid, User user) {
         List<InLineRegistration> inLineRegistrations = inLineRegRepository.findByOrderUuid(orderUuid);
+
+        if (inLineRegistrations.size() == 0) {
+            throw new NotFoundException("No attendees found for orderUuid " + orderUuid);
+        }
 
         Integer orderId = orderService.saveNewOrderForUser(user);
 
@@ -41,11 +43,11 @@ public class InLineRegistrationService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, List<InLineRegistration>> findMatchingBySearch(String search) {
+    public Map<UUID, List<InLineRegistration>> findMatchingBySearch(String search) {
         List<InLineRegistration> ilrName = inLineRegRepository.findByNameLike(search);
         List<InLineRegistration> ilrCode = inLineRegRepository.findByConfirmationCode(search);
 
-        Map<String, List<InLineRegistration>> output = new HashMap<>();
+        Map<UUID, List<InLineRegistration>> output = new HashMap<>();
         for(InLineRegistration i : ilrName) {
             if (!output.containsKey(i.getOrderUuid())) {
                 output.put(i.getOrderUuid(), new ArrayList<>());
