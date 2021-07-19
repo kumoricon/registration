@@ -44,17 +44,17 @@
         <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
              th:if="${#authorization.expression('hasAuthority(''in_line_registration'')')}">
             <div class="card-body">
-                <h5 class="card-title">In-Line Check In</h5>
+                <h5 class="card-title">In-Line Registration Check In</h5>
                 <p class="card-text">Attendees that registered in line</p>
 
-                <form class="form-inline justify-content-center" action="/inlinereg/checkin" method="post" autocomplete="off"
+                <form class="form-inline justify-content-center" action="/inlinereg/search" method="get" autocomplete="off"
                       id="inLineSearchForm" style="position: relative; z-index:1000;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <div class="input-group md-form form-sm form-2 pl-0">
-                        <input class="form-control my-0 py-1 text-uppercase" value="" type="text" name="code"
-                               id="inLineCodeSearch" autocomplete="off" placeholder="ABC123" minlength="6" maxlength="10">
+                        <input class="form-control my-0 py-1" value="" type="text" name="q"
+                               id="inLineCodeSearch" autocomplete="off" placeholder="Confirmation Code / Name">
                         <div class="input-group-append">
-                            <input class="btn btn-primary" type="submit" id="inLineCodeCheckIn" value="Check In">
+                            <input class="btn btn-primary" type="submit" value="Search">
                         </div>
                     </div>
                 </form>

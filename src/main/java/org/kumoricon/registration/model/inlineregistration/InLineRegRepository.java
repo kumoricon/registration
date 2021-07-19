@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Repository
 public class InLineRegRepository {
@@ -28,6 +29,16 @@ public class InLineRegRepository {
             return jdbcTemplate.query(
                     "select * from inlineregistrations where confirmation_code = :regCode",
                     Map.of("regCode", confirmationCode), new InLineRegRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<InLineRegistration> findByOrderUuid(UUID orderUuid) {
+        try {
+            return jdbcTemplate.query(
+                    "select * from inlineregistrations where order_uuid = :orderUuid",
+                    Map.of("orderUuid", orderUuid), new InLineRegRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
@@ -66,8 +77,8 @@ public class InLineRegRepository {
         public InLineRegistration mapRow(ResultSet rs, int rowNum) throws SQLException {
             InLineRegistration reg = new InLineRegistration();
             reg.setId(rs.getLong("id"));
-            reg.setUuid(rs.getString("uuid"));
-            reg.setOrderUuid(rs.getString("orderUuid"));
+            reg.setUuid(UUID.fromString(rs.getString("uuid")));
+            reg.setOrderUuid(UUID.fromString(rs.getString("order_uuid")));
             reg.setFirstName(rs.getString("first_name"));
             reg.setLastName(rs.getString("last_name"));
             reg.setLegalFirstName(rs.getString("legal_first_name"));

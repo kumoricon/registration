@@ -42,7 +42,7 @@
             </thead>
             <tbody>
             <tr th:if="${attendees.empty}">
-                <td colspan="6"> No Attendeess Found </td>
+                <td colspan="6"> No Attendees Found </td>
             </tr>
             <tr th:each="attendee : ${attendees}">
                 <td> <a th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${attendee.orderId},attendeeId=${attendee.id},query=${query})}"

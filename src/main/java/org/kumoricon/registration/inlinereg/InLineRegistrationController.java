@@ -1,6 +1,7 @@
 package org.kumoricon.registration.inlinereg;
 
 import org.kumoricon.registration.exceptions.NotFoundException;
+import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
 import org.kumoricon.registration.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 @Controller
@@ -25,13 +30,24 @@ public class InLineRegistrationController {
     @RequestMapping(value = "/inlinereg/search", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('in_line_registration')")
     public String inLineCheckIn(Model model,
-                                @RequestParam(value = "name", required = false) String name) {
-        if (name == null) {
+                                @RequestParam(value = "q", required = false) String q,
+                                @AuthenticationPrincipal User user) {
+        if (q == null) {
             log.info("viewed in-line registration search page");
         } else {
-            log.info("searched in-line registration for {}", name);
-            model.addAttribute("name", name);
-            model.addAttribute("results", inLineRegistrationService.findMatchingByName(name));
+            log.info("searched in-line registration for {}", q);
+
+            Map<UUID, List<InLineRegistration>> results = inLineRegistrationService.findMatchingBySearch(q);
+
+            if(results.keySet().size() == 1) {
+                for(UUID order_uuid : results.keySet()) {
+                    if(results.get(order_uuid).get(0).getConfirmationCode().equals(q))
+                        return "redirect:/reg/atconorder/" + inLineRegistrationService.createOrder(order_uuid, user);
+                }
+            }
+
+            model.addAttribute("name", q);
+            model.addAttribute("results", results);
         }
         return "inlinereg/search";
     }
@@ -39,17 +55,17 @@ public class InLineRegistrationController {
     @RequestMapping(value = "/inlinereg/checkin", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('in_line_registration')")
     public String inLineCheckInPost(Model model,
-                                    @RequestParam String code,
+                                    @RequestParam UUID orderUuid,
                                     @AuthenticationPrincipal User user) {
-        log.info("Creating order for in-line registration code {}", code);
+        log.info("Creating order for in-line registration order {}", orderUuid);
 
         try {
-            int orderId = inLineRegistrationService.createOrder(code, user);
+            int orderId = inLineRegistrationService.createOrder(orderUuid, user);
             return "redirect:/reg/atconorder/" + orderId;
         } catch (NotFoundException ex) {
             // Instead of bubbling up to the error page, stay on this page and display the search box
             log.warn("Error creating order: {}", ex.getMessage());
-            model.addAttribute("err", "No attendees found for registration code " + code);
+            model.addAttribute("err", "No attendees found for orderUuid " + orderUuid);
             return "inlinereg/search";
         }
     }
