@@ -47,7 +47,7 @@ public class InLineRegistrationController {
             }
 
             model.addAttribute("name", q);
-            model.addAttribute("results", inLineRegistrationService.findMatchingBySearch(q));
+            model.addAttribute("results", results);
         }
         return "inlinereg/search";
     }

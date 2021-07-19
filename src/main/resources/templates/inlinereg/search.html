@@ -32,8 +32,9 @@
     <table class="table table-bordered table-sm" th:if="${results}">
         <thead class="thead-dark">
         <tr>
-            <th class="text-nowrap">Confirmation ID</th>
+            <th class="text-nowrap">Confirmation Code</th>
             <th class="text-nowrap">Name</th>
+            <th class="text-nowrap">Birth date</th>
             <th class="text-nowrap">Legal Name</th>
             <th></th>
         </tr>
@@ -44,13 +45,18 @@
         </tr>
         <tr th:each="p : ${results}">
             <td>
-                <ul th:each="a : ${p.getValue()}" class="list-unstyled">
-                    <li th:text="|${a.confirmationCode}|"></li>
+                <ul class="list-unstyled">
+                    <li th:text="|${p.getValue().get(0).getConfirmationCode()}|"></li>
                 </ul>
             </td>
             <td>
                 <ul th:each="a : ${p.getValue()}" class="list-unstyled">
                     <li th:text="|${a.firstName} ${a.lastName}|"></li>
+                </ul>
+            </td>
+            <td>
+                <ul th:each="a : ${p.getValue()}" class="list-unstyled">
+                    <li th:text="|${#temporals.format(a.birthDate , 'MM/dd/yyyy')}|"></li>
                 </ul>
             </td>
             <td>
