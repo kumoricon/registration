@@ -12,14 +12,14 @@
     <div class="card-deck mb-2 justify-content-center">
         <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;">
             <div class="card-body">
-                <h5 class="card-title">Search</h5>
-                <p class="card-text">Only searches In-Line Registrations</p>
+                <h5 class="card-title">In-Line Registration Search</h5>
+                <p class="card-text">Attendees that registered in line</p>
 
                 <form class="form-inline justify-content-center" action="/inlinereg/search" method="get" autocomplete="off"
                       id="inLineSearchNameForm" style="position: relative; z-index:1000;">
                     <div class="input-group md-form form-sm form-2 pl-0">
                         <input class="form-control my-0 py-1" value="" type="text" name="q"
-                               id="inLineNameSearch" autocomplete="off" placeholder="Name" minlength="1">
+                               id="inLineNameSearch" autocomplete="off" placeholder="Confirmation Code / Name" minlength="1">
                         <div class="input-group-append">
                             <input class="btn btn-primary" type="submit" id="inLineNameCheckIn" value="Search">
                         </div>
