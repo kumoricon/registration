@@ -45,8 +45,12 @@ public class InLineRegRepository {
     }
 
     public List<InLineRegistration> findByNameLike(String name) {
-        final String SQL = "select * from inlineregistrations where first_name ILIKE :term0 || '%' OR " +
-                "last_name ILIKE :term0";
+        final String SQL = """
+                select * from inlineregistrations where 
+                first_name ILIKE :term0 || '%' OR 
+                last_name ILIKE :term0 || '%' OR 
+                legal_first_name ILIKE :term0 || '%' OR 
+                legal_last_name ILIKE :term0 || '%'""";
         try {
             return jdbcTemplate.query(SQL, Map.of("term0", name), new InLineRegRowMapper());
         } catch (
