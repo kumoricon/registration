@@ -349,12 +349,12 @@ create table if not exists staff_positions
 );
 
 
-create table if not exists inlineregistrations
+create table inlineregistrations
 (
     id bigserial not null
         constraint inlineregistrations_pk
             primary key,
-    uuid citext not null UNIQUE,
+    uuid uuid not null UNIQUE,
     first_name citext,
     last_name citext,
     legal_first_name citext,
@@ -375,6 +375,14 @@ create table if not exists inlineregistrations
     membership_type text,
     order_uuid uuid
 );
+
+create index inlineregistrations_registration_code_index
+    on inlineregistrations (confirmation_code);
+
+create unique index inlineregistrations_uuid_uindex
+    on inlineregistrations (uuid);
+
+
 
 create index if not exists inlineregistrations_registration_code_index
     on inlineregistrations (confirmation_code);
