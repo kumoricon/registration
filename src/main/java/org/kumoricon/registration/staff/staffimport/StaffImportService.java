@@ -108,9 +108,7 @@ public class StaffImportService extends ImportService {
         staff.setHasBadgeImage(person.getHasBadgeImage());
         staff.setBadgeImageFileType(person.getBadgeImageFileType());
 
-        if (person.getPositions().get(0).title.equals("Attendee Registration Staff")) {
-            staffUserCreate.createUserFromStaff(person);
-        }
+        staffUserCreate.createUserFromStaff(person);
 
         if (person.getPositions().size() >0) {
             staff.setDepartment(person.getPositions().get(0).department);
