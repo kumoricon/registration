@@ -1,6 +1,7 @@
 # Change History
 Version 1.3.0 (pending)
 - Search in-line registrations by legal name in addition to preferred name
+- Automate staff user creation
 
 Version 1.2.0 (7/22/2021)
 - Update schema creation script with order_uuid column

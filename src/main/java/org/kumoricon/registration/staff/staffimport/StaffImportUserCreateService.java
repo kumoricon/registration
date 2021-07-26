@@ -78,8 +78,7 @@ public class StaffImportUserCreateService {
     /**
      * Checks if position title of Person is present in regRoleMapping
      * If present, returns roleId associated with the role title
-     * @param positions
-     * @return
+     * @return roleId or -1 for invalid role
      */
     private Integer getStaffRoleId(List<StaffImportFile.Position> positions) {
         for(StaffImportFile.Position p : positions) {
