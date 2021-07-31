@@ -9,9 +9,10 @@ import org.kumoricon.registration.model.user.UserRepository;
 import org.kumoricon.registration.model.user.UserService;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Map.entry;
 
 
 @Component
@@ -20,7 +21,7 @@ public class StaffImportUserCreateService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final UserService userService;
-    private final Map<String, List<String>> regRoleMapping;
+    private final Map<String, String> regRoleMapping;
 
     public StaffImportUserCreateService(RoleRepository roleRepository,
                                         UserRepository userRepository,
@@ -31,20 +32,27 @@ public class StaffImportUserCreateService {
         this.regRoleMapping = mapRegRoles();
     }
 
-    private Map<String, List<String>> mapRegRoles() {
-        Map<String, List<String>> roleMap = Map.of(
-                "Administrator", Arrays.asList("Registration Software Development Coordinator", "Registration Software Development Manager",
-                                                    "Registration Software Development Staff"),
-                "Coordinator", Arrays.asList("Attendee Registration Coordinator", "Attendee Registration Coordinator (in Training)",
-                                                "Staff Registration Check-In Coordinator"),
-                "Coordinator - Specialty Badges", Arrays.asList("Specialty Registration Coordinator"),
-                "Coordinator - VIP Badges", Arrays.asList("Specialty and VIP Registration Staff", "VIP and Accessibility Registration Coordinator"),
-                "Director", Arrays.asList("Assistant Director of Membership", "Director of Membership"),
-                "Manager", Arrays.asList("Attendee Registration Assistant Manager", "Attendee Registration Coordinator Lead",
-                                            "Attendee Registration Manager", "Specialty Registration Manager",
-                                            "Staff Registration Check-In Assistant Manager", "Staff Registration Check-In Manager"),
-                "MSO", Arrays.asList("Staff Registration Check-In Staff"),
-                "Staff", Arrays.asList("Attendee Registration Staff")
+    private Map<String, String> mapRegRoles() {
+        Map<String, String> roleMap = Map.ofEntries(
+                entry("Registration Software Development Coordinator", "Administrator"),
+                entry("Registration Software Development Manager", "Administrator"),
+                entry("Registration Software Development Staff", "Administrator"),
+                entry("Attendee Registration Coordinator", "Coordinator"),
+                entry("Attendee Registration Coordinator (in Training)", "Coordinator"),
+                entry("Specialty Registration Coordinator", "Coordinator - Specialty Badges"),
+                entry("Specialty and VIP Registration Staff", "Coordinator - VIP Badges"),
+                entry("VIP and Accessibility Registration Coordinator", "Coordinator - VIP Badges"),
+                entry("Assistant Director of Membership", "Director"),
+                entry("Director of Membership", "Director"),
+                entry("Attendee Registration Assistant Manager", "Manager"),
+                entry("Attendee Registration Coordinator Lead", "Manager"),
+                entry("Attendee Registration Manager", "Manager"),
+                entry("Specialty Registration Manager", "Manager"),
+                entry("Staff Registration Check-In Assistant Manager", "Manager"),
+                entry("Staff Registration Check-In Manager", "Manager"),
+                entry("Staff Registration Check-In Coordinator", "MSO"),
+                entry("Staff Registration Check-In Staff", "MSO"),
+                entry("Attendee Registration Staff", "Staff")
         );
 
         return roleMap;
@@ -78,15 +86,12 @@ public class StaffImportUserCreateService {
     /**
      * Checks if position title of Person is present in regRoleMapping
      * If present, returns roleId associated with the role title
-     * @return roleId or -1 for invalid role
+     * @return roleId or -1 for position that does not need user account created
      */
     private Integer getStaffRoleId(List<StaffImportFile.Position> positions) {
         for(StaffImportFile.Position p : positions) {
-            if(p.department.equals("Membership")){ // roles present in regRoleMapping are all from Membership department
-                for(String key : this.regRoleMapping.keySet()) {
-                    if(this.regRoleMapping.get(key).contains(p.title))
-                        return roleRepository.findByNameIgnoreCase(key).getId();
-                }
+            if(this.regRoleMapping.get(p.title) != null) {
+                return this.roleRepository.findByNameIgnoreCase(this.regRoleMapping.get(p.title)).getId();
             }
         }
 
