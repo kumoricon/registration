@@ -8,6 +8,7 @@ import org.kumoricon.registration.model.role.RoleRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
 import org.kumoricon.registration.model.user.UserService;
+import org.kumoricon.registration.settings.Settings;
 import org.kumoricon.registration.settings.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class BaseDataService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final BadgeService badgeService;
-    private final SettingsService settingsService;
+    private final Settings currentSettings;
     private static final Logger log = LoggerFactory.getLogger(BaseDataService.class);
 
     public BaseDataService(RoleRepository roleRepository,
@@ -40,14 +41,14 @@ public class BaseDataService {
         this.userRepository = userRepository;
         this.userService = userService;
         this.badgeService = badgeService;
-        this.settingsService = settingsService;
+        this.currentSettings = settingsService.getCurrentSettings();
     }
 
     void createDefaultData() {
         if (tablesAreEmpty()) {
             createRights();
             createRoles();
-            if (settingsService.getCurrentSettings().getTrainingMode()) {
+            if (currentSettings.getTrainingMode()) {
                 createTrainingUsers();
             }
             createFullConAttendeeBadges();
@@ -78,10 +79,11 @@ public class BaseDataService {
     }
 
     private void createAdminUser() {
-        log.info("No users found. Creating default user 'admin' with password '{}'", settingsService.getCurrentSettings().getDefaultPassword());
+        log.info("No users found. Creating default user 'admin' with password '{}'", currentSettings.getDefaultPassword());
         User defaultUser = userService.newUser("Admin", "User");
         Role adminRole = roleRepository.findByNameIgnoreCase("Administrator");
         defaultUser.setUsername("admin");
+        defaultUser.setForcePasswordChange(currentSettings.getForcePasswordChange());
         defaultUser.setRoleId(adminRole.getId());
         defaultUser.setOnlineId(String.valueOf(adminRole.getId()));
         userRepository.save(defaultUser);
@@ -103,10 +105,8 @@ public class BaseDataService {
         for (String[] userData : users) {
             createdUsers.add(userData[0]);
             User user = userService.newUser(userData[0], "User");
-            if (settingsService.getCurrentSettings().getForcePasswordChange()) {
-                user.setForcePasswordChange(false);
-                userService.setPasswordOnUserObject(user, settingsService.getCurrentSettings().getDefaultPassword());
-            }
+            user.setForcePasswordChange(currentSettings.getForcePasswordChange());
+            userService.setPasswordOnUserObject(user, currentSettings.getDefaultPassword());
             user.setUsername(userData[0]);
             Role role = roleRepository.findByNameIgnoreCase(userData[1]);
             if (role == null) {
