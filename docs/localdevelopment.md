@@ -15,17 +15,11 @@ The service is built on:
 
 Setup
 -----
-**1. Install Postgresql Server (commands vary)**
+**1. Install PostgreSQL Server (commands vary)**
 
 **MacOS Catalina:**
 ```
 $ brew install postgres
-```
-
-**Fedora Linux 29:**
-```
-$ sudo dnf install postgresql postgresql-contrib postgresql-server     # Install packages
-$ sudo postgresql-setup --initdb                # Initialize database
 ```
 
 **Ubuntu Linux 20.04:**
@@ -34,16 +28,8 @@ $ sudo apt -y install postgresql postgresql-contrib
 $ sudo -i -u postgres
 
 ```
-For Ubuntu, skip to the section on creating a database user below
-On Fedora 29, enable passwords for local connections by editing the /var/lib/pgsql/data/pg_hba.conf file:
-```
-Change the line:
-host    all             all             127.0.0.1/32            ident
-To:
-host    all             all             127.0.0.1/32            md5
 
-```
-**2. Start and enable the service:**
+**2. Start and enable the PostgreSQL service:**
 ```
 Linux:
 $ sudo systemctl enable postgresql              # Enable service
@@ -54,7 +40,7 @@ $ pg_ctl -D /usr/local/var/postgres start       # Start service
 ```
 
 
-**3. Create a Postgresql user and database**
+**3. Create a PostgreSQL user and database**
 
 The User name is "kumoreg" and the database name is "registration"
 Note: for Ubuntu installs, skip the "su" command below
