@@ -7,8 +7,8 @@ On Ubuntu 20.04 (or newer)
 sudo apt intall ./registration_X_Y_Z_all.deb
 ```
 
-### Create Postgres database users for registration and training
-If running Postgres on the local server, as a user with access to create users in Postgres (typicaly the `postgres` user),
+### Create PostgreSQL database users for registration and training
+If running Postgres on the local server, as a user with access to create users in PostgreSQL (typicaly the `postgres` user),
 run `/opt/registration/bin/createdb.sh`.
 
 ```
@@ -40,4 +40,4 @@ Installed to `/opt/registration/bin/`
 
 - backup.sh: Does a database dump and tars the server's `data` directory in to the timestamped files in the local directory
  (but does not include the `data` direcotory for the training instance of the service)
-- createdb.sh: Runs Postgres commands to create the two databases.
+- createdb.sh: Runs PostgreSQL commands to create the two databases.
