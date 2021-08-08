@@ -23,7 +23,6 @@ public abstract class ImportService {
 
     @Scheduled(fixedDelay = 10000)
     public void doWork() {
-//        log.info("{} Reading files from {}", this.getClass(), onlineImportInputPath);
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, "*.{json}")) {
             for (Path entry : stream) {
                 long start = System.currentTimeMillis();

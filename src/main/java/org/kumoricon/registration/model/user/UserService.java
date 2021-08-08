@@ -164,7 +164,6 @@ public class UserService implements UserDetailsService {
 
     public void setPasswordOnUserObject(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
-        log.info("Set password to {}", user.getPassword());
     }
 
     /**
