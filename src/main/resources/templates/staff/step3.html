@@ -2,32 +2,49 @@
 <html layout:decorate="~{layout/basenomenu}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org">
 <head>
-    <title>Step 3: Signature</title>
-    <script src="/js/staff/sigpad.js"></script>
+    <title>Step 4: Done</title>
 </head>
 <body>
 
 <div layout:fragment="content" class="container">
-    <input type="hidden" id="REQUIRE_SIGNATURE" th:value="${requireSignature}">
-    <div class="row container mb-4">
-        <div class="col-sm-3">
-            <button class="btn btn-primary" id="openSigWindow">Open Signature Window</button>
-        </div>
+    <div class="row">
         <div class="col-sm-6">
-            <span id="message"></span>
+            <span th:text="|${staff.firstName} ${staff.lastName} checked in at ${dts.format(staff.checkedInAt)}|">
+                Checked in at...
+            </span><br>
+            <span th:text="|T-Shirt Size: ${staff.shirtSize}|"></span><br>
+            <span th:if="${staff.badgePrinted}">
+                Badge already printed. <a th:href="@{/staff/{uuid}(uuid=${staff.uuid})}">View Staff</a>
+            </span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6 mt-3">
-            <form method="post" id="submitForm">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="hidden" name="imageData" id="imageData" />
-                <input class="btn btn-primary" name="action" id="save" type="submit" value="Save Signature" />
-                <a th:href="@{/staff}" class="btn btn-secondary mr-5">Cancel</a>
+    <div class="row" th:if="${!staff.badgePrinted}">
+        <div class="form-inline">
+            <form method="post" th:action="|/staff/${staff.uuid}/print|">
+                <input type="hidden" name="action" value="printBadge">
+                <input type="hidden" name="sides" value="front">
+                <input class="btn btn-success btn-sm" type="submit" value="Print Badge Front">
             </form>
+            <form method="post" th:action="|/staff/${staff.uuid}/print|">
+                <input type="hidden" name="action" value="printBadge">
+                <input type="hidden" name="sides" value="back">
+                <input class="btn btn-success btn-sm ml-2" type="submit" value="Print Badge Back">
+            </form>
+            <form method="post" th:action="|/staff/${staff.uuid}/print|">
+                <input type="hidden" name="action" value="printBadge">
+                <input type="hidden" name="sides" value="both">
+                <input class="btn btn-success btn-sm ml-2" type="submit" value="Print Badge (Both Sides)">
+            </form>
+            <a class="btn btn-secondary btn-sm ml-5"
+               th:href="@{/staff/{uuid}/badge.pdf(uuid=${staff.uuid})}" target="_blank">Download Badge PDF</a>
         </div>
     </div>
 
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <a th:href="@{/staff}" class="btn btn-primary">Done</a>
+        </div>
+    </div>
 </div>
 
 </body>
