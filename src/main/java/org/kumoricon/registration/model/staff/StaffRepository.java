@@ -172,20 +172,19 @@ public class StaffRepository {
                 .addValue("suppress_printing_department", staff.getSuppressPrintingDepartment())
                 .addValue("uuid", staff.getUuid())
                 .addValue("information_verified", staff.getInformationVerified())
-                .addValue("picture_saved", staff.getPictureSaved())
-                .addValue("signature_saved", staff.getSignatureSaved());
+                .addValue("picture_saved", staff.getPictureSaved());
 
         if (staff.getId() == null) {
             final String SQL = "INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, " +
                     "badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, " +
                     "first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, " +
                     "preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, " +
-                    "picture_saved, signature_saved) " +
+                    "picture_saved) " +
                     "VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed," +
                     ":birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, " +
                     ":first_name, :has_badge_image, :last_modified_ms, :last_name, :legal_first_name, :legal_last_name," +
                     ":preferred_pronoun, :shirt_size, :suppress_printing_department, :uuid, :information_verified, " +
-                    ":picture_saved, :signature_saved) RETURNING id";
+                    ":picture_saved) RETURNING id";
             Integer id = jdbcTemplate.queryForObject(SQL, namedParameters, Integer.class);
             staff.setId(id);
         } else {
@@ -198,8 +197,7 @@ public class StaffRepository {
                     "last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, " +
                     "preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, " +
                     "suppress_printing_department = :suppress_printing_department, uuid = :uuid, " +
-                    "information_verified = :information_verified, picture_saved = :picture_saved, " +
-                    "signature_saved = :signature_saved WHERE id = :id";
+                    "information_verified = :information_verified, picture_saved = :picture_saved WHERE id = :id";
             jdbcTemplate.update(SQL, namedParameters);
         }
         savePositions(staff.getId(), staff.getPositions());
@@ -237,7 +235,6 @@ public class StaffRepository {
             s.setUuid(rs.getString("uuid"));
             s.setInformationVerified(rs.getBoolean("information_verified"));
             s.setPictureSaved(rs.getBoolean("picture_saved"));
-            s.setSignatureSaved(rs.getBoolean("signature_saved"));
 
             return s;
         }

@@ -33,7 +33,6 @@ public class SettingsController {
             case "enablePrinting" -> settingsService.setPrintingEnabled(Boolean.parseBoolean(value));
             case "trainingMode" -> settingsService.setTrainingMode(Boolean.parseBoolean(value));
             case "reportPrinterName" -> settingsService.setReportPrinterName(value);
-            case "requireStaffSignature" -> settingsService.setRequireStaffSignature(Boolean.parseBoolean(value));
             case "requireStaffPhoto" -> settingsService.setRequireStaffPhoto(Boolean.parseBoolean(value));
             case "forcePasswordChange" -> settingsService.setForcePasswordChange(Boolean.parseBoolean(value));
             case "defaultPassword" -> settingsService.setDefaultPassword(value);

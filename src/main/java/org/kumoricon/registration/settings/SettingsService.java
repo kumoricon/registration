@@ -27,8 +27,6 @@ public class SettingsService {
     private Boolean trainingModeDefault;
     @Value("${staff.requirePhoto}")
     private Boolean requireStaffPhotoDefault;
-    @Value("${staff.requireSignature}")
-    private Boolean requireStaffSignatureDefault;
     @Value("${kumoreg.defaultPassword}")
     private String defaultPasswordDefault;
     @Value("${kumoreg.forcePasswordChange}")
@@ -56,7 +54,6 @@ public class SettingsService {
         builder.setEnablePrinting(enablePrintingFromServerDefault);
         builder.setReportPrinterName(null);
         builder.setRequireStaffPhoto(requireStaffPhotoDefault);
-        builder.setRequireStaffSignature(requireStaffSignatureDefault);
         builder.setDefaultPassword(defaultPasswordDefault);
         builder.setForcePasswordChange(forcePasswordChangeDefault);
         builder.setUpdated(System.currentTimeMillis());
@@ -81,11 +78,6 @@ public class SettingsService {
     public void setRequireStaffPhoto(Boolean value) {
         settingsRepository.upsertSetting(SettingsRepository.REQUIRE_STAFF_PHOTO, value.toString());
         this.currentSettings = new Settings.Builder(currentSettings).setRequireStaffPhoto(value).build();
-    }
-
-    public void setRequireStaffSignature(Boolean value) {
-        settingsRepository.upsertSetting(SettingsRepository.REQUIRE_STAFF_SIGNATURE, value.toString());
-        this.currentSettings = new Settings.Builder(currentSettings).setRequireStaffSignature(value).build();
     }
 
     public void setDefaultPassword(String value) {

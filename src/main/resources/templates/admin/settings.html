@@ -80,18 +80,6 @@
                 </form>
             </td>
         </tr>
-        <tr>
-            <td>Require Staff Signature</td>
-            <td>
-                <form method="post" action="/admin/settings/toggle">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="hidden" name="name" value="requireStaffSignature">
-                    <input type="hidden" name="value" th:value="!${settings.requireStaffSignature}">
-                    <input class="btn btn-sm" th:classappend="(!${settings.requireStaffSignature} ? 'btn-danger' : 'btn-success')"
-                           type="submit" th:value="${settings.requireStaffSignature}">
-                </form>
-            </td>
-        </tr>
 
     </table>
 </div>

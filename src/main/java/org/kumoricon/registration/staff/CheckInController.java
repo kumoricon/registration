@@ -117,6 +117,8 @@ public class CheckInController {
             return "staff/step2?err=Error+saving+image";
         }
         staff.setPictureSaved(true);
+        staff.setCheckedIn(true);
+        staff.setCheckedInAt(OffsetDateTime.now());
         staffRepository.save(staff);
         return "redirect:/staff/checkin3/" + uuid;
     }

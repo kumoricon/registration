@@ -9,7 +9,6 @@ public class Settings {
     private final String reportPrinterName;
     private final Boolean trainingMode;
     private final Boolean requireStaffPhoto;
-    private final Boolean requireStaffSignature;
     private final String defaultPassword;
     private final Boolean forcePasswordChange;
 
@@ -19,7 +18,6 @@ public class Settings {
         reportPrinterName = builder.reportPrinterName;
         trainingMode = builder.trainingMode;
         requireStaffPhoto = builder.requireStaffPhoto;
-        requireStaffSignature = builder.requireStaffSignature;
         defaultPassword = builder.defaultPassword;
         forcePasswordChange = builder.forcePasswordChange;
     }
@@ -35,7 +33,6 @@ public class Settings {
     }
     public Boolean getTrainingMode() { return trainingMode; }
     public Boolean getRequireStaffPhoto() { return requireStaffPhoto; }
-    public Boolean getRequireStaffSignature() { return requireStaffSignature; }
     public String getDefaultPassword() { return defaultPassword; }
     public Boolean getForcePasswordChange() { return forcePasswordChange; }
 
@@ -45,7 +42,6 @@ public class Settings {
         private String reportPrinterName;
         private Boolean trainingMode;
         private Boolean requireStaffPhoto;
-        private Boolean requireStaffSignature;
         private String defaultPassword;
         private Boolean forcePasswordChange;
 
@@ -58,7 +54,6 @@ public class Settings {
             this.reportPrinterName = copy.getReportPrinterName();
             this.trainingMode = copy.getTrainingMode();
             this.requireStaffPhoto = copy.getRequireStaffPhoto();
-            this.requireStaffSignature = copy.getRequireStaffSignature();
             this.defaultPassword = copy.getDefaultPassword();
             this.forcePasswordChange = copy.getForcePasswordChange();
         }
@@ -85,11 +80,6 @@ public class Settings {
 
         public Builder setRequireStaffPhoto(Boolean requireStaffPhoto) {
             this.requireStaffPhoto = requireStaffPhoto;
-            return this;
-        }
-
-        public Builder setRequireStaffSignature(Boolean requireStaffSignature) {
-            this.requireStaffSignature = requireStaffSignature;
             return this;
         }
 
