@@ -64,7 +64,6 @@ public class StaffImportService extends ImportService {
             existing.setBadgePrintCount(0);
             existing.setInformationVerified(false);
             existing.setPictureSaved(false);
-            existing.setSignatureSaved(false);
         }
 
         updateStaffFromPerson(existing, person);

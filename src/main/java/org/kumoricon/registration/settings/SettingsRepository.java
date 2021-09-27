@@ -18,7 +18,6 @@ public class SettingsRepository {
     public static final String ENABLE_PRINTING = "enablePrinting";
     public static final String REPORT_PRINTER_NAME = "reportPrinterName";
     public static final String REQUIRE_STAFF_PHOTO = "requireStaffPhoto";
-    public static final String REQUIRE_STAFF_SIGNATURE = "requireStaffSignature";
     public static final String DEFAULT_PASSWORD = "defaultPassword";
     public static final String FORCE_PASSWORD_CHANGE = "forcePasswordChange";
 
@@ -62,9 +61,6 @@ public class SettingsRepository {
         }
         if (results.containsKey(REQUIRE_STAFF_PHOTO)) {
             builder.setRequireStaffPhoto(Boolean.parseBoolean(results.get(REQUIRE_STAFF_PHOTO)));
-        }
-        if (results.containsKey(REQUIRE_STAFF_SIGNATURE)) {
-            builder.setRequireStaffSignature(Boolean.parseBoolean(results.get(REQUIRE_STAFF_SIGNATURE)));
         }
     }
 }

@@ -336,8 +336,7 @@ create table if not exists staff
 	suppress_printing_department boolean not null,
 	uuid varchar(255) not null,
 	information_verified boolean default false not null,
-	picture_saved boolean default false not null,
-	signature_saved boolean default false not null
+	picture_saved boolean default false not null
 );
 
 create table if not exists staff_positions

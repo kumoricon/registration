@@ -117,51 +117,13 @@ public class CheckInController {
             return "staff/step2?err=Error+saving+image";
         }
         staff.setPictureSaved(true);
+        staff.setCheckedIn(true);
+        staff.setCheckedInAt(OffsetDateTime.now());
         staffRepository.save(staff);
         return "redirect:/staff/checkin3/" + uuid;
     }
 
     @RequestMapping(value = "/staff/checkin3/{uuid}")
-    @PreAuthorize("hasAuthority('staff_check_in')")
-    public String checkIn3(Model model, @PathVariable(name = "uuid") String uuid) {
-        Staff staff = staffRepository.findByUuid(uuid);
-        if (staff.getCheckedIn()) return "redirect:/staff/checkin/" + uuid + "?err=Already+checked+in";
-        if (!staff.getPictureSaved()) {
-            return "redirect:/staff/checkin2/" + uuid + "?err=Picture+not+saved";
-        }
-        model.addAttribute("staff", staff);
-        model.addAttribute("requireSignature", settingsService.getCurrentSettings().getRequireStaffSignature());
-        return "staff/step3";
-    }
-
-    @RequestMapping(value = "/staff/checkin3/{uuid}", method = RequestMethod.POST)
-    @PreAuthorize("hasAuthority('staff_check_in')")
-    public String checkIn3Post(@PathVariable(name = "uuid") String uuid,
-                               @RequestParam("imageData") String imageData) {
-        Staff s = staffRepository.findByUuid(uuid);
-        log.info("saved signature and checked in {}", s);
-        if (imageData.isEmpty() && !settingsService.getCurrentSettings().getRequireStaffSignature()) {
-            imageData = NO_DATA_SAVED_IMAGE;    // A blank image will be sent if the signature pad software isn't
-            // installed or the option to not require a signature was enabled and
-            // the user just skipped saving the signature. Add an indicator that
-            // _something_ was saved, just not anything useful.
-        }
-
-        try {
-            fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + "-signature", imageData);
-        } catch (IOException ex) {
-            log.error("Error saving image", ex);
-            return "staff/step3?err=Error+saving+image";
-        }
-
-        s.setSignatureSaved(true);
-        s.setCheckedIn(true);
-        s.setCheckedInAt(OffsetDateTime.now());
-        staffRepository.save(s);
-        return "redirect:/staff/checkin4/" + uuid;
-    }
-
-    @RequestMapping(value = "/staff/checkin4/{uuid}")
     @PreAuthorize("hasAuthority('staff_check_in')")
     public String checkInStep4(Model model, @PathVariable(name = "uuid") String uuid) {
         Staff staff = staffRepository.findByUuid(uuid);
@@ -171,11 +133,8 @@ public class CheckInController {
         if (!staff.getPictureSaved()) {
             return "redirect:/staff/checkin2/" + uuid + "?err=Picture+not+saved";
         }
-        if (!staff.getSignatureSaved()) {
-            return "redirect:/staff/checkin3/" + uuid + "?err=Signature+not+saved";
-        }
         model.addAttribute("staff", staff);
-        return "staff/step4";
+        return "staff/step3";
     }
 
     private static final String NO_DATA_SAVED_IMAGE = """
