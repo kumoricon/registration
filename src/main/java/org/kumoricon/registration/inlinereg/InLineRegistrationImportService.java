@@ -64,13 +64,11 @@ public class InLineRegistrationImportService extends ImportService {
         }
     }
 
-
-    protected void importFile(Path filepath) throws IOException {
-        InLineRegistrationFile importFile = objectMapper.readValue(filepath.toFile(), InLineRegistrationFile.class);
+    protected void processImportFile(InLineRegistrationFile fileData) {
         int attendeeCount = 0;
         int successCount = 0;
         int orderSuccessCount = 0;
-        for (InLineRegistrationRecord record : importFile.getData()) {
+        for (InLineRegistrationRecord record : fileData.getData()) {
             try {
                 String decrypted = decrypt(record.getData());
                 InLineRegistrationOrder order = objectMapper.readValue(decrypted, InLineRegistrationOrder.class);
@@ -110,7 +108,12 @@ public class InLineRegistrationImportService extends ImportService {
                 log.error("Error decrypting {} confirmation code {}: {}",  record.getId(), record.getConfirmationCode(), e.getMessage());
             }
         }
-        log.info("Imported {}/{} orders and {}/{} attendees", orderSuccessCount, importFile.getData().size(), successCount, attendeeCount);
+        log.info("Imported {}/{} orders and {}/{} attendees", orderSuccessCount, fileData.getData().size(), successCount, attendeeCount);
+    }
+
+    protected void importFile(Path filepath) throws IOException {
+        InLineRegistrationFile importFile = objectMapper.readValue(filepath.toFile(), InLineRegistrationFile.class);
+        processImportFile(importFile);
     }
 
 

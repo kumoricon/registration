@@ -2,6 +2,7 @@ package org.kumoricon.registration.inlinereg;
 
 import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.inlineregistration.InLineRegRepository;
 import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
 import org.kumoricon.registration.model.order.OrderService;
@@ -9,17 +10,21 @@ import org.kumoricon.registration.model.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
 public class InLineRegistrationService {
     private final InLineRegRepository inLineRegRepository;
     private final OrderService orderService;
-
+    private final BadgeService badgeService;
     public InLineRegistrationService(InLineRegRepository inLineRegRepository,
-                                     OrderService orderService) {
+                                     OrderService orderService,
+                                     BadgeService badgeService) {
         this.inLineRegRepository = inLineRegRepository;
         this.orderService = orderService;
+        this.badgeService = badgeService;
     }
 
     @Transactional
@@ -35,8 +40,6 @@ public class InLineRegistrationService {
         for (InLineRegistration ilr : inLineRegistrations) {
             Attendee attendee = attendeeFromInLineReg(ilr);
             orderService.saveAttendeeToOrder(orderId, attendee, user);
-            // TODO: Add a function that would save a list of attendees to a given order? Then again, orders
-            // usually won't have more than 2-4 people on them, so a few database round trips won't hurt.
         }
 
         return orderId;
@@ -64,7 +67,7 @@ public class InLineRegistrationService {
         return output;
     }
 
-    private Attendee attendeeFromInLineReg(InLineRegistration ilr) {
+    protected Attendee attendeeFromInLineReg(InLineRegistration ilr) {
         Attendee attendee = new Attendee();
         attendee.setFirstName(ilr.getFirstName());
         attendee.setLastName(ilr.getLastName());
@@ -79,6 +82,7 @@ public class InLineRegistrationService {
         attendee.setCompedBadge(false);
         attendee.setCountry(ilr.getCountry());
         attendee.setEmail(ilr.getEmail());
+        attendee.setPhoneNumber(ilr.getPhoneNumber());
         attendee.setEmergencyContactFullName(ilr.getEmergencyContactFullName());
         attendee.setEmergencyContactPhone(ilr.getEmergencyContactPhone());
         attendee.setPaid(false);
@@ -86,10 +90,32 @@ public class InLineRegistrationService {
         attendee.setParentPhone(ilr.getParentPhone());
         attendee.setParentIsEmergencyContact(ilr.getParentIsEmergencyContact());
         attendee.setZip(ilr.getZip());
-
-        attendee.setBadgeId(1);     // TODO: find type based on imported info? Not sure if that will be a thing
-
+        attendee.setBadgeId(findBadgeIdByMembershipType(ilr.getMembershipType()));
         return attendee;
+    }
+
+    protected Integer findBadgeIdByMembershipType(String membershipType) {
+        if (membershipType.equalsIgnoreCase("day")) {
+            return badgeService.findIdByBadgeName(findBadgeNameForToday());
+        } else {
+            return badgeService.findIdByBadgeName(membershipType);
+        }
+    }
+
+    /**
+     * Returns today's name if it's on a day when Kumoricon is open, or Friday otherwise.
+     * TODO: This is hard coded for now, but another way to do it would be to check for existing day badge types
+     * in case we ever have day badges on Thursday.
+     *
+     * @return "FRIDAY", "SATURDAY", or "SUNDAY"
+     */
+    protected String findBadgeNameForToday() {
+        String today = ZonedDateTime.now(ZoneId.of("America/Los_Angeles")).getDayOfWeek().name();
+        if (today.equalsIgnoreCase("saturday") || today.equalsIgnoreCase("sunday")) {
+            return today;
+        } else {
+            return "FRIDAY";
+        }
     }
 
 }
