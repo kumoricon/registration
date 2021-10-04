@@ -1,5 +1,6 @@
 # Change History
 Version 1.3.0 (pending)
+- Display legal name on at-con registration order screen
 - Search in-line registrations by legal name in addition to preferred name
 - Automate staff user creation
 - Fix "force password change" setting applying to training users
