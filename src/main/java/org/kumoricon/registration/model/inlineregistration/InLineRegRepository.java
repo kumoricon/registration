@@ -27,7 +27,7 @@ public class InLineRegRepository {
     public List<InLineRegistration> findByConfirmationCode(String confirmationCode) {
         try {
             return jdbcTemplate.query(
-                    "select * from inlineregistrations where confirmation_code = :regCode",
+                    "select * from inlineregistrations where confirmation_code ilike :regCode",
                     Map.of("regCode", confirmationCode), new InLineRegRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();

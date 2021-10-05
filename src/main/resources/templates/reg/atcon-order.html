@@ -41,7 +41,8 @@
                                 <td colspan="3"> No Attendees Found </td>
                             </tr>
                             <tr th:each="a : ${attendees}">
-                                <td th:text="${a.getNameOrFanName()}">Attendee Name</td>
+                                <td th:if="${a.nameIsLegalName}" th:text="${a.getNameOrFanName()}">Attendee Name</td>
+                                <td th:if="${!a.nameIsLegalName}" th:text="|${a.nameOrFanName} (${a.legalFirstName} ${a.legalLastName})|">Attendee Name</td>
                                 <td class="text-right" th:text="|$${a.paidAmount}|">$65.00</td>
                                 <td class="text-center">
                                     <form th:action="@{/reg/atconorder/{orderId}/attendee/{attendeeId}/parentconsentform(orderId=${order.id},attendeeId=${a.id})}"

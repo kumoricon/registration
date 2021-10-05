@@ -91,4 +91,10 @@ public class BadgeService {
         b.setVisible(visible);
         badgeRepository.save(b);
     }
+
+    @Transactional(readOnly = true)
+    public Integer findIdByBadgeName(String membershipType) {
+        Badge badge = badgeRepository.findByBadgeName(membershipType);
+        return badge.getId();
+    }
 }

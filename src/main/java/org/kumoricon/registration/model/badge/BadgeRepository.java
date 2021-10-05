@@ -101,6 +101,18 @@ class BadgeRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Badge findByBadgeName(String membershipType) throws NotFoundException {
+        SqlParameterSource params = new MapSqlParameterSource("name", membershipType);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * from badges where badges.name ilike :name",
+                    params, new BadgeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Badge named " + membershipType + " not found");
+        }
+    }
+
+
     static class BadgeRowMapper implements RowMapper<Badge> {
         @Override
         public Badge mapRow(ResultSet rs, int rowNum) throws SQLException {

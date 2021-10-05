@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.attendee.Attendee;
+import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.inlineregistration.InLineRegRepository;
 import org.kumoricon.registration.model.inlineregistration.InLineRegistration;
 import org.kumoricon.registration.model.order.OrderService;
@@ -35,12 +36,15 @@ public class InLineRegistrationControllerTest {
     @Mock(lenient = true)
     private OrderService orderService;
 
+    @Mock(lenient = true)
+    private BadgeService badgeService;
+
     private InLineRegistrationController inLineRegistrationController;
 
     @BeforeEach
     public void setUp() {
         this.inLineRegistrationController = new InLineRegistrationController(
-                new InLineRegistrationService(inLineRegRepository, orderService));
+                new InLineRegistrationService(inLineRegRepository, orderService, badgeService));
     }
 
     @Test
