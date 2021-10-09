@@ -348,7 +348,7 @@ create table if not exists staff_positions
 );
 
 
-create table inlineregistrations
+create table if not exists inlineregistrations
 (
     id bigserial not null
         constraint inlineregistrations_pk
@@ -375,14 +375,25 @@ create table inlineregistrations
     order_uuid uuid
 );
 
-create index inlineregistrations_registration_code_index
+create index if not exists inlineregistrations_registration_code_index
     on inlineregistrations (confirmation_code);
 
-create unique index inlineregistrations_uuid_uindex
+create unique index if not exists inlineregistrations_uuid_uindex
     on inlineregistrations (uuid);
-
-
 
 create index if not exists inlineregistrations_registration_code_index
     on inlineregistrations (confirmation_code);
+
+
+create table if not exists badgenumbers
+(
+    id serial
+        constraint badgenumbers_pk
+            primary key,
+    prefix char(2) not null,
+    number integer not null
+);
+
+create unique index if not exists badgenumbers_prefix_uindex
+    on badgenumbers (prefix);
 
