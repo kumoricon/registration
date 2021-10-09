@@ -6,6 +6,7 @@ import org.kumoricon.registration.helpers.FieldCleaner;
 import org.kumoricon.registration.model.attendee.*;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
+import org.kumoricon.registration.model.badgenumber.BadgeNumberService;
 import org.kumoricon.registration.model.order.Order;
 import org.kumoricon.registration.model.order.OrderRepository;
 import org.kumoricon.registration.model.order.Payment;
@@ -40,6 +41,7 @@ class AttendeeImporterService {
     private final UserRepository userRepository;
     private final AttendeeHistoryRepository attendeeHistoryRepository;
     private final PaymentRepository paymentRepository;
+    private final BadgeNumberService badgeNumberService;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(AttendeeImporterService.class);
@@ -51,7 +53,8 @@ class AttendeeImporterService {
     AttendeeImporterService(TillSessionService sessionService, OrderRepository orderRepository,
                             AttendeeRepository attendeeRepository, BadgeService badgeService,
                             UserRepository userRepository, AttendeeHistoryRepository attendeeHistoryRepository,
-                            PaymentRepository paymentRepository) {
+                            PaymentRepository paymentRepository,
+                            BadgeNumberService badgeNumberService) {
         this.sessionService = sessionService;
         this.orderRepository = orderRepository;
         this.attendeeRepository = attendeeRepository;
@@ -59,6 +62,7 @@ class AttendeeImporterService {
         this.userRepository = userRepository;
         this.attendeeHistoryRepository = attendeeHistoryRepository;
         this.paymentRepository = paymentRepository;
+        this.badgeNumberService = badgeNumberService;
     }
 
     private HashMap<String, Badge> getBadgeMap() {
@@ -83,11 +87,6 @@ class AttendeeImporterService {
             attendeeIds.put(a.getFirstName() + a.getLastName() + a.getOrderNumber(), a.getAttendeeId());
         }
         return attendeeIds;
-    }
-
-
-    private String generateBadgeNumber(Integer badgeNumber) {
-        return String.format("VN%1$05d", badgeNumber);
     }
 
     protected Integer createOrders(List<AttendeeRecord> attendeeRecords, User user) {
@@ -120,7 +119,7 @@ class AttendeeImporterService {
         return count;
     }
 
-    protected Integer createAttendees(List<AttendeeRecord> attendeeRecords, User user) {
+    protected Integer createAttendees(List<AttendeeRecord> attendeeRecords) {
         long start = System.currentTimeMillis();
         log.info("Creating attendees...");
         List<Attendee> attendeesToAdd = new ArrayList<>();
@@ -136,7 +135,7 @@ class AttendeeImporterService {
             attendee.setLegalLastName(record.lastNameOnId);
             attendee.setPreferredPronoun(normalizePronoun(record.pronouns));
             attendee.setFanName(record.fanName);
-            attendee.setBadgeNumber(generateBadgeNumber(user.getNextBadgeNumber()));
+            attendee.setBadgeNumber(badgeNumberService.getNextBadgeNumber());
             attendee.setZip(record.postal);
             attendee.setCountry(record.country);
             attendee.setPhoneNumber(FieldCleaner.cleanPhoneNumber(record.phone));
@@ -268,7 +267,7 @@ class AttendeeImporterService {
 
             orderCount = createOrders(attendees, user);
             orderIdMap = getOrderIdMap();
-            attendeeCount = createAttendees(attendees, user);
+            attendeeCount = createAttendees(attendees);
 
             attendeeIdMap = getAttendeeMap();
             noteCount = createNotes(attendees, user);
