@@ -214,7 +214,7 @@ create table if not exists attendees
   badge_id integer not null
     constraint fk_attendee_badgeid_badges
       references badges,
-  badge_number varchar(255)
+  badge_number varchar(255) not null
     constraint uk_badge_number
       unique,
   badge_pre_printed boolean not null,
@@ -302,7 +302,10 @@ create table if not exists guests
     fan_name text,
     birth_date date,
     has_badge_image boolean default false not null,
-    badge_image_file_type text
+    badge_image_file_type text,
+    badge_number varchar(255) not null
+        constraint uk_guest_badge_number
+        unique
 );
 
 create unique index if not exists guests_online_id_uindex
@@ -335,7 +338,10 @@ create table if not exists staff
 	suppress_printing_department boolean not null,
 	uuid varchar(255) not null,
 	information_verified boolean default false not null,
-	picture_saved boolean default false not null
+	picture_saved boolean default false not null,
+    badge_number varchar(255) not null
+        constraint uk_staff_badge_number
+            unique
 );
 
 create table if not exists staff_positions

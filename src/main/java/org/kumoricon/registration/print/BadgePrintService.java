@@ -211,6 +211,7 @@ public class BadgePrintService extends PrintService {
                     .withAgeImage(getAgeImage(s.getAgeCategoryAtCon()))
                     .withHideDepartment(s.getSuppressPrintingDepartment())
                     .withBadgeImage(badgeImageService.getBadgeForUuid(s.getUuid(), s.getBadgeImageFileType()))
+                    .withBadgeNumber(s.getBadgeNumber())
                     .build();
             staffBadgeDTOS.add(sb);
         }
@@ -230,6 +231,7 @@ public class BadgePrintService extends PrintService {
                     .withAgeBackgroundColor(getAgeStripeColor(g.getAgeCategoryAtCon()))
                     .withAgeImage(getAgeImage(g.getAgeCategoryAtCon()))
                     .withBadgeImage(badgeImageService.getBadgeForUuid(g.getOnlineId(), g.getBadgeImageFileType()))
+                    .withBadgeNumber(g.getBadgeNumber())
                     .withHideDepartment(true)
                     .build();
             staffBadgeDTOS.add(sb);

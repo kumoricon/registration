@@ -3,6 +3,7 @@ package org.kumoricon.registration.staff.staffimport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.ImportService;
+import org.kumoricon.registration.model.badgenumber.BadgeNumberService;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,16 +22,19 @@ public class StaffImportService extends ImportService {
 
     private final StaffRepository staffRepository;
     private final StaffImportUserCreateService staffUserCreate;
+    private final BadgeNumberService badgeNumberService;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public StaffImportService(@Value("${staff.onlineinputpath}") String importInputPath,
                               @Value("${staff.onlinedlqpath}") String importDLQPath,
                               StaffRepository staffRepository,
-                              StaffImportUserCreateService staffUserCreate) {
+                              StaffImportUserCreateService staffUserCreate,
+                              BadgeNumberService badgeNumberService) {
         this.staffRepository = staffRepository;
         this.staffUserCreate = staffUserCreate;
-        onlineImportInputPath = importInputPath;
-        onlineDLQPath = importDLQPath;
+        this.badgeNumberService = badgeNumberService;
+        this.onlineImportInputPath = importInputPath;
+        this.onlineDLQPath = importDLQPath;
     }
 
     protected void importFile(Path filepath) throws IOException {
@@ -64,6 +68,7 @@ public class StaffImportService extends ImportService {
             existing.setBadgePrintCount(0);
             existing.setInformationVerified(false);
             existing.setPictureSaved(false);
+            existing.setBadgeNumber(badgeNumberService.getNextBadgeNumber());
         }
 
         updateStaffFromPerson(existing, person);

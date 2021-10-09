@@ -76,14 +76,15 @@ public class GuestRepository {
                 .addValue("birth_date", guest.getBirthDate())
                 .addValue("age_category_at_con", guest.getAgeCategoryAtCon())
                 .addValue("has_badge_image", guest.getHasBadgeImage())
-                .addValue("badge_image_file_type", guest.getBadgeImageFileType());
+                .addValue("badge_image_file_type", guest.getBadgeImageFileType())
+                .addValue("badge_number", guest.getBadgeNumber());
 
         if (guest.getId() == null) {
             jdbcTemplate.update("""
                                     INSERT INTO guests(online_id, first_name, last_name, legal_first_name,
-                                    legal_last_name, preferred_pronoun, fan_name, birth_date, age_category_at_con, has_badge_image, badge_image_file_type)
+                                    legal_last_name, preferred_pronoun, fan_name, birth_date, age_category_at_con, has_badge_image, badge_image_file_type, badge_number)
                                     VALUES(:online_id, :first_name, :last_name, :legal_first_name, :legal_last_name, :preferred_pronoun,
-                                    :fan_name, :birth_date, :age_category_at_con, :has_badge_image, :badge_image_file_type)
+                                    :fan_name, :birth_date, :age_category_at_con, :has_badge_image, :badge_image_file_type, :badge_number)
                                     """, namedParameters);
         } else {
             jdbcTemplate.update("""
@@ -91,7 +92,8 @@ public class GuestRepository {
                                     last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name,
                                     preferred_pronoun = :preferred_pronoun, fan_name = :fan_name, birth_date = :birth_date,
                                     age_category_at_con = :age_category_at_con, has_badge_image = :has_badge_image,
-                                    badge_image_file_type = :badge_image_file_type WHERE id = :id
+                                    badge_image_file_type = :badge_image_file_type, badge_number = :badge_number 
+                                    WHERE id = :id
                                     """,
                                     namedParameters);
         }
@@ -141,7 +143,7 @@ public class GuestRepository {
             g.setAgeCategoryAtCon(rs.getString("age_category_at_con"));
             g.setHasBadgeImage(rs.getBoolean("has_badge_image"));
             g.setBadgeImageFileType(rs.getString("badge_image_file_type"));
-
+            g.setBadgeNumber(rs.getString("badge_number"));
             return g;
         }
     }

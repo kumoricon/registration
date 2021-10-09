@@ -1,6 +1,7 @@
 package org.kumoricon.registration.guest;
 
 import org.kumoricon.registration.model.ImportService;
+import org.kumoricon.registration.model.badgenumber.BadgeNumberService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
@@ -16,13 +17,16 @@ import java.util.Objects;
 public class GuestImportService extends ImportService {
 
     private final GuestRepository guestRepository;
+    private final BadgeNumberService badgeNumberService;
 
     public GuestImportService(@Value("${registration.guestinputpath}") String onlineImportInputPath,
                               @Value("${registration.onlinedlqpath}") String onlineDLQPath,
-                              GuestRepository guestRepository) {
+                              GuestRepository guestRepository,
+                              BadgeNumberService badgeNumberService) {
         this.onlineImportInputPath = onlineImportInputPath;
         this.onlineDLQPath = onlineDLQPath;
         this.guestRepository = guestRepository;
+        this.badgeNumberService = badgeNumberService;
     }
 
     protected void importFile(Path filepath) {
@@ -64,6 +68,7 @@ public class GuestImportService extends ImportService {
             existing = guestRepository.findByOnlineId(person.getId());
         } catch (EmptyResultDataAccessException ex) {
             existing = new Guest();
+            existing.setBadgeNumber(badgeNumberService.getNextBadgeNumber());
         }
 
         boolean changed = updateGuestFromPerson(existing, person);
