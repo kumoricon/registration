@@ -21,7 +21,6 @@ public class User implements UserDetails {
     private Boolean accountNonLocked;
     private Integer roleId;
     private String roleName;            // Gotten from roles table, not saved as part of this record
-    private Integer lastBadgeNumberCreated;
     private Set<Right> rights;
 
     /**
@@ -94,33 +93,6 @@ public class User implements UserDetails {
 
     public Boolean getEnabled() { return enabled; }
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
-
-
-    /**
-     * Get a string that can be used to prefix the badge number. This has to be unique to each user, and should
-     * generally be 2-3 characters. Other things to watch out for: inadvertant bad words. For example, giving
-     * someone a badge number "SEX001234" would be bad (if funny later).
-     *
-     * This used to be based on the user's initials, but there were a surprising number of collisions. So changed
-     * it to the database ID of the user in hex, plus 42 (So it doesn't start at "00").
-     *
-     * @return String
-     */
-    public String getBadgePrefix() {
-        if (id != null) {
-            return Integer.toHexString(id + 42).toUpperCase();
-        }
-        return "00";
-    }
-
-    public Integer getLastBadgeNumberCreated() { return lastBadgeNumberCreated; }
-    public void setLastBadgeNumberCreated(Integer lastBadgeNumberCreated) { this.lastBadgeNumberCreated = lastBadgeNumberCreated; }
-    public Integer getNextBadgeNumber() {
-        if (lastBadgeNumberCreated == null) { lastBadgeNumberCreated = 0; }
-        lastBadgeNumberCreated += 1;
-        return lastBadgeNumberCreated;
-    }
-
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }

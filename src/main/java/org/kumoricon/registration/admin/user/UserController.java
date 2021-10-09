@@ -82,9 +82,7 @@ public class UserController {
     /**
      * Handle saving updated user, and possibly resetting password. On success, will redirect to the user list,
      * and on failure will show whatever errors have been raised by the validator, and/or any exceptions from
-     * saving to the database. Right now the execeptions from the database are kind of useless, it would be nice
-     * to say "couldn't save because of duplicate badge prefix 'AU'" instead of the current "save failed due to
-     * database constraint FK_1234SDKFJHSDKFAFDSAF" kind of message.
+     * saving to the database.
      */
     @RequestMapping("/admin/users/save")
     @PreAuthorize("hasAuthority('manage_users')")

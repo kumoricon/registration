@@ -23,10 +23,6 @@ public class UserService implements UserDetailsService {
     private final RightRepository rightRepository;
     private final PasswordEncoder passwordEncoder;
     private final SettingsService settingsService;
-    private static final Integer INITIAL_BADGE_NUMBER = 1183; // This is the first badge number issued by each user.
-                                                              // it's a generic high number because an early director
-                                                              // got tired of people bugging him to get a low badge
-                                                              // numbers, and the tradition has stuck
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserRepository userRepository,
@@ -104,7 +100,6 @@ public class UserService implements UserDetailsService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setForcePasswordChange(true);
-        user.setLastBadgeNumberCreated(INITIAL_BADGE_NUMBER);  // Start at an arbitrary number instead of 0
         return user;
     }
 

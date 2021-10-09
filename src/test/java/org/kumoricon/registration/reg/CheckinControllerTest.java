@@ -167,7 +167,6 @@ public class CheckinControllerTest {
         User user = new User();
         user.setId(1);
         user.setUsername("staff");
-        user.setLastBadgeNumberCreated(1000);
         return user;
     }
 }

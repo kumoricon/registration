@@ -51,7 +51,6 @@ create table if not exists users
   force_password_change boolean not null default false,
   enabled boolean not null,
   first_name citext,
-  last_badge_number_created integer not null,
   last_name citext,
   password varchar(255) not null,
   username varchar(200) not null

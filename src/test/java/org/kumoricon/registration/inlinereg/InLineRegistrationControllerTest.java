@@ -139,7 +139,6 @@ public class InLineRegistrationControllerTest {
         User user = new User();
         user.setUsername("admin");
         user.setEnabled(true);
-        user.setLastBadgeNumberCreated(1000);
         user.setId(1);
         return user;
     }

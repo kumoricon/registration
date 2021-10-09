@@ -62,16 +62,16 @@ public class UserRepository {
             jdbcTemplate.update("""
                             INSERT INTO users
                             (online_id, account_non_expired, account_non_locked, force_password_change, enabled, first_name,
-                            last_name, last_badge_number_created, password, username, role_id)
+                            last_name, password, username, role_id)
                             VALUES(:onlineId, :accountNonExpired, :accountNonLocked, :forcePasswordChange, :enabled, :firstName,
-                            :lastName, :lastBadgeNumberCreated, :password, :username, :roleId)""",
+                            :lastName, :password, :username, :roleId)""",
                     params);
         } else {
             jdbcTemplate.update("""
                             UPDATE users SET online_id = :onlineId, account_non_expired = :accountNonExpired,
                             account_non_locked = :accountNonLocked, force_password_change = :forcePasswordChange,
                             enabled = :enabled, first_name = :firstName, last_name = :lastName,
-                            last_badge_number_created = :lastBadgeNumberCreated, password = :password,
+                            password = :password,
                             username = :username, role_id = :roleId WHERE id = :id""",
                     params);
         }
@@ -86,12 +86,6 @@ public class UserRepository {
     public Integer count() {
         String sql = "select count(*) from users";
         return jdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
-    }
-
-    @Transactional
-    public void incrementBadgeNumberForUser(String username) {
-        final String sql = "update users set last_badge_number_created = last_badge_number_created + 1 where users.username=:username";
-        jdbcTemplate.update(sql, Map.of("username", username));
     }
 
     @Transactional
@@ -122,7 +116,6 @@ public class UserRepository {
             user.setAccountNonExpired(rs.getBoolean("account_non_expired"));
             user.setAccountNonLocked(rs.getBoolean("account_non_locked"));
             user.setEnabled(rs.getBoolean("enabled"));
-            user.setLastBadgeNumberCreated(rs.getInt("last_badge_number_created"));
             user.setRoleId(rs.getInt("role_id"));
             user.setRoleName(rs.getString("rolename"));
             return user;
