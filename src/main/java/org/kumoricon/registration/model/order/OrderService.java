@@ -3,6 +3,7 @@ package org.kumoricon.registration.model.order;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeService;
 import org.kumoricon.registration.model.badge.BadgeService;
+import org.kumoricon.registration.model.badgenumber.BadgeNumberService;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserService;
 import org.slf4j.Logger;
@@ -17,16 +18,19 @@ public class OrderService {
     private final AttendeeService attendeeService;
     private final UserService userService;
     private final BadgeService badgeService;
+    private final BadgeNumberService badgeNumberService;
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     public OrderService(OrderRepository orderRepository,
                         AttendeeService attendeeService,
                         UserService userService,
-                        BadgeService badgeService) {
+                        BadgeService badgeService,
+                        BadgeNumberService badgeNumberService) {
         this.orderRepository = orderRepository;
         this.attendeeService = attendeeService;
         this.userService = userService;
         this.badgeService = badgeService;
+        this.badgeNumberService = badgeNumberService;
     }
 
     @Transactional
@@ -49,7 +53,7 @@ public class OrderService {
 
         attendee.setOrder(order);
         if (attendee.getBadgeNumber() == null) {
-            String badgeNumber = userService.getNextBadgeNumber(principal.getUsername());
+            String badgeNumber = badgeNumberService.getNextBadgeNumber();
             attendee.setBadgeNumber(badgeNumber);
         }
         if (attendee.getPaidAmount() != null && principal.hasRight("attendee_override_price")) {

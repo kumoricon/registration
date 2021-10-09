@@ -74,14 +74,6 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String getNextBadgeNumber(String username) {
-        User user = userRepository.findOneByUsernameIgnoreCase(username);
-        userRepository.incrementBadgeNumberForUser(username);
-
-        return String.format("%s%5d", user.getBadgePrefix(), user.getLastBadgeNumberCreated());
-    }
-
-    @Transactional
     public void updateUser(User updates) {
         User current;
         if (updates.getId() == null) {
