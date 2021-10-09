@@ -172,32 +172,37 @@ public class StaffRepository {
                 .addValue("suppress_printing_department", staff.getSuppressPrintingDepartment())
                 .addValue("uuid", staff.getUuid())
                 .addValue("information_verified", staff.getInformationVerified())
-                .addValue("picture_saved", staff.getPictureSaved());
+                .addValue("picture_saved", staff.getPictureSaved())
+                .addValue("badge_number", staff.getBadgeNumber());
 
         if (staff.getId() == null) {
-            final String SQL = "INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, " +
-                    "badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, " +
-                    "first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, " +
-                    "preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, " +
-                    "picture_saved) " +
-                    "VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed," +
-                    ":birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, " +
-                    ":first_name, :has_badge_image, :last_modified_ms, :last_name, :legal_first_name, :legal_last_name," +
-                    ":preferred_pronoun, :shirt_size, :suppress_printing_department, :uuid, :information_verified, " +
-                    ":picture_saved) RETURNING id";
+            final String SQL = """
+                    INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, 
+                      badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, 
+                      first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, 
+                      preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, 
+                      picture_saved, badge_number) 
+                    VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed,
+                      :birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, 
+                      :first_name, :has_badge_image, :last_modified_ms, :last_name, :legal_first_name, :legal_last_name, 
+                      :preferred_pronoun, :shirt_size, :suppress_printing_department, :uuid, :information_verified, 
+                      :picture_saved, :badge_number) RETURNING id""";
             Integer id = jdbcTemplate.queryForObject(SQL, namedParameters, Integer.class);
             staff.setId(id);
         } else {
-            final String SQL = "UPDATE staff SET age_category_at_con = :age_category_at_con, " +
-                    "badge_image_file_type = :badge_image_file_type, badge_print_count = :badge_print_count, " +
-                    "badge_printed = :badge_printed, birth_date = :birth_date, checked_in = :checked_in, " +
-                    "checked_in_at = :checked_in_at, deleted = :deleted, department = :department, " +
-                    "department_color_code = :department_color_code, first_name = :first_name, " +
-                    "has_badge_image = :has_badge_image, last_modified_ms = :last_modified_ms, " +
-                    "last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, " +
-                    "preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, " +
-                    "suppress_printing_department = :suppress_printing_department, uuid = :uuid, " +
-                    "information_verified = :information_verified, picture_saved = :picture_saved WHERE id = :id";
+            final String SQL = """
+                    UPDATE staff SET age_category_at_con = :age_category_at_con, 
+                      badge_image_file_type = :badge_image_file_type, badge_print_count = :badge_print_count, 
+                      badge_printed = :badge_printed, birth_date = :birth_date, checked_in = :checked_in, 
+                      checked_in_at = :checked_in_at, deleted = :deleted, department = :department, 
+                      department_color_code = :department_color_code, first_name = :first_name, 
+                      has_badge_image = :has_badge_image, last_modified_ms = :last_modified_ms, 
+                      last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, 
+                      preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, 
+                      suppress_printing_department = :suppress_printing_department, uuid = :uuid, 
+                      information_verified = :information_verified, picture_saved = :picture_saved,
+                      badge_number = :badge_number 
+                    WHERE id = :id""";
             jdbcTemplate.update(SQL, namedParameters);
         }
         savePositions(staff.getId(), staff.getPositions());
@@ -235,7 +240,7 @@ public class StaffRepository {
             s.setUuid(rs.getString("uuid"));
             s.setInformationVerified(rs.getBoolean("information_verified"));
             s.setPictureSaved(rs.getBoolean("picture_saved"));
-
+            s.setBadgeNumber(rs.getString("badge_number"));
             return s;
         }
     }

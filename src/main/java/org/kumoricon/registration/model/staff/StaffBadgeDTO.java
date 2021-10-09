@@ -18,6 +18,7 @@ public class StaffBadgeDTO {
     private final String ageBackgroundColor;
     private final Image badgeImage;          // User supplied image or generic mascot image
     private final Image ageImage;             // Color coded seal/chop image
+    private final String badgeNumber;
 
     private StaffBadgeDTO(Builder builder) {
         firstName = builder.firstName;
@@ -32,6 +33,7 @@ public class StaffBadgeDTO {
         ageBackgroundColor = builder.ageBackgroundColor;
         ageImage = builder.ageImage;
         badgeImage = builder.badgeImage;
+        badgeNumber = builder.badgeNumber;
     }
 
     public String getFirstName() {
@@ -76,6 +78,7 @@ public class StaffBadgeDTO {
         return badgeImage;
     }
 
+    public String getBadgeNumber() { return badgeNumber; }
 
     @Override
     public String toString() {
@@ -111,6 +114,7 @@ public class StaffBadgeDTO {
         private String ageBackgroundColor;
         private Image badgeImage;
         private Image ageImage;
+        private String badgeNumber;
 
         public Builder() {
             this.positions = new ArrayList<>();
@@ -186,6 +190,11 @@ public class StaffBadgeDTO {
 
         public Builder withAgeImage(Image val) {
             ageImage = val;
+            return this;
+        }
+
+        public Builder withBadgeNumber(String val) {
+            badgeNumber = val;
             return this;
         }
 

@@ -32,6 +32,7 @@ public class Staff {
     private Integer badgePrintCount;
     private Boolean informationVerified;
     private Boolean pictureSaved;
+    private String badgeNumber;
 
     public Integer getId() {
         return id;
@@ -219,6 +220,14 @@ public class Staff {
 
     public void setPictureSaved(Boolean pictureSaved) {
         this.pictureSaved = pictureSaved;
+    }
+
+    public String getBadgeNumber() {
+        return badgeNumber;
+    }
+
+    public void setBadgeNumber(String badgeNumber) {
+        this.badgeNumber = badgeNumber;
     }
 
     @Override

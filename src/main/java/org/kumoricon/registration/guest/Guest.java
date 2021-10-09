@@ -15,6 +15,7 @@ public class Guest {
     private Boolean hasBadgeImage;
     private String badgeImageFileType;
     private String ageCategoryAtCon;
+    private String badgeNumber;
 
     public Integer getId() {
         return id;
@@ -100,6 +101,10 @@ public class Guest {
     public void setBadgeImageFileType(String badgeImageFileType) {
         this.badgeImageFileType = badgeImageFileType;
     }
+
+    public String getBadgeNumber() { return badgeNumber; }
+
+    public void setBadgeNumber(String badgeNumber) { this.badgeNumber = badgeNumber; }
 
     public String getName() {
         return (firstName + " "+ lastName).trim();
