@@ -37,13 +37,15 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
         this.staffList = staffList;
         this.sides = sides;
         this.background = badgeResource.getBackground();
-        badgeCreator = new BadgeCreatorStaffFront(badgeResource.getBadgeFont(), badgeResource.getNameFont());
-        badgeCreatorBack = new BadgeCreatorStaffBack(badgeResource.getBadgeFont(), badgeResource.getNameFont());
+        badgeCreator = new BadgeCreatorStaffFront(badgeResource.getBoldFont(), badgeResource.getPlainFont());
+        badgeCreatorBack = new BadgeCreatorStaffBack(badgeResource.getBoldFont(), badgeResource.getPlainFont());
     }
 
 
     private PDPage generatePageFront(StaffBadgeDTO staffBadgeDTO, PDDocument document) throws IOException {
-        PDPage page = linkBackgroundInto(background, 0, document);
+        // Note: Badge front and back are in a different order in the 2021 staff badge PDF, so the front
+        // is actually page 1, not page 0
+        PDPage page = linkBackgroundInto(background, 1, document);
 
         byte[] badgeImage = badgeCreator.createBadge(staffBadgeDTO);
 
@@ -57,7 +59,7 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
 
 
     private PDPage generatePageBack(StaffBadgeDTO staffBadgeDTO, PDDocument document) throws IOException {
-        PDPage page = linkBackgroundInto(background, 1, document);
+        PDPage page = linkBackgroundInto(background, 0, document);
         byte[] badgeImage = badgeCreatorBack.createBadge(staffBadgeDTO);
 
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);

@@ -87,13 +87,6 @@ public class BadgeImage {
         drawCenteredString(text, rect, sizedFont, color);
     }
 
-    /**
-     * Draw a string that is stretched to fill the given rectangle, minus a 10 pixel padding
-     * @param text Text to draw
-     * @param rect Rectangle the text will fill
-     * @param font Text font
-     * @param color Text color
-     */
     void drawStretchedLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
         Rectangle paddedRect = getPaddedRect(rect);
         final Font sizedFont = scaleFont(text, paddedRect, font);
@@ -105,27 +98,33 @@ public class BadgeImage {
      * @param text Text to draw
      * @param rect Rectangle the text will fill
      * @param font Text font
-     * @param color Text color
+     * @param color Color color
+     * @param outlineWidth int Outline width
      */
-    void drawStretchedRightAlignedString(String text, Rectangle rect, Font font, Color color) {
+    void drawStretchedLeftAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+        Rectangle paddedRect = getPaddedRect(rect);
+        final Font sizedFont = scaleFont(text, paddedRect, font);
+        drawLeftAlignedString(text, paddedRect, sizedFont, color, outlineWidth);
+    }
+
+    /**
+     * Draw a string that is stretched to fill the given rectangle, minus a 10 pixel padding
+     * @param text Text to draw
+     * @param rect Rectangle the text will fill
+     * @param font Text font
+     * @param color Text color
+     * @param outlineWidth int Outline width
+     */
+    void drawStretchedRightAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
         Rectangle paddedRect = getPaddedRect(rect);
         final Font sizedFont = scaleFont(text, paddedRect, font);
 
-        drawRightAlignedString(text, paddedRect, sizedFont, color);
+        drawRightAlignedString(text, paddedRect, sizedFont, color, outlineWidth);
     }
 
 
     void drawCenteredString(String text, Rectangle rect, Font font, Color color) {
-        FontMetrics metrics = g2.getFontMetrics(font);
-        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-        // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-        g2.setFont(font);
-
-        drawTextOutline(text, color, x, y);
-
-        g2.setColor(color);
-        g2.drawString(text, x, y);
+        drawCenteredString(text, rect, font, color, 0);
     }
 
     void drawCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
@@ -140,6 +139,7 @@ public class BadgeImage {
         g2.setColor(color);
         g2.drawString(text, x, y);
     }
+
 
     void drawTextOutline(String text, Color color, int x, int y) {
         drawTextOutline(text, color, x, y, 1);
@@ -160,29 +160,38 @@ public class BadgeImage {
 
 
     void drawLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
+        drawLeftAlignedString(text, rect, font, color, 0);
+    }
+
+    void drawLeftAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
         FontMetrics metrics = g2.getFontMetrics(font);
         int x = rect.x + 10;
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g2.setFont(font);
-        drawTextOutline(text, color, x, y);
+        drawTextOutline(text, color, x, y, outlineWidth);
         g2.setColor(color);
         g2.drawString(text, x, y);
     }
 
-    void drawRightAlignedString(String text, Rectangle rect, Font font, Color color) {
+    void drawRightAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
         FontMetrics metrics = g2.getFontMetrics(font);
         int x = rect.x + (rect.width - metrics.stringWidth(text));
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g2.setFont(font);
-        drawTextOutline(text, color, x, y);
+        drawTextOutline(text, color, x, y, outlineWidth);
         g2.setColor(color);
         g2.drawString(text, x, y);
     }
 
+    Font scaleFontByHeight(float fontSize, Rectangle rect, Font font) {
+        int height = g2.getFontMetrics(font).getHeight();
+        float fontSizeByHeight = ((float)rect.height / (float)height) * fontSize;
+        return font.deriveFont(fontSizeByHeight);
+    }
 
     Font scaleFont(String text, Rectangle rect, Font font) {
         float fontSizeByWidth = 100.0f;

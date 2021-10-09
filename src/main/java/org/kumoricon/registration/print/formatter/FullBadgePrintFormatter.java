@@ -43,7 +43,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
         this.xOffset = (xOffset == null) ? 0 : xOffset;
         this.yOffset = (yOffset == null) ? 0 : yOffset;
         this.badgeResource = badgeResource;
-        this.badgeCreator = new BadgeCreatorAttendeeFull(badgeResource.getBadgeFont(), badgeResource.getNameFont());
+        this.badgeCreator = new BadgeCreatorAttendeeFull(badgeResource.getBoldFont(), badgeResource.getPlainFont());
         try {
             document = new PDDocument();
             for (AttendeeBadgeDTO attendee : attendees) {

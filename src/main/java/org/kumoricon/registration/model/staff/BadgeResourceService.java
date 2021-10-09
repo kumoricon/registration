@@ -40,8 +40,8 @@ public class BadgeResourceService {
     private PDDocument attendeeBadgeBackground;
     private PDDocument specialtyBadgeBackground;
     private PDDocument vipBadgeBackground;
-    private Font badgeFont;
-    private Font nameFont;
+    private Font boldFont;
+    private Font plainFont;
 
     public BadgeResourceService(@Value("${staffbadge.badgeresourcepath}") String badgeResourcePathString,
                                 @Value("${staffbadge.fontfilename}") String fontFilename,
@@ -70,23 +70,23 @@ public class BadgeResourceService {
     }
 
     public BadgeResource getStaffBadgeResources() {
-        return new BadgeResource(cloneDocument(staffBadgeBackground), badgeFont, nameFont);
+        return new BadgeResource(cloneDocument(staffBadgeBackground), boldFont, plainFont);
     }
 
     public BadgeResource getGuestBadgeResource() {
-        return new BadgeResource(cloneDocument(guestBadgeBackground), badgeFont, nameFont);
+        return new BadgeResource(cloneDocument(guestBadgeBackground), boldFont, plainFont);
     }
 
     public BadgeResource getAttendeeBadgeResources() {
-        return new BadgeResource(cloneDocument(attendeeBadgeBackground), badgeFont, nameFont);
+        return new BadgeResource(cloneDocument(attendeeBadgeBackground), boldFont, plainFont);
     }
 
     private BadgeResource getSpecialtyBadgeResources() {
-        return new BadgeResource(cloneDocument(specialtyBadgeBackground), badgeFont, nameFont);
+        return new BadgeResource(cloneDocument(specialtyBadgeBackground), boldFont, plainFont);
     }
 
     private BadgeResource getVipBadgeResources() {
-        return new BadgeResource(cloneDocument(vipBadgeBackground), badgeFont, nameFont);
+        return new BadgeResource(cloneDocument(vipBadgeBackground), boldFont, plainFont);
     }
 
     public Image getAdultSeal() { return adultSeal; }
@@ -96,8 +96,8 @@ public class BadgeResourceService {
     public Image getChildSeal() {
         return childSeal;
     }
-    public Font getBadgeFont() { return badgeFont; }
-    public Font getNameFont() { return nameFont; }
+    public Font getBoldFont() { return boldFont; }
+    public Font getPlainFont() { return plainFont; }
 
     private PDDocument cloneDocument(PDDocument document) {
         try {
@@ -122,19 +122,19 @@ public class BadgeResourceService {
             adultSeal = loadImage("staffadult.png");
             youthSeal = loadImage("staffyouth.png");
             childSeal = loadImage("staffchild.png");
-            staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2019-Badge-Staff.pdf");
-            guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2019-Badge-Guest.pdf");
+            staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-Staff.pdf");
+            guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-GOH.pdf");
             if (printAttendeeBackgrounds) {
-                attendeeBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Attendee.pdf");
-                specialtyBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-Specialty.pdf");
-                vipBadgeBackground = loadBackground("Print - Kumoricon-2019-Badge-VIP.pdf");
+                attendeeBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Attendee.pdf");
+                specialtyBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Specialty.pdf");
+                vipBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-VIP.pdf");
             } else {
                 attendeeBadgeBackground = buildBlankAttendeeBadge();
                 specialtyBadgeBackground = buildBlankAttendeeBadge();
                 vipBadgeBackground = buildBlankAttendeeBadge();
             }
-            nameFont = loadNameFont();
-            badgeFont = loadBadgeFont();
+            plainFont = loadPlainFont();
+            boldFont = loadBoldFont();
         } catch (IOException ex) {
             log.error("Error creating resource directory", ex);
         }
@@ -224,19 +224,24 @@ public class BadgeResourceService {
     private Font loadBadgeFont() {
         Path fontPath = Paths.get(badgeResourcePath.toAbsolutePath().toString(),fontFilename);
         try (InputStream stream = new FileInputStream(fontPath.toFile())) {
-            badgeFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(36f);
+            boldFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(36f);
         } catch (FontFormatException | IOException e) {
             log.warn("Couldn't load badge font {}, using default", fontPath);
-            badgeFont = loadNameFont();
+            boldFont = loadBoldFont();
         }
-        return badgeFont;
+        return boldFont;
     }
+
+    private Font loadBoldFont() {
+        return new Font("Dialog", Font.BOLD, 36);
+    }
+
     /**
      * Fallback font and font for fan name. Returns a font family to include as
      * many foreign/weird characters as possible
      */
-    private Font loadNameFont() {
-        return new Font("Dialog", Font.BOLD, 36);
+    private Font loadPlainFont() {
+        return new Font("Dialog", Font.PLAIN, 36);
     }
 }
 

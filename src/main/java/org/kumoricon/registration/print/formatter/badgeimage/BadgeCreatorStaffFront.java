@@ -4,8 +4,8 @@ import org.kumoricon.registration.model.staff.StaffBadgeDTO;
 import java.awt.*;
 
 public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
-    public BadgeCreatorStaffFront(Font badgeFont, Font nameFont) {
-        super(badgeFont, nameFont);
+    public BadgeCreatorStaffFront(Font boldFont, Font plainFont) {
+        super(boldFont, plainFont);
     }
 
     public byte[] createBadge(StaffBadgeDTO staff) {
@@ -14,6 +14,7 @@ public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
         drawBadgeTypeStripe(b, staff);
         drawPronouns(b, staff);
         drawBadgeAgeImage(b, staff);
+        drawBadgeNumber(b, staff);
         return b.writePNGToByteArray();
     }
 }

@@ -6,24 +6,24 @@ import java.awt.*;
 
 public class BadgeResource {
     private final PDDocument background;
-    private final Font badgeFont;
-    private final Font nameFont;
+    private final Font plainFont;
+    private final Font boldFont;
 
-    public BadgeResource(PDDocument background, Font badgeFont, Font nameFont) {
+    public BadgeResource(PDDocument background, Font boldFont, Font plainFont) {
         this.background = background;
-        this.badgeFont = badgeFont;
-        this.nameFont = nameFont;
+        this.boldFont = boldFont;
+        this.plainFont = plainFont;
     }
 
     public PDDocument getBackground() {
         return background;
     }
 
-    public Font getBadgeFont() {
-        return badgeFont;
+    public Font getPlainFont() {
+        return plainFont;
     }
 
-    public Font getNameFont() {
-        return nameFont;
+    public Font getBoldFont() {
+        return boldFont;
     }
 }
