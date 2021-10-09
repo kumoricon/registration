@@ -157,18 +157,18 @@ public class BadgePrintService extends PrintService {
 
     public byte[] generateStaffImage(List<Staff> staff) {
         List<StaffBadgeDTO> staffBadgeDTOS = staffBadgeDTOsFromStaff(staff);
-        BadgeCreatorStaffFront badgeCreatorStaffFront = new BadgeCreatorStaffFront(badgeResourceService.getBadgeFont(), badgeResourceService.getNameFont());
+        BadgeCreatorStaffFront badgeCreatorStaffFront = new BadgeCreatorStaffFront(badgeResourceService.getBoldFont(), badgeResourceService.getPlainFont());
         return badgeCreatorStaffFront.createBadge(staffBadgeDTOS.get(0));
     }
 
     public byte[] generateGuestImage(List<Guest> guests) {
         List<StaffBadgeDTO> staffBadgeDTOS = staffBadgeDTOsFromGuest(guests);
-        BadgeCreatorStaffFront badgeCreatorStaffFront = new BadgeCreatorStaffFront(badgeResourceService.getBadgeFont(), badgeResourceService.getNameFont());
+        BadgeCreatorStaffFront badgeCreatorStaffFront = new BadgeCreatorStaffFront(badgeResourceService.getBoldFont(), badgeResourceService.getPlainFont());
         return badgeCreatorStaffFront.createBadge(staffBadgeDTOS.get(0));
     }
 
     public byte[] generateAttendeeImage(AttendeeBadgeDTO attendeeBadgeDTO) {
-        BadgeCreatorAttendee badgeCreatorAttendee = new BadgeCreatorAttendeeFull(badgeResourceService.getBadgeFont(), badgeResourceService.getNameFont());
+        BadgeCreatorAttendee badgeCreatorAttendee = new BadgeCreatorAttendeeFull(badgeResourceService.getBoldFont(), badgeResourceService.getPlainFont());
         return badgeCreatorAttendee.createBadge(attendeeBadgeDTO);
     }
 

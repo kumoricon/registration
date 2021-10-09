@@ -5,8 +5,8 @@ import org.kumoricon.registration.model.staff.StaffBadgeDTO;
 import java.awt.*;
 
 public class BadgeCreatorStaffBack extends BadgeCreatorStaffBase {
-    public BadgeCreatorStaffBack(Font badgeFont, Font nameFont) {
-        super(badgeFont, nameFont);
+    public BadgeCreatorStaffBack(Font boldFont, Font plainFont) {
+        super(boldFont, plainFont);
     }
 
     public byte[] createBadge(StaffBadgeDTO staff) {
@@ -17,19 +17,12 @@ public class BadgeCreatorStaffBack extends BadgeCreatorStaffBase {
         drawBadgeImage(b, staff);
         drawPronouns(b, staff);
         drawBadgeAgeImage(b, staff);
-
+        drawBadgeNumber(b, staff);
         return b.writePNGToByteArray();
     }
 
-    @Override
-    void drawBadgeAgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(221, 291,  155, 406);
-        b.drawStretchedImage(staff.getAgeImage(), badgeImageLocation);
-    }
-
-
     private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(390, 541, 520, 740);
+        Rectangle badgeImageLocation = new Rectangle(440, 310, 450, 740);
 //        b.fillRect(badgeImageLocation, Color.CYAN);
         b.drawStretchedImage(staff.getBadgeImage(), badgeImageLocation);
     }
