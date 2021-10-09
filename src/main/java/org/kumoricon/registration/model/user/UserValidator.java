@@ -18,10 +18,6 @@ public class UserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,
                 "username", "required.username","Field Username is required.");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,
-                "badgePrefix", "required.badgePrefix","Field Badge Prefix is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,
-                "lastBadgeNumberCreated", "required.username","Field Last Badge Number Created is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,
                 "roleId", "required.role", "Field Role is required");
     }
 }

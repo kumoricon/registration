@@ -14,7 +14,6 @@
                 <th>Username</th>
                 <th>Name</th>
                 <th>Role</th>
-                <th>Badge Prefix</th>
                 <th>Enabled</th>
                 <th></th>
             </tr>
@@ -27,7 +26,6 @@
             <td th:text="${u.username}">Username</td>
             <td th:text="|${u.firstName} ${u.lastName}|">Name</td>
             <td th:text="${u.roleName}">Role</td>
-            <td th:text="${u.badgePrefix}">Prefix</td>
             <td th:text="${u.enabled}">Enabled</td>
             <td><a th:href="@{/admin/users/{id}(id=${u.id})}" href="#">Edit</a></td>
         </tr>
