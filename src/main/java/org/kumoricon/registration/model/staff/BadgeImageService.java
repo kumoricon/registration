@@ -18,12 +18,16 @@ import java.nio.file.Paths;
 public class BadgeImageService {
     private static final Logger log = LoggerFactory.getLogger(BadgeImageService.class);
     private final String badgeImagePathString;
+    private final String badgeResourcePathString;
     private final String mascotFilename;
     private Path badgeImagePath;
+    private Path badgeResourcePath;
 
     public BadgeImageService(@Value("${staffbadge.badgeimagepath}") String badgeImagePathString,
+                             @Value("${staffbadge.badgeresourcepath}") String badgeResourcePath,
                              @Value("${staffbadge.mascotfilename}") String mascotFilename) {
         this.badgeImagePathString = badgeImagePathString;
+        this.badgeResourcePathString = badgeResourcePath;
         this.mascotFilename = mascotFilename;
     }
 
@@ -45,7 +49,7 @@ public class BadgeImageService {
      * @return Mascot image
      */
     public Image getMascotImage() {
-        Path filePath = Paths.get(badgeImagePath.toAbsolutePath().toString(), mascotFilename);
+        Path filePath = Paths.get(badgeResourcePath.toAbsolutePath().toString(), mascotFilename);
         try {
             return ImageIO.read(filePath.toFile());
         } catch (IOException ex) {
@@ -58,12 +62,12 @@ public class BadgeImageService {
     public void createDirectories() {
         try {
             badgeImagePath = Files.createDirectories(Paths.get(badgeImagePathString));
+            badgeResourcePath = Files.createDirectories(Paths.get(badgeResourcePathString));
             log.info("Badge Image path: " + badgeImagePath.toAbsolutePath());
+            log.info("Badge Resource path: " + badgeImagePath.toAbsolutePath());
             log.info("Mascot Image: " + mascotFilename);
         } catch (IOException ex) {
             log.error("Error creating directory", ex);
         }
     }
-
-
 }

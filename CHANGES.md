@@ -1,5 +1,6 @@
 # Change History
 Version 1.3.0 (pending)
+- Load mascot image from badge resource path instead of badge image path
 - Generate badge numbers randomly instead of generating them per-user
 - Display legal name on at-con registration order screen
 - Search in-line registrations by legal name in addition to preferred name
