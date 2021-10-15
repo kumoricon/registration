@@ -4,6 +4,7 @@ import org.kumoricon.registration.controlleradvice.CookieControllerAdvice;
 import org.kumoricon.registration.controlleradvice.PrinterSettings;
 import org.kumoricon.registration.model.attendee.Attendee;
 import org.kumoricon.registration.model.attendee.AttendeeRepository;
+import org.kumoricon.registration.model.badge.AgeRange;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.badge.BadgeService;
 import org.kumoricon.registration.model.badge.BadgeType;
@@ -108,24 +109,41 @@ public class TestBadgeController {
     private List<AttendeeBadgeDTO> generateAllAttendeeBadges(BadgeType badgeType) {
         List<AttendeeBadgeDTO> badgeDTOS = new ArrayList<>();
         int cnt = 100000;
-        for (Badge b : badgeService.findAll()) {
-            if (b.getBadgeType() == badgeType) {
-                AttendeeBadgeDTO a = new AttendeeBadgeDTO();
-                a.setId(cnt++);
-                a.setName("Firstname Lastname");
-                a.setFanName("Fan Name");
-                a.setBadgeNumber("AB12345");
-                a.setPronoun("They/Them");
-                a.setBadgeTypeText(b.getBadgeTypeText());
-                a.setBadgeTypeBackgroundColor(b.getBadgeTypeBackgroundColor());
-                a.setAgeStripeText("Adult");
-                a.setAgeStripeBackgroundColor("#323E99");
-                badgeDTOS.add(a);
+
+        boolean firstBadge = true;
+
+        // Generate adult badges for all other badge types
+        for (Badge badge : badgeService.findAll()) {
+            if (badge.getBadgeType() == badgeType) {
+                if (firstBadge) {
+                    // Generate Youth and Child example badges for first badge type
+                    firstBadge = false;
+                    for (Long age : new long[]{8L, 16L}) {
+                        AttendeeBadgeDTO a = generateAttendeeBadgeSkeleton(cnt++, age, badge);
+                        badgeDTOS.add(a);
+                    }
+                }
+                badgeDTOS.add(generateAttendeeBadgeSkeleton(cnt++, 25L, badge));
             }
         }
         return badgeDTOS;
     }
 
+    private AttendeeBadgeDTO generateAttendeeBadgeSkeleton(int id, long age, Badge badge) {
+        AgeRange ageRange = badge.getAgeRangeForAge(age);
+
+        AttendeeBadgeDTO a = new AttendeeBadgeDTO();
+        a.setId(id);
+        a.setName("Firstname Lastname");
+        a.setFanName("Fan Name");
+        a.setBadgeNumber("AB1234");
+        a.setPronoun("They/Them");
+        a.setBadgeTypeText(badge.getBadgeTypeText());
+        a.setBadgeTypeBackgroundColor(badge.getBadgeTypeBackgroundColor());
+        a.setAgeStripeText(ageRange.getStripeText());
+        a.setAgeStripeBackgroundColor(ageRange.getStripeColor());
+        return a;
+    }
 
     private List<AttendeeBadgeDTO> generateTestAttendees() {
         List<AttendeeBadgeDTO> badgeDTOs = new ArrayList<>();
@@ -135,7 +153,7 @@ public class TestBadgeController {
             a.setId(10000);
             a.setFanName(name);
             a.setBadgeTypeText("Name Test");
-            a.setBadgeNumber("TS12345");
+            a.setBadgeNumber("TS1234");
             a.setPronoun("They/Them");
             badgeDTOs.add(a);
         }

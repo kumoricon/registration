@@ -1,5 +1,6 @@
 # Change History
 Version 1.3.0 (pending)
+- Generate child and youth badges for test badge PDFs
 - Handle 2021 attendee export fields, ignore any canceled attendees
 - Load mascot image from badge resource path instead of badge image path
 - Generate badge numbers randomly instead of generating them per-user
