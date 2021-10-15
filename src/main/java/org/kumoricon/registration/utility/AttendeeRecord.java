@@ -26,4 +26,8 @@ public class AttendeeRecord {
     public int orderOrdinal;
     public String orderId;
     public String notes;
+    public Boolean isCanceled;
+    public String vipGiftName;
+    public String hearAbout;
+    public Boolean alsoPresentInImageApiExport;
 }

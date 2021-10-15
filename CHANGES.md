@@ -1,5 +1,6 @@
 # Change History
 Version 1.3.0 (pending)
+- Handle 2021 attendee export fields, ignore any canceled attendees
 - Load mascot image from badge resource path instead of badge image path
 - Generate badge numbers randomly instead of generating them per-user
 - Display legal name on at-con registration order screen
