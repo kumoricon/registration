@@ -313,7 +313,7 @@ public class BaseDataService {
 
         // Create badge types with security restrictions below
         log.info("Creating badge VIP");
-        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.VIP, "VIP", "#000000", 300, 300, 300);
+        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.VIP, "VIP", "#000000", 400, 400, 400);
         vip.setRequiredRight("badge_type_vip");
         vip.setWarningMessage("VIP check in. See your coordinator!");
         vip.setBadgeTypeText("VIP");
