@@ -261,7 +261,8 @@ class AttendeeImporterService {
         Integer orderCount, attendeeCount, noteCount,paymentCount;
         try (InputStreamReader isr = new InputStreamReader(is);
              BufferedReader jsonFile = new BufferedReader(isr)) {
-            List<AttendeeRecord> attendees = objectMapper.readValue(jsonFile, new TypeReference<>() {});
+            List<AttendeeRecord> allAttendees = objectMapper.readValue(jsonFile, new TypeReference<>() {});
+            List<AttendeeRecord> attendees = allAttendees.stream().filter(a -> !a.isCanceled).toList();
 
             badgeMap = getBadgeMap();
 
