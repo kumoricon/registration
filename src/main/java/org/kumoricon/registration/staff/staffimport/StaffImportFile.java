@@ -169,7 +169,7 @@ public class StaffImportFile {
         @JsonCreator
         public Position(
                 @JsonProperty(value = "term", required = true) String term,
-                @JsonProperty(value = "title", required = true) String title,
+                @JsonProperty(value = "titleBadgeShort", required = true) String title,
                 @JsonProperty(value = "rank", required = true) String rank,
                 @JsonProperty(value = "department", required = true) String department,
                 @JsonProperty(value = "departmentSuppressed", required = true) Boolean departmentSuppressed) {
