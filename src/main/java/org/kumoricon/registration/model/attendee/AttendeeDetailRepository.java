@@ -80,6 +80,7 @@ public class AttendeeDetailRepository {
             a.setZip(rs.getString("zip"));
             a.setOrderId(rs.getInt("order_id"));
             a.setMembershipRevoked(rs.getBoolean("membership_revoked"));
+            a.setAccessibilitySticker(rs.getBoolean("accessibility_sticker"));
             return a;
         }
     }

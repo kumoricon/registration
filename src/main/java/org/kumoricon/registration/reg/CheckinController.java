@@ -116,6 +116,22 @@ public class CheckinController {
         }
     }
 
+    @RequestMapping(value = "/reg/checkin/{id}/accessibilitysticker", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('accessibility_sticker')")
+    public String toggleAccessibilitySticker(@PathVariable Integer id) {
+        Attendee attendee = attendeeRepository.findById(id);
+        boolean newValue = ! attendee.getAccessibilitySticker();
+        attendee.setAccessibilitySticker(newValue);
+        attendeeRepository.save(attendee);
+        if (newValue) {
+            log.info("added accessibility sticker to {}", attendee);
+            return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=Saved+accessibilty+sticker";
+        } else {
+            log.info("removed accessibility sticker from {}", attendee);
+            return "redirect:/reg/checkin/" + attendee.getId() + "/printbadge?msg=Removed+accessibilty+sticker";
+        }
+    }
+
     @RequestMapping(value = "/reg/uncheckin/{id}")
     @PreAuthorize("hasAuthority('attendee_revert_check_in')")
     public String unCheckin(Model model, @PathVariable Integer id, @AuthenticationPrincipal User principal) {
