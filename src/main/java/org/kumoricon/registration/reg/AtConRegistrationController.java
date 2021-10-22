@@ -125,6 +125,23 @@ public class AtConRegistrationController {
         }
     }
 
+    @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges/accessibilitysticker/{attendeeId}", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('accessibility_sticker')")
+    public String setAccessibilitySticker(@PathVariable Integer orderId,
+                                          @PathVariable Integer attendeeId) {
+        Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
+        boolean newValue = !attendee.getAccessibilitySticker();
+        attendee.setAccessibilitySticker(newValue);
+        attendeeRepository.save(attendee);
+
+        if (newValue) {
+            return "redirect:/reg/atconorder/" + orderId + "/printbadges?msg=Added+accessiblity+sticker";
+        } else {
+            return "redirect:/reg/atconorder/" + orderId + "/printbadges?msg=Removed+accessibility+sticker";
+        }
+
+
+    }
 
     @RequestMapping(value = "/reg/atconorder/{orderId}/printbadges", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('at_con_registration')")

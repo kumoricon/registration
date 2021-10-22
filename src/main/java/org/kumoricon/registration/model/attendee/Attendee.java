@@ -44,7 +44,7 @@ public class Attendee {
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
     private boolean membershipRevoked;          // If false, attendee may be checked in and badge may be reprinted
-
+    private boolean accessibilitySticker;
     // Possible values for Preferred pronoun field
     public static final List<String> PRONOUNS = Arrays.asList(null, "He/Him", "She/Her", "They/Them", "Ask Me My Pronouns");
 
@@ -59,6 +59,7 @@ public class Attendee {
         this.badgePrinted = false;
         this.nameIsLegalName = true;
         this.membershipRevoked = false;
+        this.accessibilitySticker = false;
     }
 
 
@@ -218,6 +219,10 @@ public class Attendee {
 
     public void setMembershipRevoked(boolean membershipRevoked) { this.membershipRevoked = membershipRevoked; }
     public boolean isMembershipRevoked() { return membershipRevoked; }
+
+    public boolean getAccessibilitySticker() { return accessibilitySticker; }
+    public boolean hasAccessibilitySticker() { return accessibilitySticker; }
+    public void setAccessibilitySticker(boolean accessibilitySticker) { this.accessibilitySticker = accessibilitySticker; }
 
     @Override
     public String toString() {

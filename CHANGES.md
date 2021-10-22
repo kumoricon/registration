@@ -1,5 +1,6 @@
 # Change History
 Version 1.3.0 (pending)
+- Added accessibility sticker toggle
 - Use titleBadgeShort field from website for staff titles
 - Generate child and youth badges for test badge PDFs
 - Handle 2021 attendee export fields, ignore any canceled attendees

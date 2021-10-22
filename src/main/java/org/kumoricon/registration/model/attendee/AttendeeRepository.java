@@ -166,13 +166,14 @@ public class AttendeeRepository {
                             emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
                             legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid,
                             paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
-                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES
+                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked, accessibility_sticker) VALUES
                             (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
                              :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
                              :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName,
                              :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid,
                              :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact,
-                             :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked)
+                             :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked,
+                             :accessibilitySticker)
                             """, params);
         } else {
             jdbcTemplate.update("""
@@ -186,7 +187,8 @@ public class AttendeeRepository {
                             paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
                             parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact,
                             parent_phone=:parentPhone, phone_number=:phoneNumber,
-                            zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id
+                            zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked,
+                            accessibility_sticker=:accessibilitySticker WHERE id = :id
                             """, params);
         }
     }
@@ -256,13 +258,15 @@ public class AttendeeRepository {
                             emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
                             legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid,
                             paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
-                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked) VALUES
+                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked,
+                            accessibility_sticker) VALUES
                             (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
                              :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
                              :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName,
                              :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid,
                              :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact,
-                             :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked)
+                             :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked,
+                             :accessibilitySticker)
                             """, toInsertParams);
         }
 
@@ -285,7 +289,8 @@ public class AttendeeRepository {
                             paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
                             parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact,
                             parent_phone=:parentPhone, phone_number=:phoneNumber,
-                            zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked WHERE id = :id
+                            zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked,
+                            accessibility_sticker=:accessibilitySticker WHERE id = :id
                             """, toUpdateParams);
         }
     }
@@ -342,6 +347,7 @@ public class AttendeeRepository {
             a.setZip(rs.getString("zip"));
             a.setOrderId(rs.getInt("order_id"));
             a.setMembershipRevoked(rs.getBoolean("membership_revoked"));
+            a.setAccessibilitySticker(rs.getBoolean("accessibility_sticker"));
             return a;
         }
     }

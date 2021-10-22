@@ -244,6 +244,7 @@ create table if not exists attendees
   phone_number varchar(255),
   pre_registered boolean not null,
   zip varchar(255),
+  accessibility_sticker boolean default false not null,
   order_id integer not null
     constraint fk_attendee_orderid_orders
       references orders

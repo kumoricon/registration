@@ -24,6 +24,18 @@
            class="btn btn-secondary mr-2"
            th:href="@{/orders/{orderId}(orderId=${attendee.orderId})}">View Order</a>
 
+        <form th:if="${#authorization.expression('hasAuthority(''accessibility_sticker'')') && attendee.checkedIn && !attendee.membershipRevoked && !attendee.accessibilitySticker}"
+              th:action="@{/orders/{orderId}/attendees/{attendeeId}/accessibilitysticker(orderId=${attendee.orderId},attendeeId=${attendee.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input class="btn btn-primary mr-2" type="submit" value="Add Accessibility Sticker">
+        </form>
+
+        <form th:if="${#authorization.expression('hasAuthority(''accessibility_sticker'')') && attendee.checkedIn && !attendee.membershipRevoked && attendee.accessibilitySticker}"
+              th:action="@{/orders/{orderId}/attendees/{attendeeId}/accessibilitysticker(orderId=${attendee.orderId},attendeeId=${attendee.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input class="btn btn-danger mr-2" type="submit" value="Remove Accessibility Sticker">
+        </form>
+
         <form th:if="${#authorization.expression('hasAuthority(''reprint_badge'')') && attendee.checkedIn && !attendee.membershipRevoked}"
               th:action="@{/orders/{orderId}/attendees/{attendeeId}/reprint(orderId=${attendee.orderId},attendeeId=${attendee.id})}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

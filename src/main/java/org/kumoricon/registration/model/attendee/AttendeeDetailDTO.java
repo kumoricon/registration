@@ -38,6 +38,7 @@ public class AttendeeDetailDTO {
     private boolean badgePrePrinted;            // Is a preprinted badge ready for this attendee?
     private boolean badgePrinted;               // Has badge been printed before
     private boolean membershipRevoked;
+    private boolean accessibilitySticker;
 
     AttendeeDetailDTO() {}
 
@@ -303,6 +304,10 @@ public class AttendeeDetailDTO {
     public boolean isMembershipRevoked() { return membershipRevoked; }
 
     public void setMembershipRevoked(boolean membershipRevoked) { this.membershipRevoked = membershipRevoked; }
+
+    public boolean getAccessibilitySticker() { return accessibilitySticker; }
+
+    public void setAccessibilitySticker(boolean accessibilitySticker) { this.accessibilitySticker = accessibilitySticker; }
 
     @Override
     public String toString() {

@@ -30,16 +30,27 @@
             </table>
 
             <div>
-                <form th:if="${attendee.checkedIn}" method="post" th:action="@{/reg/checkin/{attendeeId}/printbadge(attendeeId=${attendee.id})}">
+                <form th:if="${attendee.checkedIn}" method="post" class="mb-4"
+                      th:action="@{/reg/checkin/{attendeeId}/printbadge(attendeeId=${attendee.id})}">
                     <input type="hidden" name="id" th:value="${attendee.id}">
                     <input type="hidden" name="action" value="badgePrintedSuccessfully">
                     <input class="btn btn-success btn-sm" type="submit" value="Badge Printed Successfully">
-                </form><br>
-                <form th:if="${attendee.checkedIn}" method="post" th:action="@{/reg/checkin/{attendeeId}/printbadge(attendeeId=${attendee.id})}">
+                </form>
+                <form th:if="${attendee.checkedIn} and ${!attendee.accessibilitySticker} and ${#authorization.expression('hasAuthority(''accessibility_sticker'')')}"
+                      method="post" th:action="@{/reg/checkin/{attendeeId}/accessibilitysticker(attendeeId=${attendee.id})}" class="mb-2">
+                    <input class="btn btn-success btn-sm" type="submit" value="Add Accessibility Sticker">
+                </form>
+                <form th:if="${attendee.checkedIn} and ${attendee.accessibilitySticker} and ${#authorization.expression('hasAuthority(''accessibility_sticker'')')}"
+                      method="post" th:action="@{/reg/checkin/{attendeeId}/accessibilitysticker(attendeeId=${attendee.id})}" class="mb-2">
+                    <input class="btn btn-danger btn-sm" type="submit" value="Remove Accessibility Sticker">
+                </form>
+
+                <form th:if="${attendee.checkedIn}" method="post" class="mb-2"
+                      th:action="@{/reg/checkin/{attendeeId}/printbadge(attendeeId=${attendee.id})}">
                     <input type="hidden" name="id" th:value="${attendee.id}">
                     <input type="hidden" name="action" value="reprintDuringCheckin">
                     <input class="btn btn-secondary btn-sm mr-2" type="submit" value="Reprint Badge">
-                </form><br>
+                </form>
                 <a class="btn btn-secondary btn-sm" th:href="@{/orders/{orderId}/attendees/{attendeeId}/badge.pdf(orderId=${attendee.orderId},attendeeId=${attendee.id})}" target="_blank">Download Badge PDF</a>
             </div>
 
