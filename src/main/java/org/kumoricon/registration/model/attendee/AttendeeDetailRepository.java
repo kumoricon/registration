@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -33,6 +34,21 @@ public class AttendeeDetailRepository {
                     Map.of("attendeeId", attendeeId, "orderId", orderId), new AttendeeDetailDTORowMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Attendee id " + attendeeId + " not found in Order id " + orderId);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendeeDetailDTO> findCheckedIn(OffsetDateTime since) {
+        try {
+            return jdbcTemplate.query("""
+                            SELECT attendees.*, b.name as badge_type FROM attendees 
+                            JOIN badges b on attendees.badge_id = b.id 
+                            WHERE attendees.checked_in is true AND
+                                  last_modified >= :since
+                            """,
+                    Map.of("since", since), new AttendeeDetailDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
         }
     }
 

@@ -32,6 +32,18 @@ public class StaffRepository {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<Staff> findCheckedIn(OffsetDateTime since) {
+        final String sql = """
+            SELECT * FROM staff WHERE deleted = FALSE and checked_in is true AND last_modified >= :since
+            ORDER BY department, first_name, last_name""";
+        try {
+            return jdbcTemplate.query(sql, Map.of("since", since), new StaffRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
     private SqlParameterSource searchStringToQueryTerms(String search) {
         String[] terms = search.trim().split(" ", 2);
 
@@ -163,30 +175,31 @@ public class StaffRepository {
                 .addValue("department_color_code", staff.getDepartmentColorCode())
                 .addValue("first_name", staff.getFirstName())
                 .addValue("has_badge_image", staff.getHasBadgeImage())
-                .addValue("last_modified_ms", staff.getLastModifiedMS())
                 .addValue("last_name", staff.getLastName())
                 .addValue("legal_first_name", staff.getLegalFirstName())
                 .addValue("legal_last_name", staff.getLegalLastName())
+                .addValue("phone_number", staff.getPhoneNumber())
                 .addValue("preferred_pronoun", staff.getPreferredPronoun())
                 .addValue("shirt_size", staff.getShirtSize())
                 .addValue("suppress_printing_department", staff.getSuppressPrintingDepartment())
                 .addValue("uuid", staff.getUuid())
                 .addValue("information_verified", staff.getInformationVerified())
                 .addValue("picture_saved", staff.getPictureSaved())
-                .addValue("badge_number", staff.getBadgeNumber());
+                .addValue("badge_number", staff.getBadgeNumber())
+                .addValue("accessibility_sticker", staff.getAccessibilitySticker());
 
         if (staff.getId() == null) {
             final String SQL = """
                     INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, 
                       badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, 
-                      first_name, has_badge_image, last_modified_ms, last_name, legal_first_name, legal_last_name, 
+                      first_name, has_badge_image, last_name, legal_first_name, legal_last_name, 
                       preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, 
-                      picture_saved, badge_number) 
+                      picture_saved, badge_number, phone_number, accessibility_sticker, last_modified) 
                     VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed,
                       :birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, 
-                      :first_name, :has_badge_image, :last_modified_ms, :last_name, :legal_first_name, :legal_last_name, 
+                      :first_name, :has_badge_image, :last_name, :legal_first_name, :legal_last_name, 
                       :preferred_pronoun, :shirt_size, :suppress_printing_department, :uuid, :information_verified, 
-                      :picture_saved, :badge_number) RETURNING id""";
+                      :picture_saved, :badge_number, :phone_number, :accessibility_sticker, now()) RETURNING id""";
             Integer id = jdbcTemplate.queryForObject(SQL, namedParameters, Integer.class);
             staff.setId(id);
         } else {
@@ -196,12 +209,13 @@ public class StaffRepository {
                       badge_printed = :badge_printed, birth_date = :birth_date, checked_in = :checked_in, 
                       checked_in_at = :checked_in_at, deleted = :deleted, department = :department, 
                       department_color_code = :department_color_code, first_name = :first_name, 
-                      has_badge_image = :has_badge_image, last_modified_ms = :last_modified_ms, 
+                      has_badge_image = :has_badge_image,
                       last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, 
                       preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, 
                       suppress_printing_department = :suppress_printing_department, uuid = :uuid, 
                       information_verified = :information_verified, picture_saved = :picture_saved,
-                      badge_number = :badge_number 
+                      badge_number = :badge_number, phone_number = :phone_number, 
+                      accessibility_sticker = :accessibility_sticker, last_modified = now()
                     WHERE id = :id""";
             jdbcTemplate.update(SQL, namedParameters);
         }
@@ -230,10 +244,10 @@ public class StaffRepository {
             s.setDepartmentColorCode(rs.getString("department_color_code"));
             s.setFirstName(rs.getString("first_name"));
             s.setHasBadgeImage(rs.getBoolean("has_badge_image"));
-            s.setLastModifiedMS(rs.getLong("last_modified_ms"));
             s.setLastName(rs.getString("last_name"));
             s.setLegalFirstName(rs.getString("legal_first_name"));
             s.setLegalLastName(rs.getString("legal_last_name"));
+            s.setPhoneNumber(rs.getString("phone_number"));
             s.setPreferredPronoun(rs.getString("preferred_pronoun"));
             s.setShirtSize(rs.getString("shirt_size"));
             s.setSuppressPrintingDepartment(rs.getBoolean("suppress_printing_department"));
@@ -241,6 +255,8 @@ public class StaffRepository {
             s.setInformationVerified(rs.getBoolean("information_verified"));
             s.setPictureSaved(rs.getBoolean("picture_saved"));
             s.setBadgeNumber(rs.getString("badge_number"));
+            s.setAccessibilitySticker(rs.getBoolean("accessibility_sticker"));
+            s.setLastModified(rs.getObject("last_modified", OffsetDateTime.class));
             return s;
         }
     }

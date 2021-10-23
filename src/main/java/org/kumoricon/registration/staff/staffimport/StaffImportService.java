@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,6 @@ public class StaffImportService extends ImportService {
     }
 
     private void importPerson(StaffImportFile.Person person) {
-
         log.info("Importing {}", person);
         Staff existing;
         try {
@@ -69,46 +67,33 @@ public class StaffImportService extends ImportService {
             existing.setInformationVerified(false);
             existing.setPictureSaved(false);
             existing.setBadgeNumber(badgeNumberService.getNextBadgeNumber());
+            existing.setAccessibilitySticker(false);
         }
 
-        updateStaffFromPerson(existing, person);
-        staffRepository.save(existing);
-    }
-
-    private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person) {
-        // TOOD: Corner cases here!
         List<String> positions = new ArrayList<>();
         for (StaffImportFile.Position p : person.getPositions()) {
             positions.add(p.title);
         }
-
-        if (
-                !Objects.equals(staff.getUuid(), person.getId()) ||
-                !Objects.equals(staff.getFirstName(), person.getNamePreferredFirst()) ||
-                !Objects.equals(staff.getLastName(), person.getNamePreferredLast()) ||
-                !Objects.equals(staff.getLegalFirstName(), person.getNameOnIdFirst()) ||
-                !Objects.equals(staff.getLegalLastName(), person.getNameOnIdLast()) ||
-                !Objects.equals(staff.getPreferredPronoun(), person.getPreferredPronoun()) ||
-                !Objects.equals(staff.getBirthDate().toString(), person.getBirthdate()) ||
-                !Objects.equals(staff.getShirtSize(), person.gettShirtSize()) ||
-                !staff.getPositions().equals(positions) ||
-                !Objects.equals(staff.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
-                !Objects.equals(staff.getHasBadgeImage(), person.getHasBadgeImage()) ||
-                !Objects.equals(staff.getBadgeImageFileType(), person.getBadgeImageFileType())
-        ) {
-            staff.setLastModifiedMS(Instant.now().toEpochMilli());
+        if (staffRecordIsDifferent(existing, person, positions)) {
+            updateStaffFromPerson(existing, person, positions);
+            staffRepository.save(existing);
         }
+    }
+
+    private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person, List<String> positions) {
+        // TOOD: Corner cases here!
+
         staff.setUuid(person.getId());
         staff.setFirstName(person.getNamePreferredFirst());
         staff.setLastName(person.getNamePreferredLast());
         staff.setLegalFirstName(person.getNameOnIdFirst());
         staff.setLegalLastName(person.getNameOnIdLast());
+        staff.setPhoneNumber(person.getPhoneNumber());
         staff.setPreferredPronoun(person.getPreferredPronoun());
         staff.setBirthDate(LocalDate.parse(person.getBirthdate()));
         staff.setShirtSize(person.gettShirtSize());
         staff.setPositions(positions);
         staff.setAgeCategoryAtCon(person.getAgeCategoryConCurrentTerm());
-        staff.setPositions(positions);
         staff.setHasBadgeImage(person.getHasBadgeImage());
         staff.setBadgeImageFileType(person.getBadgeImageFileType());
 
@@ -121,6 +106,22 @@ public class StaffImportService extends ImportService {
         } else {
             log.warn("{} has no positions!", staff);
         }
+    }
+
+    private boolean staffRecordIsDifferent(Staff staff, StaffImportFile.Person person, List<String> positions) {
+        return !Objects.equals(staff.getUuid(), person.getId()) ||
+                !Objects.equals(staff.getFirstName(), person.getNamePreferredFirst()) ||
+                !Objects.equals(staff.getLastName(), person.getNamePreferredLast()) ||
+                !Objects.equals(staff.getLegalFirstName(), person.getNameOnIdFirst()) ||
+                !Objects.equals(staff.getLegalLastName(), person.getNameOnIdLast()) ||
+                !Objects.equals(staff.getPhoneNumber(), person.getPhoneNumber()) ||
+                !Objects.equals(staff.getPreferredPronoun(), person.getPreferredPronoun()) ||
+                !Objects.equals(staff.getBirthDate().toString(), person.getBirthdate()) ||
+                !Objects.equals(staff.getShirtSize(), person.gettShirtSize()) ||
+                !staff.getPositions().equals(positions) ||
+                !Objects.equals(staff.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
+                !Objects.equals(staff.getHasBadgeImage(), person.getHasBadgeImage()) ||
+                !Objects.equals(staff.getBadgeImageFileType(), person.getBadgeImageFileType());
     }
 
     /**

@@ -4,6 +4,7 @@ package org.kumoricon.registration.model.attendee;
 import org.kumoricon.registration.model.badge.Badge;
 import org.kumoricon.registration.model.order.Order;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -45,6 +46,7 @@ public class Attendee {
     private boolean badgePrinted;               // Has badge been printed before
     private boolean membershipRevoked;          // If false, attendee may be checked in and badge may be reprinted
     private boolean accessibilitySticker;
+    private OffsetDateTime lastModified;
     // Possible values for Preferred pronoun field
     public static final List<String> PRONOUNS = Arrays.asList(null, "He/Him", "She/Her", "They/Them", "Ask Me My Pronouns");
 
@@ -223,6 +225,9 @@ public class Attendee {
     public boolean getAccessibilitySticker() { return accessibilitySticker; }
     public boolean hasAccessibilitySticker() { return accessibilitySticker; }
     public void setAccessibilitySticker(boolean accessibilitySticker) { this.accessibilitySticker = accessibilitySticker; }
+
+    public OffsetDateTime getLastModified() { return lastModified; }
+    public void setLastModified(OffsetDateTime lastModified) { this.lastModified = lastModified;}
 
     @Override
     public String toString() {

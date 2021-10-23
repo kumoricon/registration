@@ -245,6 +245,7 @@ create table if not exists attendees
   pre_registered boolean not null,
   zip varchar(255),
   accessibility_sticker boolean default false not null,
+  last_modified timestamptz not null,
   order_id integer not null
     constraint fk_attendee_orderid_orders
       references orders
@@ -253,7 +254,11 @@ create table if not exists attendees
 create index if not exists attendees_order_id_index
     on attendees (order_id);
 
+create index if not exists attendees_checked_in_index
+    on attendees (checked_in);
 
+create index if not exists attendees_last_modified_index
+    on attendees (last_modified desc);
 
 create table if not exists attendeehistory
 (
@@ -323,6 +328,7 @@ create table if not exists staff
 	badge_print_count integer default 0 not null,
 	badge_printed boolean not null,
 	birth_date date,
+	phone_number varchar(255),
 	checked_in boolean,
 	checked_in_at timestamp with time zone,
 	deleted boolean,
@@ -330,7 +336,6 @@ create table if not exists staff
 	department_color_code varchar(255),
 	first_name varchar(255) not null,
 	has_badge_image boolean not null,
-	last_modified_ms bigint not null,
 	last_name varchar(255) not null,
 	legal_first_name varchar(255),
 	legal_last_name varchar(255),
@@ -340,10 +345,19 @@ create table if not exists staff
 	uuid varchar(255) not null,
 	information_verified boolean default false not null,
 	picture_saved boolean default false not null,
+	accessibility_sticker boolean default false not null,
+	last_modified timestamptz not null,
     badge_number varchar(255) not null
         constraint uk_staff_badge_number
             unique
 );
+
+create index if not exists staff_checked_in_index
+    on staff (checked_in);
+
+create index if not exists staff_last_modified_index
+    on staff (last_modified desc);
+
 
 create table if not exists staff_positions
 (

@@ -57,6 +57,7 @@ public class StaffImportFile {
         private final String namePreferredLast;
         private final String nameOnIdFirst;
         private final String nameOnIdLast;
+        private final String phoneNumber;
         private final String preferredPronoun;
         private final String tShirtSize;
         private final String badgeImpactingLastModified;
@@ -74,6 +75,7 @@ public class StaffImportFile {
                 @JsonProperty(value = "namePreferredLast") String namePreferredLast,
                 @JsonProperty(value = "nameOnIdFirst") String nameOnIdFirst,
                 @JsonProperty(value = "nameOnIdLast") String nameOnIdLast,
+                @JsonProperty(value = "phone") String phoneNumber,
                 @JsonProperty(value = "pronouns") String preferredPronoun,
                 @JsonProperty(value = "tShirtSize") String tShirtSize,
                 @JsonProperty(value = "badgeImpactingLastModified") String badgeImpactingLastModified,
@@ -88,6 +90,7 @@ public class StaffImportFile {
             this.namePreferredLast = namePreferredLast;
             this.nameOnIdFirst = nameOnIdFirst;
             this.nameOnIdLast = nameOnIdLast;
+            this.phoneNumber = phoneNumber;
             this.preferredPronoun = preferredPronoun;
             this.tShirtSize = tShirtSize;
             this.badgeImpactingLastModified = badgeImpactingLastModified;
@@ -118,6 +121,8 @@ public class StaffImportFile {
         public String getNameOnIdLast() {
             return nameOnIdLast;
         }
+
+        public String getPhoneNumber() { return phoneNumber; }
 
         public String getPreferredPronoun() { return preferredPronoun; }
 

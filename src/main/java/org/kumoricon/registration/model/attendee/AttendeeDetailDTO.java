@@ -3,6 +3,7 @@ package org.kumoricon.registration.model.attendee;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 
 public class AttendeeDetailDTO {
     private Integer id;
@@ -39,6 +40,7 @@ public class AttendeeDetailDTO {
     private boolean badgePrinted;               // Has badge been printed before
     private boolean membershipRevoked;
     private boolean accessibilitySticker;
+    private OffsetDateTime lastModified;
 
     AttendeeDetailDTO() {}
 
@@ -308,6 +310,10 @@ public class AttendeeDetailDTO {
     public boolean getAccessibilitySticker() { return accessibilitySticker; }
 
     public void setAccessibilitySticker(boolean accessibilitySticker) { this.accessibilitySticker = accessibilitySticker; }
+
+    public OffsetDateTime getLastModified() { return lastModified; }
+
+    public void setLastModified(OffsetDateTime lastModified) { this.lastModified = lastModified; }
 
     @Override
     public String toString() {

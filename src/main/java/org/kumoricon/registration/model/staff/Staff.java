@@ -13,6 +13,7 @@ public class Staff {
     private String lastName;
     private String legalFirstName;
     private String legalLastName;
+    private String phoneNumber;
     private String preferredPronoun;
     private String shirtSize;
     private String department;
@@ -27,12 +28,13 @@ public class Staff {
     private Boolean hasBadgeImage;
     private String badgeImageFileType;
     private OffsetDateTime checkedInAt;
-    private Long lastModifiedMS;
     private Boolean badgePrinted;
     private Integer badgePrintCount;
     private Boolean informationVerified;
     private Boolean pictureSaved;
     private String badgeNumber;
+    private Boolean accessibilitySticker;
+    private OffsetDateTime lastModified;
 
     public Integer getId() {
         return id;
@@ -81,6 +83,10 @@ public class Staff {
     public void setLegalLastName(String legalLastName) {
         this.legalLastName = legalLastName;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
     public String getPreferredPronoun() { return preferredPronoun; }
 
@@ -182,14 +188,6 @@ public class Staff {
         this.checkedInAt = checkedInAt;
     }
 
-    public Long getLastModifiedMS() {
-        return lastModifiedMS;
-    }
-
-    public void setLastModifiedMS(Long lastModifiedMS) {
-        this.lastModifiedMS = lastModifiedMS;
-    }
-
     public Boolean getBadgePrinted() {
         return badgePrinted;
     }
@@ -229,6 +227,13 @@ public class Staff {
     public void setBadgeNumber(String badgeNumber) {
         this.badgeNumber = badgeNumber;
     }
+
+    public Boolean getAccessibilitySticker() { return accessibilitySticker; }
+
+    public void setAccessibilitySticker(Boolean accessibilitySticker) { this.accessibilitySticker = accessibilitySticker; }
+
+    public OffsetDateTime getLastModified() { return lastModified; }
+    public void setLastModified(OffsetDateTime lastModified) { this.lastModified = lastModified; }
 
     @Override
     public String toString() {

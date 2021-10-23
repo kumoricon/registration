@@ -66,6 +66,16 @@ public class CheckInController {
         return "staff/staff-id";
     }
 
+    @RequestMapping(value = "/staff/{uuid}/accessibilitysticker", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('staff_check_in')")
+    public String accessibilityStickerToggle(@PathVariable(name = "uuid") String uuid) {
+        Staff staff = staffRepository.findByUuid(uuid);
+        Boolean newValue = !staff.getAccessibilitySticker();
+        log.info("set accessibility sticker to {} for {}", newValue, staff);
+        staff.setAccessibilitySticker(newValue);
+        staffRepository.save(staff);
+        return "redirect:/staff/" + uuid;
+    }
 
     @RequestMapping(value = "/staff/checkin/{uuid}")
     @PreAuthorize("hasAuthority('staff_check_in')")
@@ -135,6 +145,17 @@ public class CheckInController {
         }
         model.addAttribute("staff", staff);
         return "staff/step3";
+    }
+
+    @RequestMapping(value = "/staff/checkin3/{uuid}/accessibilitysticker", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('staff_check_in')")
+    public String accessibilityStickerToggleCheckIn(@PathVariable(name = "uuid") String uuid) {
+        Staff staff = staffRepository.findByUuid(uuid);
+        Boolean newValue = !staff.getAccessibilitySticker();
+        log.info("set accessibility sticker to {} for {}", newValue, staff);
+        staff.setAccessibilitySticker(newValue);
+        staffRepository.save(staff);
+        return "redirect:/staff/checkin3/" + uuid;
     }
 
     private static final String NO_DATA_SAVED_IMAGE = """
