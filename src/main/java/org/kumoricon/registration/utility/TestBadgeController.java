@@ -79,13 +79,14 @@ public class TestBadgeController {
             @PathVariable(value = "badgeId") Integer badgeId,
             @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) throws IOException {
 
+        long start = System.currentTimeMillis();
         List<Attendee> attendees = attendeeRepository.findAllByBadgeType(badgeId);
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
 
         byte[] media = badgePrintService.generateAttendeePDF(attendees, printerSettings).readAllBytes();
         HttpHeaders headers = buildHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-
+        log.info("generated {} badges in {} ms", attendees.size(), System.currentTimeMillis()-start);
         return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
 
