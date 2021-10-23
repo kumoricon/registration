@@ -35,6 +35,12 @@
                 <input type="hidden" name="sides" value="both">
                 <input class="btn btn-success btn-sm ml-2" type="submit" value="Print Badge (Both Sides)">
             </form>
+            <form th:if="${!staff.accessibilitySticker}" method="post" th:action="|/staff/checkin3/${staff.uuid}/accessibilitysticker|">
+                <input class="btn btn-success btn-sm ml-2" type="submit" value="Add accessibility sticker">
+            </form>
+            <form th:if="${staff.accessibilitySticker}" method="post" th:action="|/staff/checkin3/${staff.uuid}/accessibilitysticker|">
+                <input class="btn btn-danger btn-sm ml-2" type="submit" value="Remove accessibility sticker">
+            </form>
             <a class="btn btn-secondary btn-sm ml-5"
                th:href="@{/staff/{uuid}/badge.pdf(uuid=${staff.uuid})}" target="_blank">Download Badge PDF</a>
         </div>
