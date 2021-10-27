@@ -1,5 +1,7 @@
 # Change History
-Version 1.3.0 (pending)
+Version 1.4.0 (pending)
+
+Version 1.3.0 (10/26/2021)
 - Added event registration system export
 - Added accessibility sticker toggle to attendees and staff
 - Use titleBadgeShort field from website for staff titles
