@@ -5,13 +5,16 @@ HP OfficeJet Pro 8610
 ---------------------
 
 Working CUPS drivers:
+- HP Officejet Pro 8610, hpcups 3.20.3    (Tested on Ubuntu 20.04)
 - HP Officejet Pro 8610, hpcups 3.17.10   (Tested on Ubuntu 18.04)
 - HP Officejet Pro 8610, hpcups 3.18.6    (Tested on Fedora 28)
 
 
 Does not work:
+- Officejet Pro 8610 - IPP Everywhere                      (Tested on Ubuntu 20.04, prints 2 pages)
 - HP Officejet Pro 8610, driverless, cups-filters 1.20.2   (Tested on Ubuntu 18.04, prints 2 pages)
 - HP Officejet Pro 8610 hpijs, 3.17.10                     (Tested on Ubuntu 18.04, doesn't print)
+
 
 
 HP Laserjet M251nw
