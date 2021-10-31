@@ -28,7 +28,6 @@ public class StaffImportFile {
         return persons;
     }
 
-
     static class Action {
         private final Long actionsVersion;
         private final List<String> deleted;
@@ -55,6 +54,8 @@ public class StaffImportFile {
         private final String id;
         private final String namePreferredFirst;
         private final String namePreferredLast;
+        private final String namePrivacyFirst;
+        private final String namePrivacyLast;
         private final String nameOnIdFirst;
         private final String nameOnIdLast;
         private final String phoneNumber;
@@ -73,6 +74,8 @@ public class StaffImportFile {
                 @JsonProperty(value = "id", required = true) String id,
                 @JsonProperty(value = "namePreferredFirst") String namePreferredFirst,
                 @JsonProperty(value = "namePreferredLast") String namePreferredLast,
+                @JsonProperty(value = "namePrivacyFirst") String namePrivacyFirst,
+                @JsonProperty(value = "namePrivacyLast") String namePrivacyLast,
                 @JsonProperty(value = "nameOnIdFirst") String nameOnIdFirst,
                 @JsonProperty(value = "nameOnIdLast") String nameOnIdLast,
                 @JsonProperty(value = "phone") String phoneNumber,
@@ -88,6 +91,8 @@ public class StaffImportFile {
             this.id = id;
             this.namePreferredFirst = namePreferredFirst;
             this.namePreferredLast = namePreferredLast;
+            this.namePrivacyFirst = namePrivacyFirst;
+            this.namePrivacyLast = namePrivacyLast;
             this.nameOnIdFirst = nameOnIdFirst;
             this.nameOnIdLast = nameOnIdLast;
             this.phoneNumber = phoneNumber;
@@ -113,6 +118,10 @@ public class StaffImportFile {
         public String getNamePreferredLast() {
             return namePreferredLast;
         }
+
+        public String getNamePrivacyFirst() { return namePrivacyFirst; }
+
+        public String getNamePrivacyLast() { return namePrivacyLast; }
 
         public String getNameOnIdFirst() {
             return nameOnIdFirst;
