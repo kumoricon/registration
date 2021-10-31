@@ -81,13 +81,15 @@ public class StaffImportService extends ImportService {
     }
 
     private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person, List<String> positions) {
-        // TOOD: Corner cases here!
+        // TODO: Corner cases here!
 
         staff.setUuid(person.getId());
         staff.setFirstName(person.getNamePreferredFirst());
         staff.setLastName(person.getNamePreferredLast());
         staff.setLegalFirstName(person.getNameOnIdFirst());
         staff.setLegalLastName(person.getNameOnIdLast());
+        staff.setNamePrivacyFirst(person.getNamePrivacyFirst());
+        staff.setNamePrivacyLast(person.getNamePrivacyLast());
         staff.setPhoneNumber(person.getPhoneNumber());
         staff.setPreferredPronoun(person.getPreferredPronoun());
         staff.setBirthDate(LocalDate.parse(person.getBirthdate()));
@@ -114,6 +116,8 @@ public class StaffImportService extends ImportService {
                 !Objects.equals(staff.getLastName(), person.getNamePreferredLast()) ||
                 !Objects.equals(staff.getLegalFirstName(), person.getNameOnIdFirst()) ||
                 !Objects.equals(staff.getLegalLastName(), person.getNameOnIdLast()) ||
+                !Objects.equals(staff.getNamePrivacyFirst(), person.getNamePrivacyFirst()) ||
+                !Objects.equals(staff.getNamePrivacyLast(), person.getNamePrivacyLast()) ||
                 !Objects.equals(staff.getPhoneNumber(), person.getPhoneNumber()) ||
                 !Objects.equals(staff.getPreferredPronoun(), person.getPreferredPronoun()) ||
                 !Objects.equals(staff.getBirthDate().toString(), person.getBirthdate()) ||

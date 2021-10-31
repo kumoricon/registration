@@ -13,6 +13,8 @@ public class Staff {
     private String lastName;
     private String legalFirstName;
     private String legalLastName;
+    private String namePrivacyFirst;
+    private String namePrivacyLast;
     private String phoneNumber;
     private String preferredPronoun;
     private String shirtSize;
@@ -82,6 +84,22 @@ public class Staff {
 
     public void setLegalLastName(String legalLastName) {
         this.legalLastName = legalLastName;
+    }
+
+    public String getNamePrivacyFirst() {
+        return namePrivacyFirst;
+    }
+
+    public void setNamePrivacyFirst(String namePrivacyFirst) {
+        this.namePrivacyFirst = namePrivacyFirst;
+    }
+
+    public String getNamePrivacyLast() {
+        return namePrivacyLast;
+    }
+
+    public void setNamePrivacyLast(String namePrivacyLast) {
+        this.namePrivacyLast = namePrivacyLast;
     }
 
     public String getPhoneNumber() { return phoneNumber; }
