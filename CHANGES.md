@@ -1,4 +1,6 @@
 # Change History
+Version 1.5.0 (pending)
+
 Version 1.4.0 (10/31/2021)
 - Use privacy name when printing staff badges
 
