@@ -1,5 +1,6 @@
 # Change History
-Version 1.4.0 (pending)
+Version 1.4.0 (10/31/2021)
+- Use privacy name when printing staff badges
 
 Version 1.3.0 (10/26/2021)
 - Added event registration system export
