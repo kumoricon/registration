@@ -196,12 +196,12 @@ public class BadgePrintService extends PrintService {
         return badgeDTOS;
     }
 
-    private List<StaffBadgeDTO> staffBadgeDTOsFromStaff(@NotNull List<Staff> staffList) {
+    List<StaffBadgeDTO> staffBadgeDTOsFromStaff(@NotNull List<Staff> staffList) {
         List<StaffBadgeDTO> staffBadgeDTOS = new ArrayList<>();
         for (Staff s : staffList) {
             StaffBadgeDTO sb = new StaffBadgeDTO.Builder()
-                    .withFirstName(s.getFirstName())
-                    .withLastName(s.getLastName())
+                    .withFirstName(s.getPrivacyNameFirst()) // Note: Staff's privacy name gets used on the badge
+                    .withLastName(s.getPrivacyNameLast())   // rather than their preferred first/last name
                     .withAgeRange(s.getAgeCategoryAtCon())
                     .withDepartment(s.getDepartment())
                     .withDepartmentBackgroundColor(s.getDepartmentColorCode())
