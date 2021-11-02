@@ -85,7 +85,7 @@ public class EventReservationExportService {
     @PostConstruct
     public void createDirectory() {
         try {
-            if (exportPath != null) {
+            if (exportPathString != null) {
                 exportPath = Files.createDirectories(Paths.get(exportPathString));
                 log.info("{} export path: {}", this.getClass().getSimpleName(), exportPath.toAbsolutePath());
             } else {
