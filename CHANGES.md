@@ -1,6 +1,7 @@
 # Change History
 Version 1.5.0 (pending)
 - Event reservation export fix
+- Remove year from staff badge export
 
 Version 1.4.0 (10/31/2021)
 - Use privacy name when printing staff badges

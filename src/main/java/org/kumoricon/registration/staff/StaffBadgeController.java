@@ -92,7 +92,7 @@ public class StaffBadgeController {
         boolean keepRunning = true;
         while (keepRunning) {
             long startTime = System.currentTimeMillis();
-            File file = Paths.get("/tmp", "2019-staff-badges-" + start + ".pdf").toFile();
+            File file = Paths.get("/tmp", "staff-badges-" + start + ".pdf").toFile();
             List<Staff> staffList = staffRepository.findAllWithPositions((start-1)*50);
             InputStream pdfStream = badgePrintService.generateStaffPDF(staffList, Sides.BOTH, printerSettings);
             byte[] media = pdfStream.readAllBytes();
