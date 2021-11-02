@@ -1,5 +1,7 @@
 # Change History
-Version 1.5.0 (pending)
+Version 1.6.0 (pending)
+
+Version 1.5.0 (11/01/2021)
 - Event reservation export fix
 - Remove year from staff badge export
 - During staff check in, show privacy name
