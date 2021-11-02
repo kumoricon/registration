@@ -14,7 +14,7 @@
             </span><br>
             <span th:text="|T-Shirt Size: ${staff.shirtSize}|"></span><br>
             <span th:if="${staff.badgePrinted}">
-                Badge already printed. <a th:href="@{/staff/{uuid}(uuid=${staff.uuid})}">View Staff</a>
+                Badge already printed (<span th:text="|${staff.privacyNameFirst} ${staff.privacyNameLast}|"></span>). <a th:href="@{/staff/{uuid}(uuid=${staff.uuid})}">View Staff</a>
             </span>
         </div>
     </div>
