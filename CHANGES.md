@@ -1,6 +1,7 @@
 # Change History
-Version 1.6.0 (pending)
-
+Version 1.5.1 (11/02/2021)
+- Fix missing last modified timestamp for attendees in event registration export
+ 
 Version 1.5.0 (11/01/2021)
 - Event reservation export fix
 - Remove year from staff badge export

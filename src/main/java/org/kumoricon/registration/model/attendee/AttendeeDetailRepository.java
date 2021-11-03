@@ -97,6 +97,7 @@ public class AttendeeDetailRepository {
             a.setOrderId(rs.getInt("order_id"));
             a.setMembershipRevoked(rs.getBoolean("membership_revoked"));
             a.setAccessibilitySticker(rs.getBoolean("accessibility_sticker"));
+            a.setLastModified(rs.getObject("last_modified", OffsetDateTime.class));
             return a;
         }
     }
