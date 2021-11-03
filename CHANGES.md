@@ -1,4 +1,6 @@
 # Change History
+Version 1.6.0 (Pending)
+
 Version 1.5.1 (11/02/2021)
 - Fix missing last modified timestamp for attendees in event registration export
  
