@@ -1,8 +1,10 @@
 package org.kumoricon.registration.inlinereg.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InLineRegistrationAttendee {
     private final String uuid;
     private final String firstName;

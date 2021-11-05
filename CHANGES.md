@@ -1,4 +1,7 @@
 # Change History
+Version 1.6.1 (11/05/2021)
+- Ignore unknown fields in In-Line Registration import data
+
 Version 1.6.0 (11/04/2021)
  - Make sure attendee fields not in the edit form are preserved (bug where attendees would not be 
    checked in if they were edited)
