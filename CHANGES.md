@@ -1,6 +1,8 @@
 # Change History
 Version 1.6.0 (Pending)
- - Make sure attendee fields not in the edit form are preserved
+ - Make sure attendee fields not in the edit form are preserved (bug where attendees would not be 
+   checked in if they were edited)
+ - Add expiration to printer settings cookie so it persists across sessions
 
 Version 1.5.1 (11/02/2021)
 - Fix missing last modified timestamp for attendees in event registration export

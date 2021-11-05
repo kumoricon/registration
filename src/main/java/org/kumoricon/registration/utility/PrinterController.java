@@ -21,7 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Locale;
 
 @Controller
 public class PrinterController {
@@ -95,10 +99,19 @@ public class PrinterController {
             log.info("Setting printer to {}", settings);
             try {
                 model.addAttribute("printer", newPrinter);
-                Cookie cookie = new Cookie(CookieControllerAdvice.PRINTER_COOKIE_NAME, settings.asCookieValue());
-                cookie.setPath("/");
-                cookie.setHttpOnly(true);
-                response.addCookie(cookie);
+
+                // Build the Set-Cookie header manually because not all the options are supported
+                // by the Java cookie class
+                StringBuilder cookie = new StringBuilder(CookieControllerAdvice.PRINTER_COOKIE_NAME);
+                cookie.append("=");
+                cookie.append(settings.asCookieValue());
+                cookie.append("; ");
+                DateFormat df = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss 'GMT'", Locale.US);
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.YEAR, 1);
+                cookie.append("Expires=" + df.format(cal.getTime()) + "; ");
+                cookie.append("Path=/; SameSite=Strict; HttpOnly; ");
+                response.setHeader("Set-Cookie", cookie.toString());
             } catch (Exception e) {
                 log.error("Error setting printer to {}", newPrinter, e);
                 model.addAttribute("err", e.getMessage());
