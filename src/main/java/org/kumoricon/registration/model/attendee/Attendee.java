@@ -251,4 +251,25 @@ public class Attendee {
             return fanName;
         }
     }
+
+    public void updateFrom(Attendee other) {
+        this.firstName = other.getFirstName();
+        this.lastName = other.getLastName();
+        this.legalFirstName = other.getLegalFirstName();
+        this.legalLastName = other.getLegalLastName();
+        this.nameIsLegalName = other.getNameIsLegalName();
+        this.fanName = other.getFanName();
+        this.preferredPronoun = other.getPreferredPronoun();
+        this.birthDate = other.getBirthDate();
+        this.phoneNumber = other.getPhoneNumber();
+        this.email = other.getEmail();
+        this.zip = other.getZip();
+        this.country = other.getCountry();
+        this.emergencyContactFullName = other.getEmergencyContactFullName();
+        this.emergencyContactPhone = other.getEmergencyContactPhone();
+        this.parentFullName = other.getParentFullName();
+        this.parentPhone = other.getParentPhone();
+        this.badgeId = other.getBadgeId();
+        this.parentFormReceived = other.getParentFormReceived();
+    }
 }

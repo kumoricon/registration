@@ -58,12 +58,14 @@ public class OrderAttendeeEditController {
                                    @PathVariable Integer orderId,
                                    @PathVariable Integer attendeeId) {
 
+        Attendee serverAttendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
         setAttendeePaidAmount(attendee);
+        serverAttendee.updateFrom(attendee);
 
         try {
             if (principal.hasRight("attendee_edit")) {
                 log.info("saved attendee {}", attendee);
-                attendeeRepository.save(attendee);
+                attendeeRepository.save(serverAttendee);
                 attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), note));
                 return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved";
             } else {
@@ -73,8 +75,8 @@ public class OrderAttendeeEditController {
                 } else if (!override.hasRight("attendee_edit")) {
                     throw new RuntimeException("Override user does not have permission to provide override");
                 }
-                log.info("saved attendee {} with override by {}", attendee, override.getUsername());
-                attendeeRepository.save(attendee);
+                log.info("saved attendee {} with override by {}", serverAttendee, override.getUsername());
+                attendeeRepository.save(serverAttendee);
                 attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), note + "\n\n(Edited with override from " + override +")"));
                 return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved+with+override";
             }
