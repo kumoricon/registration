@@ -1,5 +1,5 @@
 # Change History
-Version 1.6.0 (Pending)
+Version 1.6.0 (11/04/2021)
  - Make sure attendee fields not in the edit form are preserved (bug where attendees would not be 
    checked in if they were edited)
  - Add expiration to printer settings cookie so it persists across sessions
