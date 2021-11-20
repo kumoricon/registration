@@ -8,25 +8,43 @@
 <div layout:fragment="content" class="container">
     <h1>Check Ins by Hour</h1>
 
-    <table class="table table-bordered table-striped table-sm col-7">
+    <table class="table table-bordered table-striped table-sm col-12">
         <thead class="thead-dark">
             <tr>
                 <th>Date</th>
-                <th>Pre Reg Checked In</th>
-                <th>At Con Checked In</th>
+                <th>Attendee Pre Reg</th>
+                <th>Attendee At Con</th>
+                <th></th>
+                <th>VIP Pre Reg</th>
+                <th>VIP At Con</th>
+                <th></th>
+                <th>Speciality Pre Reg</th>
+                <th>Speciality At Con</th>
+                <th></th>
+                <th>Staff</th>
+                <th></th>
                 <th>Total</th>
             </tr>
         </thead>
         <tbody>
             <tr th:if="${data.empty}">
-                <td colspan="5"> No Check In Records Found </td>
+                <td colspan="13"> No Check In Records Found </td>
             </tr>
             <tr th:each="d : ${data}">
                 <!--/*@thymesVar id="dts" type="org.kumoricon.registration.helpers.DateTimeService"*/-->
                 <td class="text-nowrap" th:text="${dts.format(d.start)}">2019-01-01</td>
-                <td class="text-right" th:text="${d.preregCheckIn}">33</td>
-                <td class="text-right" th:text="${d.atConCheckIn}">11</td>
-                <td class="text-right" th:text="${d.total}">54</td>
+                <td class="text-right" th:text="${d.attendeePreRegCheckedIn}">33</td>
+                <td class="text-right" th:text="${d.attendeeAtConCheckedIn}">11</td>
+                <td></td>
+                <td class="text-right" th:text="${d.vipPreRegCheckedIn}">44</td>
+                <td class="text-right" th:text="${d.vipAtConCheckedIn}">22</td>
+                <td></td>
+                <td class="text-right" th:text="${d.specialityPreRegCheckedIn}">55</td>
+                <td class="text-right" th:text="${d.specialityAtConCheckedIn}">33</td>
+                <td></td>
+                <td class="text-right" th:text="${d.staffCheckedIn}">76</td>
+                <td></td>
+                <td class="text-right" th:text="${d.total}">999</td>
             </tr>
         </tbody>
     </table>

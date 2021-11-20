@@ -58,24 +58,92 @@ public class AttendeeRepository {
     @Transactional(readOnly = true)
     public List<CheckInByHourDTO> findCheckInCountsByHour() {
         String sql = """
-                    SELECT date_trunc('hour', check_in_time) at time zone 'utc' as checkInDate, COALESCE(atConCheckedIn.cnt, 0) as AtConCheckedIn, COALESCE(preRegCheckedIn.cnt, 0) as PreRegCheckedIn,
-                    COUNT(checked_in) as Total FROM attendees
-                    LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt
-                    FROM attendees  WHERE attendees.checked_in = TRUE
-                    AND attendees.pre_registered = TRUE
-                    GROUP BY aCheckInDate) as preRegCheckedIn
-                    ON date_trunc('hour', check_in_time) = preRegCheckedIn.aCheckInDate
-                    LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate,
-                    COUNT(attendees.checked_in) as cnt
-                    FROM attendees
-                    WHERE attendees.checked_in = TRUE
-                    AND attendees.pre_registered = FALSE
-                    GROUP BY aCheckInDate) as atConCheckedIn
-                    ON date_trunc('hour', check_in_time) = atConCheckedIn.aCheckInDate
-                    WHERE checked_in = TRUE
-                    GROUP BY date_trunc('hour', check_in_time), checkInDate, atConCheckedIn.cnt, preRegCheckedIn.cnt
-                    ORDER BY checkInDate DESC;
-                    """;
+        SELECT checkInHour,
+               COALESCE(attendeeAtConCheckedIn.cnt, 0)   as AttendeeAtConCheckedIn,
+               COALESCE(attendeePreRegCheckedIn.cnt, 0)  as AttendeePreRegCheckedIn,
+               COALESCE(vipAtConCheckedIn.cnt, 0)        as VIPAtConCheckedIn,
+               COALESCE(vipPreRegCheckedIn.cnt, 0)       as VIPPreRegCheckedIn,
+               COALESCE(specialtyAtConCheckedIn.cnt, 0)  as SpecialtyAtConCheckedIn,
+               COALESCE(specialtyPreRegCheckedIn.cnt, 0) as SpecialtyPreRegCheckedIn,
+               COALESCE(staffCheckedIn.cnt, 0)           as StaffCheckedIn
+        
+        FROM (SELECT distinct date_trunc('hour', check_in_time) at time zone 'utc' as checkInHour
+              from attendees
+              where check_in_time is not null
+              UNION
+              select date_trunc('hour', checked_in_at) at time zone 'utc' as checkInDate
+              from staff
+              where checked_in_at is not null) as periods
+                 -- Regular attendees PreReg
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt
+                                  FROM attendees
+                                           JOIN badges b on attendees.badge_id = b.id
+                                  WHERE attendees.checked_in = TRUE
+                                    AND attendees.pre_registered = TRUE
+                                    AND b.badge_type = 0
+                                  GROUP BY aCheckInDate) as attendeePreRegCheckedIn
+                                 ON checkInHour = attendeePreRegCheckedIn.aCheckInDate
+            -- Regular attendees At Con
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate,
+                                         COUNT(attendees.checked_in)       as cnt
+                                  FROM attendees
+                                           JOIN badges b on attendees.badge_id = b.id
+                                  WHERE attendees.checked_in = TRUE
+                                    AND attendees.pre_registered = FALSE
+                                    AND b.badge_type = 0
+                                  GROUP BY aCheckInDate) as attendeeAtConCheckedIn
+                                 ON checkInHour = attendeeAtConCheckedIn.aCheckInDate
+            -- VIP Pre Reg
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt
+                                  FROM attendees
+                                           JOIN badges b on attendees.badge_id = b.id
+                                  WHERE attendees.checked_in = TRUE
+                                    AND attendees.pre_registered = TRUE
+                                    AND b.badge_type = 1
+                                  GROUP BY aCheckInDate) as vipPreRegCheckedIn
+                                 ON checkInHour = vipPreRegCheckedIn.aCheckInDate
+            -- VIP At Con
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate,
+                                         COUNT(attendees.checked_in)       as cnt
+                                  FROM attendees
+                                           JOIN badges b on attendees.badge_id = b.id
+                                  WHERE attendees.checked_in = TRUE
+                                    AND attendees.pre_registered = FALSE
+                                    AND b.badge_type = 1
+                                  GROUP BY aCheckInDate) as vipAtConCheckedIn
+                                 ON checkInHour = vipAtConCheckedIn.aCheckInDate
+            -- Specialty Pre Reg
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate, COUNT(attendees.checked_in) as cnt
+                                  FROM attendees
+                                           JOIN badges b on attendees.badge_id = b.id
+                                  WHERE attendees.checked_in = TRUE
+                                    AND attendees.pre_registered = TRUE
+                                    AND b.badge_type = 2
+                                  GROUP BY aCheckInDate) as specialtyPreRegCheckedIn
+                                 ON checkInHour = specialtyPreRegCheckedIn.aCheckInDate
+            -- Specialty At Con
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', check_in_time) as aCheckInDate,
+                                         COUNT(attendees.checked_in)       as cnt
+                                  FROM attendees
+                                           JOIN badges b on attendees.badge_id = b.id
+                                  WHERE attendees.checked_in = TRUE
+                                    AND attendees.pre_registered = FALSE
+                                    AND b.badge_type = 2
+                                  GROUP BY aCheckInDate) as specialtyAtConCheckedIn
+                                 ON checkInHour = specialtyAtConCheckedIn.aCheckInDate
+            -- Staff
+                 LEFT OUTER JOIN (SELECT date_trunc('hour', checked_in_at) as aCheckInDate,
+                                         COUNT(staff.checked_in)           as cnt
+                                  FROM staff
+                                  WHERE staff.checked_in = TRUE
+                                  GROUP BY aCheckInDate) as staffCheckedIn
+                                 ON checkInHour = staffCheckedIn.aCheckInDate
+        
+        GROUP BY checkInHour, attendeeAtConCheckedIn.cnt, attendeePreRegCheckedIn.cnt,
+                 vipAtConCheckedIn.cnt, vipPreRegCheckedIn.cnt, specialtyAtConCheckedIn.cnt, specialtyPreRegCheckedIn.cnt,
+                 staffCheckedIn
+        ORDER BY checkInHour DESC;
+		""";
 
         try {
             return jdbcTemplate.query(sql, new CheckInByHourDTORowMapper());
@@ -166,7 +234,7 @@ public class AttendeeRepository {
                             emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
                             legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid,
                             paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
-                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked, 
+                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked,
                             accessibility_sticker, last_modified) VALUES
                             (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
                              :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
@@ -371,9 +439,14 @@ public class AttendeeRepository {
         @Override
         public CheckInByHourDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new CheckInByHourDTO(
-                    rs.getObject("checkInDate", OffsetDateTime.class),
-                    rs.getInt("preregcheckedin"),
-                    rs.getInt("atconcheckedin"));
+                    rs.getObject("checkInHour", OffsetDateTime.class),
+                    rs.getInt("attendeepreregcheckedin"),
+                    rs.getInt("attendeeatconcheckedin"),
+                    rs.getInt("vippreregcheckedin"),
+                    rs.getInt("vipatconcheckedin"),
+                    rs.getInt("specialtypreregcheckedin"),
+                    rs.getInt("specialtyatconcheckedin"),
+                    rs.getInt("staffcheckedin"));
         }
     }
 

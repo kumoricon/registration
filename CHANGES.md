@@ -1,5 +1,6 @@
 # Change History
 Version 1.6.2 (Pending)
+- Break out check in by hour report by badge type
 
 Version 1.6.1 (11/05/2021)
 - Ignore unknown fields in In-Line Registration import data
