@@ -39,8 +39,8 @@ public class ReprintController {
                                @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie,
                                @AuthenticationPrincipal User user) {
         Attendee attendee = attendeeRepository.findByIdAndOrderId(attendeeId, orderId);
-        log.info("reprinting badge for {}", attendee);
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+        log.info("reprinting badge for {} with {}", attendee, printerSettings);
 
         try {
             String result = badgePrintService.printBadgesForAttendees(List.of(attendee), printerSettings);

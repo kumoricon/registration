@@ -57,10 +57,9 @@ public class InLineRegistrationController {
     public String inLineCheckInPost(Model model,
                                     @RequestParam UUID orderUuid,
                                     @AuthenticationPrincipal User user) {
-        log.info("Creating order for in-line registration order {}", orderUuid);
-
         try {
             int orderId = inLineRegistrationService.createOrder(orderUuid, user);
+            log.info("created order ID {} for in-line registration order {}", orderId, orderUuid);
             return "redirect:/reg/atconorder/" + orderId;
         } catch (NotFoundException ex) {
             // Instead of bubbling up to the error page, stay on this page and display the search box
