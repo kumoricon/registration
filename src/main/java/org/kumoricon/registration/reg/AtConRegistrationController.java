@@ -83,8 +83,8 @@ public class AtConRegistrationController {
     @RequestMapping(value = "/reg/atconorder/new", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('at_con_registration')")
     public String newOrder(@AuthenticationPrincipal User principal) {
-        log.info("creating new order");
         Integer newId = orderService.saveNewOrderForUser(principal);
+        log.info("created order ID {}", newId);
         return "redirect:/reg/atconorder/" + newId + "/attendee/new";
     }
 
@@ -93,9 +93,9 @@ public class AtConRegistrationController {
     public String orderComplete(@PathVariable Integer orderId,
                                 @AuthenticationPrincipal User principal,
                                 @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie) {
-        log.info("completing order {} and printing badges", orderId);
         orderService.completeOrder(orderId, principal);
         PrinterSettings printerSettings = PrinterSettings.fromCookieValue(printerCookie);
+        log.info("completing order {} and printing badges with {}", orderId, printerSettings);
         List<Attendee> attendees = attendeeRepository.findAllByOrderId(orderId);
 
         try {
