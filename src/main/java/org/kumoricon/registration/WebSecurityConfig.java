@@ -33,6 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutUrl("/logout").permitAll()
                     .logoutSuccessUrl("/login?logout")
             .and()
+                .csrf()
+                    .ignoringAntMatchers("/login")
+            .and()
                 .formLogin()
                     .loginPage("/login").permitAll();
 

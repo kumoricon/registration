@@ -1,5 +1,7 @@
 # Change History
-Version 1.6.2 (Pending)
+
+Version 2.0.0 (Pending)
+- Fix problem logging in after session time out
 
 Version 1.6.1 (11/05/2021)
 - Ignore unknown fields in In-Line Registration import data
