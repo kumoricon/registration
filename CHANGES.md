@@ -2,6 +2,8 @@
 
 Version 2.0.0 (Pending)
 - Fix problem logging in after session time out
+- Library version upgrades
+- Require Java 17 instead of 16
 
 Version 1.6.1 (11/05/2021)
 - Ignore unknown fields in In-Line Registration import data
