@@ -6,5 +6,5 @@ Priority: low
 Architecture: all
 Description: [[description]]
 Maintainer: Jason Short <jason@sheersky.com>
-Depends: openjdk-16-jdk-headless, cups, cups-bsd, hplip
+Depends: openjdk-17-jdk-headless, cups, cups-bsd, hplip
 Recommends: fonts-dejavu, fonts-takao-mincho, fonts-takao, unifont, ttf-unifont, fonts-noto, fonts-noto-cjk-extra, ttf-wqy-zenhei, ttf-wqy-microhei

@@ -15,7 +15,8 @@
 	<description>Attendee registration system</description>
 
 	<properties>
-		<java.version>16</java.version>
+		<java.version>17</java.version>
+		<java.version>17</java.version>
 		<homepage>https://github.com/kumoregdev/registration</homepage>
 	</properties>
 
