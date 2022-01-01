@@ -48,7 +48,7 @@ public class Attendee {
     private boolean accessibilitySticker;
     private OffsetDateTime lastModified;
     // Possible values for Preferred pronoun field
-    public static final List<String> PRONOUNS = Arrays.asList(null, "He/Him", "She/Her", "They/Them", "Ask Me My Pronouns");
+    public static final List<String> PRONOUNS = Arrays.asList(null, "He/Him", "She/Her", "They/Them", "He/They", "She/They", "Ask Me My Pronouns");
 
     public Attendee() {
         this.paidAmount = null;
