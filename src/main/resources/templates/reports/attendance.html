@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
 <head>
-    <title>Active Logins</title>
+    <title>Attendance Report</title>
 </head>
 <body>
 
@@ -9,34 +9,129 @@
 
     <h1>Attendance</h1>
 
-    <table class="table table-bordered table-striped table-sm table-fit">
+    <table class="table table-bordered table-striped table-sm table-fit mt-5">
         <tbody>
             <tr>
-                <td>Total Convention Members</td>
-                <td th:text="${counts.totalConventionMembers}">0</td>
+                <th class="font-weight-bolder h4 p-2">Paid Attendance</th>
+                <td class="font-weight-bolder h4 text-right p-2" th:text="${counts.paidAttendance}">0</td>
+                <td><b>Reporting on attendance at or after con? Use this!</b><br>
+                    <i>Counts paid attendees only — not exhibitors, staff, etc.</i>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="row-header p-2">Total Convention Members</th>
+                <td class="text-right p-2" th:text="${counts.totalConventionMembers}">0</td>
+                <td>Want to know how much work Registration and MSO had to do? Use this.<br>
+                    <i>People registered for any badge type (including staff), whether or not checked in</i></td>
             </tr>
             <tr>
-                <td>Body Count</td>
-                <td th:text="${counts.warmBodyCount}">0</td>
+                <th class="row-header p-2">Total Paid Members</td>
+                <td class="text-right p-2" th:text="${counts.paidMembers}">0</td>
+                <td><i>Everyone registered for a badge, whether showed up or not, but dropping free badges</i></td>
             </tr>
             <tr>
-                <td>Total Paid Members</td>
-                <td th:text="${counts.paidMembers}">0</td>
-            </tr>
-            <tr>
-                <td>Paid Attendance</td>
-                <td th:text="${counts.paidAttendance}">0</td>
+                <th class="row-header p-2">Body Count</td>
+                <td class="text-right p-2" th:text="${counts.warmBodyCount}">0</td>
+                <td>Telling the fire marshal how many people are on site? Use this!<br>
+                    <i>People who have picked up a badge, whether they paid for it.<br> Guest badges are always counted as checked in because they don't come to Registration to check in</i></td>
             </tr>
         </tbody>
     </table>
 
-    <b>These numbers are NOT deduplicated and will be revised post-con</b>
+    <b class="text-danger">These numbers are NOT deduplicated and will be revised post-con</b>
 
-    <ul>
-        <li>Total convention members – Everybody registered for a badge, whether showed up or not</li>
-        <li>Body count – Above, but drop people who don’t show up <i>Guest badges are always counted as checked in because they don't come to Registration to check in</i></li>
-        <li>Total paid members – Everybody registered for a badge, whether showed up or not, but dropping free badges</li>
-        <li>Paid attendance – Only counting paid “attendees”—not exhibitors, etc.</li>
+
+    <table class="table table-striped table-header-rotated mt-5">
+        <thead>
+        <tr>
+            <th></th>
+            <th class="rotate-45"><div><span>Paid Attendance Unique</span></div></th>
+            <th class="rotate-45"><div><span>Total Convention Members Unique</span></div></th>
+            <th class="rotate-45"><div><span>Total Paid Members Unique</span></div></th>
+            <th class="rotate-45"><div><span>Body Count Unique</span></div></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th class="row-header">Pre-registered attendee<br> At-door weekend attendee</th>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        <tr>
+            <th class="row-header">Registers for single day</th>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+        </tr>
+        <tr>
+            <th class="row-header">Registers for single day,
+                comes back next day and registers for another <a href="#footnote1" id="from-footnote1">[1]</a></th>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+        </tr>
+        <tr>
+            <th class="row-header">VIP</th>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        <tr>
+            <th class="row-header">Free under-6 attendee</th>
+            <td></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        <tr>
+            <th class="row-header">Staff</th>
+            <td></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        <tr>
+            <th class="row-header">Panelist, Press, Industry, Guest</th>
+            <td></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        <tr>
+            <th class="row-header">Artist, Exhibitor</th>
+            <td></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        <tr>
+            <th class="row-header">Lifetime member</th>
+            <td></td>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td></td>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+        </tr>
+        </tbody>
+    </table>
+    <table>
+        <tr>
+            <td><img src="/img/icon-check.svg" width="32" height="32" alt="Counted"></td>
+            <td>Counted</td>
+        </tr>
+        <tr>
+            <td><img src="/img/icon-circle.svg" width="32" height="32" alt="Counted only if checked in"></i></td>
+            <td>Counted only if checked in</td>
+        </tr>
+    </table>
+    <ul class="list-unstyled mt-2">
+        <li id="footnote1"><a href="#from-footnote1">[1]</a> Used to be double-counted in the past, but we now actively track these in a unified database so
+            we have the capability of detecting duplicates. Now correctly single-counted.</li>
     </ul>
 
 </div>
