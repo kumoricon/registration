@@ -93,3 +93,52 @@ table.table-fit tbody td, table.table-fit tfoot td {
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(300px, 1fr));
 }
+
+.table-header-rotated th.row-header{
+    width: auto;
+}
+
+.table-header-rotated td{
+    width: 40px;
+    border-top: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table-header-rotated th.rotate-45{
+    height: 80px;
+    width: 80px;
+    min-width: 80px;
+    max-width: 40px;
+    position: relative;
+    vertical-align: bottom;
+    padding: 0;
+    font-size: 12px;
+    line-height: 0.8;
+}
+
+.table-header-rotated th.rotate-45 > div{
+    position: relative;
+    top: 0;
+    left: 40px;
+    height: 100%;
+    -ms-transform:skew(-45deg,0deg);
+    transform:skew(-45deg,0deg);
+    overflow: hidden;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    border-top: 1px solid #dddddd;
+}
+
+.table-header-rotated th.rotate-45 span {
+    -ms-transform:skew(45deg,0deg) rotate(315deg);
+    transform:skew(45deg,0deg) rotate(315deg);
+    position: absolute;
+    bottom: 30px;
+    left: -10px;
+    display: inline-block;
+    width: 85px;
+    text-align: left;
+}

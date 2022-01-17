@@ -5,6 +5,7 @@ Version 2.0.0 (Pending)
 - Library version upgrades
 - Require Java 17 instead of 16
 - Added He/They and She/They pronouns
+- Clarified Attendance report
 
 Version 1.6.1 (11/05/2021)
 - Ignore unknown fields in In-Line Registration import data
