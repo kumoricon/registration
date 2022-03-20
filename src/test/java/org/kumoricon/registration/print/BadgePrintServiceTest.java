@@ -21,10 +21,11 @@ class BadgePrintServiceTest {
     BadgeImageService badgeImageService = mock(BadgeImageService.class);
     BadgeResourceService badgeResourceService = mock(BadgeResourceService.class);
     SettingsService settingsService = mock(SettingsService.class);
+    Boolean withAttendeeBackground = mock(Boolean.class);
 
     @BeforeEach
     void setUp() {
-        badgePrintService = new BadgePrintService(printerInfoService, badgeService, badgeImageService, badgeResourceService, settingsService);
+        badgePrintService = new BadgePrintService(printerInfoService, badgeService, badgeImageService, badgeResourceService, settingsService, withAttendeeBackground);
     }
 
     @Test
