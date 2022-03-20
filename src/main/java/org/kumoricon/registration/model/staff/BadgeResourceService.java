@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @Service
 public class BadgeResourceService {
@@ -52,6 +53,14 @@ public class BadgeResourceService {
     }
 
     public BadgeResource getBadgeResourceFor(BadgeType badgeType) {
+        return getBadgeResourceForWithBackground(badgeType, printAttendeeBackgrounds);
+    }
+
+    public BadgeResource getBadgeResourceForWithBackground(BadgeType badgeType, Boolean withAttendeeBackground) {
+        if (!withAttendeeBackground.equals(printAttendeeBackgrounds)) {
+            setAttendeeBackground(badgeType, withAttendeeBackground);
+        }
+
         switch (badgeType) {
             case ATTENDEE:
                 return getAttendeeBadgeResources();
@@ -66,6 +75,21 @@ public class BadgeResourceService {
             default:
                 log.warn("Tried to get badge resources for type {} that is not supported in BadgeResourceService", badgeType);
                 return getAttendeeBadgeResources();
+        }
+    }
+
+    private void setAttendeeBackground(BadgeType badgeType, Boolean withAttendeeBackground) {
+        log.info("Overriding current printAttendeeBackground setting of {} to {}", printAttendeeBackgrounds, withAttendeeBackground);
+        Map<Boolean, PDDocument> backgroundFuncMap = Map.of(
+                true, loadBackground("Print - Kumoricon-2021-Badge-" + badgeType + ".pdf"),
+                false, buildBlankAttendeeBadge()
+        );
+
+        switch (badgeType) {
+            case ATTENDEE -> attendeeBadgeBackground = backgroundFuncMap.get(withAttendeeBackground);
+            case VIP -> vipBadgeBackground = backgroundFuncMap.get(withAttendeeBackground);
+            case SPECIALTY -> specialtyBadgeBackground = backgroundFuncMap.get(withAttendeeBackground);
+            default -> log.warn("Tried to set attendee badge background for type {} that is not supported in BadgeResourceService", badgeType);
         }
     }
 
