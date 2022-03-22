@@ -30,18 +30,16 @@ public class BadgeExportService {
     private final GuestRepository guestRepository;
     private final StaffRepository staffRepository;
     private final BadgePrintService badgePrintService;
-    private final BadgeExport badgeExport;
 
     public BadgeExportService(AttendeeRepository attendeeRepository, GuestRepository guestRepository, StaffRepository staffRepository,
-                              BadgePrintService badgePrintService, BadgeExport badgeExport) {
+                              BadgePrintService badgePrintService) {
         this.attendeeRepository = attendeeRepository;
         this.guestRepository = guestRepository;
         this.staffRepository = staffRepository;
         this.badgePrintService = badgePrintService;
-        this.badgeExport = badgeExport;
     }
 
-    public void delegateBadgeExport(PrinterSettings printerSettings) {
+    public void delegateBadgeExport(BadgeExport badgeExport, PrinterSettings printerSettings) {
         switch (badgeExport.getType()) {
             case "Attendee", "Vip", "Specialty" -> exportAttendeeBadgesByType(badgeExport.getPath(), badgeExport.getType(),
                     badgeExport.isMarkPreprinted(), badgeExport.isWithAttendeeBackground(), printerSettings);

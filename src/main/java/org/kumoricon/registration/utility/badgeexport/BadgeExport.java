@@ -1,9 +1,5 @@
 package org.kumoricon.registration.utility.badgeexport;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-@Component
 public class BadgeExport {
 
     private String type;
@@ -11,7 +7,7 @@ public class BadgeExport {
     private boolean markPreprinted;
     private String path = "/tmp";
 
-    public BadgeExport(@Value("${badge.printAttendeeBackgrounds}") boolean withAttendeeBackground) {
+    public BadgeExport(boolean withAttendeeBackground) {
         this.withAttendeeBackground = withAttendeeBackground;
     }
 
