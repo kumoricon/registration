@@ -12,6 +12,7 @@
             <label class="col-form-label-sm">Badge type</label>
             <select th:field="*{type}" class="form-control">
                 <option th:each="badgeType : ${T(org.kumoricon.registration.model.badge.BadgeType).values()}"
+                        th:if="${badgeType.toString != 'Attendee' and badgeType.toString != 'Specialty'}"
                         th:value="${badgeType}"
                         th:text="${badgeType}">
                 </option>

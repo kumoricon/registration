@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,10 +42,11 @@ public class BadgeExportService {
 
     public void delegateBadgeExport(BadgeExport badgeExport, PrinterSettings printerSettings) {
         switch (badgeExport.getType()) {
-            case "Attendee", "Vip", "Specialty" -> exportAttendeeBadgesByType(badgeExport.getPath(), badgeExport.getType(),
+            case "Vip" -> exportAttendeeBadgesByType(badgeExport.getPath(), badgeExport.getType(),
                     badgeExport.isMarkPreprinted(), badgeExport.isWithAttendeeBackground(), printerSettings);
             case "Staff" -> exportStaffBadges(badgeExport.getPath(), printerSettings);
             case "Guest" -> exportGuestBadges(badgeExport.getPath(), printerSettings);
+            case "Attendee", "Specialty" -> log.warn("{} badge export not supported", badgeExport.getType());
             default -> log.error("{} badge type not recognized", badgeExport.getType());
         }
     }
