@@ -58,7 +58,7 @@ public class BadgeResourceService {
 
     public BadgeResource getBadgeResourceForWithBackground(BadgeType badgeType, Boolean withAttendeeBackground) {
         if (!withAttendeeBackground.equals(printAttendeeBackgrounds)) {
-            setAttendeeBackground(badgeType, withAttendeeBackground);
+            return getAttendeeBadgeResourcesWithBackgroundOverride(badgeType, withAttendeeBackground);
         }
 
         switch (badgeType) {
@@ -78,19 +78,13 @@ public class BadgeResourceService {
         }
     }
 
-    private void setAttendeeBackground(BadgeType badgeType, Boolean withAttendeeBackground) {
+    private BadgeResource getAttendeeBadgeResourcesWithBackgroundOverride(BadgeType badgeType, Boolean withAttendeeBackground) {
         log.info("Overriding current printAttendeeBackground setting of {} to {}", printAttendeeBackgrounds, withAttendeeBackground);
-        Map<Boolean, PDDocument> backgroundFuncMap = Map.of(
-                true, loadBackground("Print - Kumoricon-2021-Badge-" + badgeType + ".pdf"),
-                false, buildBlankAttendeeBadge()
-        );
 
-        switch (badgeType) {
-            case ATTENDEE -> attendeeBadgeBackground = backgroundFuncMap.get(withAttendeeBackground);
-            case VIP -> vipBadgeBackground = backgroundFuncMap.get(withAttendeeBackground);
-            case SPECIALTY -> specialtyBadgeBackground = backgroundFuncMap.get(withAttendeeBackground);
-            default -> log.warn("Tried to set attendee badge background for type {} that is not supported in BadgeResourceService", badgeType);
-        }
+        PDDocument background = withAttendeeBackground ?
+                loadBackground("Print - Kumoricon-2021-Badge-" + badgeType + ".pdf") : buildBlankAttendeeBadge();
+
+        return new BadgeResource(cloneDocument(background), boldFont, plainFont);
     }
 
     public BadgeResource getStaffBadgeResources() {
