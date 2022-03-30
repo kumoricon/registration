@@ -16,6 +16,7 @@ import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorAttende
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorAttendeeFull;
 import org.kumoricon.registration.print.formatter.badgeimage.BadgeCreatorStaffFront;
 import org.kumoricon.registration.settings.SettingsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.print.*;
@@ -132,13 +133,18 @@ public class BadgePrintService extends PrintService {
     }
 
     public InputStream generateAttendeePDF(List<Attendee> attendees, PrinterSettings printerSettings) {
+        Boolean withAttendeeBackground = true;
+        return generateAttendeePDF(attendees, withAttendeeBackground, printerSettings);
+    }
+
+    public InputStream generateAttendeePDF(List<Attendee> attendees, Boolean withAttendeeBackground, PrinterSettings printerSettings) {
         List<AttendeeBadgeDTO> attendeeBadgeDTOS = attendeeBadgeDTOsFromAttendees(attendees);
 
         // Note: These two lines mean that we can only generate badges for a single attendee
         // type (regular, VIP, specialty) at once. In practice, this hasn't been a problem
         // because regular attendees, specialty and VIP all check in at different booths
         Badge b = badgeService.findById(attendees.get(0).getBadgeId());
-        BadgeResource badgeResource = badgeResourceService.getBadgeResourceFor(b.getBadgeType());
+        BadgeResource badgeResource = badgeResourceService.getBadgeResourceForWithBackground(b.getBadgeType(), withAttendeeBackground);
 
         BadgePrintFormatter badgePrintFormatter = new FullBadgePrintFormatter(attendeeBadgeDTOS,
                 printerSettings.getxOffset(), printerSettings.getyOffset(),

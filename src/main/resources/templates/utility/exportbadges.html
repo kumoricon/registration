@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Export Badges</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <form action="#" th:action="@{/utility/exportbadges}" th:object="${badgeexport}" method="post">
+        <div class="form-group col-md-6">
+            <label class="col-form-label-sm">Badge type</label>
+            <select th:field="*{type}" class="form-control">
+                <option th:each="badgeType : ${T(org.kumoricon.registration.model.badge.BadgeType).values()}"
+                        th:if="${badgeType.toString != 'Attendee' and badgeType.toString != 'Specialty'}"
+                        th:value="${badgeType}"
+                        th:text="${badgeType}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-3">
+            <label class="col-form-label-sm">Print attendee background?</label>
+            <input type="checkbox" th:field="*{withAttendeeBackground}" class="form-control">
+        </div>
+
+        <div class="form-group col-md-3">
+            <label class="col-form-label-sm">Mark preprinted?</label>
+            <input type="checkbox" th:field="*{markPreprinted}" class="form-control">
+        </div>
+
+        <div class="form-group col-md-3">
+            <label class="col-form-label-sm">Save to path (/tmp default):</label>
+            <input type="text" th:field="*{path}" class="form-control" placeholder="/tmp" required autofocus>
+        </div>
+
+        <div class="form-group col-md-12 mt-2">
+            <div class="col-sm-10">
+                <input class="btn btn-primary" type="submit" value="Export" />
+                <input class="btn btn-secondary" type="reset" value="Reset" />
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

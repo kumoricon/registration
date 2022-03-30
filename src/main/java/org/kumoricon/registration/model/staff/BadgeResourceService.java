@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @Service
 public class BadgeResourceService {
@@ -30,7 +31,6 @@ public class BadgeResourceService {
     private final String badgeResourcePathString;
     private final String fontFilename;
     private Path badgeResourcePath;
-    private final Boolean printAttendeeBackgrounds;
 
     private Image adultSeal;
     private Image youthSeal;
@@ -44,21 +44,24 @@ public class BadgeResourceService {
     private Font plainFont;
 
     public BadgeResourceService(@Value("${staffbadge.badgeresourcepath}") String badgeResourcePathString,
-                                @Value("${staffbadge.fontfilename}") String fontFilename,
-                                @Value("${badge.printAttendeeBackgrounds:false}") Boolean printAttendeeBackgrounds) {
+                                @Value("${staffbadge.fontfilename}") String fontFilename) {
         this.badgeResourcePathString = badgeResourcePathString;
         this.fontFilename = fontFilename;
-        this.printAttendeeBackgrounds = printAttendeeBackgrounds;
     }
 
     public BadgeResource getBadgeResourceFor(BadgeType badgeType) {
+        Boolean withAttendeeBackground = true;
+        return getBadgeResourceForWithBackground(badgeType, withAttendeeBackground);
+    }
+
+    public BadgeResource getBadgeResourceForWithBackground(BadgeType badgeType, Boolean withAttendeeBackground) {
         switch (badgeType) {
             case ATTENDEE:
-                return getAttendeeBadgeResources();
+                return withAttendeeBackground ? getAttendeeBadgeResources() : getBlankAttendeeBadgeResources();
             case VIP:
-                return getVipBadgeResources();
+                return withAttendeeBackground ? getVipBadgeResources() : getBlankAttendeeBadgeResources();
             case SPECIALTY :
-                return getSpecialtyBadgeResources();
+                return withAttendeeBackground ? getSpecialtyBadgeResources() : getBlankAttendeeBadgeResources();
             case STAFF:
                 return getStaffBadgeResources();
             case GUEST:
@@ -87,6 +90,10 @@ public class BadgeResourceService {
 
     private BadgeResource getVipBadgeResources() {
         return new BadgeResource(cloneDocument(vipBadgeBackground), boldFont, plainFont);
+    }
+
+    private BadgeResource getBlankAttendeeBadgeResources() {
+        return new BadgeResource(cloneDocument(buildBlankAttendeeBadge()), boldFont, plainFont);
     }
 
     public Image getAdultSeal() { return adultSeal; }
@@ -124,15 +131,9 @@ public class BadgeResourceService {
             childSeal = loadImage("staffchild.png");
             staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-Staff.pdf");
             guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-GOH.pdf");
-            if (printAttendeeBackgrounds) {
-                attendeeBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Attendee.pdf");
-                specialtyBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Specialty.pdf");
-                vipBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-VIP.pdf");
-            } else {
-                attendeeBadgeBackground = buildBlankAttendeeBadge();
-                specialtyBadgeBackground = buildBlankAttendeeBadge();
-                vipBadgeBackground = buildBlankAttendeeBadge();
-            }
+            attendeeBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Attendee.pdf");
+            specialtyBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Specialty.pdf");
+            vipBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-VIP.pdf");
             plainFont = loadPlainFont();
             boldFont = loadBoldFont();
         } catch (IOException ex) {
