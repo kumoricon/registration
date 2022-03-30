@@ -57,17 +57,13 @@ public class BadgeResourceService {
     }
 
     public BadgeResource getBadgeResourceForWithBackground(BadgeType badgeType, Boolean withAttendeeBackground) {
-        if (!withAttendeeBackground.equals(printAttendeeBackgrounds)) {
-            return getAttendeeBadgeResourcesWithBackgroundOverride(badgeType, withAttendeeBackground);
-        }
-
         switch (badgeType) {
             case ATTENDEE:
-                return getAttendeeBadgeResources();
+                return withAttendeeBackground ? getAttendeeBadgeResources() : getBlankAttendeeBadgeResources();
             case VIP:
-                return getVipBadgeResources();
+                return withAttendeeBackground ? getVipBadgeResources() : getBlankAttendeeBadgeResources();
             case SPECIALTY :
-                return getSpecialtyBadgeResources();
+                return withAttendeeBackground ? getSpecialtyBadgeResources() : getBlankAttendeeBadgeResources();
             case STAFF:
                 return getStaffBadgeResources();
             case GUEST:
@@ -76,15 +72,6 @@ public class BadgeResourceService {
                 log.warn("Tried to get badge resources for type {} that is not supported in BadgeResourceService", badgeType);
                 return getAttendeeBadgeResources();
         }
-    }
-
-    private BadgeResource getAttendeeBadgeResourcesWithBackgroundOverride(BadgeType badgeType, Boolean withAttendeeBackground) {
-        log.info("Overriding current printAttendeeBackground setting of {} to {}", printAttendeeBackgrounds, withAttendeeBackground);
-
-        PDDocument background = withAttendeeBackground ?
-                loadBackground("Print - Kumoricon-2021-Badge-" + badgeType + ".pdf") : buildBlankAttendeeBadge();
-
-        return new BadgeResource(cloneDocument(background), boldFont, plainFont);
     }
 
     public BadgeResource getStaffBadgeResources() {
@@ -105,6 +92,10 @@ public class BadgeResourceService {
 
     private BadgeResource getVipBadgeResources() {
         return new BadgeResource(cloneDocument(vipBadgeBackground), boldFont, plainFont);
+    }
+
+    private BadgeResource getBlankAttendeeBadgeResources() {
+        return new BadgeResource(cloneDocument(buildBlankAttendeeBadge()), boldFont, plainFont);
     }
 
     public Image getAdultSeal() { return adultSeal; }
@@ -142,15 +133,9 @@ public class BadgeResourceService {
             childSeal = loadImage("staffchild.png");
             staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-Staff.pdf");
             guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-GOH.pdf");
-            if (printAttendeeBackgrounds) {
-                attendeeBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Attendee.pdf");
-                specialtyBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Specialty.pdf");
-                vipBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-VIP.pdf");
-            } else {
-                attendeeBadgeBackground = buildBlankAttendeeBadge();
-                specialtyBadgeBackground = buildBlankAttendeeBadge();
-                vipBadgeBackground = buildBlankAttendeeBadge();
-            }
+            attendeeBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Attendee.pdf");
+            specialtyBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Specialty.pdf");
+            vipBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-VIP.pdf");
             plainFont = loadPlainFont();
             boldFont = loadBoldFont();
         } catch (IOException ex) {
