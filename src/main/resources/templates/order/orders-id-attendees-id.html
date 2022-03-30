@@ -81,6 +81,10 @@
                 <label for="inputPronoun" class="col-form-label-sm">Preferred Pronoun</label>
                 <input type="text" class="form-control" readonly th:field="*{preferredPronoun}" id="inputPronoun">
             </div>
+            <div class="form-group col-md-3" th:if="${#authorization.expression('hasAuthority(''set_custom_pronouns'')')}">
+                <label for="inputCustomPronoun" class="col-form-label-sm">Custom Pronoun</label>
+                <input type="text" th:field="*{customPronoun}" th:errorclass="is-invalid" class="form-control" id="inputCustomPronoun" readonly>
+            </div>
 
             <div class="form-group col-md-12">
                 <label for="inputBirthDate" class="col-form-label-sm">Date of Birth</label>
