@@ -7,10 +7,6 @@ public class BadgeExport {
     private boolean markPreprinted;
     private String path = "/tmp";
 
-    public BadgeExport(boolean withAttendeeBackground) {
-        this.withAttendeeBackground = withAttendeeBackground;
-    }
-
     public String getType() {
         return type;
     }

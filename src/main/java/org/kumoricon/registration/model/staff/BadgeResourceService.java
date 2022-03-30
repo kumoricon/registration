@@ -31,7 +31,6 @@ public class BadgeResourceService {
     private final String badgeResourcePathString;
     private final String fontFilename;
     private Path badgeResourcePath;
-    private final Boolean printAttendeeBackgrounds;
 
     private Image adultSeal;
     private Image youthSeal;
@@ -45,15 +44,14 @@ public class BadgeResourceService {
     private Font plainFont;
 
     public BadgeResourceService(@Value("${staffbadge.badgeresourcepath}") String badgeResourcePathString,
-                                @Value("${staffbadge.fontfilename}") String fontFilename,
-                                @Value("${badge.printAttendeeBackgrounds:false}") Boolean printAttendeeBackgrounds) {
+                                @Value("${staffbadge.fontfilename}") String fontFilename) {
         this.badgeResourcePathString = badgeResourcePathString;
         this.fontFilename = fontFilename;
-        this.printAttendeeBackgrounds = printAttendeeBackgrounds;
     }
 
     public BadgeResource getBadgeResourceFor(BadgeType badgeType) {
-        return getBadgeResourceForWithBackground(badgeType, printAttendeeBackgrounds);
+        Boolean withAttendeeBackground = true;
+        return getBadgeResourceForWithBackground(badgeType, withAttendeeBackground);
     }
 
     public BadgeResource getBadgeResourceForWithBackground(BadgeType badgeType, Boolean withAttendeeBackground) {

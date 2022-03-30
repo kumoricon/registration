@@ -15,18 +15,16 @@ public class BadgeExportController {
     private static final Logger log = LoggerFactory.getLogger(BadgeExportController.class);
 
     private final BadgeExportService badgeExportService;
-    private final Boolean printAttendeeBackgrounds;
 
-    public BadgeExportController(@Value("${badge.printAttendeeBackgrounds}") Boolean printAttendeeBackgrounds,
-                                 BadgeExportService badgeExportService) {
+    public BadgeExportController(BadgeExportService badgeExportService) {
         this.badgeExportService = badgeExportService;
-        this.printAttendeeBackgrounds = printAttendeeBackgrounds;
     }
 
     @RequestMapping(value = "/utility/exportbadges", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('pre_print_badges')")
     public String exportBadgesGet(Model model) {
-        BadgeExport defaults = new BadgeExport(printAttendeeBackgrounds);
+        BadgeExport defaults = new BadgeExport();
+        defaults.setWithAttendeeBackground(true);
         defaults.setPath("/tmp");
         model.addAttribute("badgeexport", defaults);
         return "utility/exportbadges";

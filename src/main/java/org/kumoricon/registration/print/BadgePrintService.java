@@ -36,20 +36,16 @@ public class BadgePrintService extends PrintService {
     private final BadgeResourceService badgeResourceService;
     private final SettingsService settingsService;
 
-    private final Boolean withAttendeeBackground;
-
     public BadgePrintService(PrinterInfoService printerInfoService,
                              BadgeService badgeService,
                              BadgeImageService badgeImageService,
                              BadgeResourceService badgeResourceService,
-                             SettingsService settingsService,
-                             @Value("${badge.printAttendeeBackgrounds}") Boolean withBackground) {
+                             SettingsService settingsService) {
         super(printerInfoService);
         this.badgeService = badgeService;
         this.badgeImageService = badgeImageService;
         this.badgeResourceService = badgeResourceService;
         this.settingsService = settingsService;
-        this.withAttendeeBackground = withBackground;
     }
 
     /**
@@ -137,6 +133,7 @@ public class BadgePrintService extends PrintService {
     }
 
     public InputStream generateAttendeePDF(List<Attendee> attendees, PrinterSettings printerSettings) {
+        Boolean withAttendeeBackground = true;
         return generateAttendeePDF(attendees, withAttendeeBackground, printerSettings);
     }
 
