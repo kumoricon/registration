@@ -164,14 +164,14 @@ public class AttendeeRepository {
                             INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed,
                             birth_date, check_in_time, checked_in, comped_badge, country, email,
                             emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
-                            legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid,
+                            legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, custom_pronoun, paid,
                             paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
-                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked, 
+                            parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked,
                             accessibility_sticker, last_modified) VALUES
                             (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
                              :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
                              :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName,
-                             :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid,
+                             :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :customPronoun, :paid,
                              :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact,
                              :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked,
                              :accessibilitySticker, now())
@@ -184,8 +184,8 @@ public class AttendeeRepository {
                             emergency_contact_full_name=:emergencyContactFullName,
                             emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName,
                             last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName,
-                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid,
-                            paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
+                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, custom_pronoun=:customPronoun,
+                            paid=:paid, paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
                             parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact,
                             parent_phone=:parentPhone, phone_number=:phoneNumber,
                             zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked,
@@ -257,14 +257,14 @@ public class AttendeeRepository {
                             INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed,
                             birth_date, check_in_time, checked_in, comped_badge, country, email,
                             emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
-                            legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, paid,
+                            legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, custom_pronoun, paid,
                             paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
                             parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked,
                             accessibility_sticker, last_modified) VALUES
                             (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
                              :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
                              :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName,
-                             :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :paid,
+                             :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :customPronoun, :paid,
                              :paidAmount, :parentFormReceived, :parentFullName, :parentIsEmergencyContact,
                              :parentPhone, :phoneNumber, :preRegistered, :zip, :orderId, :membershipRevoked,
                              :accessibilitySticker, now())
@@ -286,8 +286,8 @@ public class AttendeeRepository {
                             emergency_contact_full_name=:emergencyContactFullName,
                             emergency_contact_phone=:emergencyContactPhone, fan_name=:fanName, first_name=:firstName,
                             last_name=:lastName, legal_first_name=:legalFirstName, legal_last_name=:legalLastName,
-                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, paid=:paid,
-                            paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
+                            name_is_legal_name=:nameIsLegalName, preferred_pronoun=:preferredPronoun, custom_pronoun=:customPronoun,
+                            paid=:paid, paid_amount=:paidAmount, parent_form_received=:parentFormReceived,
                             parent_full_name=:parentFullName, parent_is_emergency_contact=:parentIsEmergencyContact,
                             parent_phone=:parentPhone, phone_number=:phoneNumber,
                             zip=:zip, order_id=:orderId, membership_revoked=:membershipRevoked,
@@ -336,6 +336,7 @@ public class AttendeeRepository {
             a.setLegalFirstName(rs.getString("legal_first_name"));
             a.setLegalLastName(rs.getString("legal_last_name"));
             a.setPreferredPronoun(rs.getString("preferred_pronoun"));
+            a.setCustomPronoun(rs.getString("custom_pronoun"));
             a.setNameIsLegalName(rs.getBoolean("name_is_legal_name"));
             a.setPaid(rs.getBoolean("paid"));
             a.setPaidAmount(rs.getBigDecimal("paid_amount"));

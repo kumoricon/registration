@@ -264,7 +264,7 @@ public class Attendee {
         this.nameIsLegalName = other.getNameIsLegalName();
         this.fanName = other.getFanName();
         this.customPronoun = other.getCustomPronoun();
-        this.preferredPronoun = customPronoun.isEmpty() ? other.getPreferredPronoun() : other.getCustomPronoun();
+        this.preferredPronoun = other.getPreferredPronoun();
         this.birthDate = other.getBirthDate();
         this.phoneNumber = other.getPhoneNumber();
         this.email = other.getEmail();

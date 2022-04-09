@@ -108,7 +108,9 @@ public class AttendeeBadgeDTO {
         output.setName(attendee.getFirstName(), attendee.getLastName());
         output.setFanName(attendee.getFanName());
         output.setBadgeNumber(attendee.getBadgeNumber());
-        output.setPronoun(attendee.getPreferredPronoun());
+
+        String attendeePronoun = attendee.getCustomPronoun().isEmpty() ? attendee.getPreferredPronoun() : attendee.getCustomPronoun();
+        output.setPronoun(attendeePronoun);
 
         output.setBadgeTypeText(badge.getBadgeTypeText());
         output.setBadgeTypeBackgroundColor(badge.getBadgeTypeBackgroundColor());
