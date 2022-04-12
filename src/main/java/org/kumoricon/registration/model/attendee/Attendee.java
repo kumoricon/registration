@@ -20,6 +20,7 @@ public class Attendee {
     private String legalLastName;
     private Boolean nameIsLegalName;
     private String preferredPronoun;
+    private String customPronoun;
     private String fanName;                   // Fan Name (optional)
     private String badgeNumber;
     private String zip;
@@ -89,6 +90,9 @@ public class Attendee {
 
     public String getPreferredPronoun() { return preferredPronoun; }
     public void setPreferredPronoun(String preferredPronoun) { this.preferredPronoun = preferredPronoun; }
+
+    public String getCustomPronoun() { return customPronoun; }
+    public void setCustomPronoun(String customPronoun) { this.customPronoun = customPronoun; }
 
     public String getFanName() { return fanName; }
     public void setFanName(String fanName) { this.fanName = fanName; }
@@ -259,6 +263,7 @@ public class Attendee {
         this.legalLastName = other.getLegalLastName();
         this.nameIsLegalName = other.getNameIsLegalName();
         this.fanName = other.getFanName();
+        this.customPronoun = other.getCustomPronoun();
         this.preferredPronoun = other.getPreferredPronoun();
         this.birthDate = other.getBirthDate();
         this.phoneNumber = other.getPhoneNumber();

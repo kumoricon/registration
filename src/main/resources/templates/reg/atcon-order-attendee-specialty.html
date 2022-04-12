@@ -49,6 +49,10 @@
                 <option th:each="p : ${attendee.PRONOUNS}" th:value="${p}" th:text="${p}" th:selected="${p==attendee.preferredPronoun}"></option>
             </select>
         </div>
+        <div class="form-group col-md-3" th:if="${#authorization.expression('hasAuthority(''set_custom_pronouns'')')}">
+            <label for="inputCustomPronoun" class="col-form-label-sm">Custom Pronoun</label>
+            <input type="text" th:field="*{customPronoun}" th:errorclass="is-invalid" class="form-control" id="inputCustomPronoun">
+        </div>
 
         <div class="form-group col-md-12">
             <label for="inputBirthDate" class="col-form-label-sm">Date of Birth</label>

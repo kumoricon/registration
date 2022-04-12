@@ -235,6 +235,7 @@ create table if not exists attendees
   membership_revoked boolean not null,
   name_is_legal_name boolean,
   preferred_pronoun varchar(255),
+  custom_pronoun varchar(255),
   paid boolean,
   paid_amount numeric(19,2),
   parent_form_received boolean,

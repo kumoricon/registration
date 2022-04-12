@@ -13,6 +13,7 @@ public class AttendeeDetailDTO {
     private String legalLastName;
     private Boolean nameIsLegalName;
     private String preferredPronoun;
+    private String customPronoun;
     private String fanName;                   // Fan Name (optional)
     private String badgeNumber;
     private String zip;
@@ -109,6 +110,14 @@ public class AttendeeDetailDTO {
 
     public void setPreferredPronoun(String preferredPronoun) {
         this.preferredPronoun = preferredPronoun;
+    }
+
+    public String getCustomPronoun() {
+        return customPronoun;
+    }
+
+    public void setCustomPronoun(String customPronoun) {
+        this.customPronoun = customPronoun;
     }
 
     public String getFanName() {

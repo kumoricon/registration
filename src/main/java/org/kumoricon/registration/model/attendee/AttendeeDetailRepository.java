@@ -84,6 +84,7 @@ public class AttendeeDetailRepository {
             a.setLegalFirstName(rs.getString("legal_first_name"));
             a.setLegalLastName(rs.getString("legal_last_name"));
             a.setPreferredPronoun(rs.getString("preferred_pronoun"));
+            a.setCustomPronoun(rs.getString("custom_pronoun"));
             a.setNameIsLegalName(rs.getBoolean("name_is_legal_name"));
             a.setPaid(rs.getBoolean("paid"));
             a.setPaidAmount(rs.getBigDecimal("paid_amount"));
