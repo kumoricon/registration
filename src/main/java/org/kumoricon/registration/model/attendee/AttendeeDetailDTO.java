@@ -118,6 +118,9 @@ public class AttendeeDetailDTO {
 
     public void setCustomPronoun(String customPronoun) {
         this.customPronoun = customPronoun;
+        if (!"".equals(customPronoun)) {
+            setPreferredPronoun(customPronoun);
+        }
     }
 
     public String getFanName() {
