@@ -51,6 +51,7 @@
                     <input type="hidden" name="action" value="reprintDuringCheckin">
                     <input class="btn btn-secondary btn-sm mr-2" type="submit" value="Reprint Badge">
                 </form>
+                <a class="btn btn-secondary btn-sm" href="/utility/printer" target="_blank">Open Printer Settings</a>
                 <a class="btn btn-secondary btn-sm" th:href="@{/orders/{orderId}/attendees/{attendeeId}/badge.pdf(orderId=${attendee.orderId},attendeeId=${attendee.id})}" target="_blank">Download Badge PDF</a>
             </div>
 
