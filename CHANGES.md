@@ -8,6 +8,7 @@ Version 2.0.0 (Pending)
 - Clarified Attendance report
 - Added badge export screen for Staff, Guest, and VIP badges
 - Added custom pronoun override usable by Coordinators and above
+- Label x/y offsets on printer utility page
 
 Version 1.6.1 (11/05/2021)
 - Ignore unknown fields in In-Line Registration import data
