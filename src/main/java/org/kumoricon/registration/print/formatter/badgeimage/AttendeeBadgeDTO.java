@@ -109,7 +109,7 @@ public class AttendeeBadgeDTO {
         output.setFanName(attendee.getFanName());
         output.setBadgeNumber(attendee.getBadgeNumber());
 
-        String attendeePronoun = attendee.getCustomPronoun().isEmpty() ? attendee.getPreferredPronoun() : attendee.getCustomPronoun();
+        String attendeePronoun = determineAttendeePronoun(attendee);
         output.setPronoun(attendeePronoun);
 
         output.setBadgeTypeText(badge.getBadgeTypeText());
@@ -133,5 +133,13 @@ public class AttendeeBadgeDTO {
         output.setAgeStripeBackgroundColor("#FF0099");
         output.setAgeStripeText("Guest");
         return output;
+    }
+
+    private static String determineAttendeePronoun(Attendee attendee) {
+        if (attendee.getCustomPronoun() == null || attendee.getPreferredPronoun().isEmpty()) {
+            return attendee.getPreferredPronoun();
+        }
+
+        return attendee.getCustomPronoun();
     }
 }
