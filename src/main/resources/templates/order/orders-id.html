@@ -69,7 +69,8 @@
                                 </tr>
                                 <tr th:each="payment : ${payments}">
                                     <td th:text="${payment.paymentType}"></td>
-                                    <td th:text="${payment.authNumber}"></td>
+                                    <td th:text="${payment.squareReceiptNumber}"></td>
+                                    <td th:text="${payment.checkNumber}"></td>
                                     <td th:text="${dts.format(payment.paymentTakenAt)}"></td>
                                     <td th:text="${payment.paymentTakenByUsername}"></td>
                                     <td th:text="|${payment.tillName} - ${payment.tillSessionId}|"></td>

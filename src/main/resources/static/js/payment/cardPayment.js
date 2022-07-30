@@ -11,12 +11,14 @@ function setState() {
 
     const amount = parseFloat(inputAmount.val());
     const due = parseFloat($('#amountDue').val());
+    const inputSquareReceiptNumber = document.getElementById('inputSquareReceiptNumber');
 
     if (isNaN(amount) || isNaN(due)) {
         btnSave.attr("disabled", true);
         return;
     }
 
+    // amount paid validity check
     if (amount <= 0) {
         inputAmount.val("").select();
         btnSave.attr("disabled", true);
@@ -24,25 +26,20 @@ function setState() {
         return;
     }
 
-    // Make sure auth number is filled in if the field exists (cash and check payment types)
-    const inputAuth = document.getElementById('inputAuthNumber');
-
-    if (inputAuth != null) {
-        if (!inputAuth.value || inputAuth.value.length < 5) {
-            btnSave.attr("disabled", true);
-            return;
-        } else {
-            btnSave.attr("disabled", false);
-        }
+    if (amount > due) {
+        alert("Do not give change for credit cards or checks\nAmount taken must be less than or equal to amount due");
+        btnSave.attr("disabled", true);
+        return;
     }
 
-    if (inputAuth != null) {
-        if (amount > due) {
-            alert("Do not give change for credit cards or checks\nAmount taken must be less than or equal to amount due");
+    // square receipt number validity check
+    if (inputSquareReceiptNumber != null) {
+        if (!inputSquareReceiptNumber.value || inputSquareReceiptNumber.value.length < 4) {
             btnSave.attr("disabled", true);
             return;
         }
     }
+
 
     btnSave.attr("disabled", false);
 }
@@ -50,5 +47,5 @@ function setState() {
 function addListeners() {
     $('#inputAmount').keyup(setState);
 
-    $('#inputAuthNumber').keyup(setState);
+    $('#inputSquareReceiptNumber').keyup(setState);
 }

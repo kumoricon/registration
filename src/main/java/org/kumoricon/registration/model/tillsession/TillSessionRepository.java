@@ -182,7 +182,7 @@ public class TillSessionRepository {
                 " GROUP BY id) as t1" +
                 "  left outer join (" +
 //                "-- select payments in order" +
-                "select id, array_to_string(array_agg(taken_at || ' - ' || type || auth || ': $' || amount), ', ') as payments from (" +
+                "select id, array_to_string(array_agg(taken_at || ' - ' || type || squareReceiptNumber || checkNumber || ': $' || amount), ', ') as payments from (" +
                 "select" +
                 "  o.id, date_trunc('second', p.payment_taken_at AT TIME ZONE 'America/Los_Angeles') as taken_at, " +
                 "  (CASE" +
@@ -192,10 +192,15 @@ public class TillSessionRepository {
                 "      WHEN p.payment_type = 3 THEN '" + Payment.PaymentType.PREREG + "'" +
                 "    END) as type," +
                 "   (CASE\n" +
-                "    WHEN p.auth_number is null then ''\n" +
-                "    ELSE ' (Auth ' || p.auth_number || ')'\n" +
+                "    WHEN p.square_receipt_number is null then ''\n" +
+                "    ELSE ' (Square Receipt Number ' || p.square_receipt_number || ')'\n" +
                 "    END\n" +
-                "    ) as auth," +
+                "    ) as squareReceiptNumber," +
+                "   (CASE\n" +
+                "    WHEN p.check_number is null then ''\n" +
+                "    ELSE ' (Check Number ' || p.check_number || ')'\n" +
+                "    END\n" +
+                "    ) as checkNumber," +
                 "  p.amount" +
                 "  from orders o" +
                 "       JOIN payments p on o.id = p.order_id" +

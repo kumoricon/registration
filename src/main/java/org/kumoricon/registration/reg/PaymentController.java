@@ -99,13 +99,8 @@ public class PaymentController {
         }
 
         paymentData.setAmount(payment.getAmount());
-        if( !payment.getPaymentType().equals("cash") )
-        {
-            if(payment.getAuthNumber().length() <= 10)
-                paymentData.setAuthNumber(payment.getAuthNumber());
-            else
-                throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
-        }
+        paymentData.setSquareReceiptNumber(payment.getSquareReceiptNumber());
+        paymentData.setCheckNumber(payment.getCheckNumber());
 
         try {
             paymentRepository.save(paymentData);
@@ -185,17 +180,8 @@ public class PaymentController {
         paymentData.setPaymentLocation(request.getRemoteAddr());
         paymentData.setTillSessionId(currentTillSession.getId());
         paymentData.setAmount(payment.getAmount());
-
-        paymentData.setAmount(payment.getAmount());
-
-        if( !payment.getPaymentType().equals("cash") )
-        {
-            if(payment.getAuthNumber().length() <= 10)
-                paymentData.setAuthNumber(payment.getAuthNumber());
-            else
-                throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
-
-        }
+        paymentData.setSquareReceiptNumber(payment.getSquareReceiptNumber());
+        paymentData.setCheckNumber(payment.getCheckNumber());
 
         // For cash, don't record a payment of more than the amount due in the order. The user should
         // be giving change. However, we should NOT be giving change for card or check transactions.
