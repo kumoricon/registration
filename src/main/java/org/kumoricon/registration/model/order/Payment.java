@@ -15,7 +15,8 @@ public class Payment {
     private PaymentType paymentType;
     private OffsetDateTime paymentTakenAt;
     private String paymentLocation;
-    private String authNumber;
+    private String squareReceiptNumber;
+    private String checkNumber;
     private Integer tillSessionId;
 
     public enum PaymentType {
@@ -102,8 +103,28 @@ public class Payment {
         this.paymentLocation = paymentLocation;
     }
 
-    public String getAuthNumber() { return authNumber; }
-    public void setAuthNumber(String authNumber) { this.authNumber = authNumber; }
+    public String getSquareReceiptNumber() {
+        return squareReceiptNumber;
+    }
+    public void setSquareReceiptNumber(String squareReceiptNumber) {
+        if (squareReceiptNumber != null && squareReceiptNumber.length() < 4) {
+            throw new RuntimeException("Invalid square receipt number: " + squareReceiptNumber + " (cannot be less than 4 characters)");
+        }
+
+        this.squareReceiptNumber = squareReceiptNumber;
+    }
+
+    public String getCheckNumber() {
+        return checkNumber;
+    }
+    public void setCheckNumber(String checkNumber) {
+        // keeping 10-char length check for legacy reasons
+        // if we don't want to validate against this length we can remove
+        if (checkNumber != null && checkNumber.length() >= 10) {
+            throw new RuntimeException("Invalid check number: " + checkNumber + " (must be less than 10 characters)");
+        }
+        this.checkNumber = checkNumber;
+    }
 
     public Integer getTillSessionId() { return tillSessionId; }
     public void setTillSessionId(Integer tillSessionId) { this.tillSessionId = tillSessionId; }

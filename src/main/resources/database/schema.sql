@@ -168,7 +168,8 @@ create table if not exists payments
   amount numeric(19,2) not null
     constraint payments_amount_check
       check (amount >= (0)::numeric),
-  auth_number varchar(255),
+  square_receipt_number varchar(255),
+  check_number varchar(255),
   payment_location varchar(255),
   payment_taken_at timestamp with time zone,
   payment_taken_by integer

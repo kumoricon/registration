@@ -146,7 +146,9 @@ public class ExportFileController {
                 String paymentSummary = paymentType + ": " + amount + " by " + takenBy + " at " + takenAt + " session " + tillSession + "  ";
                 paymentString.append(paymentSummary);
                 if (type == Payment.PaymentType.CREDIT)
-                    paymentString.append("auth " + p.getAuthNumber() + "  ");
+                    paymentString.append("squareReceiptNumber " + p.getSquareReceiptNumber() + "  ");
+                if (type == Payment.PaymentType.CHECK)
+                    paymentString.append("checkNumber " + p.getCheckNumber() + "  ");
             }
 
             sb.append(o.getId().toString()).append(",")

@@ -57,11 +57,11 @@ public class PaymentRepository {
 
         if (payment.getId() == null) {
             final String SQL ="INSERT INTO payments " +
-                    "(amount, auth_number, payment_location, payment_taken_at, payment_taken_by, payment_type, till_session_id, order_id) " +
-                    "VALUES(:amount,:authNumber,:paymentLocation,:paymentTakenAt,:paymentTakenBy,:paymentType,:tillSessionId,:orderId)";
+                    "(amount, square_receipt_number, check_number, payment_location, payment_taken_at, payment_taken_by, payment_type, till_session_id, order_id) " +
+                    "VALUES(:amount,:squareReceiptNumber,:checkNumber,:paymentLocation,:paymentTakenAt,:paymentTakenBy,:paymentType,:tillSessionId,:orderId)";
             jdbcTemplate.update(SQL, params);
         } else {
-            final String SQL = "UPDATE payments SET amount = :amount, auth_number = :authNumber, " +
+            final String SQL = "UPDATE payments SET amount = :amount, square_receipt_number = :squareReceiptNumber, check_number = :check_number" +
                     "payment_location = :paymentLocation, payment_taken_at = :paymentTakenAt, " +
                     "payment_taken_by = :paymentTakenBy, payment_type = :paymentType, " +
                     "till_session_id = :tillSessionId, order_id = :orderId WHERE id = :id";
@@ -117,7 +117,8 @@ public class PaymentRepository {
             Payment p = new Payment();
             p.setId(rs.getInt("id"));
             p.setAmount(rs.getBigDecimal("amount"));
-            p.setAuthNumber(rs.getString("auth_number"));
+            p.setSquareReceiptNumber(rs.getString("square_receipt_number"));
+            p.setCheckNumber(rs.getString("check_number"));
             p.setPaymentType(Payment.PaymentType.fromInteger(rs.getInt("payment_type")));
             p.setPaymentLocation(rs.getString("payment_location"));
             p.setPaymentTakenAt(rs.getObject("payment_taken_at", OffsetDateTime.class));
@@ -135,7 +136,8 @@ public class PaymentRepository {
             PaymentDTO p = new PaymentDTO();
             p.setId(rs.getInt("id"));
             p.setAmount(rs.getBigDecimal("amount"));
-            p.setAuthNumber(rs.getString("auth_number"));
+            p.setSquareReceiptNumber(rs.getString("square_receipt_number"));
+            p.setCheckNumber(rs.getString("check_number"));
             p.setPaymentType(Payment.PaymentType.fromInteger(rs.getInt("payment_type")));
             p.setPaymentLocation(rs.getString("payment_location"));
             p.setPaymentTakenAt(rs.getObject("payment_taken_at", OffsetDateTime.class));

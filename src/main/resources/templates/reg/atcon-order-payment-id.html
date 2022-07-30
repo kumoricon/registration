@@ -19,7 +19,8 @@
             <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
         </ul>
         <input type="hidden" th:field="*{id}" />
-        <input type="hidden" th:field="*{authNumber}" />
+        <input type="hidden" th:field="*{squareReceiptNumber}" />
+        <input type="hidden" th:field="*{checkNumber}" />
         <input type="hidden" th:field="*{paymentLocation}" />
         <input type="hidden" th:field="*{paymentTakenAt}"/>
         <input type="hidden" th:field="*{paymentTakenBy}"/>
@@ -36,9 +37,16 @@
         </div>
 
         <div class="form-group row">
-            <label for="inputAuthNumber" class="col-sm-2 col-form-label">Auth Number</label>
+            <label for="inputSquareReceiptNumber" class="col-sm-2 col-form-label">Square Receipt Number</label>
             <div class="col-sm-10">
-                <input type="text" th:field="*{authNumber}" th:errorclass="is-invalid" class="form-control" id="inputAuthNumber" maxlength="10" placeholder="123456">
+                <input type="text" th:field="*{squareReceiptNumber}" th:errorclass="is-invalid" class="form-control" id="inputSquareReceiptNumber" minlength="4" placeholder="123456">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputCheckNumber" class="col-sm-2 col-form-label">Check Number</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{checkNumber}" th:errorclass="is-invalid" class="form-control" id="inputCheckNumber" maxlength="10" placeholder="123456">
             </div>
         </div>
 
