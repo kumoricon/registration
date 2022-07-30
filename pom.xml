@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty.http2</groupId>
 			<artifactId>http2-server</artifactId>
-			<version>9.4.43.v20210629</version>
+			<version>9.4.48.v20220622</version>
 		</dependency>
 		<!--
 		Log4J version set explicitly because of
