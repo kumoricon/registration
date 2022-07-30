@@ -99,13 +99,7 @@ public class PaymentController {
         }
 
         paymentData.setAmount(payment.getAmount());
-        if( !payment.getPaymentType().equals("cash") )
-        {
-            if(payment.getAuthNumber().length() <= 10)
-                paymentData.setAuthNumber(payment.getAuthNumber());
-            else
-                throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
-        }
+        paymentData.setAuthNumber(validateAuthNumberForPaymentType(payment.getPaymentType(), payment.getAuthNumber()));
 
         try {
             paymentRepository.save(paymentData);
@@ -185,17 +179,7 @@ public class PaymentController {
         paymentData.setPaymentLocation(request.getRemoteAddr());
         paymentData.setTillSessionId(currentTillSession.getId());
         paymentData.setAmount(payment.getAmount());
-
-        paymentData.setAmount(payment.getAmount());
-
-        if( !payment.getPaymentType().equals("cash") )
-        {
-            if(payment.getAuthNumber().length() <= 10)
-                paymentData.setAuthNumber(payment.getAuthNumber());
-            else
-                throw new RuntimeException("Invalid auth number: " + payment.getAuthNumber() + " (must be 10 characters or less)");
-
-        }
+        paymentData.setAuthNumber(validateAuthNumberForPaymentType(payment.getPaymentType(), payment.getAuthNumber()));
 
         // For cash, don't record a payment of more than the amount due in the order. The user should
         // be giving change. However, we should NOT be giving change for card or check transactions.
@@ -231,6 +215,23 @@ public class PaymentController {
             }
         }
         return false;
+    }
+
+    /**
+     * Validate auth number for payment type
+     * Square receipt numbers (card payments) must be greater than 4 characters
+     * Check numbers can be less than 4 characters, but must be less than 10 characters
+     */
+    private String validateAuthNumberForPaymentType(String paymentType, String authNumber) {
+        if (paymentType.equals("card") && authNumber.length() < 4) {
+            throw new RuntimeException("Invalid square receipt number: " + authNumber + " (cannot be less than 4 characters)");
+        }
+
+        if (paymentType.equals("check") && authNumber.length() >= 10) {
+            throw new RuntimeException("Invalid check number: " + authNumber + " (must be 10 characters or less)");
+        }
+
+        return authNumber;
     }
 
 }

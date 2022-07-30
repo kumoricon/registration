@@ -193,7 +193,8 @@ public class TillSessionRepository {
                 "    END) as type," +
                 "   (CASE\n" +
                 "    WHEN p.auth_number is null then ''\n" +
-                "    ELSE ' (Auth ' || p.auth_number || ')'\n" +
+                "    WHEN p.payment_type = 1 THEN ' (Check Number ' || p.auth_number || ')'\n" +
+                "    WHEN p.payment_type = 2 THEN ' (Square Receipt Number ' || p.auth_number || ')'\n" +
                 "    END\n" +
                 "    ) as auth," +
                 "  p.amount" +
