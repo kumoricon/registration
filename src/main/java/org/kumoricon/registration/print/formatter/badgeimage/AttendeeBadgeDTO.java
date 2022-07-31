@@ -136,7 +136,7 @@ public class AttendeeBadgeDTO {
     }
 
     private static String determineAttendeePronoun(Attendee attendee) {
-        if (attendee.getCustomPronoun() == null || attendee.getPreferredPronoun().isEmpty()) {
+        if (attendee.getCustomPronoun() == null || attendee.getCustomPronoun().isEmpty()) {
             return attendee.getPreferredPronoun();
         }
 
