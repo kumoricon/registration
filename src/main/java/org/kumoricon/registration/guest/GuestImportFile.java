@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,8 @@ public class GuestImportFile {
         private final String namePreferredLast;
         private final String nameOnIdFirst;
         private final String nameOnIdLast;
+        private final String namePrivacyFirst;
+        private final String namePrivacyLast;
         private final String preferredPronoun;
         private final String fanName;
         private final String tShirtSize;
@@ -67,6 +70,20 @@ public class GuestImportFile {
         private final String badgeImageFileType;
         private final Long detailsVersion;
         private final Boolean isCanceled;
+        private final String country;
+        private final String email;
+        private final String phone;
+        private final String postal;
+        private final String emergencyName;
+        private final String emergencyPhone;
+        private final Boolean parentContactSeparate;
+        private final String parentName;
+        private final String parentPhone;
+        private final String hearAbout;
+        private final String notes;
+        private final String membershipType;
+        private final String vipLevel;
+        private final Integer amountPaidCents;
 
         @JsonCreator
         public Person(
@@ -75,6 +92,8 @@ public class GuestImportFile {
                 @JsonProperty(value = "namePreferredLast") String namePreferredLast,
                 @JsonProperty(value = "nameOnIdFirst") String nameOnIdFirst,
                 @JsonProperty(value = "nameOnIdLast") String nameOnIdLast,
+                @JsonProperty(value = "nomePrivacyFirst") String namePrivacyFirst,
+                @JsonProperty(value = "namePrivacyLast") String namePrivacyLast,
                 @JsonProperty(value = "pronouns") String preferredPronoun,
                 @JsonProperty(value = "fanName") String fanName,
                 @JsonProperty(value = "tShirtSize") String tShirtSize,
@@ -84,12 +103,28 @@ public class GuestImportFile {
                 @JsonProperty(value = "hasBadgeImage") Boolean hasBadgeImage,
                 @JsonProperty(value = "badgeImageFileType") String badgeImageFileType,
                 @JsonProperty(value = "detailsVersion") Long detailsVersion,
-                @JsonProperty(value = "isCanceled", defaultValue = "false") Boolean isCanceled) {
+                @JsonProperty(value = "isCanceled", defaultValue = "false") Boolean isCanceled,
+                @JsonProperty(value = "country") String country,
+                @JsonProperty(value = "email") String email,
+                @JsonProperty(value = "phone") String phone,
+                @JsonProperty(value = "postal") String postal,
+                @JsonProperty(value = "emergencyName") String emergencyName,
+                @JsonProperty(value = "emergencyPhone") String emergencyPhone,
+                @JsonProperty(value = "parentContactSeparate") Boolean parentContactSeparate,
+                @JsonProperty(value = "parentName") String parentName,
+                @JsonProperty(value = "parentPhone") String parentPhone,
+                @JsonProperty(value = "hearAbout") String hearAbout,
+                @JsonProperty(value = "notes") String notes,
+                @JsonProperty(value = "vipLevel") String vipLevel,
+                @JsonProperty(value = "membershipType") String membershipType,
+                @JsonProperty(value = "amountPaidCents") Integer amountPaidCents) {
             this.id = id;
             this.namePreferredFirst = namePreferredFirst;
             this.namePreferredLast = namePreferredLast;
             this.nameOnIdFirst = nameOnIdFirst;
             this.nameOnIdLast = nameOnIdLast;
+            this.namePrivacyFirst = namePrivacyFirst;
+            this.namePrivacyLast = namePrivacyLast;
             this.preferredPronoun = preferredPronoun;
             this.fanName = fanName;
             this.tShirtSize = tShirtSize;
@@ -100,6 +135,20 @@ public class GuestImportFile {
             this.badgeImageFileType = badgeImageFileType;
             this.detailsVersion = detailsVersion;
             this.isCanceled = isCanceled;
+            this.country = country;
+            this.email = email;
+            this.phone = phone;
+            this.postal = postal;
+            this.emergencyName = emergencyName;
+            this.emergencyPhone = emergencyPhone;
+            this.parentContactSeparate = parentContactSeparate;
+            this.parentName = parentName;
+            this.parentPhone = parentPhone;
+            this.hearAbout = hearAbout;
+            this.notes = notes;
+            this.membershipType = membershipType;
+            this.vipLevel = vipLevel;
+            this.amountPaidCents = amountPaidCents;
         }
 
         public String getId() {
@@ -152,6 +201,70 @@ public class GuestImportFile {
 
         public Long getDetailsVersion() {
             return detailsVersion;
+        }
+
+        public String getNamePrivacyFirst() {
+            return namePrivacyFirst;
+        }
+
+        public String getNamePrivacyLast() {
+            return namePrivacyLast;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public String getPostal() {
+            return postal;
+        }
+
+        public String getEmergencyName() {
+            return emergencyName;
+        }
+
+        public String getEmergencyPhone() {
+            return emergencyPhone;
+        }
+
+        public Boolean getParentContactSeparate() {
+            return parentContactSeparate;
+        }
+
+        public String getParentName() {
+            return parentName;
+        }
+
+        public String getParentPhone() {
+            return parentPhone;
+        }
+
+        public String getHearAbout() {
+            return hearAbout;
+        }
+
+        public String getNotes() {
+            return notes;
+        }
+
+        public Integer getAmountPaidCents() {
+            return amountPaidCents;
+        }
+
+        public String getMembershipType() {
+            return membershipType;
+        }
+
+        public String getVipLevel() {
+            return vipLevel;
         }
 
         public Boolean isCanceled() {

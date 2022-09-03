@@ -24,8 +24,9 @@ public class StaffImportService extends ImportService {
     private final BadgeNumberService badgeNumberService;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public StaffImportService(@Value("${staff.onlineinputpath}") String importInputPath,
-                              @Value("${staff.onlinedlqpath}") String importDLQPath,
+    public StaffImportService(@Value("${staff.onlineImportPath}") String importInputPath,
+                              @Value("${staff.onlineImportGlob}") String importGlob,
+                              @Value("${staff.onlineDLQPath}") String importDLQPath,
                               StaffRepository staffRepository,
                               StaffImportUserCreateService staffUserCreate,
                               BadgeNumberService badgeNumberService) {
@@ -33,6 +34,7 @@ public class StaffImportService extends ImportService {
         this.staffUserCreate = staffUserCreate;
         this.badgeNumberService = badgeNumberService;
         this.onlineImportInputPath = importInputPath;
+        this.onlineImportGlob = importGlob;
         this.onlineDLQPath = importDLQPath;
     }
 

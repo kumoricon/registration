@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 public abstract class ImportService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected String onlineImportInputPath;
+    protected String onlineImportGlob;
     protected String onlineDLQPath;
     protected Path inputPath;
     protected Path dlqPath;
@@ -23,7 +24,7 @@ public abstract class ImportService {
 
     @Scheduled(fixedDelay = 10000)
     public void doWork() {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, "*.{json}")) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, this.onlineImportGlob)) {
             for (Path entry : stream) {
                 long start = System.currentTimeMillis();
                 try {

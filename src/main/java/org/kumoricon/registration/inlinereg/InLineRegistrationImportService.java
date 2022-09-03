@@ -43,7 +43,8 @@ public class InLineRegistrationImportService extends ImportService {
     private PrivateKey privateKey;
 
     public InLineRegistrationImportService(
-            @Value("${inLineRegistration.onlineInputPath}") String importInputPath,
+            @Value("${inLineRegistration.onlineImportPath}") String importInputPath,
+            @Value("${inLineRegistration.onlineImportGlob}") String importGlob,
             @Value("${inLineRegistration.onlineDLQPath}") String importDLQPath,
             @Value("${inLineRegistration.privateKey}") String privateKeyFilename,
             InLineRegRepository inLineRegRepository) {
@@ -53,6 +54,7 @@ public class InLineRegistrationImportService extends ImportService {
         this.inLineRegRepository = inLineRegRepository;
 
         onlineImportInputPath = importInputPath;
+        this.onlineImportGlob = importGlob;
         onlineDLQPath = importDLQPath;
 
         log.info("Reading private key from {}", privateKeyFilename);

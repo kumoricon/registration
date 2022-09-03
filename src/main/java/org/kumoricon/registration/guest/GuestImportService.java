@@ -19,12 +19,14 @@ public class GuestImportService extends ImportService {
     private final GuestRepository guestRepository;
     private final BadgeNumberService badgeNumberService;
 
-    public GuestImportService(@Value("${registration.guestinputpath}") String onlineImportInputPath,
-                              @Value("${registration.onlinedlqpath}") String onlineDLQPath,
+    public GuestImportService(@Value("${registration.attendeeImportPath}") String onlineImportInputPath,
+                              @Value("${registration.attendeeImportGlob}") String importGlob,
+                              @Value("${registration.onlineDLQPath}") String onlineDLQPath,
                               GuestRepository guestRepository,
                               BadgeNumberService badgeNumberService) {
         this.onlineImportInputPath = onlineImportInputPath;
         this.onlineDLQPath = onlineDLQPath;
+        this.onlineImportGlob = importGlob;
         this.guestRepository = guestRepository;
         this.badgeNumberService = badgeNumberService;
     }
@@ -36,7 +38,12 @@ public class GuestImportService extends ImportService {
 
             for (GuestImportFile.Person person : importFile.getPersons()) {
                 try {
-                    importPerson(person);
+                    if ("guest".equalsIgnoreCase(person.getMembershipType())) {
+                        importPerson(person);
+                    } else {
+                        importAttendee(person);
+                    }
+
                 } catch (Exception ex) {
                     log.error("Error importing {}", person, ex);
                 }
@@ -54,6 +61,12 @@ public class GuestImportService extends ImportService {
                 log.error("Error moving {} to DLQ {}", filepath, dlqPath, e);
             }
         }
+    }
+
+    private void importAttendee(GuestImportFile.Person person) {
+        // TODO: actually import attendees
+        // TODO: Make badge numbers deterministic
+        log.info("Attendee: {}", person);
     }
 
     private void importPerson(GuestImportFile.Person person) {
