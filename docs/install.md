@@ -8,19 +8,19 @@ sudo apt intall ./registration_X_Y_Z_all.deb
 ```
 
 ### Create PostgreSQL database users for registration and training
-If running Postgres on the local server, as a user with access to create users in PostgreSQL (typicaly the `postgres` user),
+If running Postgres on the local server, install it and create the database as a user with access to create users in PostgreSQL (typicaly the `postgres` user),
 run `/opt/registration/bin/createdb.sh`.
 
 ```
-$ sudo su postgres
-$ /opt/registration/bin/createdb.sh
+sudo apt install postgresql postgresql-contrib
+sudo su postgres
+/opt/registration/bin/createdb.sh
 ```
 
-Otherwise, create users `registration` and `registrationtraining` in your database.
+Otherwise, create the user `registration` and database `registration`.
 
 ### Edit Configuration Files
-Update the database URL, username and password in `/opt/registration/application.properties`
-and `/opt/registration/application-training.properties`
+Update the database URL, username and password in `/opt/registration/registration.properties`
 
 ### Install Badge Resources
 Copy badge resource files to `/opt/registration/badgeResource`
