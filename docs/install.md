@@ -30,9 +30,21 @@ Copy badge resource files to `/opt/registration/badgeResource`
 sudo systemctl start registration
 ```
 
-### Log In
-Browse to http://hostname:8080/
+### Setup CUPS (Print service)
+Allow CUPS to listen on all addresses. Run:
+```
+sudo cupsctl --remote-admin --remote-any --share-printers
+```
+Add your user (and any other admins) to the `lpadmin` group to allow CUPS admin access:
 
+```
+sudo usermod -aG lpadmin jason
+```
+
+
+### Log In
+- Browse to http://hostname:8080/
+- Printer administration: https://hostname:631/
 
 # Utilities
 Installed to `/opt/registration/bin/`
