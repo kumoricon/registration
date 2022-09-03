@@ -3,16 +3,11 @@
 sudo adduser --no-create-home --home /opt/registration --system --group registration
 
 systemctl enable registration
-systemctl enable registration-training
 
 # If config files don't exist, copy them in. This is so any customizations aren't overwritten
 # when the package is upgraded
 if [ ! -f /opt/registration/registration.properties ]; then
     cp /opt/registration/configuration/default.properties /opt/registration/registration.properties
-fi
-
-if [ ! -f /opt/registration/registration-training.properties ]; then
-    cp /opt/registration/configuration/default-training.properties /opt/registration/registration-training.properties
 fi
 
 # Create service data directory if it doesn't exist. Must be writable by the service (subdirectories will be created

@@ -28,7 +28,6 @@ Copy badge resource files to `/opt/registration/badgeResource`
 ### Start the Services
 ```
 sudo systemctl start registration
-sudo systemctl start registration-training
 ```
 
 ### Log In

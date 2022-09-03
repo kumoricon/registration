@@ -203,12 +203,6 @@
 									<linkTarget>lib/${project.build.finalName}.jar</linkTarget>
 								</data>
 								<data>
-									<type>link</type>
-									<symlink>true</symlink>
-									<linkName>/opt/registration/registration-training.jar</linkName>
-									<linkTarget>lib/${project.build.finalName}.jar</linkTarget>
-								</data>
-								<data>
 									<src>${basedir}/src/deb/systemd</src>
 									<type>directory</type>
 									<mapper>
