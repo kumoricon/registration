@@ -212,6 +212,8 @@ create table if not exists attendees
   id serial not null
     constraint attendees_pkey
       primary key,
+  website_id varchar(255) constraint uk_website_id
+      unique,
   badge_id integer not null
     constraint fk_attendee_badgeid_badges
       references badges,
@@ -255,7 +257,6 @@ create table if not exists attendees
 
 create index if not exists attendees_order_id_index
     on attendees (order_id);
-
 create index if not exists attendees_checked_in_index
     on attendees (checked_in);
 

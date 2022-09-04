@@ -36,6 +36,17 @@ public class AttendeeRepository {
     }
 
     @Transactional(readOnly = true)
+    public Attendee findByWebsiteId(String websiteId) throws NotFoundException {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "select * from attendees where website_id=:websiteId",
+                    Map.of("websiteId", websiteId), new AttendeeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Attendee " + websiteId + " not found");
+        }
+    }
+
+    @Transactional(readOnly = true)
     public List<CheckInByBadgeTypeDTO> getCheckInCountsByBadgeType() {
         final String sql = """
                 select name, preRegCheckedIn, preRegNotcheckedIn, atConCheckedIn, atConNotcheckedIn from badges
@@ -161,14 +172,14 @@ public class AttendeeRepository {
         SqlParameterSource params = new BeanPropertySqlParameterSource(attendee);
         if (attendee.getId() == null) {
             jdbcTemplate.update("""
-                            INSERT INTO attendees(badge_id, badge_number, badge_pre_printed, badge_printed,
+                            INSERT INTO attendees(website_id, badge_id, badge_number, badge_pre_printed, badge_printed,
                             birth_date, check_in_time, checked_in, comped_badge, country, email,
                             emergency_contact_full_name, emergency_contact_phone, fan_name, first_name, last_name,
                             legal_first_name, legal_last_name, name_is_legal_name, preferred_pronoun, custom_pronoun, paid,
                             paid_amount, parent_form_received, parent_full_name, parent_is_emergency_contact,
                             parent_phone, phone_number, pre_registered, zip, order_id, membership_revoked,
                             accessibility_sticker, last_modified) VALUES
-                            (:badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
+                            (:websiteId, :badgeId, :badgeNumber, :badgePrePrinted, :badgePrinted,
                              :birthDate, :checkInTime, :checkedIn, :compedBadge, :country, :email,
                              :emergencyContactFullName, :emergencyContactPhone, :fanName, :firstName, :lastName,
                              :legalFirstName, :legalLastName, :nameIsLegalName, :preferredPronoun, :customPronoun, :paid,
@@ -178,7 +189,7 @@ public class AttendeeRepository {
                             """, params);
         } else {
             jdbcTemplate.update("""
-                            UPDATE attendees SET badge_id = :badgeId, badge_pre_printed = :badgePrePrinted,
+                            UPDATE attendees SET website_id = :websiteId, badge_id = :badgeId, badge_pre_printed = :badgePrePrinted,
                             badge_printed = :badgePrinted, birth_date = :birthDate, check_in_time = :checkInTime,
                             checked_in=:checkedIn, comped_badge=:compedBadge, country=:country, email=:email,
                             emergency_contact_full_name=:emergencyContactFullName,
@@ -318,6 +329,7 @@ public class AttendeeRepository {
             Attendee a = new Attendee();
 
             a.setId(rs.getInt("id"));
+            a.setWebsiteId("websiteId");
             a.setBadgeId(rs.getInt("badge_id"));
             a.setBadgeNumber(rs.getString("badge_number"));
             a.setBadgePrePrinted(rs.getBoolean("badge_pre_printed"));

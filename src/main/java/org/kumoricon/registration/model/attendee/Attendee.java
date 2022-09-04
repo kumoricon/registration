@@ -14,6 +14,7 @@ import java.util.List;
 
 public class Attendee {
     private Integer id;
+    private String websiteId;
     private String firstName;
     private String lastName;
     private String legalFirstName;
@@ -78,6 +79,9 @@ public class Attendee {
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    public String getWebsiteId() { return websiteId; }
+    public void setWebsiteId(String websiteId) { this.websiteId = websiteId; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
