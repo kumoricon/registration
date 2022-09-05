@@ -14,10 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 
 @Service
@@ -315,12 +312,18 @@ public class BaseDataService {
         }
 
         // Create badge types with security restrictions below
-        log.info("Creating badge VIP");
-        Badge vip = BadgeFactory.createBadge("VIP", BadgeType.VIP, "VIP", "#000000", 400, 400, 400);
-        vip.setRequiredRight("badge_type_vip");
-        vip.setWarningMessage("VIP check in. See your coordinator!");
-        vip.setBadgeTypeText("VIP");
-        badgeService.save(vip);
+        List<Badge> vipBadges = new ArrayList<>();
+        vipBadges.add(BadgeFactory.createBadge("VIP-Cumulus", BadgeType.VIP, "VIP", "#000000", 250, 250, 250));
+        vipBadges.add(BadgeFactory.createBadge("VIP-Altocumulus", BadgeType.VIP, "VIP", "#000000", 450, 450, 450));
+        vipBadges.add(BadgeFactory.createBadge("VIP-Cumulonimbus", BadgeType.VIP, "VIP", "#000000", 600, 600, 600));
+
+        for (Badge vip : vipBadges) {
+            log.info("Creating badge {}", vip.getName());
+            vip.setRequiredRight("badge_type_vip");
+            vip.setWarningMessage("VIP check in. See your coordinator!");
+            vip.setBadgeTypeText("VIP");
+            badgeService.save(vip);
+        }
     }
 
     private void createSpecialtyBadges() {
