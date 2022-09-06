@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GuestImportFile {
@@ -52,10 +52,11 @@ public class GuestImportFile {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Person {
+        public static final class Person {
         private final String id;
         private final String namePreferredFirst;
         private final String namePreferredLast;
+        private final Boolean nameOnIdSame;
         private final String nameOnIdFirst;
         private final String nameOnIdLast;
         private final String namePrivacyFirst;
@@ -81,190 +82,159 @@ public class GuestImportFile {
         private final String parentPhone;
         private final String hearAbout;
         private final String notes;
-        private final String membershipType;
         private final String vipLevel;
+        private final String membershipType;
         private final Integer amountPaidCents;
 
-        @JsonCreator
-        public Person(
-                @JsonProperty(value = "id", required = true) String id,
-                @JsonProperty(value = "namePreferredFirst") String namePreferredFirst,
-                @JsonProperty(value = "namePreferredLast") String namePreferredLast,
-                @JsonProperty(value = "nameOnIdFirst") String nameOnIdFirst,
-                @JsonProperty(value = "nameOnIdLast") String nameOnIdLast,
-                @JsonProperty(value = "nomePrivacyFirst") String namePrivacyFirst,
-                @JsonProperty(value = "namePrivacyLast") String namePrivacyLast,
-                @JsonProperty(value = "pronouns") String preferredPronoun,
-                @JsonProperty(value = "fanName") String fanName,
-                @JsonProperty(value = "tShirtSize") String tShirtSize,
-                @JsonProperty(value = "badgeImpactingLastModified") String badgeImpactingLastModified,
-                @JsonProperty(value = "birthdate") String birthdate,
-                @JsonProperty(value = "ageCategoryConCurrentTerm") String ageCategoryConCurrentTerm,
-                @JsonProperty(value = "hasBadgeImage") Boolean hasBadgeImage,
-                @JsonProperty(value = "badgeImageFileType") String badgeImageFileType,
-                @JsonProperty(value = "detailsVersion") Long detailsVersion,
-                @JsonProperty(value = "isCanceled", defaultValue = "false") Boolean isCanceled,
-                @JsonProperty(value = "country") String country,
-                @JsonProperty(value = "email") String email,
-                @JsonProperty(value = "phone") String phone,
-                @JsonProperty(value = "postal") String postal,
-                @JsonProperty(value = "emergencyName") String emergencyName,
-                @JsonProperty(value = "emergencyPhone") String emergencyPhone,
-                @JsonProperty(value = "parentContactSeparate") Boolean parentContactSeparate,
-                @JsonProperty(value = "parentName") String parentName,
-                @JsonProperty(value = "parentPhone") String parentPhone,
-                @JsonProperty(value = "hearAbout") String hearAbout,
-                @JsonProperty(value = "notes") String notes,
-                @JsonProperty(value = "vipLevel") String vipLevel,
-                @JsonProperty(value = "membershipType") String membershipType,
-                @JsonProperty(value = "amountPaidCents") Integer amountPaidCents) {
-            this.id = id;
-            this.namePreferredFirst = namePreferredFirst;
-            this.namePreferredLast = namePreferredLast;
-            this.nameOnIdFirst = nameOnIdFirst;
-            this.nameOnIdLast = nameOnIdLast;
-            this.namePrivacyFirst = namePrivacyFirst;
-            this.namePrivacyLast = namePrivacyLast;
-            this.preferredPronoun = preferredPronoun;
-            this.fanName = fanName;
-            this.tShirtSize = tShirtSize;
-            this.badgeImpactingLastModified = badgeImpactingLastModified;
-            this.birthdate = birthdate;
-            this.ageCategoryConCurrentTerm = ageCategoryConCurrentTerm;
-            this.hasBadgeImage = hasBadgeImage;
-            this.badgeImageFileType = badgeImageFileType;
-            this.detailsVersion = detailsVersion;
-            this.isCanceled = isCanceled;
-            this.country = country;
-            this.email = email;
-            this.phone = phone;
-            this.postal = postal;
-            this.emergencyName = emergencyName;
-            this.emergencyPhone = emergencyPhone;
-            this.parentContactSeparate = parentContactSeparate;
-            this.parentName = parentName;
-            this.parentPhone = parentPhone;
-            this.hearAbout = hearAbout;
-            this.notes = notes;
-            this.membershipType = membershipType;
-            this.vipLevel = vipLevel;
-            this.amountPaidCents = amountPaidCents;
-        }
+            @JsonCreator
+            public Person(
+                    @JsonProperty(value = "id", required = true) String id,
+                    @JsonProperty(value = "namePreferredFirst") String namePreferredFirst,
+                    @JsonProperty(value = "namePreferredLast") String namePreferredLast,
+                    @JsonProperty(value = "nameOnIdSame") Boolean nameOnIdSame,
+                    @JsonProperty(value = "nameOnIdFirst") String nameOnIdFirst,
+                    @JsonProperty(value = "nameOnIdLast") String nameOnIdLast,
+                    @JsonProperty(value = "nomePrivacyFirst") String namePrivacyFirst,
+                    @JsonProperty(value = "namePrivacyLast") String namePrivacyLast,
+                    @JsonProperty(value = "pronouns") String preferredPronoun,
+                    @JsonProperty(value = "fanName") String fanName,
+                    @JsonProperty(value = "tShirtSize") String tShirtSize,
+                    @JsonProperty(value = "badgeImpactingLastModified") String badgeImpactingLastModified,
+                    @JsonProperty(value = "birthdate") String birthdate,
+                    @JsonProperty(value = "ageCategoryConCurrentTerm") String ageCategoryConCurrentTerm,
+                    @JsonProperty(value = "hasBadgeImage") Boolean hasBadgeImage,
+                    @JsonProperty(value = "badgeImageFileType") String badgeImageFileType,
+                    @JsonProperty(value = "detailsVersion") Long detailsVersion,
+                    @JsonProperty(value = "isCanceled", defaultValue = "false") Boolean isCanceled,
+                    @JsonProperty(value = "country") String country,
+                    @JsonProperty(value = "email") String email,
+                    @JsonProperty(value = "phone") String phone,
+                    @JsonProperty(value = "postal") String postal,
+                    @JsonProperty(value = "emergencyName") String emergencyName,
+                    @JsonProperty(value = "emergencyPhone") String emergencyPhone,
+                    @JsonProperty(value = "parentContactSeparate") Boolean parentContactSeparate,
+                    @JsonProperty(value = "parentName") String parentName,
+                    @JsonProperty(value = "parentPhone") String parentPhone,
+                    @JsonProperty(value = "hearAbout") String hearAbout,
+                    @JsonProperty(value = "notes") String notes,
+                    @JsonProperty(value = "vipLevel") String vipLevel,
+                    @JsonProperty(value = "membershipType") String membershipType,
+                    @JsonProperty(value = "amountPaidCents") Integer amountPaidCents) {
+                this.id = id;
+                this.namePreferredFirst = namePreferredFirst;
+                this.namePreferredLast = namePreferredLast;
+                this.nameOnIdFirst = nameOnIdFirst;
+                this.nameOnIdLast = nameOnIdLast;
+                this.nameOnIdSame = nameOnIdSame;
+                this.namePrivacyFirst = namePrivacyFirst;
+                this.namePrivacyLast = namePrivacyLast;
+                this.preferredPronoun = preferredPronoun;
+                this.fanName = fanName;
+                this.tShirtSize = tShirtSize;
+                this.badgeImpactingLastModified = badgeImpactingLastModified;
+                this.birthdate = birthdate;
+                this.ageCategoryConCurrentTerm = ageCategoryConCurrentTerm;
+                this.hasBadgeImage = hasBadgeImage;
+                this.badgeImageFileType = badgeImageFileType;
+                this.detailsVersion = detailsVersion;
+                this.isCanceled = isCanceled;
+                this.country = country;
+                this.email = email;
+                this.phone = phone;
+                this.postal = postal;
+                this.emergencyName = emergencyName;
+                this.emergencyPhone = emergencyPhone;
+                this.parentContactSeparate = parentContactSeparate;
+                this.parentName = parentName;
+                this.parentPhone = parentPhone;
+                this.hearAbout = hearAbout;
+                this.notes = notes;
+                this.membershipType = membershipType;
+                this.vipLevel = vipLevel;
+                this.amountPaidCents = amountPaidCents;
+            }
 
-        public String getId() {
+            public String getOrderId() {
+                // id will be something like: n1xz94s5l3yzt9wscmhin1vm3ks7vnn0-0 where orderId is the first part
+                if (this.id.contains("-")) {
+                    return this.id.split("-")[0];
+                } else {
+                    throw new RuntimeException("Unknown ID format in %s (%s %s)".formatted(
+                            this.id, this.namePreferredFirst, this.namePreferredLast));
+                }
+            }
+
+            @Override
+            public String toString() {
+                return String.format("[Person %s: %s %s]", id, namePreferredFirst, namePreferredLast);
+            }
+
+        public String id() {
             return id;
         }
 
-        public String getNamePreferredFirst() {
+        public String namePreferredFirst() {
             return namePreferredFirst;
         }
 
-        public String getNamePreferredLast() {
+        public String namePreferredLast() {
             return namePreferredLast;
         }
 
-        public String getNameOnIdFirst() {
+        public Boolean nameOnIdSame() {
+            return nameOnIdSame;
+        }
+
+        public String nameOnIdFirst() {
             return nameOnIdFirst;
         }
 
-        public String getNameOnIdLast() {
+        public String nameOnIdLast() {
             return nameOnIdLast;
         }
 
-        public String getPreferredPronoun() { return preferredPronoun; }
-
-        public String getFanName() { return fanName; }
-
-        public String gettShirtSize() {
-            return tShirtSize;
-        }
-
-        public String getBadgeImpactingLastModified() {
-            return badgeImpactingLastModified;
-        }
-
-        public String getBirthdate() {
-            return birthdate;
-        }
-
-        public String getAgeCategoryConCurrentTerm() {
-            return ageCategoryConCurrentTerm;
-        }
-
-        public Boolean getHasBadgeImage() {
-            return hasBadgeImage;
-        }
-
-        public String getBadgeImageFileType() {
-            return badgeImageFileType;
-        }
-
-        public Long getDetailsVersion() {
-            return detailsVersion;
-        }
-
-        public String getNamePrivacyFirst() {
+        public String namePrivacyFirst() {
             return namePrivacyFirst;
         }
 
-        public String getNamePrivacyLast() {
+        public String namePrivacyLast() {
             return namePrivacyLast;
         }
 
-        public String getCountry() {
-            return country;
+        public String preferredPronoun() {
+            return preferredPronoun;
         }
 
-        public String getEmail() {
-            return email;
+        public String fanName() {
+            return fanName;
         }
 
-        public String getPhone() {
-            return phone;
+        public String tShirtSize() {
+            return tShirtSize;
         }
 
-        public String getPostal() {
-            return postal;
+        public String badgeImpactingLastModified() {
+            return badgeImpactingLastModified;
         }
 
-        public String getEmergencyName() {
-            return emergencyName;
+        public String birthdate() {
+            return birthdate;
         }
 
-        public String getEmergencyPhone() {
-            return emergencyPhone;
+        public String ageCategoryConCurrentTerm() {
+            return ageCategoryConCurrentTerm;
         }
 
-        public Boolean getParentContactSeparate() {
-            return parentContactSeparate;
+        public Boolean hasBadgeImage() {
+            return hasBadgeImage;
         }
 
-        public String getParentName() {
-            return parentName;
+        public String badgeImageFileType() {
+            return badgeImageFileType;
         }
 
-        public String getParentPhone() {
-            return parentPhone;
-        }
-
-        public String getHearAbout() {
-            return hearAbout;
-        }
-
-        public String getNotes() {
-            return notes;
-        }
-
-        public Integer getAmountPaidCents() {
-            return amountPaidCents;
-        }
-
-        public String getMembershipType() {
-            return membershipType;
-        }
-
-        public String getVipLevel() {
-            return vipLevel;
+        public Long detailsVersion() {
+            return detailsVersion;
         }
 
         public Boolean isCanceled() {
@@ -272,9 +242,105 @@ public class GuestImportFile {
             return isCanceled;
         }
 
-        @Override
-        public String toString() {
-            return String.format("[Person %s: %s %s]", id, namePreferredFirst, namePreferredLast);
+        public String country() {
+            return country;
         }
-    }
+
+        public String email() {
+            return email;
+        }
+
+        public String phone() {
+            return phone;
+        }
+
+        public String postal() {
+            return postal;
+        }
+
+        public String emergencyName() {
+            return emergencyName;
+        }
+
+        public String emergencyPhone() {
+            return emergencyPhone;
+        }
+
+        public Boolean parentContactSeparate() {
+            return parentContactSeparate;
+        }
+
+        public String parentName() {
+            return parentName;
+        }
+
+        public String parentPhone() {
+            return parentPhone;
+        }
+
+        public String hearAbout() {
+            return hearAbout;
+        }
+
+        public String notes() {
+            return notes;
+        }
+
+        public String vipLevel() {
+            return vipLevel;
+        }
+
+        public String membershipType() {
+            return membershipType;
+        }
+
+        public Integer amountPaidCents() {
+            return amountPaidCents;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (Person) obj;
+            return Objects.equals(this.id, that.id) &&
+                    Objects.equals(this.namePreferredFirst, that.namePreferredFirst) &&
+                    Objects.equals(this.namePreferredLast, that.namePreferredLast) &&
+                    Objects.equals(this.nameOnIdSame, that.nameOnIdSame) &&
+                    Objects.equals(this.nameOnIdFirst, that.nameOnIdFirst) &&
+                    Objects.equals(this.nameOnIdLast, that.nameOnIdLast) &&
+                    Objects.equals(this.namePrivacyFirst, that.namePrivacyFirst) &&
+                    Objects.equals(this.namePrivacyLast, that.namePrivacyLast) &&
+                    Objects.equals(this.preferredPronoun, that.preferredPronoun) &&
+                    Objects.equals(this.fanName, that.fanName) &&
+                    Objects.equals(this.tShirtSize, that.tShirtSize) &&
+                    Objects.equals(this.badgeImpactingLastModified, that.badgeImpactingLastModified) &&
+                    Objects.equals(this.birthdate, that.birthdate) &&
+                    Objects.equals(this.ageCategoryConCurrentTerm, that.ageCategoryConCurrentTerm) &&
+                    Objects.equals(this.hasBadgeImage, that.hasBadgeImage) &&
+                    Objects.equals(this.badgeImageFileType, that.badgeImageFileType) &&
+                    Objects.equals(this.detailsVersion, that.detailsVersion) &&
+                    Objects.equals(this.isCanceled, that.isCanceled) &&
+                    Objects.equals(this.country, that.country) &&
+                    Objects.equals(this.email, that.email) &&
+                    Objects.equals(this.phone, that.phone) &&
+                    Objects.equals(this.postal, that.postal) &&
+                    Objects.equals(this.emergencyName, that.emergencyName) &&
+                    Objects.equals(this.emergencyPhone, that.emergencyPhone) &&
+                    Objects.equals(this.parentContactSeparate, that.parentContactSeparate) &&
+                    Objects.equals(this.parentName, that.parentName) &&
+                    Objects.equals(this.parentPhone, that.parentPhone) &&
+                    Objects.equals(this.hearAbout, that.hearAbout) &&
+                    Objects.equals(this.notes, that.notes) &&
+                    Objects.equals(this.vipLevel, that.vipLevel) &&
+                    Objects.equals(this.membershipType, that.membershipType) &&
+                    Objects.equals(this.amountPaidCents, that.amountPaidCents);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, namePreferredFirst, namePreferredLast, nameOnIdSame, nameOnIdFirst, nameOnIdLast, namePrivacyFirst, namePrivacyLast, preferredPronoun, fanName, tShirtSize, badgeImpactingLastModified, birthdate, ageCategoryConCurrentTerm, hasBadgeImage, badgeImageFileType, detailsVersion, isCanceled, country, email, phone, postal, emergencyName, emergencyPhone, parentContactSeparate, parentName, parentPhone, hearAbout, notes, vipLevel, membershipType, amountPaidCents);
+        }
+
+        }
 }

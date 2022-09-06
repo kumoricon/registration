@@ -5,6 +5,8 @@ import org.kumoricon.registration.model.role.Right;
 import org.kumoricon.registration.model.role.RightRepository;
 import org.kumoricon.registration.model.role.Role;
 import org.kumoricon.registration.model.role.RoleRepository;
+import org.kumoricon.registration.model.tillsession.TillSession;
+import org.kumoricon.registration.model.tillsession.TillSessionRepository;
 import org.kumoricon.registration.model.user.User;
 import org.kumoricon.registration.model.user.UserRepository;
 import org.kumoricon.registration.model.user.UserService;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 
@@ -24,6 +27,7 @@ public class BaseDataService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final BadgeService badgeService;
+    private final TillSessionRepository tillSessionRepository;
     private final Settings currentSettings;
     private static final Logger log = LoggerFactory.getLogger(BaseDataService.class);
 
@@ -32,12 +36,14 @@ public class BaseDataService {
                            UserRepository userRepository,
                            UserService userService,
                            BadgeService badgeService,
+                           TillSessionRepository tillSessionRepository,
                            SettingsService settingsService) {
         this.roleRepository = roleRepository;
         this.rightRepository = rightRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.badgeService = badgeService;
+        this.tillSessionRepository = tillSessionRepository;
         this.currentSettings = settingsService.getCurrentSettings();
     }
 

@@ -1,7 +1,8 @@
-package org.kumoricon.registration.utility;
+package org.kumoricon.registration.guest;
 
 
 import org.junit.jupiter.api.Test;
+import org.kumoricon.registration.guest.AttendeeImporterService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -47,6 +47,18 @@ public class AttendeeRepository {
     }
 
     @Transactional(readOnly = true)
+    public Integer countByWebsiteId(String websiteId) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) FROM attendees where website_id=:websiteId",
+                    Map.of("websiteId", websiteId),
+                    Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    @Transactional(readOnly = true)
     public List<CheckInByBadgeTypeDTO> getCheckInCountsByBadgeType() {
         final String sql = """
                 select name, preRegCheckedIn, preRegNotcheckedIn, atConCheckedIn, atConNotcheckedIn from badges
@@ -329,7 +341,7 @@ public class AttendeeRepository {
             Attendee a = new Attendee();
 
             a.setId(rs.getInt("id"));
-            a.setWebsiteId("websiteId");
+            a.setWebsiteId(rs.getString("website_id"));
             a.setBadgeId(rs.getInt("badge_id"));
             a.setBadgeNumber(rs.getString("badge_number"));
             a.setBadgePrePrinted(rs.getBoolean("badge_pre_printed"));

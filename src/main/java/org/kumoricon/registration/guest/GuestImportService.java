@@ -5,80 +5,86 @@ import org.kumoricon.registration.model.badgenumber.BadgeNumberService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Component
 public class GuestImportService extends ImportService {
 
     private final GuestRepository guestRepository;
+    private final AttendeeImporterService attendeeImporterService;
     private final BadgeNumberService badgeNumberService;
 
     public GuestImportService(@Value("${registration.attendeeImportPath}") String onlineImportInputPath,
                               @Value("${registration.attendeeImportGlob}") String importGlob,
                               @Value("${registration.onlineDLQPath}") String onlineDLQPath,
                               GuestRepository guestRepository,
+                              AttendeeImporterService attendeeImporterService,
                               BadgeNumberService badgeNumberService) {
         this.onlineImportInputPath = onlineImportInputPath;
         this.onlineDLQPath = onlineDLQPath;
         this.onlineImportGlob = importGlob;
         this.guestRepository = guestRepository;
+        this.attendeeImporterService = attendeeImporterService;
         this.badgeNumberService = badgeNumberService;
     }
 
     protected void importFile(Path filepath) {
+        GuestImportFile importFile;
         try {
-            GuestImportFile importFile = objectMapper.readValue(filepath.toFile(), GuestImportFile.class);
-            log.info("{}: Actions: {}   Persons: {}", filepath, importFile.getActions().size(), importFile.getPersons().size());
-
-            for (GuestImportFile.Person person : importFile.getPersons()) {
-                try {
-                    if ("guest".equalsIgnoreCase(person.getMembershipType())) {
-                        importPerson(person);
-                    } else {
-                        importAttendee(person);
-                    }
-
-                } catch (Exception ex) {
-                    log.error("Error importing {}", person, ex);
-                }
-            }
-
-            for (GuestImportFile.Action action : importFile.getActions()) {
-                log.info("  Action: {}: {}", action.getActionsVersion(), action.getDeleted());
-            }
+            importFile = objectMapper.readValue(filepath.toFile(), GuestImportFile.class);
         } catch (IOException ex) {
-            log.error("Error loading {}", filepath, ex);
+            log.error("Error reading {}", filepath, ex);
+            return;
+        }
+        log.info("{}: Actions: {}   Persons: {}", filepath, importFile.getActions().size(), importFile.getPersons().size());
+
+        List<GuestImportFile.Person> attendees = new ArrayList<>();
+        for (GuestImportFile.Person person : importFile.getPersons()) {
             try {
-                Path dest = Paths.get(dlqPath.toString(), filepath.getFileName().toString());
-                Files.move(filepath, dest);
-            } catch (IOException e) {
-                log.error("Error moving {} to DLQ {}", filepath, dlqPath, e);
+                if ("guest".equalsIgnoreCase(person.membershipType())) {
+                    importPerson(person);
+                } else {
+                    attendees.add(person);
+                }
+
+            } catch (Exception ex) {
+                log.error("Error importing {}", person, ex);
+                throw new RuntimeException(ex);
             }
         }
-    }
 
-    private void importAttendee(GuestImportFile.Person person) {
-        // TODO: actually import attendees
-        // TODO: Make badge numbers deterministic
-        log.info("Attendee: {}", person);
+        attendeeImporterService.importFromObjects(attendees);
+
+//            for (GuestImportFile.Action action : importFile.getActions()) {
+//                log.info("  Action: {}: {}", action.getActionsVersion(), action.getDeleted());
+//            }
+//        } catch (IOException ex) {
+//            log.error("Error loading {}", filepath, ex);
+//            try {
+//                Path dest = Paths.get(dlqPath.toString(), filepath.getFileName().toString());
+//                Files.move(filepath, dest);
+//            } catch (IOException e) {
+//                log.error("Error moving {} to DLQ {}", filepath, dlqPath, e);
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 
     private void importPerson(GuestImportFile.Person person) {
         if (person.isCanceled()) {
             log.info("{} was canceled online, deleting from system", person);
-            guestRepository.deleteByOnlineId(person.getId());
+            guestRepository.deleteByOnlineId(person.id());
             return;
         }
         log.info("Importing {}", person);
         Guest existing;
         try {
-            existing = guestRepository.findByOnlineId(person.getId());
+            existing = guestRepository.findByOnlineId(person.id());
         } catch (EmptyResultDataAccessException ex) {
             existing = new Guest();
             existing.setBadgeNumber(badgeNumberService.getNextBadgeNumber());
@@ -92,36 +98,36 @@ public class GuestImportService extends ImportService {
 
     private boolean updateGuestFromPerson(Guest guest, GuestImportFile.Person person) {
         boolean changed = false;
-        if (guest.getOnlineId() != null && !guest.getOnlineId().equals(person.getId())) {
+        if (guest.getOnlineId() != null && !guest.getOnlineId().equals(person.id())) {
             log.error("Tried to update guest {} that didn't match Person {}'s id", guest, person);
             throw new RuntimeException("Tried to update guest from the wrong person");
         }
         if (guest.getOnlineId() == null ||
-                !Objects.equals(guest.getOnlineId(), person.getId()) ||
-                !Objects.equals(guest.getFirstName(), person.getNamePreferredFirst()) ||
-                !Objects.equals(guest.getLastName(), person.getNamePreferredLast()) ||
-                !Objects.equals(guest.getLegalFirstName(), person.getNameOnIdFirst()) ||
-                !Objects.equals(guest.getLegalLastName(), person.getNameOnIdLast()) ||
-                !Objects.equals(guest.getPreferredPronoun(), person.getPreferredPronoun()) ||
-                !Objects.equals(guest.getFanName(), person.getFanName()) ||
-                !Objects.equals(guest.getBirthDate().toString(), person.getBirthdate()) ||
-                !Objects.equals(guest.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
-                !Objects.equals(guest.getHasBadgeImage(), person.getHasBadgeImage()) ||
-                !Objects.equals(guest.getBadgeImageFileType(), person.getBadgeImageFileType())
+                !Objects.equals(guest.getOnlineId(), person.id()) ||
+                !Objects.equals(guest.getFirstName(), person.namePreferredFirst()) ||
+                !Objects.equals(guest.getLastName(), person.namePreferredLast()) ||
+                !Objects.equals(guest.getLegalFirstName(), person.nameOnIdFirst()) ||
+                !Objects.equals(guest.getLegalLastName(), person.nameOnIdLast()) ||
+                !Objects.equals(guest.getPreferredPronoun(), person.preferredPronoun()) ||
+                !Objects.equals(guest.getFanName(), person.fanName()) ||
+                !Objects.equals(guest.getBirthDate().toString(), person.birthdate()) ||
+                !Objects.equals(guest.getAgeCategoryAtCon(), person.ageCategoryConCurrentTerm()) ||
+                !Objects.equals(guest.getHasBadgeImage(), person.hasBadgeImage()) ||
+                !Objects.equals(guest.getBadgeImageFileType(), person.badgeImageFileType())
         ) {
             changed = true;
         }
-        guest.setOnlineId(person.getId());
-        guest.setFirstName(person.getNamePreferredFirst());
-        guest.setLastName(person.getNamePreferredLast());
-        guest.setLegalFirstName(person.getNameOnIdFirst());
-        guest.setLegalLastName(person.getNameOnIdLast());
-        guest.setPreferredPronoun(person.getPreferredPronoun());
-        guest.setFanName(person.getFanName());
-        guest.setBirthDate(LocalDate.parse(person.getBirthdate()));
-        guest.setAgeCategoryAtCon(person.getAgeCategoryConCurrentTerm());
-        guest.setHasBadgeImage(person.getHasBadgeImage());
-        guest.setBadgeImageFileType(person.getBadgeImageFileType());
+        guest.setOnlineId(person.id());
+        guest.setFirstName(person.namePreferredFirst());
+        guest.setLastName(person.namePreferredLast());
+        guest.setLegalFirstName(person.nameOnIdFirst());
+        guest.setLegalLastName(person.nameOnIdLast());
+        guest.setPreferredPronoun(person.preferredPronoun());
+        guest.setFanName(person.fanName());
+        guest.setBirthDate(LocalDate.parse(person.birthdate()));
+        guest.setAgeCategoryAtCon(person.ageCategoryConCurrentTerm());
+        guest.setHasBadgeImage(person.hasBadgeImage());
+        guest.setBadgeImageFileType(person.badgeImageFileType());
 
         return changed;
     }

@@ -7,10 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 public abstract class ImportService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -30,14 +27,15 @@ public abstract class ImportService {
                 try {
                     importFile(entry);
                     Files.delete(entry);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     log.error("Error processing file {}", entry, ex);
                     try {
                         Path dest = Paths.get(dlqPath.toString(), entry.getFileName().toString());
-                        Files.move(entry, dest);
+                        Files.move(entry, dest, StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
                         log.error("Error moving {} to DLQ {}", entry, dlqPath, e);
                     }
+                    throw ex;
                 }
                 long finish = System.currentTimeMillis();
                 log.info("Imported {} in {} ms", entry, finish-start);
