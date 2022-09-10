@@ -12,8 +12,7 @@ import java.util.Random;
 @Service
 public class BadgeNumberService {
     private static final Logger log = LoggerFactory.getLogger(BadgeNumberService.class);
-    private static final String[] PREFIXES = {"BN", "CE", "CT", "CR", "FN", "HA", "HL", "JT", "JX", "KH", "MM", "NZ",
-            "PN", "PW", "RH", "RR", "RW", "TJ", "YH", "YT", "ZW"};
+    private static final String[] PREFIXES = {"G"};
     private final Integer startingBadgeNumber;
     private final BadgeNumberRepository badgeNumberRepository;
     private final Random random = new Random();
