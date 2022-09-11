@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GuestImportFile {
+public class AttendeeImportFile {
     private final List<Action> actions;
     private final List<Person> persons;
 
     @JsonCreator
-    public GuestImportFile(
+    public AttendeeImportFile(
             @JsonProperty(value = "actions") List<Action> actions,
             @JsonProperty(value = "persons") List<Person> persons) {
         this.actions = actions == null ? new ArrayList<>() : actions;

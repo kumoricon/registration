@@ -81,12 +81,12 @@ public class AttendeeImporterService {
         return attendeeIds;
     }
 
-    protected List<String> createOrders(List<GuestImportFile.Person> attendeeRecords, User user) {
+    protected List<String> createOrders(List<AttendeeImportFile.Person> attendeeRecords, User user) {
         long start = System.currentTimeMillis();
         log.info("Creating orders...");
         Set<String> orderNumbers = new HashSet<>();
         int count = 0;
-        for (GuestImportFile.Person a : attendeeRecords) {
+        for (AttendeeImportFile.Person a : attendeeRecords) {
             count++;
             if (a.getOrderId() == null || a.getOrderId().trim().isEmpty()) {
                 log.error("During import record {} had no order id: {} {}", count, a.namePreferredFirst(), a.namePreferredLast());
@@ -132,11 +132,11 @@ public class AttendeeImporterService {
     }
 
 
-    protected void createNotes(List<GuestImportFile.Person> attendeeRecords, User user) {
+    protected void createNotes(List<AttendeeImportFile.Person> attendeeRecords, User user) {
         long start = System.currentTimeMillis();
         int noteCount = 0, foundExistingNote = 0;
         List<AttendeeHistory> notes = new ArrayList<>();
-        for (GuestImportFile.Person record : attendeeRecords) {
+        for (AttendeeImportFile.Person record : attendeeRecords) {
             Integer attendeeId = attendeeIdMap.get(record.namePreferredFirst() + record.namePreferredLast() + record.getOrderId());
 
             List<AttendeeHistoryDTO> existing = attendeeHistoryRepository.findAllDTObyAttendeeId(attendeeId);
@@ -221,7 +221,7 @@ public class AttendeeImporterService {
     }
 
     @Transactional
-    public void importFromObjects(List<GuestImportFile.Person> persons) {
+    public void importFromObjects(List<AttendeeImportFile.Person> persons) {
         long start = System.currentTimeMillis();
 
         badgeMap = getBadgeMap();
@@ -232,7 +232,7 @@ public class AttendeeImporterService {
         List<String> createdOrderIds = createOrders(persons, user);
         orderIdMap = getOrderIdMap();
 
-        for (GuestImportFile.Person person : persons) {
+        for (AttendeeImportFile.Person person : persons) {
             attendeeCount++;
             Attendee attendee;
             boolean isNew = false;
@@ -264,7 +264,7 @@ public class AttendeeImporterService {
                 attendeeCount, newAttendee, updatedAttendee, System.currentTimeMillis()-start);
     }
 
-    private boolean updateAttendeeFromPerson(GuestImportFile.Person person, Attendee attendee) {
+    private boolean updateAttendeeFromPerson(AttendeeImportFile.Person person, Attendee attendee) {
         boolean dirty = false;
         if (!Objects.equals(attendee.getFirstName(), person.namePreferredFirst())) {
             dirty = true;

@@ -12,19 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Handles importing non-staff members (attendees and guests). Attendees are handed off
+ * to the AttendeeImporterService
+ */
 @Component
-public class GuestImportService extends ImportService {
+public class AttendeeImportService extends ImportService {
 
     private final GuestRepository guestRepository;
     private final AttendeeImporterService attendeeImporterService;
     private final BadgeNumberService badgeNumberService;
 
-    public GuestImportService(@Value("${registration.attendeeImportPath}") String onlineImportInputPath,
-                              @Value("${registration.attendeeImportGlob}") String importGlob,
-                              @Value("${registration.onlineDLQPath}") String onlineDLQPath,
-                              GuestRepository guestRepository,
-                              AttendeeImporterService attendeeImporterService,
-                              BadgeNumberService badgeNumberService) {
+    public AttendeeImportService(@Value("${registration.attendeeImportPath}") String onlineImportInputPath,
+                                 @Value("${registration.attendeeImportGlob}") String importGlob,
+                                 @Value("${registration.onlineDLQPath}") String onlineDLQPath,
+                                 GuestRepository guestRepository,
+                                 AttendeeImporterService attendeeImporterService,
+                                 BadgeNumberService badgeNumberService) {
         this.onlineImportInputPath = onlineImportInputPath;
         this.onlineDLQPath = onlineDLQPath;
         this.onlineImportGlob = importGlob;
@@ -34,17 +38,17 @@ public class GuestImportService extends ImportService {
     }
 
     protected void importFile(Path filepath) {
-        GuestImportFile importFile;
+        AttendeeImportFile importFile;
         try {
-            importFile = objectMapper.readValue(filepath.toFile(), GuestImportFile.class);
+            importFile = objectMapper.readValue(filepath.toFile(), AttendeeImportFile.class);
         } catch (IOException ex) {
             log.error("Error reading {}", filepath, ex);
             return;
         }
         log.info("{}: Actions: {}   Persons: {}", filepath, importFile.getActions().size(), importFile.getPersons().size());
 
-        List<GuestImportFile.Person> attendees = new ArrayList<>();
-        for (GuestImportFile.Person person : importFile.getPersons()) {
+        List<AttendeeImportFile.Person> attendees = new ArrayList<>();
+        for (AttendeeImportFile.Person person : importFile.getPersons()) {
             try {
                 if ("guest".equalsIgnoreCase(person.membershipType())) {
                     importPerson(person);
@@ -75,7 +79,7 @@ public class GuestImportService extends ImportService {
 //        }
     }
 
-    private void importPerson(GuestImportFile.Person person) {
+    private void importPerson(AttendeeImportFile.Person person) {
         if (person.isCanceled()) {
             log.info("{} was canceled online, deleting from system", person);
             guestRepository.deleteByOnlineId(person.id());
@@ -96,7 +100,7 @@ public class GuestImportService extends ImportService {
         }
     }
 
-    private boolean updateGuestFromPerson(Guest guest, GuestImportFile.Person person) {
+    private boolean updateGuestFromPerson(Guest guest, AttendeeImportFile.Person person) {
         boolean changed = false;
         if (guest.getOnlineId() != null && !guest.getOnlineId().equals(person.id())) {
             log.error("Tried to update guest {} that didn't match Person {}'s id", guest, person);
