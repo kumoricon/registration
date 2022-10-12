@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class AttendanceReportController {
     private final AttendeeSearchRepository attendeeSearchRepository;
     private final StaffRepository staffRepository;
-    private final String[] ATTENDEE_BADGE_TYPES = {"wednesday", "thursday", "friday", "saturday", "sunday", "weekend", "vip"};
+    private final String[] ATTENDEE_BADGE_TYPES = {"wednesday", "thursday", "friday", "saturday", "sunday", "weekend", "vip", "vip-cumulus", "vip-altocumulus", "vip-cumulonimbus"};
     private final String[] VENDOR_BADGE_TYPES = {"artist", "exhibitor"};
 
     public AttendanceReportController(AttendeeSearchRepository attendeeSearchRepository,
@@ -42,7 +42,6 @@ public class AttendanceReportController {
 
             if (a.getCheckedIn()) {
                 attendanceCounts.incrementWarmBodyCount();
-
             }
 
             if (isRegularAttendee(a.getBadgeType()) &&
@@ -62,7 +61,7 @@ public class AttendanceReportController {
 
     /**
      * Staff count as warm bodies if they've checked in
-     * @param attendanceCounts
+     * @param attendanceCounts Running count totals
      */
     private void countStaff(AttendanceCounts attendanceCounts) {
         for (Staff s : staffRepository.findAll()) {
@@ -74,10 +73,8 @@ public class AttendanceReportController {
     }
 
     private Boolean isRegularAttendee(String badgeType) {
-        String toCompare = badgeType.toLowerCase();
-
         for (String badge : ATTENDEE_BADGE_TYPES) {
-            if (badge.equals(toCompare)) {
+            if (badge.equalsIgnoreCase(badgeType)) {
                 return true;
             }
         }
@@ -85,10 +82,8 @@ public class AttendanceReportController {
     }
 
     private Boolean isArtistExhibitor(String badgeType) {
-        String toCompare = badgeType.toLowerCase();
-
         for (String badge : VENDOR_BADGE_TYPES) {
-            if (badge.equals(toCompare)) {
+            if (badge.equalsIgnoreCase(badgeType)) {
                 return true;
             }
         }
