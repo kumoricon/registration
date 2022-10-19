@@ -58,14 +58,16 @@ class BadgeCreatorStaffBase {
         }
 
 //        b.fillRect(largeNameBg, Color.ORANGE);
-        b.drawCenteredStrings(names, largeNameBg, boldFont, Color.BLACK);
+        Color fgColor = Color.decode("#eaa44e");
+        b.drawStretchedCenteredStrings(names, largeNameBg, boldFont, fgColor, 1);
     }
 
     void drawPronouns(BadgeImage b, StaffBadgeDTO staff) {
         if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isBlank()) {
+            Color fgColor = Color.decode("#eaa44e");
             Rectangle background = new Rectangle(700, 1620, 460, 150);
 //            b.fillRect(background, Color.RED);
-            b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, plainFont, Color.BLACK, 1);
+            b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, plainFont, fgColor, 1);
         }
     }
 
