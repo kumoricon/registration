@@ -31,23 +31,22 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
     private void drawAgeColorStripe(BadgeImage b, AttendeeBadgeDTO attendee) {
         Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
         Color fgColor = BadgeImage.getInverseColor(bgColor);
-        Rectangle ageBackground = new Rectangle(112, 900, 1260, 207);
+        Rectangle ageBackground = new Rectangle(110, 112, 223, 750);
+        Rectangle textBoundingBox = new Rectangle(155, 150, 160, 680);
         b.fillRect(ageBackground, bgColor);
-        Rectangle ageTextBoundingBox;
-        ageTextBoundingBox = new Rectangle(130, 870, 1160, 200);
-        b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getAgeStripeText()), ageTextBoundingBox, boldFont, fgColor);
+        b.drawVerticalCenteredString(attendee.getAgeStripeText(), textBoundingBox, boldFont, fgColor, 2);
     }
 
     private void drawLargeName(BadgeImage b, AttendeeBadgeDTO attendee) {
-        // If fan name exists, draw it here. Otherwise draw the full name here
+        // If fan name exists, draw it here. Otherwise, draw the full name here
         String name;
         Rectangle largeNameBg;
         if (attendee.getFanName() != null && !attendee.getFanName().trim().equals("")) {
-            largeNameBg = new Rectangle(490, 450, 640, 110);
+            largeNameBg = new Rectangle(370, 350, 620, 150);
             name = attendee.getFanName();
         } else {
             // Draw regular name in the combined name and fan name spaces
-            largeNameBg = new Rectangle(490, 450, 640, 200);
+            largeNameBg = new Rectangle(370, 350, 620, 250);
             name = attendee.getName();
         }
 //         b.fillRect(largeNameBg, Color.ORANGE);
@@ -59,7 +58,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
         String fanName = attendee.getFanName();
         if (fanName != null && !attendee.getFanName().trim().isEmpty()) {
             if (attendee.getName() != null && !attendee.getName().isEmpty()) {
-                Rectangle nameBg = new Rectangle(500, 535, 630, 65);
+                Rectangle nameBg = new Rectangle(400, 505, 590, 105);
 //                 b.fillRect(nameBg, Color.ORANGE);
                 b.drawStretchedCenteredString(attendee.getName(), nameBg, plainFont, Color.BLACK, 0);
             }
@@ -70,27 +69,21 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
         if (attendee != null) {
             Color bgColor = Color.decode(attendee.getBadgeTypeBackgroundColor());
             Color fgColor = BadgeImage.getInverseColor(bgColor);
-            Rectangle badgeType = new Rectangle(1200, 115, 180, 785);
-            b.fillRect(badgeType, bgColor);
 
-            Rectangle textBoundingBox = new Rectangle(1200, 160, 160, 680);
-            b.drawVerticalCenteredString(attendee.getBadgeTypeText(), textBoundingBox, boldFont, fgColor, 0);
+            Rectangle background = new Rectangle(112, 861, 1275, 207);
+            b.fillRect(background, bgColor);
+            Rectangle textBoundingBox = new Rectangle(180, 840, 1160, 200);
+//            b.fillRect(textBoundingBox, Color.RED);
+            b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getBadgeTypeText()), textBoundingBox, boldFont, fgColor);
         }
     }
 
     private void drawBadgeNumber(BadgeImage b, AttendeeBadgeDTO attendee) {
         String badgeNumber = attendee.getBadgeNumber();
-        Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
-        Color fgColor = BadgeImage.getInverseColor(bgColor);
-        Rectangle badgeNumberBounds = new Rectangle(1160, 900, 170, 160);
-
-        String[] lines;
-        if (badgeNumber.length() == 8) {
-            lines = new String[] {badgeNumber.substring(0, 3), badgeNumber.substring(3)};
-            b.drawCenteredStrings(lines, badgeNumberBounds, boldFont, fgColor);
-        } else {
-            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
-        }
+        Color fgColor = Color.BLACK;
+        Rectangle badgeNumberBounds = new Rectangle(340, 760, 200, 110);
+        b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
+//        b.fillRect(badgeNumberBounds, Color.GREEN);
     }
 
     private void drawPronoun(BadgeImage b, AttendeeBadgeDTO attendee) {
@@ -98,10 +91,10 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
 
         if (pronoun != null) {
             Color fgColor = Color.BLACK;
-            Rectangle textBoundingBox = new Rectangle(510, 570, 580, 145);
+            Rectangle textBoundingBox = new Rectangle(350, 600, 280, 100);
 //            b.fillRect(textBoundingBox, Color.ORANGE);
-            Font scaledFont = b.scaleFontByHeight(16f, textBoundingBox, plainFont);
-            b.drawRightAlignedString(pronoun, textBoundingBox, scaledFont, fgColor, 0);
+            Font scaledFont = b.scaleFontByHeight(18f, textBoundingBox, plainFont);
+            b.drawStretchedCenteredString(pronoun, textBoundingBox, scaledFont, fgColor, 0);
         }
     }
 }
