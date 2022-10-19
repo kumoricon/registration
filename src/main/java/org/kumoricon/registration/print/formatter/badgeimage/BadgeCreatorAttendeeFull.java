@@ -74,16 +74,37 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
             b.fillRect(background, bgColor);
             Rectangle textBoundingBox = new Rectangle(180, 840, 1160, 200);
 //            b.fillRect(textBoundingBox, Color.RED);
-            b.drawStretchedCenteredString(BadgeImage.buildTitleString(attendee.getBadgeTypeText()), textBoundingBox, boldFont, fgColor);
+            String titleText = attendee.getBadgeTypeText().toUpperCase();
+            if (titleText.length() < 7) {
+                titleText = BadgeImage.buildTitleString(titleText);
+            }
+            b.drawStretchedCenteredString(titleText, textBoundingBox, boldFont, fgColor);
         }
     }
 
     private void drawBadgeNumber(BadgeImage b, AttendeeBadgeDTO attendee) {
         String badgeNumber = attendee.getBadgeNumber();
-        Color fgColor = Color.BLACK;
-        Rectangle badgeNumberBounds = new Rectangle(340, 760, 200, 110);
-        b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
+        // For attendee badges, badge number needs to be in the corner
+        if (attendee.getBadgeTypeText().equalsIgnoreCase("weekend") ||
+            attendee.getBadgeTypeText().equalsIgnoreCase("friday") ||
+            attendee.getBadgeTypeText().equalsIgnoreCase("saturday") ||
+            attendee.getBadgeTypeText().equalsIgnoreCase("sunday") ||
+            attendee.getBadgeTypeText().equalsIgnoreCase("vip")) {
+            Color bgColor = Color.decode(attendee.getBadgeTypeBackgroundColor());
+            Color fgColor = BadgeImage.getInverseColor(bgColor);
+            Rectangle badgeNumberBounds = new Rectangle(1140, 890, 200, 110);
+            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
 //        b.fillRect(badgeNumberBounds, Color.GREEN);
+        } else {
+            // For specialty badges, the badge number conflicts with the badge type text, so
+            // move it on to the badge itself (printing it in black is fine, since the backround
+            // is lighter
+            Color fgColor = Color.BLACK;
+            Rectangle badgeNumberBounds = new Rectangle(340, 760, 200, 110);
+            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
+//        b.fillRect(badgeNumberBounds, Color.GREEN);
+        }
+
     }
 
     private void drawPronoun(BadgeImage b, AttendeeBadgeDTO attendee) {
