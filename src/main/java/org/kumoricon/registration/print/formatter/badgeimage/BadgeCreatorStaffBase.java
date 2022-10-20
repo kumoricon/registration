@@ -49,17 +49,22 @@ class BadgeCreatorStaffBase {
     void drawLargeName(BadgeImage b, StaffBadgeDTO staff) {
         // Staff don't have fan names, but guests do, so add that to the list if it's not null.
         // Also, some guests apparently don't have a last name entered.
-        String[] names = buildNameList(staff.getFanName(), staff.getFirstName(), staff.getLastName());
-        Rectangle largeNameBg;
-        if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isEmpty()) {
-            largeNameBg = new Rectangle(280, 1385, 850, 280);
+        if (staff.getFanName() == null || staff.getFanName().isEmpty()) {
+            Rectangle largeNameBg = new Rectangle(280, 1385, 850, 280);
+            Color fgColor = Color.decode("#c3c2fe");
+            b.drawStretchedCenteredString((staff.getFirstName() + " " + staff.getLastName()).trim(), largeNameBg, boldFont, fgColor, 1);
         } else {
-            largeNameBg = new Rectangle(280, 1385, 850, 380);
-        }
-
+            String[] names = buildNameList(staff.getFanName(), staff.getFirstName() + " " + staff.getLastName());
+            Rectangle largeNameBg;
+            if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isEmpty()) {
+                largeNameBg = new Rectangle(280, 1385, 850, 280);
+            } else {
+                largeNameBg = new Rectangle(280, 1385, 850, 380);
+            }
 //        b.fillRect(largeNameBg, Color.ORANGE);
-        Color fgColor = Color.decode("#c3c2fe");
-        b.drawStretchedCenteredStrings(names, largeNameBg, boldFont, fgColor, 1);
+            Color fgColor = Color.decode("#c3c2fe");
+            b.drawStretchedCenteredStrings(names, largeNameBg, boldFont, fgColor, 1);
+        }
     }
 
     void drawPronouns(BadgeImage b, StaffBadgeDTO staff) {
