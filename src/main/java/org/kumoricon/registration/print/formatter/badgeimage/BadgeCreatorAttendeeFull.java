@@ -31,8 +31,8 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
     private void drawAgeColorStripe(BadgeImage b, AttendeeBadgeDTO attendee) {
         Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
         Color fgColor = BadgeImage.getInverseColor(bgColor);
-        Rectangle ageBackground = new Rectangle(110, 112, 223, 750);
-        Rectangle textBoundingBox = new Rectangle(155, 150, 160, 680);
+        Rectangle ageBackground = new Rectangle(110, 112, 223, 957);
+        Rectangle textBoundingBox = new Rectangle(155, 180, 160, 680);
         b.fillRect(ageBackground, bgColor);
         b.drawVerticalCenteredString(attendee.getAgeStripeText(), textBoundingBox, boldFont, fgColor, 2);
     }
@@ -72,8 +72,8 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
 
             Rectangle background = new Rectangle(112, 861, 1275, 207);
             b.fillRect(background, bgColor);
-            Rectangle textBoundingBox = new Rectangle(180, 840, 1160, 200);
-//            b.fillRect(textBoundingBox, Color.RED);
+            Rectangle textBoundingBox = new Rectangle(350, 880, 990, 200);
+//            b.fillRect(textBoundingBox, Color.YELLOW);
             String titleText = attendee.getBadgeTypeText().toUpperCase();
             if (titleText.length() < 7) {
                 titleText = BadgeImage.buildTitleString(titleText);
@@ -84,27 +84,12 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
 
     private void drawBadgeNumber(BadgeImage b, AttendeeBadgeDTO attendee) {
         String badgeNumber = attendee.getBadgeNumber();
-        // For attendee badges, badge number needs to be in the corner
-        if (attendee.getBadgeTypeText().equalsIgnoreCase("weekend") ||
-            attendee.getBadgeTypeText().equalsIgnoreCase("friday") ||
-            attendee.getBadgeTypeText().equalsIgnoreCase("saturday") ||
-            attendee.getBadgeTypeText().equalsIgnoreCase("sunday") ||
-            attendee.getBadgeTypeText().equalsIgnoreCase("vip")) {
-            Color bgColor = Color.decode(attendee.getBadgeTypeBackgroundColor());
-            Color fgColor = BadgeImage.getInverseColor(bgColor);
-            Rectangle badgeNumberBounds = new Rectangle(1140, 890, 200, 110);
-            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
-//        b.fillRect(badgeNumberBounds, Color.GREEN);
-        } else {
-            // For specialty badges, the badge number conflicts with the badge type text, so
-            // move it on to the badge itself (printing it in black is fine, since the backround
-            // is lighter
-            Color fgColor = Color.BLACK;
-            Rectangle badgeNumberBounds = new Rectangle(340, 760, 200, 110);
-            b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
-//        b.fillRect(badgeNumberBounds, Color.GREEN);
-        }
 
+        Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
+        Color fgColor = BadgeImage.getInverseColor(bgColor);
+        Rectangle badgeNumberBounds = new Rectangle(155, 900, 160, 110);
+//        b.fillRect(badgeNumberBounds, Color.GREEN);
+        b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
     }
 
     private void drawPronoun(BadgeImage b, AttendeeBadgeDTO attendee) {
