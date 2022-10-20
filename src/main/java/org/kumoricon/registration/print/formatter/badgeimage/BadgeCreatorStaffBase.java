@@ -22,7 +22,7 @@ class BadgeCreatorStaffBase {
 
     void drawBadgeAgeImage(BadgeImage b, StaffBadgeDTO staff) {
 //        Rectangle badgeImageLocation = new Rectangle(250, 290, 165, 413);
-        Rectangle badgeImageLocation = new Rectangle(250, 292, 165, 413);
+        Rectangle badgeImageLocation = new Rectangle(260, 292, 165, 413);
 //        b.fillRect(badgeImageLocation, Color.RED);
         b.drawImage(staff.getAgeImage(), badgeImageLocation);
     }
@@ -35,7 +35,7 @@ class BadgeCreatorStaffBase {
             Color bgColor = Color.decode(staff.getDepartmentBackgroundColor());
             fgColor = BadgeImage.getInverseColor(bgColor);
 
-            Rectangle positionsBackground = new Rectangle(0, 278, 230, 1576);
+            Rectangle positionsBackground = new Rectangle(0, 278, 241, 1576);
             b.fillRect(positionsBackground, bgColor);
         }
 
@@ -52,19 +52,19 @@ class BadgeCreatorStaffBase {
         String[] names = buildNameList(staff.getFanName(), staff.getFirstName(), staff.getLastName());
         Rectangle largeNameBg;
         if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isEmpty()) {
-            largeNameBg = new Rectangle(280, 1325, 850, 300);
+            largeNameBg = new Rectangle(280, 1385, 850, 280);
         } else {
-            largeNameBg = new Rectangle(280, 1325, 850, 400);
+            largeNameBg = new Rectangle(280, 1385, 850, 380);
         }
 
 //        b.fillRect(largeNameBg, Color.ORANGE);
-        Color fgColor = Color.decode("#eaa44e");
+        Color fgColor = Color.decode("#c3c2fe");
         b.drawStretchedCenteredStrings(names, largeNameBg, boldFont, fgColor, 1);
     }
 
     void drawPronouns(BadgeImage b, StaffBadgeDTO staff) {
         if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isBlank()) {
-            Color fgColor = Color.decode("#eaa44e");
+            Color fgColor = Color.decode("#c3c2fe");
             Rectangle background = new Rectangle(700, 1620, 460, 150);
 //            b.fillRect(background, Color.RED);
             b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, plainFont, fgColor, 1);

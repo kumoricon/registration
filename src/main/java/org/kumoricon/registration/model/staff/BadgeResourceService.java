@@ -135,7 +135,7 @@ public class BadgeResourceService {
             specialtyBadgeBackground = loadBackground("2022 Specialty Badges.pdf");
             vipBadgeBackground = loadBackground("2022 VIP Badges.pdf");
             plainFont = loadPlainFont();
-            boldFont = loadBoldFont();
+            boldFont = loadBadgeFont();
         } catch (IOException ex) {
             log.error("Error creating resource directory", ex);
         }

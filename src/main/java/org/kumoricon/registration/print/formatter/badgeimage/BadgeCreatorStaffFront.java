@@ -15,14 +15,6 @@ public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
         drawPronouns(b, staff);
         drawBadgeAgeImage(b, staff);
         drawBadgeNumber(b, staff);
-        drawBadgeImage(b, staff);
         return b.writePNGToByteArray();
-    }
-
-
-    private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(440, 310, 450, 740);
-//        b.fillRect(badgeImageLocation, Color.CYAN);
-        b.drawStretchedImage(staff.getBadgeImage(), badgeImageLocation);
     }
 }
