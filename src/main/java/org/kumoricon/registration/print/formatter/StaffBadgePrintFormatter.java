@@ -37,6 +37,7 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
         this.staffList = staffList;
         this.sides = sides;
         this.background = badgeResource.getBackground();
+
         badgeCreator = new BadgeCreatorStaffFront(badgeResource.getBoldFont(), badgeResource.getPlainFont());
         badgeCreatorBack = new BadgeCreatorStaffBack(badgeResource.getBoldFont(), badgeResource.getPlainFont());
     }
