@@ -70,20 +70,35 @@ class BadgeCreatorStaffBase {
         // Staff don't have fan names, but guests do, so add that to the list if it's not null.
         // Also, some guests apparently don't have a last name entered.
         Color fgColor = foregroundColorForName(staff);
-        if (staff.getFanName() == null || staff.getFanName().isEmpty()) {
-            Rectangle largeNameBg = new Rectangle(280, 1385, 850, 280);
-            b.drawStretchedCenteredString((staff.getFirstName() + " " + staff.getLastName()).trim(), largeNameBg, boldFont, fgColor, 1);
-        } else {
-            String[] names = buildNameList(staff.getFanName(), staff.getFirstName() + " " + staff.getLastName());
-            Rectangle largeNameBg;
-            if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isEmpty()) {
-                largeNameBg = new Rectangle(280, 1385, 850, 280);
-            } else {
-                largeNameBg = new Rectangle(280, 1385, 850, 380);
+        String[] names = buildNameList(staff);
+        Rectangle line1 = null;
+        Rectangle line2 = null;
+
+        if (staff.getPreferredPronoun() == null || staff.getPreferredPronoun().isBlank()) {
+            // No pronoun
+            if (names.length == 1) {
+                line1 = new Rectangle(270, 1300, 880, 450);
+                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
+            } else if (names.length == 2) {
+                line1 = new Rectangle(270, 1300, 880, 290);
+                line2 = new Rectangle(270, 1560, 880, 210);
+                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
+                b.drawStretchedCenteredString(names[1], line2, boldFont, fgColor, 1);
             }
-//        b.fillRect(largeNameBg, Color.ORANGE);
-            b.drawStretchedCenteredStrings(names, largeNameBg, boldFont, fgColor, 1);
+        } else {
+            // Pronouns
+            if (names.length == 1) {
+                line1 = new Rectangle(270, 1300, 880, 350);
+                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
+            } else if (names.length == 2) {
+                line1 = new Rectangle(270, 1300, 880, 230);
+                line2 = new Rectangle(270, 1500, 880, 160);
+                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
+                b.drawStretchedCenteredString(names[1], line2, boldFont, fgColor, 1);
+            }
         }
+//        if (line1 != null) b.fillRect(line1, Color.RED);
+//        if (line2 != null) b.fillRect(line2, Color.ORANGE);
     }
 
     private static Color foregroundColorForName(StaffBadgeDTO staff) {
@@ -122,16 +137,28 @@ class BadgeCreatorStaffBase {
     }
 
     /**
-     * Builds an array of Strings from the input strings, excluding any that are null or blank
-     * @param strings Input Strings
+     * Builds a two-line name to print based on the staff record. If fan name exists, use
+     *     Fan Name
+     *     First Last
+     * otherwise, use:
+     *     First
+     *     Last
+     * @param staff Staff record
      * @return Array
      */
-    String[] buildNameList(String...strings) {
+    String[] buildNameList(StaffBadgeDTO staff) {
         java.util.List<String> names = new ArrayList<>();
-        for (String s : strings) {
-            if (s != null && !s.isBlank()) {
-                names.add(s);
+        if (staff.getFanName() == null || staff.getFanName().isBlank()) {
+            // No fan name set; first and last names on separate lines
+            if (staff.getFirstName() != null && !staff.getFirstName().isBlank()) {
+                names.add(staff.getFirstName());
             }
+            if (staff.getLastName() != null && !staff.getLastName().isBlank()) {
+                names.add(staff.getLastName());
+            }
+        } else {
+            names.add(staff.getFanName());
+            names.add((staff.getFirstName() + " " + staff.getLastName()).trim());
         }
 
         String[] output = new String[names.size()];
