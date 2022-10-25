@@ -80,8 +80,8 @@ class BadgeCreatorStaffBase {
                 line1 = new Rectangle(270, 1300, 880, 450);
                 b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
             } else if (names.length == 2) {
-                line1 = new Rectangle(270, 1300, 880, 290);
-                line2 = new Rectangle(270, 1560, 880, 210);
+                line1 = new Rectangle(270, 1370, 880, 290);
+                line2 = new Rectangle(270, 1580, 880, 210);
                 b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
                 b.drawStretchedCenteredString(names[1], line2, boldFont, fgColor, 1);
             }
@@ -91,8 +91,8 @@ class BadgeCreatorStaffBase {
                 line1 = new Rectangle(270, 1300, 880, 350);
                 b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
             } else if (names.length == 2) {
-                line1 = new Rectangle(270, 1300, 880, 230);
-                line2 = new Rectangle(270, 1500, 880, 160);
+                line1 = new Rectangle(270, 1370, 880, 230);
+                line2 = new Rectangle(270, 1530, 880, 160);
                 b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
                 b.drawStretchedCenteredString(names[1], line2, boldFont, fgColor, 1);
             }
