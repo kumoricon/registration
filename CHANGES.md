@@ -1,6 +1,6 @@
 # Change History
 
-Version 2.0.0 (Pending)
+Version 2.0.0 (10/30/2022)
 - Fix problem logging in after session time out
 - Library version upgrades
 - Require Java 17 instead of 16
@@ -11,6 +11,7 @@ Version 2.0.0 (Pending)
 - Label x/y offsets on printer utility page
 - Remove training server install
 - Import all attendees from filesystem instead of uploading manually, support multiple imports/changes
+- 2022 badges
 
 Version 1.6.1 (11/05/2021)
 - Ignore unknown fields in In-Line Registration import data
