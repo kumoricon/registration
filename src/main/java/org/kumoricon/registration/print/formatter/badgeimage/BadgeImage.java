@@ -310,6 +310,26 @@ public class BadgeImage {
         }
     }
 
+    void drawStretchedCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, int outlineWidth) {
+        // Find initial line height
+        int lineHeight = (int) (boundingBox.getHeight() / text.length);
+
+        Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
+        Font sizedFont = scaleFont(text[0], lineBounds, font);
+
+
+        // Find the smallest font needed for each line and use it for all lines
+        for (int i = 1; i < text.length; i++) {
+            Font tmpFont = scaleFont(text[i], lineBounds, font);
+            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
+        }
+        lineHeight = sizedFont.getSize() + 15;   // Make line height close to actual line size with padding
+
+        for (int i = 0; i < text.length; i++) {
+            Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
+            drawStretchedCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineWidth);
+        }
+    }
 
     void drawStretchedRightRotatedString(String text, Rectangle boundingBox, Font font, Color fgColor) {
         AffineTransform orig = g2.getTransform();

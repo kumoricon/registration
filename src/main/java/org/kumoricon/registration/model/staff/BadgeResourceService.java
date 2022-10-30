@@ -129,13 +129,13 @@ public class BadgeResourceService {
             adultSeal = loadImage("staffadult.png");
             youthSeal = loadImage("staffyouth.png");
             childSeal = loadImage("staffchild.png");
-            staffBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-Staff.pdf");
-            guestBadgeBackground = loadStaffBackground("Print - Kumoricon-2021-Badge-GOH.pdf");
-            attendeeBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Attendee.pdf");
-            specialtyBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-Specialty.pdf");
-            vipBadgeBackground = loadBackground("Print - Kumoricon-2021-Badge-VIP.pdf");
+            staffBadgeBackground = loadStaffBackground("2022 Staff Badge.pdf");
+            guestBadgeBackground = loadStaffBackground("2022 Guest of Honor Badge.pdf");
+            attendeeBadgeBackground = loadBackground("2022 Attendee Badges.pdf");
+            specialtyBadgeBackground = loadBackground("2022 Specialty Badges.pdf");
+            vipBadgeBackground = loadBackground("2022 VIP Badges.pdf");
             plainFont = loadPlainFont();
-            boldFont = loadBoldFont();
+            boldFont = loadBadgeFont();
         } catch (IOException ex) {
             log.error("Error creating resource directory", ex);
         }

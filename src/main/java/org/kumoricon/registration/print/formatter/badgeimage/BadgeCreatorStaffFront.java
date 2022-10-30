@@ -11,7 +11,7 @@ public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
     public byte[] createBadge(StaffBadgeDTO staff) {
         BadgeImage b = new BadgeImage(BADGE_WIDTH, BADGE_HEIGHT, DPI);
         drawLargeName(b, staff);
-        drawBadgeTypeStripe(b, staff);
+        drawPositionsStripe(b, staff);
         drawPronouns(b, staff);
         drawBadgeAgeImage(b, staff);
         drawBadgeNumber(b, staff);

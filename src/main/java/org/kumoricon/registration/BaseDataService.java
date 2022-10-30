@@ -319,15 +319,14 @@ public class BaseDataService {
 
         // Create badge types with security restrictions below
         List<Badge> vipBadges = new ArrayList<>();
-        vipBadges.add(BadgeFactory.createBadge("VIP-Cumulus", BadgeType.VIP, "VIP", "#000000", 250, 250, 250));
-        vipBadges.add(BadgeFactory.createBadge("VIP-Altocumulus", BadgeType.VIP, "VIP", "#000000", 450, 450, 450));
-        vipBadges.add(BadgeFactory.createBadge("VIP-Cumulonimbus", BadgeType.VIP, "VIP", "#000000", 600, 600, 600));
+        vipBadges.add(BadgeFactory.createBadge("VIP-Cumulus", BadgeType.VIP, "Weekend", "#000000", 250, 250, 250));
+        vipBadges.add(BadgeFactory.createBadge("VIP-Altocumulus", BadgeType.VIP, "Weekend", "#000000", 450, 450, 450));
+        vipBadges.add(BadgeFactory.createBadge("VIP-Cumulonimbus", BadgeType.VIP, "Weekend", "#000000", 600, 600, 600));
 
         for (Badge vip : vipBadges) {
             log.info("Creating badge {}", vip.getName());
             vip.setRequiredRight("badge_type_vip");
             vip.setWarningMessage("VIP check in. See your coordinator!");
-            vip.setBadgeTypeText("VIP");
             badgeService.save(vip);
         }
     }
