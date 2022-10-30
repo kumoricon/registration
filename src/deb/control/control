@@ -1,10 +1,10 @@
 Package: [[name]]
 Version: [[version]]
-Homepage: https://github.com/kumoregdev/registration
+Homepage: https://github.com/kumoricon/registration
 Section: misc
 Priority: low
 Architecture: all
 Description: [[description]]
 Maintainer: Jason Short <jason@sheersky.com>
-Depends: openjdk-17-jdk-headless, cups, cups-bsd, hplip
+Depends: openjdk-17-jdk-headless, cups, cups-bsd, hplip, python3-venv
 Recommends: fonts-dejavu, fonts-takao-mincho, fonts-takao, unifont, ttf-unifont, fonts-noto, fonts-noto-cjk-extra, ttf-wqy-zenhei, ttf-wqy-microhei

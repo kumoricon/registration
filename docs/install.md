@@ -2,16 +2,31 @@
 
 On Ubuntu 20.04 (or newer)
 
-### Install Registration Services
-```
-sudo apt intall ./registration_X_Y_Z_all.deb
+## Server setup
+### Create users
+```shell
+ssh <reg server>
+sudo adduser jason
+sudo usermod -a -G sudo jason
+sudo usermod -a -G adm jason
+# Repeat for other admins
+exit
 ```
 
-### Create PostgreSQL database users for registration and training
+## Service Install
+### Install Registration Services
+```shell
+ssh <reg server>
+sudo apt intall ./registration_X_Y_Z_all.deb
+sudo usermod -aG registration jason # repeat for other admins
+```
+
+
+### Create PostgresQL database users for registration and training
 If running Postgres on the local server, install it and create the database as a user with access to create users in PostgreSQL (typicaly the `postgres` user),
 run `/opt/registration/bin/createdb.sh`.
 
-```
+```shell
 sudo apt install postgresql postgresql-contrib
 sudo su postgres
 /opt/registration/bin/createdb.sh
@@ -23,7 +38,8 @@ Otherwise, create the user `registration` and database `registration`.
 Update the database URL, username and password in `/opt/registration/registration.properties`
 
 ### Install Badge Resources
-Copy badge resource files to `/opt/registration/badgeResource`
+Copy badge resource files to `/opt/registration/data/badgeResource`
+Copy `in-line-registration-private.pem` to `/opt/registration/in-line-registration-private.pem`
 
 ### Start the Services
 ```

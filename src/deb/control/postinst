@@ -16,11 +16,10 @@ if [ ! -d /opt/registration/data/ ]; then
     mkdir /opt/registration/data/
     mkdir /opt/registration/data/badgeImage/
     mkdir /opt/registration/data/badgeResource/
-    mkdir /opt/registration/data/guestImport/
-    mkdir /opt/registration/data/guestImportDLQ/
-    mkdir /opt/registration/data/staffImport/
-    mkdir /opt/registration/data/staffImportDLQ/
+    mkdir /opt/registration/data/import/
+    mkdir /opt/registration/data/importDLQ/
     mkdir /opt/registration/data/staffUpload/
+    mkdir /opt/registration/data/eventReservation/
     chown registration /opt/registration/data/ -R
     chgrp registration /opt/registration/data/ -R
     chmod 775 /opt/registration/data/ -R
