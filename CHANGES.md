@@ -1,5 +1,8 @@
 # Change History
 Version 2.0.1 (pending)
+- Normalize badge types imported from website (smallPress -> Small Press, etc)
+- In Checks Ins by Badge Type report, don't count members where their membership has been revoked
+  (for example, if they roll membership to next year)
 
 Version 2.0.0 (10/30/2022)
 - Fix problem logging in after session time out
