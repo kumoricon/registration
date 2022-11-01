@@ -63,13 +63,13 @@ public class AttendeeRepository {
         final String sql = """
                 select name, preRegCheckedIn, preRegNotcheckedIn, atConCheckedIn, atConNotcheckedIn from badges
                 left outer join
-                (select badge_id, count(*) as preRegCheckedIn from attendees where checked_in is true and pre_registered is true group by badge_id) a on a.badge_id = badges.id
+                (select badge_id, count(*) as preRegCheckedIn from attendees where membership_revoked is false and checked_in is true and pre_registered is true group by badge_id) a on a.badge_id = badges.id
                 left outer join
-                (select badge_id, count(*) as preRegNotcheckedIn from attendees where checked_in is false and pre_registered is true group by badge_id) b on b.badge_id = badges.id
+                (select badge_id, count(*) as preRegNotcheckedIn from attendees where membership_revoked is false and checked_in is false and pre_registered is true group by badge_id) b on b.badge_id = badges.id
                 left outer join
-                (select badge_id, count(*) as atConCheckedIn from attendees where checked_in is true and pre_registered is false group by badge_id) c on c.badge_id = badges.id
+                (select badge_id, count(*) as atConCheckedIn from attendees where membership_revoked is false and checked_in is true and pre_registered is false group by badge_id) c on c.badge_id = badges.id
                 left outer join
-                (select badge_id, count(*) as atConNotcheckedIn from attendees where checked_in is false and pre_registered is false group by badge_id) d on d.badge_id = badges.id;
+                (select badge_id, count(*) as atConNotcheckedIn from attendees where membership_revoked is false and checked_in is false and pre_registered is false group by badge_id) d on d.badge_id = badges.id;
                 """;
         try {
             return jdbcTemplate.query(sql, new CheckInByBadgeTypeDTORowMapper());
