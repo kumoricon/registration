@@ -57,10 +57,16 @@ public class AttendeeImporterService {
         this.badgeNumberService = badgeNumberService;
     }
 
+    /**
+     * Returns a map of lowercase badge names with non-alphanumeric characters removed. This is to
+     * make it easier to match badge names from the website, we have cases like  "smallPress" -> "small press",
+     * "standardPress" -> "standard press".
+     * @return Badge sanitized name to badge map
+     */
     private HashMap<String, Badge> getBadgeMap() {
         HashMap<String, Badge> badges = new HashMap<>();
         for (Badge b : badgeService.findAll()) {
-            badges.put(b.getName().toLowerCase(), b);
+            badges.put(b.getName().replaceAll("[^A-Za-z0-9]", "").toLowerCase(), b);
         }
         return badges;
     }
@@ -375,7 +381,7 @@ public class AttendeeImporterService {
         if (person.vipLevel().isEmpty()) {
             lowerCaseMembershipType = person.membershipType().toLowerCase();
         } else {
-            lowerCaseMembershipType = "vip-" + person.vipLevel().toLowerCase();
+            lowerCaseMembershipType = "vip" + person.vipLevel().toLowerCase();
         }
         if (badgeMap.containsKey(lowerCaseMembershipType)) {
             attendee.setBadgeId(badgeMap.get(lowerCaseMembershipType).getId());
