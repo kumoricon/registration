@@ -18,6 +18,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -57,17 +58,19 @@ public class BadgeExportService {
         List<Attendee> attendees = getAttendeeListByType(attendeeType);
 
         // allows us to iterate at least once to run export badge flow if list size < 50
-        int iterateAmount = attendees.size() < 50 ? 1 : attendees.size() / 50;
+        int iterateAmount = attendees.size() < 50 ? 0 : attendees.size() / 50;
 
-        for (int i = 0; i < iterateAmount; i++) {
+        for (int i = 0; i <= iterateAmount; i++) {
+            int start = i*50;
             int end = (i+1)*50;
             if (end > attendees.size()) {
                 end = attendees.size();
             }
 
             File file = Paths.get(dir, attendeeType + "-badges-" + i + ".pdf").toFile();
-            log.info("download badges to {}", file.getPath());
-            List<Attendee> sublist = attendees.subList(i*50, end);
+            log.info("saving badges {}-{} to {}", start+1, end, file.getPath());
+            // Sublist is inclusive of the start index, exclusive of the end index
+            List<Attendee> sublist = attendees.subList(start, end);
 
             futures.add(CompletableFuture.supplyAsync(() -> {
                 try {
@@ -126,15 +129,17 @@ public class BadgeExportService {
         List<Guest> guests = guestRepository.findAll();
 
         // allows us to iterate at least once to run export badge flow if list size < 50
-        int iterateAmount = guests.size() < 50 ? 1 : guests.size() / 50;
+        int iterateAmount = guests.size() < 50 ? 0 : guests.size() / 50;
 
-        for (int i = 0; i < iterateAmount; i++) {
+        for (int i = 0; i <= iterateAmount; i++) {
+            int start = i*50;
             int end = (i+1)*50;
             if (end > guests.size()) {
                 end = guests.size();
             }
 
             File file = Paths.get(dir, "guest-badges-" + i + ".pdf").toFile();
+            log.info("saving badges {}-{} to {}", start+1, end, file.getPath());
             List<Guest> sublist = guests.subList(i*50, end);
 
             futures.add(CompletableFuture.supplyAsync(() -> {
@@ -201,6 +206,13 @@ public class BadgeExportService {
      * Helper method to combine and return attendee lists by badge type
      */
     private List<Attendee> getAttendeeListByType(String type) {
+        // Note: Should probably do this comparison in SQL, that would mean modifying
+        // findALlByBadgeType() to take multiple badge types. Also excluding revoked
+        // memberships in that function would be good
+        Comparator<Attendee> compareByName = Comparator
+                .comparing(Attendee::getLastName)
+                .thenComparing(Attendee::getFirstName);
+
         switch (type) {
             case "Attendee":
                 List<Attendee> weekend = attendeeRepository.findAllByBadgeType(1);
@@ -211,20 +223,31 @@ public class BadgeExportService {
 
                 return Stream.of(weekend, militaryWeekend, friday, saturday, sunday)
                         .flatMap(Collection::stream)
+                        .filter(a -> !a.isMembershipRevoked())
+                        .sorted(compareByName)
                         .toList();
             case "Vip":
-                return attendeeRepository.findAllByBadgeType(6);
+                List<Attendee> vip1 = attendeeRepository.findAllByBadgeType(6);
+                List<Attendee> vip2 = attendeeRepository.findAllByBadgeType(7);
+                List<Attendee> vip3 = attendeeRepository.findAllByBadgeType(8);
+                return Stream.of(vip1, vip2, vip3)
+                        .flatMap(Collection::stream)
+                        .filter(a -> !a.isMembershipRevoked())
+                        .sorted(compareByName)
+                        .toList();
             case "Specialty":
-                List<Attendee> artist = attendeeRepository.findAllByBadgeType(7);
-                List<Attendee> exhibitor = attendeeRepository.findAllByBadgeType(8);
-                List<Attendee> smallPress = attendeeRepository.findAllByBadgeType(10);
-                List<Attendee> emergingPress = attendeeRepository.findAllByBadgeType(11);
-                List<Attendee> standardPress = attendeeRepository.findAllByBadgeType(12);
-                List<Attendee> industry = attendeeRepository.findAllByBadgeType(13);
-                List<Attendee> panelist = attendeeRepository.findAllByBadgeType(14);
+                List<Attendee> artist = attendeeRepository.findAllByBadgeType(9);
+                List<Attendee> exhibitor = attendeeRepository.findAllByBadgeType(10);
+                List<Attendee> smallPress = attendeeRepository.findAllByBadgeType(12);
+                List<Attendee> emergingPress = attendeeRepository.findAllByBadgeType(13);
+                List<Attendee> standardPress = attendeeRepository.findAllByBadgeType(14);
+                List<Attendee> industry = attendeeRepository.findAllByBadgeType(15);
+                List<Attendee> panelist = attendeeRepository.findAllByBadgeType(16);
 
                 return Stream.of(artist, exhibitor, smallPress, emergingPress, standardPress, industry, panelist)
                         .flatMap(Collection::stream)
+                        .filter(a -> !a.isMembershipRevoked())
+                        .sorted(compareByName)
                         .toList();
             default:
                 log.error("Attendee type {} not recognized", type);
