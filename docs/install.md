@@ -69,6 +69,48 @@ Add your user (and any other admins) to the `lpadmin` group to allow CUPS admin 
 sudo usermod -aG lpadmin jason # repeat for other admins
 ```
 
+### Setup Reverse Proxy
+
+```shell
+sudo apt install -y apache2 certbot python3-certbot-apache
+sudo a2enmod rewrite a2enmod ssl proxy proxy_http deflate
+sudo a2dissite 000-default
+sudo a2disconf serve-cgi-bin
+```
+
+Put this in `/etc/apache2/sites-available/registration.conf`:
+(Substitute the host for `reg.kumoricon.org` if it's different)
+```
+<VirtualHost *:80>
+  ServerName reg.kumoricon.org
+  ServerAdmin regdev@kumoricon.org
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+</VirtualHost>
+<VirtualHost *:443>
+  ServerName reg.kumoricon.org
+  ServerAdmin regdev@kumoricon.org
+  ProxyRequests     Off
+  ProxyPreserveHost On
+  ProxyPass /  http://127.0.0.1:8080/
+  ProxyPassReverse / http://127.0.0.1:8080/
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+Enable the new site:
+```shell
+sudo a2ensite registration
+sudo systemctl restart apache2
+```
+
+Get SSL certificate (follow prompts on screen, you will have to set a TXT DNS record. Change the hostname if necessary):
+```shell
+sudo certbot -m regdev@kumoricon.org --no-redirect --agree-tos -d reg.kumoricon.org --preferred-challenges dns-01 --manual --installer apache
+```
+
 ### Setup cron tasks
 Log out and back in (so that changed groups take effect), then set up
 registration-filetransfer from https://github.com/kumoricon/registration-filetransfer/
@@ -76,11 +118,17 @@ registration-filetransfer from https://github.com/kumoricon/registration-filetra
 
 
 ### Log In
-- Browse to http://hostname:8080/
+- Browse to https://hostname/ or http://hostname:8080/
 - Printer administration: https://hostname:631/
+
 
 # Utilities
 Installed to `/opt/registration/bin/`
 
 - backup.sh: Does a database dump and tars the server's `data` directory in to the timestamped files in the local directory
 - createdb.sh: Runs PostgreSQL commands to create the two databases.
+
+Restoring database:
+```shell
+psql -U USERNAME registration < registration.sql
+```
