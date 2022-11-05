@@ -68,6 +68,10 @@ public class AttendeeImporterService {
         for (Badge b : badgeService.findAll()) {
             badges.put(b.getName().replaceAll("[^A-Za-z0-9]", "").toLowerCase(), b);
         }
+        // Add special cases - you can't buy day badges online, but they can be created
+        badges.put("regularday1", badges.get("friday"));
+        badges.put("regularday2", badges.get("saturday"));
+        badges.put("regularday3", badges.get("sunday"));
         return badges;
     }
 
@@ -227,7 +231,7 @@ public class AttendeeImporterService {
     }
 
     @Transactional
-    public void importFromObjects(List<AttendeeImportFile.Person> persons) {
+    public void importFromObjects(List<AttendeeImportFile.Person> persons, Map<String, String> guestBadgeNumbers) {
         long start = System.currentTimeMillis();
 
         badgeMap = getBadgeMap();
@@ -249,6 +253,7 @@ public class AttendeeImporterService {
                 newAttendee++;
                 attendee = new Attendee();
                 attendee.setWebsiteId(person.id());
+                attendee.setBadgeNumber(guestBadgeNumbers.getOrDefault(person.id(), null));
             }
             boolean updated = updateAttendeeFromPerson(person, attendee);
 
@@ -272,6 +277,12 @@ public class AttendeeImporterService {
 
     private boolean updateAttendeeFromPerson(AttendeeImportFile.Person person, Attendee attendee) {
         boolean dirty = false;
+
+        // Guests are always counted as checked in because they don't pick up their badges at Registration
+        if ("guest".equalsIgnoreCase(person.membershipType())) {
+            attendee.setCheckedIn(true);
+        }
+
         if (!Objects.equals(attendee.getFirstName(), person.namePreferredFirst())) {
             dirty = true;
             attendee.setFirstName(person.namePreferredFirst());
@@ -375,7 +386,6 @@ public class AttendeeImporterService {
             dirty = true;
             attendee.setBadgeNumber(badgeNumberService.getNextBadgeNumber());
         }
-
 
         String lowerCaseMembershipType;
         if (person.vipLevel().isEmpty()) {

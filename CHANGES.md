@@ -1,5 +1,7 @@
 # Change History
 Version 2.0.2 (pending)
+- Fix importing day badges
+- Import guest badges to attendees table set and checked in (for counts)
 
 Version 2.0.1 (11/02/2022)
 - Normalize badge types imported from website (smallPress -> Small Press, etc)

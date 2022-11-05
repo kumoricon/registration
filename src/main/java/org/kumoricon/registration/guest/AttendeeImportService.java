@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Handles importing non-staff members (attendees and guests). Attendees are handed off
@@ -47,43 +45,40 @@ public class AttendeeImportService extends ImportService {
         }
         log.info("{}: Actions: {}   Persons: {}", filepath, importFile.getActions().size(), importFile.getPersons().size());
 
+        // Guests are imported in to both the guests table (for printing) and the
+        // attendees table. One side effect of this is that the badge numbers are different
+        // between the two tables. To fix this, run the SQL:
+        //      UPDATE attendees SET badge_number = guests.badge_number
+        //      FROM guests WHERE guests.online_id = attendees.website_id;
+        // guestBadgeNumbers is a map of the badge numbers in the guests table,
+        // and it's used later to set the same badge number in the attendees table.
+        // This is pretty hacky.
+        // TODO: Refactor all this in to a single "members" table
+        Map<String, String> guestBadgeNumbers = new HashMap<>();
         List<AttendeeImportFile.Person> attendees = new ArrayList<>();
         for (AttendeeImportFile.Person person : importFile.getPersons()) {
             try {
                 if ("guest".equalsIgnoreCase(person.membershipType())) {
-                    importPerson(person);
-                } else {
-                    attendees.add(person);
+                    Guest guest = importPerson(person);
+                    if (guest != null) {
+                        guestBadgeNumbers.put(guest.getOnlineId(), guest.getBadgeNumber());
+                    }
                 }
-
+                attendees.add(person);
             } catch (Exception ex) {
                 log.error("Error importing {}", person, ex);
                 throw new RuntimeException(ex);
             }
         }
 
-        attendeeImporterService.importFromObjects(attendees);
-
-//            for (GuestImportFile.Action action : importFile.getActions()) {
-//                log.info("  Action: {}: {}", action.getActionsVersion(), action.getDeleted());
-//            }
-//        } catch (IOException ex) {
-//            log.error("Error loading {}", filepath, ex);
-//            try {
-//                Path dest = Paths.get(dlqPath.toString(), filepath.getFileName().toString());
-//                Files.move(filepath, dest);
-//            } catch (IOException e) {
-//                log.error("Error moving {} to DLQ {}", filepath, dlqPath, e);
-//                throw new RuntimeException(e);
-//            }
-//        }
+        attendeeImporterService.importFromObjects(attendees, guestBadgeNumbers);
     }
 
-    private void importPerson(AttendeeImportFile.Person person) {
+    private Guest importPerson(AttendeeImportFile.Person person) {
         if (person.isCanceled()) {
             log.info("{} was canceled online, deleting from system", person);
             guestRepository.deleteByOnlineId(person.id());
-            return;
+            return null;
         }
         log.info("Importing {}", person);
         Guest existing;
@@ -98,6 +93,7 @@ public class AttendeeImportService extends ImportService {
         if (changed) {
             guestRepository.save(existing);
         }
+        return existing;
     }
 
     private boolean updateGuestFromPerson(Guest guest, AttendeeImportFile.Person person) {
