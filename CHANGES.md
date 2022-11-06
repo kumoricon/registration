@@ -1,4 +1,6 @@
 # Change History
+Version 2.0.3 (Pending)
+
 Version 2.0.2 (11/05/2022)
 - Fix importing day badges
 - Import guest badges to attendees table set and checked in (for counts)
