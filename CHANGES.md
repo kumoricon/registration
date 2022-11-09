@@ -1,5 +1,5 @@
 # Change History
-Version 2.0.4 (pending)
+Version 2.0.4 (Pending)
 
 Version 2.0.3 (11/08/2022)
 - Use regular font for attendee badge names - Myriad Pro Bold is missing symbols
