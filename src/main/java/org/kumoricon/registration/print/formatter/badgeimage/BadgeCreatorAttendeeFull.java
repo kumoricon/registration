@@ -50,7 +50,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
             name = attendee.getName();
         }
 //         b.fillRect(largeNameBg, Color.ORANGE);
-        b.drawStretchedLeftAlignedString(name, largeNameBg, boldFont, Color.BLACK, 0);
+        b.drawStretchedLeftAlignedString(name, largeNameBg, plainFont, Color.BLACK, 0);
     }
 
     private void drawSmallName(BadgeImage b, AttendeeBadgeDTO attendee) {

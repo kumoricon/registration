@@ -1,5 +1,6 @@
 # Change History
-Version 2.0.3 (Pending)
+Version 2.0.3 (11/08/2022)
+- Use regular font for attendee badge names - Myriad Pro Bold is missing symbols
 
 Version 2.0.2 (11/05/2022)
 - Fix importing day badges
