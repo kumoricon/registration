@@ -1,6 +1,14 @@
 Printer Notes
 =============
 
+HP OfficeJet Pro 8210
+---------------------
+
+Working CUPS drivers:
+- HP OfficeJet Pro 8210, driverless, cups-filters 1.28.15   (Tested on Ubuntu 22.04)
+  - Didn't test duplex, for attendee badges only
+
+
 HP OfficeJet Pro 8610
 ---------------------
 
