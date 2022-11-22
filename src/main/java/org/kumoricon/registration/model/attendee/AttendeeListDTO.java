@@ -70,4 +70,17 @@ public class AttendeeListDTO {
         LocalDate now = LocalDate.now(timezone);
         return ChronoUnit.YEARS.between(birthDate, now);
     }
+
+    @Override
+    public String toString() {
+        return "AttendeeListDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", legalFirstName='" + legalFirstName + '\'' +
+                ", legalLastName='" + legalLastName + '\'' +
+                ", fanName='" + fanName + '\'' +
+                ", birthDate=" + birthDate +
+                '}';
+    }
 }
