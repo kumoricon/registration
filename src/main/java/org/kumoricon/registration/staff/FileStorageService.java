@@ -27,15 +27,18 @@ public class FileStorageService {
     private Path uploadPath;
 
     public void storeFile(String fileName, String imageData) throws IOException {
-        if(fileName.contains("..")) {
-            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+        // remove forward slash from filename to prevent file from being written to invalid directory
+        String sanitizedFileName = fileName.replace("/", "");
+        if(sanitizedFileName.contains("..")) {
+            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + sanitizedFileName);
         }
 
         String fileFormat = findImageFormat(imageData);
         BufferedImage image = decodeImageFromString(imageData);
-        Path targetLocation = this.uploadPath.resolve(fileName + "_" + Instant.now().toEpochMilli() + "." + fileFormat);
+        Path targetLocation = this.uploadPath.resolve(sanitizedFileName + "_" + Instant.now().toEpochMilli() + "." + fileFormat);
         File outputFile = targetLocation.toFile();
 
+        log.debug("Writing staff image {}", outputFile);
         ImageIO.write(image, fileFormat, outputFile);
     }
 

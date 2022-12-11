@@ -16481,6 +16481,36 @@
       "hasBadgeImage": true,
       "badgeImageFileType": "jpg",
       "phone": "(123) 456-7890"
+    },
+    {
+      "id": 2154,
+      "namePreferred": "Test/Slash/",
+      "namePreferredFirst": "Test/",
+      "namePreferredLast": "Slash/",
+      "nameOnId": "Test/Slash/",
+      "nameOnIdFirst": "Test/",
+      "nameOnIdLast": "Slash/",
+      "namePrivacy": "Test/Slash/",
+      "namePrivacyFirst": "Test/",
+      "namePrivacyLast": "Slash/",
+      "pronouns": "",
+      "birthdate": "1949-10-22",
+      "ageCategoryConCurrentTerm": "adult",
+      "tShirtSize": "M",
+      "badgeImpactingLastModified": "2019-01-02 19:58:54",
+      "positions": [
+        {
+          "term": "2019",
+          "title": "KumoriMarket Coordinator (Artists)",
+          "rank": "coordinator",
+          "department": "Relations",
+          "departmentSuppressed": false,
+          "titleBadgeShort": "KumoriMarket Coordinator (Artists)"
+        }
+      ],
+      "hasBadgeImage": true,
+      "badgeImageFileType": "jpg",
+      "phone": "(123) 456-7890"
     }
   ],
   "updated": [
@@ -17022,7 +17052,8 @@
     1310,
     900,
     2204,
-    1663
+    1663,
+    2154
   ],
   "deleted": [
     1773,
