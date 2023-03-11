@@ -24,6 +24,7 @@ public class OrderAttendeeEditController {
     private final BadgeService badgeService;
     private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(OrderAttendeeEditController.class);
+    private static final String SAVE_AND_REPRINT_ACTION = "save & reprint";
 
     public OrderAttendeeEditController(AttendeeRepository attendeeRepository,
                                        AttendeeHistoryRepository attendeeHistoryRepository,
@@ -54,6 +55,7 @@ public class OrderAttendeeEditController {
                                    @RequestParam(value = "overrideUser", required = false) final String overrideUser,
                                    @RequestParam(value = "overridePassword", required = false) final String overridePassword,
                                    @RequestParam(value="note") final String note,
+                                   @RequestParam(value="action") final String action,
                                    @AuthenticationPrincipal User principal,
                                    @PathVariable Integer orderId,
                                    @PathVariable Integer attendeeId) {
@@ -67,6 +69,12 @@ public class OrderAttendeeEditController {
                 log.info("saved attendee {}", attendee);
                 attendeeRepository.save(serverAttendee);
                 attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), note));
+
+                // forward to ReprintController if we are saving and printing
+                if (action.equalsIgnoreCase(SAVE_AND_REPRINT_ACTION)) {
+                    return "forward:/orders/" + orderId + "/attendees/" + attendeeId + "/reprint?msg=Saved";
+                }
+
                 return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved";
             } else {
                 User override = (User) userService.loadUserByUsername(overrideUser);
@@ -78,6 +86,12 @@ public class OrderAttendeeEditController {
                 log.info("saved attendee {} with override by {}", serverAttendee, override.getUsername());
                 attendeeRepository.save(serverAttendee);
                 attendeeHistoryRepository.save(new AttendeeHistory(principal, attendee.getId(), note + "\n\n(Edited with override from " + override +")"));
+
+                // forward to ReprintController if we are saving and printing
+                if (action.equalsIgnoreCase(SAVE_AND_REPRINT_ACTION)) {
+                    return "forward:/orders/" + orderId + "/attendees/" + attendeeId + "/reprint?msg=Saved+with+override";
+                }
+
                 return "redirect:/orders/" + orderId + "/attendees/" + attendeeId + "?msg=Saved+with+override";
             }
         } catch (UsernameNotFoundException ex) {

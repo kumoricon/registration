@@ -144,6 +144,7 @@
         <div class="form-group col-md-12 mt-2">
             <div class="col-sm-10">
                 <input class="btn btn-primary" name="action" id="save" type="submit" value="Save" />
+                <input class="btn btn-primary" name="action" id="saveAndReprint" type="submit" value="Save & Reprint" />
                 <a th:href="@{/orders/{orderId}/attendees/{attendeeId}(orderId=${attendee.orderId},attendeeId=${attendee.id})}" class="btn btn-secondary">Cancel</a>
                 <input class="btn btn-secondary" type="reset" value="Reset" />
             </div>

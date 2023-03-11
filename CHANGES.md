@@ -6,6 +6,7 @@ Version 2.0.4 (Pending)
 - Fix staff image write failure when name has forward slashes
 - Add interceptor to update user rights without forcing relog
 - Update staff search to search for multiple first/last names
+- Add a Save & Reprint option on edit Attendee order page
 
 Version 2.0.3 (11/08/2022)
 - Use regular font for attendee badge names - Myriad Pro Bold is missing symbols

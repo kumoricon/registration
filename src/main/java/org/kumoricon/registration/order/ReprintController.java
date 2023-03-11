@@ -33,7 +33,7 @@ public class ReprintController {
     }
 
     @RequestMapping(value = "/orders/{orderId}/attendees/{attendeeId}/reprint", method = RequestMethod.POST)
-    @PreAuthorize("hasAuthority('reprint_badge')")
+    @PreAuthorize("hasAuthority('reprint_badge') || hasAuthority('reprint_badge_with_override')")
     public String reprintBadge(@PathVariable Integer orderId,
                                @PathVariable Integer attendeeId,
                                @CookieValue(value = CookieControllerAdvice.PRINTER_COOKIE_NAME, required = false) String printerCookie,
