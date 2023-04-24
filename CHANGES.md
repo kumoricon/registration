@@ -4,6 +4,7 @@ Version 2.0.4 (Pending)
 - Read version from build information instead of hardcoding it
 - Add experimental deduplication support for Attendance report
 - Fix staff image write failure when name has forward slashes
+- Add interceptor to update user rights without forcing relog
 
 Version 2.0.3 (11/08/2022)
 - Use regular font for attendee badge names - Myriad Pro Bold is missing symbols
