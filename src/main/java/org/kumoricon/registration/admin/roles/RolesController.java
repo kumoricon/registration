@@ -73,6 +73,7 @@ public class RolesController {
         try {
             role.setId(roleRepository.save(role));
             rightRepository.saveRightsForRole(role);
+            UserRightsUpdateInterceptor.clearCache();
         } catch (Exception ex) {
             bindingResult.addError(new ObjectError("Role", ex.getMessage()));
             model.addAttribute("allRights", rightRepository.findAll());
