@@ -5,6 +5,7 @@ Version 2.0.4 (Pending)
 - Add experimental deduplication support for Attendance report
 - Fix staff image write failure when name has forward slashes
 - Add interceptor to update user rights without forcing relog
+- Update staff search to search for multiple first/last names
 
 Version 2.0.3 (11/08/2022)
 - Use regular font for attendee badge names - Myriad Pro Bold is missing symbols

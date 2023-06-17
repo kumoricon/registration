@@ -16511,6 +16511,96 @@
       "hasBadgeImage": true,
       "badgeImageFileType": "jpg",
       "phone": "(123) 456-7890"
+    },
+    {
+      "id": 2886,
+      "namePreferred": "John Jacob",
+      "namePreferredFirst": "John Jacob",
+      "namePreferredLast": "Smith",
+      "nameOnId": "John Jacob Smith",
+      "nameOnIdFirst": "John Jacob",
+      "nameOnIdLast": "Smith",
+      "namePrivacy": "John Jacob Smith",
+      "namePrivacyFirst": "John Jacob",
+      "namePrivacyLast": "Smith",
+      "pronouns": "",
+      "birthdate": "1989-12-16",
+      "ageCategoryConCurrentTerm": "adult",
+      "tShirtSize": "L",
+      "badgeImpactingLastModified": "2019-01-02 19:58:54",
+      "positions": [
+        {
+          "term": "2019",
+          "title": "Staff and Attendee Services Coordinator",
+          "rank": "coordinator",
+          "department": "Department of the Chair",
+          "departmentSuppressed": false,
+          "titleBadgeShort": "Staff and Attendee Services Coordinator"
+        }
+      ],
+      "hasBadgeImage": true,
+      "badgeImageFileType": "jpg",
+      "phone": "(123) 456-7890"
+    },
+    {
+      "id": 3155,
+      "namePreferred": "Jane",
+      "namePreferredFirst": "Jane",
+      "namePreferredLast": "Sally Smith",
+      "nameOnId": "Jane Sally Smith",
+      "nameOnIdFirst": "Jane",
+      "nameOnIdLast": "Sally Smith",
+      "namePrivacy": "Jane Sally Smith",
+      "namePrivacyFirst": "Jane",
+      "namePrivacyLast": "Sally Smith",
+      "pronouns": "",
+      "birthdate": "1984-01-04",
+      "ageCategoryConCurrentTerm": "adult",
+      "tShirtSize": "L",
+      "badgeImpactingLastModified": "2019-01-02 19:58:54",
+      "positions": [
+        {
+          "term": "2019",
+          "title": "Staff and Attendee Services Coordinator",
+          "rank": "coordinator",
+          "department": "Department of the Chair",
+          "departmentSuppressed": false,
+          "titleBadgeShort": "Staff and Attendee Services Coordinator"
+        }
+      ],
+      "hasBadgeImage": true,
+      "badgeImageFileType": "jpg",
+      "phone": "(123) 456-7890"
+    },
+    {
+      "id": 8845,
+      "namePreferred": "Billy",
+      "namePreferredFirst": "Billy",
+      "namePreferredLast": "Smith",
+      "nameOnId": "Billy Bob Joe Smith",
+      "nameOnIdFirst": "Billy Bob",
+      "nameOnIdLast": "Joe Smith",
+      "namePrivacy": "Billy Bob Joe Smith",
+      "namePrivacyFirst": "Billy Bob",
+      "namePrivacyLast": "Joe Smith",
+      "pronouns": "",
+      "birthdate": "1988-05-15",
+      "ageCategoryConCurrentTerm": "adult",
+      "tShirtSize": "XS",
+      "badgeImpactingLastModified": "2019-01-02 19:58:54",
+      "positions": [
+        {
+          "term": "2019",
+          "title": "Staff and Attendee Services Coordinator",
+          "rank": "coordinator",
+          "department": "Department of the Chair",
+          "departmentSuppressed": false,
+          "titleBadgeShort": "Staff and Attendee Services Coordinator"
+        }
+      ],
+      "hasBadgeImage": true,
+      "badgeImageFileType": "jpg",
+      "phone": "(123) 456-7890"
     }
   ],
   "updated": [
@@ -17053,7 +17143,10 @@
     900,
     2204,
     1663,
-    2154
+    2154,
+    2886,
+    3155,
+    8845
   ],
   "deleted": [
     1773,

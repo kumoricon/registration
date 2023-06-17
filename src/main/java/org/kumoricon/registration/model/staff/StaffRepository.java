@@ -57,9 +57,8 @@ public class StaffRepository {
     /**
      * Search for the given name in the staff table. If only a single word is in the search phrase, return
      * records where first OR last or legal first or legal last name start with that (case insensitive)
-     * If there is a space in the search phrase, assume that it is "Firstname Lastname" and return records
-     * were first_name or legal_first_name starts with firstname, and last_name or legal_last_name starts with
-     * the second word.
+     * If there is a space in the search phrase, return records where first_name and last_name or
+     * legal_first_name and legal_last_name contain values in the string query
      * @param search Search phrase
      * @return List of matching records or empty list
      */
@@ -70,8 +69,19 @@ public class StaffRepository {
         }
         SqlParameterSource params = searchStringToQueryTerms(search);
 
-        final String singleSQL = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE :first||'%' OR last_name ILIKE :first||'%') OR (legal_first_name ILIKE :first||'%' OR legal_last_name ILIKE :first||'%') ORDER BY first_name, last_name";
-        final String multiSQL  = "SELECT * FROM staff WHERE deleted = FALSE AND (first_name ILIKE :first||'%' AND last_name ILIKE :second||'%') OR (legal_first_name ILIKE :first||'%' AND legal_last_name ILIKE :second||'%') ORDER BY first_name, last_name";
+        final String singleSQL = """
+                SELECT * FROM staff WHERE deleted = FALSE
+                AND (first_name ILIKE :first||'%' OR last_name ILIKE :first||'%')
+                OR (legal_first_name ILIKE :first||'%' OR legal_last_name ILIKE :first||'%')
+                ORDER BY first_name, last_name
+                """;
+        final String multiSQL = """
+                SELECT * FROM staff WHERE deleted = FALSE
+                AND (first_name || ' ' || last_name) ~* (:first || '.*' || :second || '|' || :second || '.*' || :first)
+                OR (legal_first_name || ' ' || legal_last_name) ~* (:first || '.*' || :second || '|' || :second || '.*' || :first)
+                ORDER BY first_name, last_name
+                """;
+
         try {
             List<Staff> staffList;
             if (params.getParameterNames() != null && params.getParameterNames().length == 1) {
