@@ -17,9 +17,10 @@ Setup
 -----
 **1. Install PostgreSQL Server (commands vary)**
 
-**MacOS Catalina:**
+**MacOS Ventura:**
 ```
-$ brew install postgres
+brew tap homebrew/core
+$ brew install postgresql
 ```
 
 **Ubuntu Linux 20.04:**
@@ -36,7 +37,7 @@ $ sudo systemctl enable postgresql              # Enable service
 $ sudo systemctl start postgresql               # Start service
 
 MacOS:
-$ pg_ctl -D /usr/local/var/postgres start       # Start service
+$ brew services start postgresql@14             # Start service
 ```
 
 
@@ -50,9 +51,9 @@ MacOS:
 $ sudo dscl . -create /Users/postgres
 
 MacOS/Linux:
-$ su - postgres
-$ createuser --interactive -P kumoreg
-    Enter password for new role:
+$ su - postgres   # Not needed on MacOS
+$ createuser --interactive -P registration
+    Enter password for new role:    #Set this to: 'password' without quotes (unless you want to change the defaults in the file 'default.properties')
     Enter it again:
     Shall the new role be a superuser? (y/n) n
     Shall the new role be allowed to create databases? (y/n) n
@@ -82,12 +83,18 @@ psql -h 127.0.0.1 -U kumoreg registration
 - \q - Quit
 
 
-Build and Run the Server with Maven:
+Build and Run the Server with Maven (IntelliJ IDEA):
 ------------------------------------
 ```
 mvn spring-boot:run
 ```
+# For VS Code, expand JAVA PROJECTS > registration and select Run in the context menu
 
+Acessing the Site in a Browser:
+```
+http://127.0.0.1:8080
+```
+Log in with the user 'admin' and password 'test'
 
 Architecture Notes
 ------------------
