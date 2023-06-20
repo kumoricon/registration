@@ -59,7 +59,7 @@ $ createuser --interactive -P registration
     Shall the new role be allowed to create databases? (y/n) n
     Shall the new role be allowed to create more new roles? (y/n) n
 
-$ createdb -O kumoreg registration
+$ createdb -O registration registration
 ```
 
 **4. Enable case-insensitive searching**
@@ -88,7 +88,11 @@ Build and Run the Server with Maven (IntelliJ IDEA):
 ```
 mvn spring-boot:run
 ```
-# For VS Code, expand JAVA PROJECTS > registration and select Run in the context menu
+# For VS Code:
+  # Install 'Extension Pack for Java'
+  # Install a JDK, can be whatever you are prompted to install by the extension
+  # Restart VS Code and JAVA PROJECTS should auto-scan to look for projects
+  # Once that's done, expand JAVA PROJECTS > registration and select Run in the context menu
 
 Acessing the Site in a Browser:
 ```
