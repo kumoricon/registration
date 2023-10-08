@@ -1,6 +1,6 @@
 # Installation Notes
 
-On Ubuntu 20.04 (or newer)
+On Ubuntu 22.04.02 (or newer)
 
 ## Server setup
 ### Create users
@@ -21,10 +21,9 @@ sudo apt -y update
 sudo apt -y upgrade
 sudo shutdown -r now # restart, wait a minute
 ssh <reg server>
-sudo apt intall -y ./registration_X_Y_Z_all.deb
+sudo apt install -y ./registration_X_Y_Z_all.deb
 sudo usermod -aG registration jason # repeat for other admins
 ```
-
 
 ### Create PostgresQL database users for registration and training
 If running Postgres on the local server, install it and create the database as a user with access to create users in PostgreSQL (typicaly the `postgres` user),
@@ -116,11 +115,9 @@ Log out and back in (so that changed groups take effect), then set up
 registration-filetransfer from https://github.com/kumoricon/registration-filetransfer/
 
 
-
 ### Log In
 - Browse to https://hostname/ or http://hostname:8080/
 - Printer administration: https://hostname:631/
-
 
 # Utilities
 Installed to `/opt/registration/bin/`
