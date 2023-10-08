@@ -29,7 +29,7 @@ public class FileStorageService {
     public void storeFile(String fileName, String imageData) throws IOException {
         // remove forward slash from filename to prevent file from being written to invalid directory
         String sanitizedFileName = fileName.replace("/", "");
-        if(sanitizedFileName.contains("..")) {
+        if (sanitizedFileName.contains("..")) {
             throw new FileStorageException("Sorry! Filename contains invalid path sequence " + sanitizedFileName);
         }
 
