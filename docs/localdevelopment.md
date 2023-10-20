@@ -26,14 +26,15 @@ $ brew install postgresql
 Ubuntu Linux 22.04.02:
 ```
 $ sudo apt -y install postgresql postgresql-contrib
+$ sudo su - postgres
+```
+Alternatively, instead of `sudo su - postgres`:
+```
+$ sudo usermod -aG postgres myusername   # your local username with superuser privileges
 
-# NOTE: there are a few options for running the rest of the commands
 # There is a postgres user account that gets created on Ubuntu automatically;
 # However, there is no way to enter a password for that special account
 # To run commands with the postgres account on Ubuntu 22.04.02, use: 
-$ sudo usermod -aG postgres myusername   # your local username with superuser privileges
-and/or:
-$ sudo su - postgres
 # These instructions will use the above methods
 # The other option is to use sudo for every command below from an account
 # that you have the password for
@@ -111,18 +112,22 @@ psql -h 127.0.0.1 -U kumoreg registration
 - \q - Quit
 
 
-Build and Run the Server with Maven (IntelliJ IDEA):
+Build and Run the Server:
 ------------------------------------
+**Maven**
 ```
 mvn spring-boot:run
 ```
-# For VS Code:
-  # Install 'Extension Pack for Java'
-  # Install a JDK, version 17 (see step 5)
-  # Restart VS Code and JAVA PROJECTS should auto-scan to look for projects
-  # Once that's done, expand JAVA PROJECTS > registration and select Run in the context menu
+**IDE-specific**
 
-Acessing the Site in a Browser:
+<ins>VSCode:</ins>
+  - Install `Extension Pack for Java`
+  - Install a JDK, version 17 (see step 5)
+  - Restart VS Code and JAVA PROJECTS should auto-scan to look for projects
+  - Once that's done, expand JAVA PROJECTS > registration and select Run in the context menu
+
+Accessing the Site in a Browser:
+------------------------------------
 ```
 http://127.0.0.1:8080
 ```
