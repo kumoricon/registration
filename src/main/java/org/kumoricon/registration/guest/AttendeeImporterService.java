@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class AttendeeImporterService {
     public static final String IMPORT_TILL_NAME = "Attendee Import";
+    private static final String REPLACE_REGEX = "[^A-Za-z0-9]";
     private final TillSessionService sessionService;
 
     private final OrderRepository orderRepository;
@@ -66,7 +67,7 @@ public class AttendeeImporterService {
     private HashMap<String, Badge> getBadgeMap() {
         HashMap<String, Badge> badges = new HashMap<>();
         for (Badge b : badgeService.findAll()) {
-            badges.put(b.getName().replaceAll("[^A-Za-z0-9]", "").toLowerCase(), b);
+            badges.put(b.getName().replaceAll(REPLACE_REGEX, "").toLowerCase(), b);
         }
         // Add special cases - you can't buy day badges online, but they can be created
         badges.put("regularday1", badges.get("friday"));
@@ -389,9 +390,9 @@ public class AttendeeImporterService {
 
         String lowerCaseMembershipType;
         if (person.vipLevel().isEmpty()) {
-            lowerCaseMembershipType = person.membershipType().toLowerCase();
+            lowerCaseMembershipType = person.membershipType().replaceAll(REPLACE_REGEX, "").toLowerCase();
         } else {
-            lowerCaseMembershipType = "vip" + person.vipLevel().toLowerCase();
+            lowerCaseMembershipType = "vip" + person.vipLevel().replaceAll(REPLACE_REGEX, "").toLowerCase();
         }
         if (badgeMap.containsKey(lowerCaseMembershipType)) {
             attendee.setBadgeId(badgeMap.get(lowerCaseMembershipType).getId());
