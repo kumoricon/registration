@@ -7,6 +7,8 @@ Version 2.0.4 (Pending)
 - Add interceptor to update user rights without forcing relog
 - Update staff search to search for multiple first/last names
 - Add a save & reprint option on edit attendee order page
+- Fix mismatch between badge type & membership type in attendee import
+- Update VIP levels for 2023 to only have Primary VIP level
 
 Version 2.0.3 (11/08/2022)
 - Use regular font for attendee badge names - Myriad Pro Bold is missing symbols

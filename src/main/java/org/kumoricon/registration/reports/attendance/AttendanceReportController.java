@@ -19,7 +19,7 @@ import java.util.*;
 public class AttendanceReportController {
     private final AttendeeSearchRepository attendeeSearchRepository;
     private final StaffRepository staffRepository;
-    private final String[] ATTENDEE_BADGE_TYPES = {"wednesday", "thursday", "friday", "saturday", "sunday", "weekend", "vip", "vip-cumulus", "vip-altocumulus", "vip-cumulonimbus"};
+    private final String[] ATTENDEE_BADGE_TYPES = {"wednesday", "thursday", "friday", "saturday", "sunday", "weekend", "vip", "vip-primary"};
     private final String[] VENDOR_BADGE_TYPES = {"artist", "exhibitor"};
 
     public AttendanceReportController(AttendeeSearchRepository attendeeSearchRepository,
