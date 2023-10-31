@@ -146,26 +146,25 @@ public class StaffImportService extends ImportService {
         switch (dept) {
             case "treasury":
             case "department of the treasurer":
-                return "#0a8141";
+                return "#743029";
             case "secretarial":
             case "department of the secretary":
-                return "#3953a4"; // Not sure which color code is correct, this is from 2016
-//            return "#3a53a5";
+                return "#8EA8D7";
             case "relations":
-                return "#f282b4";
+                return "#F48DA5";
             case "publicity":
-                return "#e0e0e0";
+                return "#DDE0EB";
             case "programming":
-                return "#6b52a2";
+                return "#854B76";
             case "operations":
-                return "#ec2426";
+                return "#447F65";
             case "membership":
-                return "#f57f20";
+                return "#F5994B";
             case "infrastructure":
-                return "#414242";
+                return "#2D233E";
             case "chair":
             case "department of the chair":
-                return "#f99f1d";
+                return "#DDAD14";
             default:
                 log.warn("Warning, couldn't find color code for " + department);
                 return "#FFFFFF";

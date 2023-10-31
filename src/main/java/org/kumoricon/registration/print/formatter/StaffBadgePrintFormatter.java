@@ -42,7 +42,6 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
         badgeCreatorBack = new BadgeCreatorStaffBack(badgeResource.getBoldFont(), badgeResource.getPlainFont());
     }
 
-
     private PDPage generatePageFront(StaffBadgeDTO staffBadgeDTO, PDDocument document) throws IOException {
         // Note: Badge front and back are in a different order in the 2021 staff badge PDF, so the front
         // is actually page 1, not page 0
@@ -52,12 +51,11 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
 
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, staffBadgeDTO.getFirstName() + ".png");
-        contentStream.drawImage(pdi,45+xOffset, 81+yOffset, 306, 450);
+        contentStream.drawImage(pdi,12+xOffset, 13+yOffset, 306, 550);
         contentStream.close();
 
         return page;
     }
-
 
     private PDPage generatePageBack(StaffBadgeDTO staffBadgeDTO, PDDocument document) throws IOException {
         PDPage page = linkBackgroundInto(background, 0, document);
@@ -65,7 +63,7 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
 
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, staffBadgeDTO.getLastName() + ".png");
-        contentStream.drawImage(pdi,45+xOffset, 81+yOffset, 306, 450);
+        contentStream.drawImage(pdi,12+xOffset, 13+yOffset, 306, 550);
         contentStream.close();
 
         return page;

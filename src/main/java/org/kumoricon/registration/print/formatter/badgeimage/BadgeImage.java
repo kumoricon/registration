@@ -69,27 +69,28 @@ public class BadgeImage {
      * @param font Text font
      * @param color Text color
      */
-    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
-        drawStretchedCenteredString(text, rect, font, color, 1);
+    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+        float maxFontSize = 0.0f;
+        drawStretchedCenteredString(text, rect, font, color, outlineWidth, maxFontSize);
     }
 
-    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth, float maxFontSize) {
         Rectangle paddedRect = getPaddedRect(rect);
-        final Font sizedFont = scaleFont(text, paddedRect, font);
+        final Font sizedFont = scaleFont(text, paddedRect, font, maxFontSize);
         drawCenteredString(text, rect, sizedFont, color, outlineWidth);
     }
 
 
     @SuppressWarnings("SuspiciousNameCombination")
-    void drawRotatedStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
+    void drawRotatedStretchedCenteredString(String text, Rectangle rect, Font font, Color color, float maxFontSize) {
         Rectangle rotatedBounds = new Rectangle(rect.x, rect.y, rect.height, rect.width);
-        final Font sizedFont = scaleFont(text, rotatedBounds, font);
+        final Font sizedFont = scaleFont(text, rotatedBounds, font, maxFontSize);
         drawCenteredString(text, rect, sizedFont, color);
     }
 
-    void drawStretchedLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
+    void drawStretchedLeftAlignedString(String text, Rectangle rect, Font font, Color color, float maxFontSize) {
         Rectangle paddedRect = getPaddedRect(rect);
-        final Font sizedFont = scaleFont(text, paddedRect, font);
+        final Font sizedFont = scaleFont(text, paddedRect, font, maxFontSize);
         drawLeftAlignedString(text, paddedRect, sizedFont, color);
     }
 
@@ -101,9 +102,9 @@ public class BadgeImage {
      * @param color Color color
      * @param outlineWidth int Outline width
      */
-    void drawStretchedLeftAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+    void drawStretchedLeftAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth, float maxFontSize) {
         Rectangle paddedRect = getPaddedRect(rect);
-        final Font sizedFont = scaleFont(text, paddedRect, font);
+        final Font sizedFont = scaleFont(text, paddedRect, font, maxFontSize);
         drawLeftAlignedString(text, paddedRect, sizedFont, color, outlineWidth);
     }
 
@@ -115,9 +116,9 @@ public class BadgeImage {
      * @param color Text color
      * @param outlineWidth int Outline width
      */
-    void drawStretchedRightAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+    void drawStretchedRightAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth, float maxFontSize) {
         Rectangle paddedRect = getPaddedRect(rect);
-        final Font sizedFont = scaleFont(text, paddedRect, font);
+        final Font sizedFont = scaleFont(text, paddedRect, font, maxFontSize);
 
         drawRightAlignedString(text, paddedRect, sizedFont, color, outlineWidth);
     }
@@ -193,7 +194,7 @@ public class BadgeImage {
         return font.deriveFont(fontSizeByHeight);
     }
 
-    Font scaleFont(String text, Rectangle rect, Font font) {
+    Font scaleFont(String text, Rectangle rect, Font font, float maxFontSize) {
         float fontSizeByWidth = 100.0f;
         float fontSizeByHeight = 100.0f;
         Font tFont = font.deriveFont(fontSizeByWidth);
@@ -202,6 +203,14 @@ public class BadgeImage {
 
         int height = g2.getFontMetrics(tFont).getHeight();
         fontSizeByHeight = ((float)rect.height / (float)height) * fontSizeByHeight;
+
+        // Enforce maximum font size, if specified
+        if (maxFontSize > 0 && fontSizeByHeight > maxFontSize) {
+            fontSizeByHeight = maxFontSize;
+        }
+        if (maxFontSize > 0 && fontSizeByWidth > maxFontSize) {
+            fontSizeByWidth = maxFontSize;
+        }
 
         if (fontSizeByHeight < fontSizeByWidth) {
             return font.deriveFont(fontSizeByHeight);
@@ -256,7 +265,7 @@ public class BadgeImage {
         }
     }
 
-    void drawRotatedCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, boolean rotateRight) {
+    void drawRotatedCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, boolean rotateRight, float maxFontSize) {
         if (text.length == 0) return;
         // Since lines will be drawn rotated, line height is based on WIDTH of the bounding box
         int lineHeight = (int) (boundingBox.getWidth() / text.length);
@@ -264,11 +273,11 @@ public class BadgeImage {
         // Font scaling code assumes horizontal text, build a bounding box that's "rotated"
         @SuppressWarnings("SuspiciousNameCombination")
         Rectangle rotatedBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.height, lineHeight);
-        Font sizedFont = scaleFont(text[0], rotatedBounds, font);
+        Font sizedFont = scaleFont(text[0], rotatedBounds, font, maxFontSize);
 
         // Find the smallest font needed for each line and use it for all lines
         for (int i = 1; i < text.length; i++) {
-            Font tmpFont = scaleFont(text[i], rotatedBounds, font);
+            Font tmpFont = scaleFont(text[i], rotatedBounds, font, maxFontSize);
             if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
         }
 
@@ -288,57 +297,60 @@ public class BadgeImage {
     }
 
 
-    void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor) {
-
+    void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, int outlineWidth, float maxFontSize, boolean yAxisCentering) {
         // Find initial line height
         int lineHeight = (int) (boundingBox.getHeight() / text.length);
 
         Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
-        Font sizedFont = scaleFont(text[0], lineBounds, font);
+        Font sizedFont = scaleFont(text[0], lineBounds, font, maxFontSize);
+
+        // Find the smallest font needed for each line and use it for all lines
+        for (int i = 1; i < text.length; i++) {
+            Font tmpFont = scaleFont(text[i], lineBounds, font, maxFontSize);
+            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
+        }
+        lineHeight = sizedFont.getSize() + 15;   // Make line height close to actual line size with padding
+
+        int yOffset = boundingBox.y; /* Upper edge of the bounding box */
+        if (yAxisCentering) {
+            yOffset += /* Half the height of box */ boundingBox.height / 2 - /* Half the height of lines */ (text.length * (lineHeight - 15)) / 2;
+        }
+
+        for (int i = 0; i < text.length; i++) {
+            Rectangle lineBoundingBox = new Rectangle(boundingBox.x, yOffset + (i*lineHeight), boundingBox.width, lineHeight);
+            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineWidth);
+        }
+    }
+
+    void drawStretchedCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, int outlineWidth, float maxFontSize) {
+        // Find initial line height
+        int lineHeight = (int) (boundingBox.getHeight() / text.length);
+
+        Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
+        Font sizedFont = scaleFont(text[0], lineBounds, font, maxFontSize);
 
 
         // Find the smallest font needed for each line and use it for all lines
         for (int i = 1; i < text.length; i++) {
-            Font tmpFont = scaleFont(text[i], lineBounds, font);
+            Font tmpFont = scaleFont(text[i], lineBounds, font, maxFontSize);
             if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
         }
         lineHeight = sizedFont.getSize() + 15;   // Make line height close to actual line size with padding
 
         for (int i = 0; i < text.length; i++) {
             Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
-            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor);
+            drawStretchedCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineWidth, maxFontSize);
         }
     }
 
-    void drawStretchedCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, int outlineWidth) {
-        // Find initial line height
-        int lineHeight = (int) (boundingBox.getHeight() / text.length);
-
-        Rectangle lineBounds = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, lineHeight);
-        Font sizedFont = scaleFont(text[0], lineBounds, font);
-
-
-        // Find the smallest font needed for each line and use it for all lines
-        for (int i = 1; i < text.length; i++) {
-            Font tmpFont = scaleFont(text[i], lineBounds, font);
-            if (tmpFont.getSize() < sizedFont.getSize()) sizedFont = tmpFont;
-        }
-        lineHeight = sizedFont.getSize() + 15;   // Make line height close to actual line size with padding
-
-        for (int i = 0; i < text.length; i++) {
-            Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
-            drawStretchedCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineWidth);
-        }
-    }
-
-    void drawStretchedRightRotatedString(String text, Rectangle boundingBox, Font font, Color fgColor) {
+    void drawStretchedRightRotatedString(String text, Rectangle boundingBox, Font font, Color fgColor, float maxFontSize) {
         AffineTransform orig = g2.getTransform();
         g2.rotate(-Math.PI/2, boundingBox.getX() + (boundingBox.getWidth()/2), boundingBox.getY() + (boundingBox.getHeight()/2));
-        drawRotatedStretchedCenteredString(text, boundingBox, font, fgColor);
+        drawRotatedStretchedCenteredString(text, boundingBox, font, fgColor, maxFontSize);
         g2.setTransform(orig);
     }
 
-    void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor, int outlineWidth) {
+    void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor, int outlineWidth, float maxFontSize) {
         String text = ageStripeText.toUpperCase();
 
         int letterBoundingBoxHeight = ageBackground.height / ageStripeText.length();
@@ -350,7 +362,7 @@ public class BadgeImage {
                     ageBackground.y + (letterBoundingBoxHeight * i)+5,
                     ageBackground.width,
                     letterBoundingBoxHeight+10);
-            drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor, outlineWidth);
+            drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor, outlineWidth, maxFontSize);
         }
     }
 

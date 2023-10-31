@@ -129,11 +129,11 @@ public class BadgeResourceService {
             adultSeal = loadImage("staffadult.png");
             youthSeal = loadImage("staffyouth.png");
             childSeal = loadImage("staffchild.png");
-            staffBadgeBackground = loadStaffBackground("2022 Staff Badge.pdf");
-            guestBadgeBackground = loadStaffBackground("2022 Guest of Honor Badge.pdf");
-            attendeeBadgeBackground = loadBackground("2022 Attendee Badges.pdf");
-            specialtyBadgeBackground = loadBackground("2022 Specialty Badges.pdf");
-            vipBadgeBackground = loadBackground("2022 VIP Badges.pdf");
+            staffBadgeBackground = loadStaffBackground("2023-Staff-Badge.pdf");
+            guestBadgeBackground = loadStaffBackground("2023-Guest-Badge.pdf");
+            attendeeBadgeBackground = loadBackground("2023-Attendee-Badge_PRINT.pdf");
+            specialtyBadgeBackground = loadBackground("2023-Specialty-Badge_PRINT.pdf");
+            vipBadgeBackground = loadBackground("2023-VIP-Badge_PRINT.pdf");
             plainFont = loadPlainFont();
             boldFont = loadBadgeFont();
         } catch (IOException ex) {

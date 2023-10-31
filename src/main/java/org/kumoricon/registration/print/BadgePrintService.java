@@ -245,15 +245,14 @@ public class BadgePrintService extends PrintService {
         return staffBadgeDTOS;
     }
 
-
     private String getAgeStripeColor(String ageRangeAtCon) {
         if (ageRangeAtCon == null) { ageRangeAtCon = "child"; }
         if ("adult".equalsIgnoreCase(ageRangeAtCon)) {
-            return "#323E99";
+            return "#412B78";
         } else if ("youth".equalsIgnoreCase(ageRangeAtCon)) {
-            return  "#FFFF00";
+            return  "#EDB741";
         } else {
-            return  "#CC202A";
+            return  "#BF2D28";
         }
     }
 
