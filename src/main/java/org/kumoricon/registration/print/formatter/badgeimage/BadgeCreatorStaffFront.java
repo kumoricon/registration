@@ -14,16 +14,14 @@ public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
         drawLargeName(b, staff);
         drawPositionsStripe(b, staff);
         drawPronouns(b, staff);
-        //drawBadgeAgeImage(b, staff); // Not used for 2023
         drawBadgeNumber(b, staff);
         drawBadgeImage(b, staff);
 
         return b.writePNGToByteArray();
     }
 
-        private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
-            Rectangle badgeImageLocation = new Rectangle(380, 850, 450, 510);
-//        b.fillRect(badgeImageLocation, Color.CYAN);
+    private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
+        Rectangle badgeImageLocation = new Rectangle(80, 850, 1040, 510);
         b.drawStretchedImage(staff.getBadgeImage(), badgeImageLocation);
     }
 }

@@ -15,9 +15,8 @@ public class BadgeCreatorStaffBack extends BadgeCreatorStaffBase {
         drawPositionsStripe(b, staff);
         drawLargeName(b, staff);
         drawPronouns(b, staff);
-        //drawBadgeAgeImage(b, staff);
         drawBadgeNumber(b, staff);
-        
+
         return b.writePNGToByteArray();
     }
 }

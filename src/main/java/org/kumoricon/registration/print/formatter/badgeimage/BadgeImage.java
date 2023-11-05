@@ -13,6 +13,7 @@ import java.io.IOException;
  * and text placement, plus the image itself.
  */
 public class BadgeImage {
+    //private static final Logger log = LoggerFactory.getLogger(BadgeImage.class);
     private final BufferedImage image;
     private final Graphics2D g2;
     private final int dpi;
@@ -39,27 +40,66 @@ public class BadgeImage {
 
     void drawImage(Image image, Rectangle area) {
         if (image == null) return;
+        g2.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
         g2.drawImage(image, area.x, area.y, area.width, area.height, null);
     }
 
-    void drawStretchedImage(Image image, Rectangle area) {
+    void drawStretchedImage(Image image, Rectangle boundingArea) {
         if (image == null) return;
-        double imageWidth = image.getWidth(null);
-        double imageHeight = image.getHeight(null);
+        int imageWidth = image.getWidth(null);
+        int imageHeight = image.getHeight(null);
 
-        double widthRatio = area.getWidth() / imageWidth;
-        double heightRatio = area.getHeight() / imageHeight;
-        double ratio = Math.min(widthRatio, heightRatio);
+        Dimension imageDimension = new Dimension(imageWidth, imageHeight);
+        Dimension boundaryDimension = new Dimension(boundingArea.width, boundingArea.height);
+        Dimension scaledDimension = getScaledDimension(imageDimension, boundaryDimension);
 
-        int newWidth = (int) (imageWidth * ratio);
-        int newHeight = (int) (imageHeight * ratio);
+        Rectangle imageArea = new Rectangle(
+            boundingArea.x,
+            boundingArea.y,
+            scaledDimension.width,
+            scaledDimension.height
+        );
 
-        Rectangle scaledArea = new Rectangle(
-                area.x + (area.width - newWidth)/2,
-                area.y + (area.height - newHeight)/2,
-                newWidth,
-                newHeight);
-        drawImage(image, scaledArea);
+        int heightDifference = boundingArea.height - imageArea.height;
+        int widthDifference = boundingArea.width - imageArea.width;
+
+        Rectangle centeredImage = new Rectangle(
+            boundingArea.x + (widthDifference/2),
+            boundingArea.y + (heightDifference/2),
+            imageArea.width,
+            imageArea.height
+        );
+
+        drawImage(image, centeredImage);
+    }
+
+    public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
+        int original_width = imgSize.width;
+        int original_height = imgSize.height;
+        int bound_width = boundary.width;
+        int bound_height = boundary.height;
+        int new_width = original_width;
+        int new_height = original_height;
+    
+        // first check if we need to scale width
+        if (original_width > bound_width) {
+            //scale width to fit
+            new_width = bound_width;
+            //scale height to maintain aspect ratio
+            new_height = (new_width * original_height) / original_width;
+        }
+    
+        // then check if we need to scale even with the new height
+        if (new_height > bound_height) {
+            //scale height to fit instead
+            new_height = bound_height;
+            //scale width to maintain aspect ratio
+            // The '* 125 / 100' part is an embarrassing hack to make scaled images 25% wider
+            // since I couldn't figure out what was shrinking them by 25% with the amount of time I had
+            new_width = (new_height * original_width * 125 / 100) / original_height;
+        }
+    
+        return new Dimension(new_width, new_height);
     }
 
     /**
@@ -79,7 +119,6 @@ public class BadgeImage {
         final Font sizedFont = scaleFont(text, paddedRect, font, maxFontSize);
         drawCenteredString(text, rect, sizedFont, color, outlineWidth);
     }
-
 
     @SuppressWarnings("SuspiciousNameCombination")
     void drawRotatedStretchedCenteredString(String text, Rectangle rect, Font font, Color color, float maxFontSize) {
@@ -159,7 +198,6 @@ public class BadgeImage {
         g2.drawString(text, x+width, y+width);
     }
 
-
     void drawLeftAlignedString(String text, Rectangle rect, Font font, Color color) {
         drawLeftAlignedString(text, rect, font, color, 0);
     }
@@ -228,7 +266,6 @@ public class BadgeImage {
         g2.setBackground(color);
         g2.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
-
 
     private Rectangle getPaddedRect(Rectangle rect) {
         if (rect.getHeight() > 40 && rect.getWidth() > 40) {
