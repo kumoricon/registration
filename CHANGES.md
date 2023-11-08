@@ -1,5 +1,8 @@
 # Change History
-Version 2.0.4 (Pending)
+Version 2.0.5 (Pending) 
+- Update VIP levels for 2023 to only have Primary VIP level
+
+Version 2.0.4 (11/08/2023)
 - Framework and library updates
 - Read version from build information instead of hardcoding it
 - Add experimental deduplication support for Attendance report
@@ -8,7 +11,6 @@ Version 2.0.4 (Pending)
 - Update staff search to search for multiple first/last names
 - Add a save & reprint option on edit attendee order page
 - Fix mismatch between badge type & membership type in attendee import
-- Update VIP levels for 2023 to only have Primary VIP level
 
 Version 2.0.3 (11/08/2022)
 - Use regular font for attendee badge names - Myriad Pro Bold is missing symbols
