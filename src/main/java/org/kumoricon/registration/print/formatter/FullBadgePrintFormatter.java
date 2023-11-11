@@ -69,7 +69,7 @@ public class FullBadgePrintFormatter implements BadgePrintFormatter {
 
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, attendee.getId() + ".png");
-        contentStream.drawImage(pdi,126+xOffset,54+yOffset, 360, 288);
+        contentStream.drawImage(pdi,12+xOffset,yOffset-42, 360, 288);
         contentStream.close();
 
         return page;
