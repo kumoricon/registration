@@ -10,11 +10,18 @@ public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
 
     public byte[] createBadge(StaffBadgeDTO staff) {
         BadgeImage b = new BadgeImage(BADGE_WIDTH, BADGE_HEIGHT, DPI);
+
         drawLargeName(b, staff);
         drawPositionsStripe(b, staff);
         drawPronouns(b, staff);
-        drawBadgeAgeImage(b, staff);
         drawBadgeNumber(b, staff);
+        drawBadgeImage(b, staff);
+
         return b.writePNGToByteArray();
+    }
+
+    private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
+        Rectangle badgeImageLocation = new Rectangle(80, 850, 1040, 510);
+        b.drawStretchedImage(staff.getBadgeImage(), badgeImageLocation);
     }
 }

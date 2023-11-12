@@ -34,7 +34,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
         Rectangle ageBackground = new Rectangle(110, 112, 223, 957);
         Rectangle textBoundingBox = new Rectangle(155, 180, 160, 680);
         b.fillRect(ageBackground, bgColor);
-        b.drawVerticalCenteredString(attendee.getAgeStripeText(), textBoundingBox, boldFont, fgColor, 2);
+        b.drawVerticalCenteredString(attendee.getAgeStripeText(), textBoundingBox, boldFont, fgColor, 2, 0);
     }
 
     private void drawLargeName(BadgeImage b, AttendeeBadgeDTO attendee) {
@@ -78,7 +78,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
             if (titleText.length() < 7) {
                 titleText = BadgeImage.buildTitleString(titleText);
             }
-            b.drawStretchedCenteredString(titleText, textBoundingBox, boldFont, fgColor);
+            b.drawStretchedCenteredString(titleText, textBoundingBox, boldFont, fgColor, 0);
         }
     }
 
@@ -89,7 +89,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
         Color fgColor = BadgeImage.getInverseColor(bgColor);
         Rectangle badgeNumberBounds = new Rectangle(155, 900, 160, 110);
 //        b.fillRect(badgeNumberBounds, Color.GREEN);
-        b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor);
+        b.drawStretchedCenteredString(badgeNumber, badgeNumberBounds, plainFont, fgColor, 0);
     }
 
     private void drawPronoun(BadgeImage b, AttendeeBadgeDTO attendee) {

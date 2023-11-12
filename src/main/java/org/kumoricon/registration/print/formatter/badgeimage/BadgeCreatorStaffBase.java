@@ -1,7 +1,5 @@
 package org.kumoricon.registration.print.formatter.badgeimage;
-
 import org.kumoricon.registration.model.staff.StaffBadgeDTO;
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -20,118 +18,98 @@ class BadgeCreatorStaffBase {
         this.plainFont = plainFont;
     }
 
-    void drawBadgeAgeImage(BadgeImage b, StaffBadgeDTO staff) {
-//        Rectangle badgeImageLocation = new Rectangle(250, 290, 165, 413);
-        Rectangle badgeImageLocation = new Rectangle(260, 292, 165, 413);
-//        b.fillRect(badgeImageLocation, Color.RED);
-        b.drawImage(staff.getAgeImage(), badgeImageLocation);
-    }
-
+    // For 2023, an age image is not used (background color instead)
+    // void drawBadgeAgeImage(BadgeImage b, StaffBadgeDTO staff) {
+    //     Rectangle badgeImageLocation = new Rectangle(160, 292, 165, 113);
+    //     b.drawImage(staff.getAgeImage(), badgeImageLocation);
+    // }
 
     void drawPositionsStripe(BadgeImage b, StaffBadgeDTO staff) {
         // Guests don't have a department color stripe, but we have to fill in the background color this
         // year. (In past years, it was part of the badge background)
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
         Color bgColor = positionBackground(staff.getDepartmentBackgroundColor());
-        if (staff.getDepartmentBackgroundColor() != null && !staff.getDepartmentBackgroundColor().isBlank()) {
-            bgColor = Color.decode(staff.getDepartmentBackgroundColor());
-            fgColor = BadgeImage.getInverseColor(bgColor);
-        }
 
-        Rectangle positionsBackground = new Rectangle(0, 278, 242, 1576);
+        Rectangle positionsBackground = new Rectangle(0, 625, 1200, 207);
         b.fillRect(positionsBackground, bgColor);
 
-        if (staff.getPositions() != null) {
-            Rectangle textBounds = new Rectangle(54, 290, 176, 1410);
-//            b.fillRect(textBounds, Color.CYAN);
-            b.drawRotatedCenteredStrings(staff.getPositions(), textBounds, boldFont, fgColor, true);
+        String[] staffPositions = staff.getPositions();
+
+        if (staffPositions != null) {
+            Rectangle textBounds = null;
+            textBounds = new Rectangle(80, 605, 1040, 207);
+
+            float maxFontSize = 72f;
+            boolean yAxisCentering = true;
+            b.drawCenteredStrings(staffPositions, textBounds, boldFont, fgColor, 1, maxFontSize, yAxisCentering);
         }
     }
 
     static Color positionForeground(String departmentBackgroundColor) {
         if (departmentBackgroundColor == null || departmentBackgroundColor.isEmpty()) {
-            return Color.BLACK;
+            return Color.WHITE;
         } else {
-            return BadgeImage.getInverseColor(Color.decode(departmentBackgroundColor));
+            return Color.WHITE;
         }
     }
 
     static Color positionBackground(String departmentBackgroundColor) {
         if (departmentBackgroundColor == null || departmentBackgroundColor.isEmpty()) {
-            return Color.decode("#c3c2fe");
+            return Color.decode("#E69826");
         } else {
             return Color.decode(departmentBackgroundColor);
         }
     }
 
-
-
     void drawLargeName(BadgeImage b, StaffBadgeDTO staff) {
         // Staff don't have fan names, but guests do, so add that to the list if it's not null.
         // Also, some guests apparently don't have a last name entered.
+
+        // Draw the background with the age color
+        Color bgColor = Color.decode(staff.getAgeBackgroundColor());
+        Rectangle positionsBackground = new Rectangle(0, 1513, 1200, 390);
+        b.fillRect(positionsBackground, bgColor);
+
         Color fgColor = foregroundColorForName(staff);
         String[] names = buildNameList(staff);
         Rectangle line1 = null;
-        Rectangle line2 = null;
 
-        if (staff.getPreferredPronoun() == null || staff.getPreferredPronoun().isBlank()) {
-            // No pronoun
-            if (names.length == 1) {
-                line1 = new Rectangle(270, 1300, 880, 450);
-                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
-            } else if (names.length == 2) {
-                line1 = new Rectangle(270, 1370, 880, 290);
-                line2 = new Rectangle(270, 1580, 880, 210);
-                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
-                b.drawStretchedCenteredString(names[1], line2, boldFont, fgColor, 1);
-            }
-        } else {
-            // Pronouns
-            if (names.length == 1) {
-                line1 = new Rectangle(270, 1300, 880, 350);
-                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
-            } else if (names.length == 2) {
-                line1 = new Rectangle(270, 1370, 880, 230);
-                line2 = new Rectangle(270, 1530, 880, 160);
-                b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1);
-                b.drawStretchedCenteredString(names[1], line2, boldFont, fgColor, 1);
-            }
-        }
-//        if (line1 != null) b.fillRect(line1, Color.RED);
-//        if (line2 != null) b.fillRect(line2, Color.ORANGE);
+        line1 = new Rectangle(80, 1495, 1020, 200);
+        b.drawStretchedCenteredString(
+            names.length == 2 ? names[0] + ' ' + names[1] : names[0],
+            line1,
+            boldFont,
+            fgColor,
+            1,
+            0.0f
+        );
     }
 
     private static Color foregroundColorForName(StaffBadgeDTO staff) {
         Color fgColor;
         if (staff.getDepartment() == null) {
             // No department == Guest of Honor
-            fgColor = Color.decode("#39296c");
+            fgColor = Color.WHITE;
         } else {
             // Regular staff
-            fgColor = Color.decode("#c3c2fe");
+            fgColor = Color.WHITE;
         }
         return fgColor;
     }
 
     void drawPronouns(BadgeImage b, StaffBadgeDTO staff) {
         if (staff.getPreferredPronoun() != null && !staff.getPreferredPronoun().isBlank()) {
-            Color fgColor = foregroundColorForName(staff);
-            Rectangle background = new Rectangle(700, 1620, 460, 150);
-//            b.fillRect(background, Color.RED);
-            b.drawStretchedCenteredString(staff.getPreferredPronoun(), background, plainFont, fgColor, 1);
+            Color fgColor = Color.WHITE;
+            Rectangle background = new Rectangle(810, 1675, 300, 70);
+            Font pronounFont = plainFont.deriveFont(56f);
+            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, 0);
         }
     }
 
     void drawBadgeNumber(BadgeImage b, StaffBadgeDTO staff) {
-        Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
-        if (staff.getDepartmentBackgroundColor() != null && !staff.getDepartmentBackgroundColor().isBlank()) {
-            Color bgColor = Color.decode(staff.getDepartmentBackgroundColor());
-            fgColor = BadgeImage.getInverseColor(bgColor);
-        }
-
+        Color fgColor = Color.WHITE;
         if (staff.getBadgeNumber() != null && !staff.getBadgeNumber().isBlank()) {
-            Rectangle background = new Rectangle(40, 1690, 180, 50);
-//            b.fillRect(background, Color.GREEN);
+            Rectangle background = new Rectangle(70, 1685, 200, 60);
             b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, 0);
         }
     }
