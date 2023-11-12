@@ -37,12 +37,7 @@ class BadgeCreatorStaffBase {
 
         if (staffPositions != null) {
             Rectangle textBounds = null;
-
-            if (staffPositions.length == 2) {
-                textBounds = new Rectangle(80, 605, 1040, 207);
-            } else {
-                textBounds = new Rectangle(80, 605, 1040, 207);
-            }
+            textBounds = new Rectangle(80, 605, 1040, 207);
 
             float maxFontSize = 72f;
             boolean yAxisCentering = true;
@@ -79,15 +74,15 @@ class BadgeCreatorStaffBase {
         String[] names = buildNameList(staff);
         Rectangle line1 = null;
 
-        if (names.length == 1) {
-            line1 = new Rectangle(80, 1495, 1020, 200);
-            float maxFontSize = 0.0f;             
-            b.drawStretchedCenteredString(names[0], line1, boldFont, fgColor, 1, maxFontSize);
-        } else if (names.length == 2) {
-            line1 = new Rectangle(80, 1495, 1020, 200);
-            float maxFontSize = 0.0f;
-            b.drawStretchedCenteredString(names[0] + ' ' + names[1], line1, boldFont, fgColor, 1, maxFontSize);
-        }
+        line1 = new Rectangle(80, 1495, 1020, 200);
+        b.drawStretchedCenteredString(
+            names.length == 2 ? names[0] + ' ' + names[1] : names[0],
+            line1,
+            boldFont,
+            fgColor,
+            1,
+            0.0f
+        );
     }
 
     private static Color foregroundColorForName(StaffBadgeDTO staff) {
@@ -112,16 +107,7 @@ class BadgeCreatorStaffBase {
     }
 
     void drawBadgeNumber(BadgeImage b, StaffBadgeDTO staff) {
-        Color bgColor = null;
-        if (staff.getDepartment() == null) {
-            // No department == Guest of Honor
-            bgColor = Color.BLACK;
-        } else {
-            // Regular staff
-            bgColor = Color.decode(staff.getAgeBackgroundColor());
-        }
-
-        Color fgColor = Color.WHITE; //BadgeImage.getInverseColor(bgColor);
+        Color fgColor = Color.WHITE;
         if (staff.getBadgeNumber() != null && !staff.getBadgeNumber().isBlank()) {
             Rectangle background = new Rectangle(70, 1685, 200, 60);
             b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, 0);
