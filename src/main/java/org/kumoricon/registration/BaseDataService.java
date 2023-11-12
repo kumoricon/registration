@@ -326,13 +326,13 @@ public class BaseDataService {
 
     private void createSpecialtyBadges() {
         log.info("Creating badge Artist");
-        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.SPECIALTY, "Artist", "#800080", 75f, 75f, 75f);
+        Badge artist = BadgeFactory.createBadge("Artist", BadgeType.SPECIALTY, "Artist", "#5900A3", 75f, 75f, 75f);
         artist.setRequiredRight("badge_type_artist");
         artist.setWarningMessage("Artist check in. See your coordinator!");
         badgeService.save(artist);
 
         log.info("Creating badge Exhibitor");
-        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.SPECIALTY, "Exhibitor", "#00597c", 250f, 250f, 250f);
+        Badge exhibitor = BadgeFactory.createBadge("Exhibitor", BadgeType.SPECIALTY, "Exhibitor", "#00597C", 250f, 250f, 250f);
         exhibitor.setRequiredRight("badge_type_exhibitor");
         exhibitor.setWarningMessage("Exhibitor check in. See your coordinator!");
         badgeService.save(exhibitor);
@@ -344,7 +344,7 @@ public class BaseDataService {
         badgeService.save(guest);
 
         log.info("Creating badge Small Press");
-        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.SPECIALTY,"Small Press", "#007c5f", 0f, 0f, 0f);
+        Badge smallPress = BadgeFactory.createBadge("Small Press", BadgeType.SPECIALTY,"Small Press", "#007C5F", 0f, 0f, 0f);
         smallPress.setRequiredRight("badge_type_small_press");
         smallPress.setWarningMessage("Press check in. See your coordinator!");
         badgeService.save(smallPress);
@@ -356,7 +356,7 @@ public class BaseDataService {
         badgeService.save(ePress);
 
         log.info("Creating badge Standard Press");
-        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.SPECIALTY,"S Press", "#16b7a7", 0f, 0f, 0f);
+        Badge sPress = BadgeFactory.createBadge("Standard Press", BadgeType.SPECIALTY,"S Press", "#1DE5D1", 0f, 0f, 0f);
         sPress.setRequiredRight("badge_type_standard_press");
         sPress.setWarningMessage("Press check in. See your coordinator!");
         badgeService.save(sPress);

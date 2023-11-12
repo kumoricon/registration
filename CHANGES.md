@@ -1,6 +1,7 @@
 # Change History
-Version 2.0.5 (Pending) 
+Version 2.1.0 (Pending)
 - Update VIP levels for 2023 to only have Primary VIP level
+- 2023 Attendee badges
 
 Version 2.0.4 (11/08/2023)
 - Framework and library updates

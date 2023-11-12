@@ -109,9 +109,12 @@ public class BadgeImage {
      * @param font Text font
      * @param color Text color
      */
+    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
+        drawStretchedCenteredString(text, rect, font, color, 1, 0.0f);
+    }
+
     void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
-        float maxFontSize = 0.0f;
-        drawStretchedCenteredString(text, rect, font, color, outlineWidth, maxFontSize);
+        drawStretchedCenteredString(text, rect, font, color, outlineWidth, 0.0f);
     }
 
     void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth, float maxFontSize) {
@@ -243,10 +246,10 @@ public class BadgeImage {
         fontSizeByHeight = ((float)rect.height / (float)height) * fontSizeByHeight;
 
         // Enforce maximum font size, if specified
-        if (maxFontSize > 0 && fontSizeByHeight > maxFontSize) {
+        if (maxFontSize > 0.0f && fontSizeByHeight > maxFontSize) {
             fontSizeByHeight = maxFontSize;
         }
-        if (maxFontSize > 0 && fontSizeByWidth > maxFontSize) {
+        if (maxFontSize > 0.0f && fontSizeByWidth > maxFontSize) {
             fontSizeByWidth = maxFontSize;
         }
 
@@ -387,6 +390,10 @@ public class BadgeImage {
         g2.setTransform(orig);
     }
 
+    void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor, int outlineWidth) {
+        drawVerticalCenteredString(ageStripeText, ageBackground, font, fgColor, outlineWidth, 0.0f);
+    }
+
     void drawVerticalCenteredString(String ageStripeText, Rectangle ageBackground, Font font, Color fgColor, int outlineWidth, float maxFontSize) {
         String text = ageStripeText.toUpperCase();
 
@@ -403,6 +410,14 @@ public class BadgeImage {
         }
     }
 
+    /**
+     * Used for badge type text when bar is on horizontal bottom
+     *
+     * Previous usage:
+     * if (titleText.length() < 7) {
+     *     titleText = BadgeImage.buildTitleString(titleText);
+     * }
+     */
     static String buildTitleString(String input) {
         if (input == null) return "";
         char[] characters = input.toUpperCase().toCharArray();

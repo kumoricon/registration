@@ -18,10 +18,10 @@ public class BadgeFactory {
         b.setBadgeType(badgeType);
         b.setBadgeTypeText(badgeTypeText);
         b.setBadgeTypeBackgroundColor(dayBackgroundColor);
-        b.addAgeRange("Adult", 18, 255, adultCost, "#323E99", "Adult");
-        b.addAgeRange("Youth", 13, 17, youthCost, "#FFFF00", "Youth");
-        b.addAgeRange("Child", 6, 12, childCost, "#CC202A", "Child");
-        b.addAgeRange("5 and under", 0, 5, 0.00, "#CC202A", "Child");
+        b.addAgeRange("Adult", 18, 255, adultCost, "#412B78", "Adult");
+        b.addAgeRange("Youth", 13, 17, youthCost, "#EDB741", "Youth");
+        b.addAgeRange("Child", 6, 12, childCost, "#BF2D28", "Child");
+        b.addAgeRange("5 and under", 0, 5, 0.00, "#BF2D28", "Child");
         return b;
     }
 
@@ -34,10 +34,10 @@ public class BadgeFactory {
         b.setName("");
         b.setBadgeType(BadgeType.ATTENDEE);
         b.setBadgeTypeText("");
-        b.addAgeRange("Adult", 18, 255, 0.00, "#323E99", "Adult");
-        b.addAgeRange("Youth", 13, 17, 0.00, "#FFFF00", "Youth");
-        b.addAgeRange("Child", 6, 12, 0.00, "#CC202A", "Child");
-        b.addAgeRange("5 and under", 0, 5, 0.00, "#CC202A", "Child");
+        b.addAgeRange("Adult", 18, 255, 0.00, "#412B78", "Adult");
+        b.addAgeRange("Youth", 13, 17, 0.00, "#EDB741", "Youth");
+        b.addAgeRange("Child", 6, 12, 0.00, "#BF2D28", "Child");
+        b.addAgeRange("5 and under", 0, 5, 0.00, "#BF2D28", "Child");
         return b;
     }
 }
