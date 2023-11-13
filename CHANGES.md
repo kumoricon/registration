@@ -1,5 +1,8 @@
 # Change History
-Version 2.1.0 (Pending)
+Version 2.1.1 (Pending)
+- Change badge id numbers for query in BadgeExportService
+
+Version 2.1.0 (11/13/2023)
 - Update VIP levels for 2023 to only have Primary VIP level
 - 2023 Attendee badges
 - 2023 Staff/Guest badges

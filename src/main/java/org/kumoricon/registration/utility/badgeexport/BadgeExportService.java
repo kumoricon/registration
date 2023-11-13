@@ -227,22 +227,15 @@ public class BadgeExportService {
                         .sorted(compareByName)
                         .toList();
             case "Vip":
-                List<Attendee> vip1 = attendeeRepository.findAllByBadgeType(6);
-                List<Attendee> vip2 = attendeeRepository.findAllByBadgeType(7);
-                List<Attendee> vip3 = attendeeRepository.findAllByBadgeType(8);
-                return Stream.of(vip1, vip2, vip3)
-                        .flatMap(Collection::stream)
-                        .filter(a -> !a.isMembershipRevoked())
-                        .sorted(compareByName)
-                        .toList();
+                return attendeeRepository.findAllByBadgeType(6);
             case "Specialty":
-                List<Attendee> artist = attendeeRepository.findAllByBadgeType(9);
-                List<Attendee> exhibitor = attendeeRepository.findAllByBadgeType(10);
-                List<Attendee> smallPress = attendeeRepository.findAllByBadgeType(12);
-                List<Attendee> emergingPress = attendeeRepository.findAllByBadgeType(13);
-                List<Attendee> standardPress = attendeeRepository.findAllByBadgeType(14);
-                List<Attendee> industry = attendeeRepository.findAllByBadgeType(15);
-                List<Attendee> panelist = attendeeRepository.findAllByBadgeType(16);
+                List<Attendee> artist = attendeeRepository.findAllByBadgeType(7);
+                List<Attendee> exhibitor = attendeeRepository.findAllByBadgeType(8);
+                List<Attendee> smallPress = attendeeRepository.findAllByBadgeType(10);
+                List<Attendee> emergingPress = attendeeRepository.findAllByBadgeType(11);
+                List<Attendee> standardPress = attendeeRepository.findAllByBadgeType(12);
+                List<Attendee> industry = attendeeRepository.findAllByBadgeType(13);
+                List<Attendee> panelist = attendeeRepository.findAllByBadgeType(14);
 
                 return Stream.of(artist, exhibitor, smallPress, emergingPress, standardPress, industry, panelist)
                         .flatMap(Collection::stream)
