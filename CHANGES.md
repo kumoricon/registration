@@ -1,5 +1,8 @@
 # Change History
-Version 2.1.1 (Pending)
+Version 2.1.2 (Pending)
+- Fix badge offset
+
+Version 2.1.1 (11/15/2023)
 - Change badge id numbers for query in BadgeExportService
 
 Version 2.1.0 (11/13/2023)
