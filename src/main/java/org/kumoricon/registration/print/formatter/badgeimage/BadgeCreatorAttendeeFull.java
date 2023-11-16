@@ -31,7 +31,7 @@ public class BadgeCreatorAttendeeFull implements BadgeCreatorAttendee {
     private void drawAgeColorStripe(BadgeImage b, AttendeeBadgeDTO attendee) {
         Color bgColor = Color.decode(attendee.getAgeStripeBackgroundColor());
         Color fgColor = BadgeImage.getInverseColor(bgColor);
-        Rectangle ageBackground = new Rectangle(1076, 0, 190, 976);
+        Rectangle ageBackground = new Rectangle(1096, 0, 190, 976);
         Rectangle textBoundingBox = new Rectangle(1070, 150, 160, 680);
         b.fillRect(ageBackground, bgColor);
         b.drawVerticalCenteredString(attendee.getAgeStripeText(), textBoundingBox, boldFont, fgColor, 2);
