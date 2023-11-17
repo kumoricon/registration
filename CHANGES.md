@@ -1,5 +1,8 @@
 # Change History
-Version 2.1.2 (Pending)
+Version 2.1.3 (Pending)
+- Move failing inline reg imports to DLQ
+
+Version 2.1.2 (11/17/2023)
 - Fix badge offset
 
 Version 2.1.1 (11/15/2023)
