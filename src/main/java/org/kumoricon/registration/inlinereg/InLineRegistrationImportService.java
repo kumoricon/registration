@@ -102,12 +102,13 @@ public class InLineRegistrationImportService extends ImportService {
                         successCount += 1;
                     } catch (Exception ex) {
                         log.error("Error importing in line registration {} confirmation code {}: {}",
-                                a.getUuid(), record.getConfirmationCode(), ex.getMessage());
+                                a.getUuid(), record.getConfirmationCode(), ex.getMessage(), ex);
                     }
                 }
                 orderSuccessCount += 1;
             } catch (Exception e) {
-                log.error("Error decrypting {} confirmation code {}: {}",  record.getId(), record.getConfirmationCode(), e.getMessage());
+                log.error("Error decrypting {} confirmation code {}: {}",  record.getId(), record.getConfirmationCode(), e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
         log.info("Imported {}/{} orders and {}/{} attendees", orderSuccessCount, fileData.getData().size(), successCount, attendeeCount);
