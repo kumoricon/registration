@@ -1,5 +1,8 @@
 # Change History
-Version 2.1.3 (Pending)
+Version 2.1.4 (Pending)
+- Make price override required for at con specialty attendees
+
+Version 2.1.3 (11/17/2023)
 - Move failing inline reg imports to DLQ
 
 Version 2.1.2 (11/17/2023)
