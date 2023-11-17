@@ -177,6 +177,10 @@ function readyToSaveSpeciality() {
     // Vastly reduced field enforcement -- we assume that Speciality coords have a reason for doing anything
     // For example, they can create badges that don't have first or last name at all, or a birthdate
     // It is required that you have either a firstname and lastname OR a fan name, though.
-    return ($("#inputFirstName").val() !== "" && $("#inputLastName").val() !== "") ||
-        $("#inputFanName").val() !== "";
+
+    // For 2023 specifically, the specialty badge prices can be variable depending on if they purchased WiFi or not
+    // For a temp fix, require the user to put in a price override for specialty attendees
+    return $("#inputPaidAmount").val() !== "" &&
+        (($("#inputFirstName").val() !== "" && $("#inputLastName").val() !== "") ||
+        ($("#inputFanName").val() !== "" && $("#inputPaidAmount").val() !== ""));
 }
