@@ -96,7 +96,7 @@ public class OrderAttendeeEditController {
 
             // Reprint badge
             if (action.equalsIgnoreCase(SAVE_AND_REPRINT)) {
-                final String result = reprintBadge(attendee, printerCookie, principal);
+                final String result = reprintBadge(serverAttendee, printerCookie, principal);
                 message += ". " + result; // ex: Saved. Printed 1 badges to PRINTER_NAME
             }
 
