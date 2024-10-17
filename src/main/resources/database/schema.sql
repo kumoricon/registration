@@ -372,6 +372,14 @@ create table if not exists staff_positions
 	position varchar(255) not null
 );
 
+create table if not exists voucher
+(
+    id serial not null primary key,
+    staff_id int references staff(id),
+    voucher_date date not null,
+    voucher_by varchar(200) references users(username),
+    voucher_at timestamp with time zone
+);
 
 create table if not exists inlineregistrations
 (

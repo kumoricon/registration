@@ -1,0 +1,54 @@
+package org.kumoricon.registration.voucher;
+
+import org.kumoricon.registration.model.staff.Staff;
+
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
+public class Voucher {
+    private Integer id;
+    private Integer staffId;
+    private LocalDate voucherDate;
+    private String voucherBy;
+    private OffsetDateTime voucherAt;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(final Integer id) {
+        this.id = id;
+    }
+
+    public Integer getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(final Integer staffId) {
+        this.staffId = staffId;
+    }
+
+    public LocalDate getVoucherDate() {
+        return voucherDate;
+    }
+
+    public void setVoucherDate(final LocalDate voucherDate) {
+        this.voucherDate = voucherDate;
+    }
+
+    public String getVoucherBy() {
+        return voucherBy;
+    }
+
+    public void setVoucherBy(final String voucherBy) {
+        this.voucherBy = voucherBy;
+    }
+
+    public OffsetDateTime getVoucherAt() {
+        return voucherAt;
+    }
+
+    public void setVoucherAt(final OffsetDateTime voucherAt) {
+        this.voucherAt = voucherAt;
+    }
+}

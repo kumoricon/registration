@@ -28,6 +28,7 @@
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_guest_badge'')')}" href="/guests">Guest Badges</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="/orders">Orders</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''staff_check_in'')')}" href="/staff">Staff Check In</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''voucher_check_in'')')}" href="/voucher/search">Staff Check In</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_administration'')')}">
