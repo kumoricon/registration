@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Staff List</title>
+    <script src="/webjars/jQuery-Autocomplete/1.4.10/jquery.autocomplete.min.js"></script>
+    <script src="/js/staff/staffSuggest.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-11 form-inline">
+            <form method="get" class="form-inline col-sm-8" id="voucherStaffSearchForm">
+                <div class="input-group md-form form-sm form-2 pl-0">
+                    <input class="form-control my-0 py-1" type="text"  id="voucherStaffSearch" name="q"  autocomplete="off"
+                           placeholder="Staff Name" aria-label="Search" th:value="${search}" autofocus>
+                    <div class="input-group-append">
+                        <input class="btn btn-primary" type="submit" value="Search">
+                    </div>
+                </div>
+            </form>
+            <span class="mr-3" th:if="!${search.isEmpty()}"
+                  th:text="|${staff.size()} results found|"></span>
+            <span th:text="|(${dailyVoucherCount} / ${totalCount} vouchers given)|"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mt-2" >
+            <table class="table table-bordered table-sm table-fix-head" id="staffList"
+                   style="width:1000px;" th:if="!${search.isEmpty()}">
+                <thead>
+                <tr style="width:800px !important;">
+                    <th style="width: 200px;">Name</th>
+                    <th style="width: 200px;">Legal Name</th>
+                    <th style="width: 300px;">Department</th>
+                    <th style="width: 300px;">Received At</th>
+                    <th style="width: 150px;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${staff}">
+                    <td th:text="|${s.firstName} ${s.lastName}|">Firstname Lastname</td>
+                    <td th:text="|${s.legalFirstName} ${s.legalLastName}|">Firstname Lastname</td>
+                    <td th:text="${s.department}">Department</td>
+                    <td th:text="${dts.format(staffVouchers.get(s.getId()) == null ? null : staffVouchers.get(s.getId()).getVoucherAt())}">Received At</td>
+                    <td>
+                        <form th:action="@{/voucher/checkin/{uuid}(uuid=${s.uuid})}" method="post" th:if="${staffVouchers.get(s.getId()) == null}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input type="hidden" name="q" th:value="${search}" />
+                            <input type="submit" value="Mark Received" class="btn btn-sm btn-primary" >
+                        </form>
+                        <a th:href="@{/voucher/revoke/{uuid}(uuid=${s.uuid})}"
+                           th:if="${staffVouchers.get(s.getId()) != null}" class="btn btn-sm btn-primary">Revoke</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
