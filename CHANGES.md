@@ -1,6 +1,7 @@
 # Change History
 Version 2.1.5 (Pending)
 - Print server attendee instead of attendee in save & reprint flow
+- Update VIP level in attendee test data to only have Primary VIP level
 
 Version 2.1.4 (11/17/2023)
 - Make price override required for at con specialty attendees
