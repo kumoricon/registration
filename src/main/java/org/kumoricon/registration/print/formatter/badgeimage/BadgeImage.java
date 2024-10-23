@@ -110,17 +110,21 @@ public class BadgeImage {
      * @param color Text color
      */
     void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color) {
-        drawStretchedCenteredString(text, rect, font, color, 1, 0.0f);
+        drawStretchedCenteredString(text, rect, font, color, getInverseColor(color), 1, 0.0f);
     }
 
     void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
-        drawStretchedCenteredString(text, rect, font, color, outlineWidth, 0.0f);
+        drawStretchedCenteredString(text, rect, font, color, getInverseColor(color), outlineWidth, 0.0f);
     }
 
-    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth, float maxFontSize) {
+    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, Color outlineColor, int outlineWidth) {
+        drawStretchedCenteredString(text, rect, font, color, outlineColor, outlineWidth, 0.0f);
+    }
+
+    void drawStretchedCenteredString(String text, Rectangle rect, Font font, Color color, Color outlineColor, int outlineWidth, float maxFontSize) {
         Rectangle paddedRect = getPaddedRect(rect);
         final Font sizedFont = scaleFont(text, paddedRect, font, maxFontSize);
-        drawCenteredString(text, rect, sizedFont, color, outlineWidth);
+        drawCenteredString(text, rect, sizedFont, color, outlineColor, outlineWidth);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
@@ -167,17 +171,25 @@ public class BadgeImage {
 
 
     void drawCenteredString(String text, Rectangle rect, Font font, Color color) {
-        drawCenteredString(text, rect, font, color, 0);
+        drawCenteredString(text, rect, font, color, getInverseColor(color), 0);
+    }
+
+    void drawCenteredString(String text, Rectangle rect, Font font, Color color, Color outlineColor) {
+        drawCenteredString(text, rect, font, color, outlineColor, 0);
     }
 
     void drawCenteredString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+        drawCenteredString(text, rect, font, color, getInverseColor(color), outlineWidth);
+    }
+
+    void drawCenteredString(String text, Rectangle rect, Font font, Color color, Color outlineColor, int outlineWidth) {
         FontMetrics metrics = g2.getFontMetrics(font);
         int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
         g2.setFont(font);
 
-        drawTextOutline(text, color, x, y, outlineWidth);
+        drawTextOutline(text, color, outlineColor, x, y, outlineWidth);
 
         g2.setColor(color);
         g2.drawString(text, x, y);
@@ -185,12 +197,20 @@ public class BadgeImage {
 
 
     void drawTextOutline(String text, Color color, int x, int y) {
-        drawTextOutline(text, color, x, y, 1);
+        drawTextOutline(text, color, getInverseColor(color), x, y, 1);
     }
 
     void drawTextOutline(String text, Color color, int x, int y, int width) {
+        drawTextOutline(text, color, getInverseColor(color), x, y, width);
+    }
+
+    void drawTextOutline(String text, Color color, Color outlineColor, int x, int y) {
+        drawTextOutline(text, color, outlineColor, x, y, 1);
+    }
+
+    void drawTextOutline(String text, Color color, Color outlineColor, int x, int y, int width) {
         if (width <= 0) return;
-        g2.setColor(getInverseColor(color));
+        g2.setColor(outlineColor);
         g2.drawString(text, x-width, y);
         g2.drawString(text, x+width, y);
         g2.drawString(text, x, y-width);
@@ -218,13 +238,17 @@ public class BadgeImage {
     }
 
     void drawRightAlignedString(String text, Rectangle rect, Font font, Color color, int outlineWidth) {
+        drawRightAlignedString(text, rect, font, color, getInverseColor(color), outlineWidth);
+    }
+
+    void drawRightAlignedString(String text, Rectangle rect, Font font, Color color, Color outlineColor, int outlineWidth) {
         FontMetrics metrics = g2.getFontMetrics(font);
         int x = rect.x + (rect.width - metrics.stringWidth(text));
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g2.setFont(font);
-        drawTextOutline(text, color, x, y, outlineWidth);
+        drawTextOutline(text, color, outlineColor, x, y, outlineWidth);
         g2.setColor(color);
         g2.drawString(text, x, y);
     }
@@ -336,8 +360,11 @@ public class BadgeImage {
         }
     }
 
-
     void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, int outlineWidth, float maxFontSize, boolean yAxisCentering) {
+        drawCenteredStrings(text, boundingBox, font, fgColor, getInverseColor(fgColor), outlineWidth, maxFontSize, yAxisCentering);
+    }
+
+    void drawCenteredStrings(String[] text, Rectangle boundingBox, Font font, Color fgColor, Color outlineColor, int outlineWidth, float maxFontSize, boolean yAxisCentering) {
         // Find initial line height
         int lineHeight = (int) (boundingBox.getHeight() / text.length);
 
@@ -358,7 +385,7 @@ public class BadgeImage {
 
         for (int i = 0; i < text.length; i++) {
             Rectangle lineBoundingBox = new Rectangle(boundingBox.x, yOffset + (i*lineHeight), boundingBox.width, lineHeight);
-            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineWidth);
+            drawCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineColor, outlineWidth);
         }
     }
 
@@ -379,7 +406,7 @@ public class BadgeImage {
 
         for (int i = 0; i < text.length; i++) {
             Rectangle lineBoundingBox = new Rectangle(boundingBox.x, boundingBox.y + (i*lineHeight), boundingBox.width, lineHeight);
-            drawStretchedCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, outlineWidth, maxFontSize);
+            drawStretchedCenteredString(text[i], lineBoundingBox, sizedFont, fgColor, getInverseColor(fgColor), outlineWidth, maxFontSize);
         }
     }
 
@@ -406,7 +433,7 @@ public class BadgeImage {
                     ageBackground.y + (letterBoundingBoxHeight * i)+5,
                     ageBackground.width,
                     letterBoundingBoxHeight+10);
-            drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor, outlineWidth, maxFontSize);
+            drawStretchedCenteredString(text.substring(i, i+1), letterBoundingBox, font, fgColor, getInverseColor(fgColor), outlineWidth, maxFontSize);
         }
     }
 
