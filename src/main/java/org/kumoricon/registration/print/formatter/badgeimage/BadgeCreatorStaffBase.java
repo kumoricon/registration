@@ -104,7 +104,7 @@ class BadgeCreatorStaffBase {
             Color fgColor = Color.WHITE;
             Rectangle background = new Rectangle(810, 1675, 300, 70);
             Font pronounFont = plainFont.deriveFont(56f);
-            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, TEXT_OUTLINE_COLOR, 0);
+            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, TEXT_OUTLINE_COLOR, 1);
         }
     }
 
@@ -112,7 +112,7 @@ class BadgeCreatorStaffBase {
         Color fgColor = Color.WHITE;
         if (staff.getBadgeNumber() != null && !staff.getBadgeNumber().isBlank()) {
             Rectangle background = new Rectangle(70, 1685, 200, 60);
-            b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, TEXT_OUTLINE_COLOR, 0);
+            b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, TEXT_OUTLINE_COLOR, 1);
         }
     }
 
