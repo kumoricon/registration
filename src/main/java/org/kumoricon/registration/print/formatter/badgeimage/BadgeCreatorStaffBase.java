@@ -30,14 +30,14 @@ class BadgeCreatorStaffBase {
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
         Color bgColor = positionBackground(staff.getDepartmentBackgroundColor());
 
-        Rectangle positionsBackground = new Rectangle(0, 625, 1200, 207);
+        Rectangle positionsBackground = new Rectangle(0, 625, 1200, 210);
         b.fillRect(positionsBackground, bgColor);
 
         String[] staffPositions = staff.getPositions();
 
         if (staffPositions != null) {
             Rectangle textBounds = null;
-            textBounds = new Rectangle(80, 605, 1040, 207);
+            textBounds = new Rectangle(80, 605, 1040, 210);
 
             float maxFontSize = 72f;
             boolean yAxisCentering = true;
@@ -67,14 +67,14 @@ class BadgeCreatorStaffBase {
 
         // Draw the background with the age color
         Color bgColor = Color.decode(staff.getAgeBackgroundColor());
-        Rectangle positionsBackground = new Rectangle(0, 1513, 1200, 390);
+        Rectangle positionsBackground = new Rectangle(8, 1513, 1200, 390);
         b.fillRect(positionsBackground, bgColor);
 
         Color fgColor = foregroundColorForName(staff);
         String[] names = buildNameList(staff);
         Rectangle line1 = null;
 
-        line1 = new Rectangle(80, 1495, 1020, 200);
+        line1 = new Rectangle(88, 1495, 1040, 200);
         b.drawStretchedCenteredString(
             names.length == 2 ? names[0] + ' ' + names[1] : names[0],
             line1,

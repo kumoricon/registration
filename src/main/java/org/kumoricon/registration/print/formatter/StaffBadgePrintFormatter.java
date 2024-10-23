@@ -51,7 +51,7 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
 
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, staffBadgeDTO.getFirstName() + ".png");
-        contentStream.drawImage(pdi,12+xOffset, 13+yOffset, 306, 550);
+        contentStream.drawImage(pdi,xOffset+18, yOffset+29, 320, 550);
         contentStream.close();
 
         return page;
@@ -63,7 +63,7 @@ public class StaffBadgePrintFormatter implements BadgePrintFormatter {
 
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, false);
         PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, staffBadgeDTO.getLastName() + ".png");
-        contentStream.drawImage(pdi,12+xOffset, 13+yOffset, 306, 550);
+        contentStream.drawImage(pdi,xOffset+18, yOffset+29, 320, 550);
         contentStream.close();
 
         return page;
