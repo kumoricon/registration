@@ -78,6 +78,24 @@
                 </form>
             </div>
         </div>
+
+        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
+             th:if="${#authorization.expression('hasAuthority(''voucher_check_in'')')}">
+            <div class="card-body">
+                <h5 class="card-title">Voucher Check In</h5>
+                <p class="card-text">Food voucher check in for staff members</p>
+                <form class="form-inline justify-content-center" action="/voucher/search" method="get" id="voucherStaffSearchForm"
+                      style="position: relative; z-index:1000;">
+                    <div class="input-group md-form form-sm form-2 pl-0">
+                        <input class="form-control my-0 py-1" type="text"  id="voucherStaffSearch" name="q" autocomplete="off"
+                               placeholder="Staff Name">
+                        <div class="input-group-append">
+                            <input class="btn btn-primary" type="submit" value="Search">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 

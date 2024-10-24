@@ -179,6 +179,7 @@ public class BaseDataService {
                 {"manage_settings", "Manage run-time server settings"},
                 {"manage_till_sessions", "View/Close Till Sessions for other users"},
                 {"staff_check_in", "Check In Staff"},
+                {"voucher_check_in", "Food voucher check in for staff members"},
                 {"import_pre_reg_data", "Import pre-registered attendees and orders"},
                 {"load_base_data", "Load default data (users, roles, rights)"},
                 {"pre_print_badges", "Pre-print badges for all attendees with a particular badge type"},
@@ -240,7 +241,7 @@ public class BaseDataService {
                 "view_check_in_by_user_report", "view_check_in_by_department_report", "pre_reg_check_in_edit",
                 "manage_orders", "manage_till_sessions", "at_con_registration_specialty",
                 "menu_registration", "menu_utility", "menu_report", "menu_administration",
-                "staff_check_in", "view_attendance_report", "attendee_revert_check_in", "accessibility_sticker", "set_custom_pronouns"});
+                "staff_check_in", "voucher_check_in", "view_attendance_report", "attendee_revert_check_in", "accessibility_sticker", "set_custom_pronouns"});
         roles.put("Director", new String[] {"at_con_registration", "at_con_registration_specialty", "print_guest_badge",
                 "pre_reg_check_in", "attendee_search", "print_badge", "attendee_edit", "attendee_add_note", "in_line_registration",
                 "at_con_registration_blacklist", "attendee_override_price", "reprint_badge", "manage_users",
@@ -255,7 +256,7 @@ public class BaseDataService {
                 "menu_registration", "menu_utility", "menu_report",
                 "menu_administration", "manage_blacklist", "staff_check_in", "view_attendance_report",
                 "attendee_revert_check_in", "accessibility_sticker", "set_custom_pronouns"});
-        roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "menu_registration"});
+        roles.put("Ops", new String[] {"attendee_search", "attendee_add_note", "menu_registration", "voucher_check_in"});
 
         HashMap<String, Right> rightMap = getRightsHashMap();
 
