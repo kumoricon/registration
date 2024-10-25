@@ -7,6 +7,7 @@ class BadgeCreatorStaffBase {
     static final int DPI = 300;
     static final int BADGE_WIDTH = (int) 4.25*DPI;
     static final int BADGE_HEIGHT = (int) 6.25*DPI;
+    static final Color TEXT_OUTLINE_COLOR = Color.decode("#47154B");
 
     @SuppressWarnings("WeakerAccess")
     final Font boldFont;
@@ -30,18 +31,18 @@ class BadgeCreatorStaffBase {
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
         Color bgColor = positionBackground(staff.getDepartmentBackgroundColor());
 
-        Rectangle positionsBackground = new Rectangle(0, 625, 1200, 207);
+        Rectangle positionsBackground = new Rectangle(0, 625, 1200, 210);
         b.fillRect(positionsBackground, bgColor);
 
         String[] staffPositions = staff.getPositions();
 
         if (staffPositions != null) {
             Rectangle textBounds = null;
-            textBounds = new Rectangle(80, 605, 1040, 207);
+            textBounds = new Rectangle(80, 605, 1040, 210);
 
             float maxFontSize = 72f;
             boolean yAxisCentering = true;
-            b.drawCenteredStrings(staffPositions, textBounds, boldFont, fgColor, 1, maxFontSize, yAxisCentering);
+            b.drawCenteredStrings(staffPositions, textBounds, boldFont, fgColor, TEXT_OUTLINE_COLOR, 1, maxFontSize, yAxisCentering);
         }
     }
 
@@ -67,19 +68,20 @@ class BadgeCreatorStaffBase {
 
         // Draw the background with the age color
         Color bgColor = Color.decode(staff.getAgeBackgroundColor());
-        Rectangle positionsBackground = new Rectangle(0, 1513, 1200, 390);
+        Rectangle positionsBackground = new Rectangle(8, 1513, 1200, 390);
         b.fillRect(positionsBackground, bgColor);
 
         Color fgColor = foregroundColorForName(staff);
         String[] names = buildNameList(staff);
         Rectangle line1 = null;
 
-        line1 = new Rectangle(80, 1495, 1020, 200);
+        line1 = new Rectangle(88, 1495, 1040, 200);
         b.drawStretchedCenteredString(
             names.length == 2 ? names[0] + ' ' + names[1] : names[0],
             line1,
             boldFont,
             fgColor,
+            TEXT_OUTLINE_COLOR,
             1,
             0.0f
         );
@@ -102,7 +104,7 @@ class BadgeCreatorStaffBase {
             Color fgColor = Color.WHITE;
             Rectangle background = new Rectangle(810, 1675, 300, 70);
             Font pronounFont = plainFont.deriveFont(56f);
-            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, 0);
+            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, TEXT_OUTLINE_COLOR, 1);
         }
     }
 
@@ -110,7 +112,7 @@ class BadgeCreatorStaffBase {
         Color fgColor = Color.WHITE;
         if (staff.getBadgeNumber() != null && !staff.getBadgeNumber().isBlank()) {
             Rectangle background = new Rectangle(70, 1685, 200, 60);
-            b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, 0);
+            b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, TEXT_OUTLINE_COLOR, 1);
         }
     }
 

@@ -248,11 +248,11 @@ public class BadgePrintService extends PrintService {
     private String getAgeStripeColor(String ageRangeAtCon) {
         if (ageRangeAtCon == null) { ageRangeAtCon = "child"; }
         if ("adult".equalsIgnoreCase(ageRangeAtCon)) {
-            return "#412B78";
+            return "#00009b";
         } else if ("youth".equalsIgnoreCase(ageRangeAtCon)) {
-            return  "#EDB741";
+            return  "#ffe400";
         } else {
-            return  "#BF2D28";
+            return  "#c90000";
         }
     }
 
