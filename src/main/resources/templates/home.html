@@ -14,45 +14,14 @@
 
     <div class="card-deck mb-2 justify-content-center">
         <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
-             th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}">
-            <div class="card-body">
-                <h5 class="card-title">At-Con Check In</h5>
-                <p class="card-text">Attendees buying registration here</p>
-                <form method="post" action="/reg/atconorder/new" class="form-inline justify-content-center">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input class="btn btn-primary" type="submit" value="New At Con Order">
-                </form>
-            </div>
-        </div>
-        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
              th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}">
             <div class="card-body">
-                <h5 class="card-title">Pre-Reg Check In</h5>
-                <p class="card-text">Attendees who pre-registered online</p>
+                <h5 class="card-title">Guest Check In</h5>
+                <p class="card-text">Guests of Honor</p>
                 <form class="form-inline justify-content-center" action="/search" method="get" id="attendeeSearchForm"
                       style="position: relative; z-index:1000;">
                     <div class="input-group md-form form-sm form-2 pl-0">
                         <input class="form-control my-0 py-1" type="text" id="attendeeSearch" name="q" placeholder="Attendee Name" autofocus autocomplete="off">
-                        <div class="input-group-append">
-                            <input class="btn btn-primary" type="submit" value="Search">
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="card bg-light m-1" style="width: 22rem; min-width: 22rem; max-width: 22rem;"
-             th:if="${#authorization.expression('hasAuthority(''in_line_registration'')')}">
-            <div class="card-body">
-                <h5 class="card-title">In-Line Registration Check In</h5>
-                <p class="card-text">Attendees that registered in line</p>
-
-                <form class="form-inline justify-content-center" action="/inlinereg/search" method="get" autocomplete="off"
-                      id="inLineSearchForm" style="position: relative; z-index:1000;">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <div class="input-group md-form form-sm form-2 pl-0">
-                        <input class="form-control my-0 py-1" value="" type="text" name="q"
-                               id="inLineCodeSearch" autocomplete="off" placeholder="Confirmation Code / Name">
                         <div class="input-group-append">
                             <input class="btn btn-primary" type="submit" value="Search">
                         </div>
