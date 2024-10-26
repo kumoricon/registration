@@ -17,12 +17,6 @@
                 <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_registration'')')}">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration/Check-In</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <form method="post" action="/reg/atconorder/new" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <input class="dropdown-item" type="submit" value="New At Con Order">
-                        </form>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="/reg/atconorder/takeover">Take Over At Con Order</a>
-                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''in_line_registration'')')}" href="/inlinereg/search">In-Line Registration</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/search">Attendee Search</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/searchbybadge">Search by Badge Type</a>
                         <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_guest_badge'')')}" href="/guests">Guest Badges</a>
