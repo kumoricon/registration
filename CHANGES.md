@@ -3,6 +3,11 @@ Version 2.1.5 (Pending)
 - Print server attendee instead of attendee in save & reprint flow
 - Update VIP level in attendee test data to only have Primary VIP level
 - Add a staff food voucher checklist for ops
+- Remove template access to In-Line Registration Check In, At-Con Check In
+- Swap Pre-Reg Check In to Guest Check In
+- Update staff positions to match the new team/leveling system
+- Update staff import & user creation to handle the new staff model
+- 2024 Staff/Guest badges
 
 Version 2.1.4 (11/17/2023)
 - Make price override required for at con specialty attendees

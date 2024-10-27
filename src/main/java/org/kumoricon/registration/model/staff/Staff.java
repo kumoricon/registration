@@ -22,7 +22,6 @@ public class Staff {
     private String departmentColorCode;
 
     private List<String> positions;
-    private Boolean suppressPrintingDepartment;
     private Boolean checkedIn;
     private LocalDate birthDate;
     private String ageCategoryAtCon;
@@ -140,14 +139,6 @@ public class Staff {
 
     public void setPositions(List<String> positions) {
         this.positions = positions;
-    }
-
-    public Boolean getSuppressPrintingDepartment() {
-        return suppressPrintingDepartment;
-    }
-
-    public void setSuppressPrintingDepartment(Boolean suppressPrintingDepartment) {
-        this.suppressPrintingDepartment = suppressPrintingDepartment;
     }
 
     public Boolean getCheckedIn() {

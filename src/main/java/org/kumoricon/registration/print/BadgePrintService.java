@@ -215,7 +215,6 @@ public class BadgePrintService extends PrintService {
                     .withPreferredPronoun(s.getPreferredPronoun())
                     .withAgeBackgroundColor(getAgeStripeColor(s.getAgeCategoryAtCon()))
                     .withAgeImage(getAgeImage(s.getAgeCategoryAtCon()))
-                    .withHideDepartment(s.getSuppressPrintingDepartment())
                     .withBadgeImage(badgeImageService.getBadgeForUuid(s.getUuid(), s.getBadgeImageFileType()))
                     .withBadgeNumber(s.getBadgeNumber())
                     .build();

@@ -346,7 +346,6 @@ create table if not exists staff
     privacy_name_last varchar(255) not null,
 	preferred_pronoun varchar(255),
 	shirt_size varchar(255),
-	suppress_printing_department boolean not null,
 	uuid varchar(255) not null,
 	information_verified boolean default false not null,
 	picture_saved boolean default false not null,

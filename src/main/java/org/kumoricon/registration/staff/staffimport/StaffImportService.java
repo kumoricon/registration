@@ -105,7 +105,6 @@ public class StaffImportService extends ImportService {
 
         if (person.getPositions().size() >0) {
             staff.setDepartment(person.getPositions().get(0).department);
-            staff.setSuppressPrintingDepartment(person.getPositions().get(0).departmentSuppressed);
             staff.setDepartmentColorCode(findDepartmentColorCode(staff.getDepartment()));
         } else {
             log.warn("{} has no positions!", staff);
