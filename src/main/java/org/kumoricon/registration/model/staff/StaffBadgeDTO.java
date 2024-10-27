@@ -60,10 +60,6 @@ public class StaffBadgeDTO {
         return departmentBackgroundColor;
     }
 
-    public Boolean getHideDepartment() {
-        return hideDepartment;
-    }
-
     public String getAgeRange() {
         return ageRange;
     }

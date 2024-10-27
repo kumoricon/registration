@@ -34,25 +34,16 @@ public class StaffImportUserCreateService {
 
     private Map<String, String> mapRegRoles() {
         Map<String, String> roleMap = Map.ofEntries(
-                entry("Registration Software Development Coordinator", "Administrator"),
-                entry("Registration Software Development Manager", "Administrator"),
-                entry("Registration Software Development Staff", "Administrator"),
-                entry("Attendee Registration Coordinator", "Coordinator"),
-                entry("Attendee Registration Coordinator (in Training)", "Coordinator"),
-                entry("Specialty Registration Coordinator", "Coordinator - Specialty Badges"),
-                entry("Specialty and VIP Registration Staff", "Coordinator - VIP Badges"),
-                entry("VIP and Accessibility Registration Coordinator", "Coordinator - VIP Badges"),
-                entry("Assistant Director of Membership", "Director"),
+                entry("Developer", "Administrator"),
                 entry("Director of Membership", "Director"),
-                entry("Attendee Registration Assistant Manager", "Manager"),
-                entry("Attendee Registration Coordinator Lead", "Manager"),
-                entry("Attendee Registration Manager", "Manager"),
-                entry("Specialty Registration Manager", "Manager"),
-                entry("Staff Registration Check-In Assistant Manager", "Manager"),
-                entry("Staff Registration Check-In Manager", "Manager"),
-                entry("Staff Registration Check-In Coordinator", "MSO"),
-                entry("Staff Registration Check-In Staff", "MSO"),
-                entry("Attendee Registration Staff", "Staff")
+                entry("Lead", "Manager"),
+                entry("Captain", "Manager"),
+                entry("Area Manager", "Coordinator"),
+                entry("Shift Lead", "Coordinator"),
+                entry("VIP Support", "Coordinator - VIP Badges"),
+                entry("Support", "Staff"),
+                entry("Crew", "Staff"),
+                entry("Assistant", "Staff")
         );
 
         return roleMap;
@@ -90,6 +81,10 @@ public class StaffImportUserCreateService {
      */
     private Integer getStaffRoleId(List<StaffImportFile.Position> positions) {
         for(StaffImportFile.Position p : positions) {
+            // only make users for Membership volunteers
+            if (!"Membership".equalsIgnoreCase(p.department))
+                continue;
+
             if(this.regRoleMapping.get(p.title) != null) {
                 return this.roleRepository.findByNameIgnoreCase(this.regRoleMapping.get(p.title)).getId();
             }

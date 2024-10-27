@@ -193,7 +193,6 @@ public class StaffRepository {
                 .addValue("phone_number", staff.getPhoneNumber())
                 .addValue("preferred_pronoun", staff.getPreferredPronoun())
                 .addValue("shirt_size", staff.getShirtSize())
-                .addValue("suppress_printing_department", staff.getSuppressPrintingDepartment())
                 .addValue("uuid", staff.getUuid())
                 .addValue("information_verified", staff.getInformationVerified())
                 .addValue("picture_saved", staff.getPictureSaved())
@@ -206,13 +205,13 @@ public class StaffRepository {
                       badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, 
                       first_name, has_badge_image, last_name, legal_first_name, legal_last_name, 
                       privacy_name_first, privacy_name_last,
-                      preferred_pronoun, shirt_size, suppress_printing_department, uuid, information_verified, 
+                      preferred_pronoun, shirt_size, uuid, information_verified, 
                       picture_saved, badge_number, phone_number, accessibility_sticker, last_modified) 
                     VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed,
                       :birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, 
                       :first_name, :has_badge_image, :last_name, :legal_first_name, :legal_last_name, 
                       :privacy_name_first, :privacy_name_last,
-                      :preferred_pronoun, :shirt_size, :suppress_printing_department, :uuid, :information_verified, 
+                      :preferred_pronoun, :shirt_size, :uuid, :information_verified, 
                       :picture_saved, :badge_number, :phone_number, :accessibility_sticker, now()) RETURNING id""";
             Integer id = jdbcTemplate.queryForObject(SQL, namedParameters, Integer.class);
             staff.setId(id);
@@ -227,8 +226,7 @@ public class StaffRepository {
                       last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, 
                       privacy_name_first = :privacy_name_first, privacy_name_last = :privacy_name_last,
                       preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, 
-                      suppress_printing_department = :suppress_printing_department, uuid = :uuid, 
-                      information_verified = :information_verified, picture_saved = :picture_saved,
+                      uuid = :uuid, information_verified = :information_verified, picture_saved = :picture_saved,
                       badge_number = :badge_number, phone_number = :phone_number, 
                       accessibility_sticker = :accessibility_sticker, last_modified = now()
                     WHERE id = :id""";
@@ -267,7 +265,6 @@ public class StaffRepository {
             s.setPhoneNumber(rs.getString("phone_number"));
             s.setPreferredPronoun(rs.getString("preferred_pronoun"));
             s.setShirtSize(rs.getString("shirt_size"));
-            s.setSuppressPrintingDepartment(rs.getBoolean("suppress_printing_department"));
             s.setUuid(rs.getString("uuid"));
             s.setInformationVerified(rs.getBoolean("information_verified"));
             s.setPictureSaved(rs.getBoolean("picture_saved"));
