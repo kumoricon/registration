@@ -185,7 +185,7 @@ public class StaffImportFile {
         private static final Map<String, List<String>> DEPARTMENT_TEAMS = Map.of(
                 "Membership", List.of("Registration", "Staff Registration", "Registration Hall", "Registration Software",
                         "Specialty Registration", "Attendee Registration", "Membership"),
-                "Infrastructure", List.of("IT", "KumoriMarket", "Hotels", "Infrastructure", "Facilities"),
+                "Infrastructure", List.of("IT", "KumoriMarket", "Hotels", "Infrastructure", "Facilities", "Infrastructure Office"),
                 "Programming", List.of("Panels", "Fan Art", "Auditorium Tech", "Cosplay Contest",
                         "Online Content", "Tabletop Library", "Lip Sync", "Special Events", "Karaoke", "Chibi Room",
                         "Console Gaming", "Cabinet and Rhythm Gaming", "Manga Library", "Maid Cafe", "Cosplay Chess",
@@ -193,17 +193,18 @@ public class StaffImportFile {
                         "RPG", "Idol Festival", "LARP", "PC Gaming", "Live Events", "Tabletop Gaming", "Escape Room",
                         "Video Gaming", "Fan Fiction", "Play and Win", "Gunpla Lounge", "Pokémon Gaming Assistant Coordinator",
                         "Programming", "Programming Office", "TCG", "Lighting Equipment", "Video Equipment", "Programming Booth",
-                        "Pokémon Gaming"),
+                        "Pokémon Gaming", "Umbrella Lounge", "Cosplay Cabaret", "Viewing Rooms"),
                 "Publicity", List.of("Hall Cosplay", "Info Booth", "Software", "Merchandise", "Press", "Social Media",
-                        "Website", "Marketing", "Newsletter", "Multimedia", "Graphics", "Publicity"),
+                        "Website", "Marketing", "Newsletter", "Multimedia", "Graphics", "Publicity", "Moderation", "Lore"),
                 "Relations", List.of("Relations", "Autographs", "Relations Logistics", "Hospitality", "Industry and Sponsorship",
                         "Guests"),
-                "Operations", List.of("Hotel Attendee Services", "Attendee Services", "Operations Office", "Accessibility",
-                        "Cosplay Repair", "Operations"),
+                "Operations", List.of("Operations", "Hotel Attendee Services", "Attendee Services", "Operations Office", "Accessibility",
+                        "Cosplay Repair", "Staff Station"),
                 "Treasury", List.of("Treasury", "Supply and Logistics"),
                 "Secretarial", List.of("Secretary"),
                 "Chair", List.of("Chair", "EDI", "Staff Retention", "Internal Support", "Outreach", "Staff Events",
-                        "Training and Development", "Charity", "External Support", "Art Show", "Photobooth", "Nonprofit Grants")
+                        "Training and Development", "Charity", "External Support", "Art Show", "Photobooth", "Nonprofit Grants",
+                        "Recruitment", "Staff Relations")
         );
 
         @JsonCreator
@@ -227,9 +228,8 @@ public class StaffImportFile {
                     return dept;
                 }
             }
-            System.out.println(team);
 
-            return "Membership";
+            throw new RuntimeException("Unknown department for team " + team);
         }
     }
 }
