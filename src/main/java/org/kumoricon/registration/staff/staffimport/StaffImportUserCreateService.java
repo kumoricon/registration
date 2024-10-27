@@ -36,6 +36,9 @@ public class StaffImportUserCreateService {
         Map<String, String> roleMap = Map.ofEntries(
                 entry("Developer", "Administrator"),
                 entry("Director of Membership", "Director"),
+                entry("Director of Operations", "Director"),
+                entry("Assistant Director", "Director"),
+                entry("Executive Assistant", "Manager"),
                 entry("Lead", "Manager"),
                 entry("Captain", "Manager"),
                 entry("Area Manager", "Coordinator"),
@@ -43,7 +46,10 @@ public class StaffImportUserCreateService {
                 entry("VIP Support", "Coordinator - VIP Badges"),
                 entry("Support", "Staff"),
                 entry("Crew", "Staff"),
-                entry("Assistant", "Staff")
+                entry("Assistant", "Staff"),
+                entry("Senior Manager", "Ops"),
+                entry("Manager", "Ops"),
+                entry("Staff Station Crew", "Ops")
         );
 
         return roleMap;
@@ -81,8 +87,8 @@ public class StaffImportUserCreateService {
      */
     private Integer getStaffRoleId(List<StaffImportFile.Position> positions) {
         for(StaffImportFile.Position p : positions) {
-            // only make users for Membership volunteers
-            if (!"Membership".equalsIgnoreCase(p.department))
+            // only make users for Membership & Ops volunteers
+            if (!"Membership".equalsIgnoreCase(p.department) && !"Operations".equalsIgnoreCase(p.department))
                 continue;
 
             if(this.regRoleMapping.get(p.title) != null) {
