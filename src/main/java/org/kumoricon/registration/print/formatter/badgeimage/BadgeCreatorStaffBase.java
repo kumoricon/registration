@@ -1,5 +1,6 @@
 package org.kumoricon.registration.print.formatter.badgeimage;
 import org.kumoricon.registration.model.staff.StaffBadgeDTO;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ class BadgeCreatorStaffBase {
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
         Color bgColor = positionBackground(staff.getDepartmentBackgroundColor());
 
-        Rectangle positionsBackground = new Rectangle(0, 625, 1200, 210);
+        Rectangle positionsBackground = new Rectangle(0, 615, 1200, 220);
         b.fillRect(positionsBackground, bgColor);
 
         String[] staffPositions = staff.getPositions();
