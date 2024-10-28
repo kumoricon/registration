@@ -74,7 +74,7 @@ public class StaffImportService extends ImportService {
 
         List<String> positions = new ArrayList<>();
         for (StaffImportFile.Position p : person.getPositions()) {
-            positions.add(p.title);
+            positions.add(p.team + ", " + p.title);
         }
         if (staffRecordIsDifferent(existing, person, positions)) {
             updateStaffFromPerson(existing, person, positions);
