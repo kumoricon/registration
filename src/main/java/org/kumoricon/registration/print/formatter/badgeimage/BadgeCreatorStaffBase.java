@@ -8,7 +8,8 @@ class BadgeCreatorStaffBase {
     static final int DPI = 300;
     static final int BADGE_WIDTH = (int) 4.25*DPI;
     static final int BADGE_HEIGHT = (int) 6.25*DPI;
-    static final Color TEXT_OUTLINE_COLOR = Color.decode("#47154B");
+    static final Color STAFF_TEXT_OUTLINE_COLOR = Color.decode("#47154B");
+    static final Color GUEST_TEXT_OUTLINE_COLOR = Color.decode("#0E477F");
 
     @SuppressWarnings("WeakerAccess")
     final Font boldFont;
@@ -27,6 +28,7 @@ class BadgeCreatorStaffBase {
     // }
 
     void drawPositionsStripe(BadgeImage b, StaffBadgeDTO staff) {
+
         // Guests don't have a department color stripe, but we have to fill in the background color this
         // year. (In past years, it was part of the badge background)
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
@@ -39,12 +41,20 @@ class BadgeCreatorStaffBase {
 
         if (staffPositions != null) {
             Rectangle textBounds = null;
-            textBounds = new Rectangle(80, 605, 1040, 210);
+            textBounds = new Rectangle(80, 615, 1040, 220);
 
             float maxFontSize = 72f;
             boolean yAxisCentering = true;
-            b.drawCenteredStrings(staffPositions, textBounds, boldFont, fgColor, TEXT_OUTLINE_COLOR, 1, maxFontSize, yAxisCentering);
+            b.drawCenteredStrings(staffPositions, textBounds, boldFont, fgColor, getTextOutlineColor(staff), 1, maxFontSize, yAxisCentering);
         }
+    }
+
+    /**
+     * hack way of doing this, but Guest & Staff badges have different text outlines
+     * Guest DTOs have a null department background color, so checking that value to determine the outline we wanna use
+     */
+    Color getTextOutlineColor(final StaffBadgeDTO staff) {
+        return staff.getDepartmentBackgroundColor().isEmpty() ? GUEST_TEXT_OUTLINE_COLOR : STAFF_TEXT_OUTLINE_COLOR;
     }
 
     static Color positionForeground(String departmentBackgroundColor) {
@@ -82,7 +92,7 @@ class BadgeCreatorStaffBase {
             line1,
             boldFont,
             fgColor,
-            TEXT_OUTLINE_COLOR,
+            getTextOutlineColor(staff),
             1,
             0.0f
         );
@@ -105,7 +115,7 @@ class BadgeCreatorStaffBase {
             Color fgColor = Color.WHITE;
             Rectangle background = new Rectangle(810, 1675, 300, 70);
             Font pronounFont = plainFont.deriveFont(56f);
-            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, TEXT_OUTLINE_COLOR, 1);
+            b.drawRightAlignedString(staff.getPreferredPronoun(), background, pronounFont, fgColor, getTextOutlineColor(staff), 1);
         }
     }
 
@@ -113,7 +123,7 @@ class BadgeCreatorStaffBase {
         Color fgColor = Color.WHITE;
         if (staff.getBadgeNumber() != null && !staff.getBadgeNumber().isBlank()) {
             Rectangle background = new Rectangle(70, 1685, 200, 60);
-            b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, TEXT_OUTLINE_COLOR, 1);
+            b.drawStretchedCenteredString(staff.getBadgeNumber(), background, plainFont, fgColor, getTextOutlineColor(staff), 1);
         }
     }
 
