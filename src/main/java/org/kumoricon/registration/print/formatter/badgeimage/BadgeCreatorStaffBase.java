@@ -28,7 +28,6 @@ class BadgeCreatorStaffBase {
     // }
 
     void drawPositionsStripe(BadgeImage b, StaffBadgeDTO staff) {
-
         // Guests don't have a department color stripe, but we have to fill in the background color this
         // year. (In past years, it was part of the badge background)
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
@@ -41,7 +40,11 @@ class BadgeCreatorStaffBase {
 
         if (staffPositions != null) {
             Rectangle textBounds = null;
-            textBounds = new Rectangle(80, 615, 1040, 220);
+            // TODO: remove the y/height assignment after con, we're doing some major edge case stuff here boys
+            // there's 2 staff members who have over 3 positions, both work with variable positioning
+            final int y = staff.getPositions().length > 3 ? 585 : 605;
+            final int height = staff.getPositions().length > 4 ? 200 : 220;
+            textBounds = new Rectangle(80, y, 1040, height);
 
             float maxFontSize = 72f;
             boolean yAxisCentering = true;
