@@ -82,7 +82,7 @@ class BadgeCreatorStaffBase {
 
         // Draw the background with the age color
         Color bgColor = Color.decode(staff.getAgeBackgroundColor());
-        Rectangle positionsBackground = new Rectangle(8, 1513, 1200, 390);
+        Rectangle positionsBackground = new Rectangle(8, 1505, 1200, 390);
         b.fillRect(positionsBackground, bgColor);
 
         Color fgColor = foregroundColorForName(staff);
