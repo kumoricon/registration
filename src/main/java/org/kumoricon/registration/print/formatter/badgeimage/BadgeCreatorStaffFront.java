@@ -21,7 +21,7 @@ public class BadgeCreatorStaffFront extends BadgeCreatorStaffBase {
     }
 
     private void drawBadgeImage(BadgeImage b, StaffBadgeDTO staff) {
-        Rectangle badgeImageLocation = new Rectangle(80, 850, 1040, 510);
+        Rectangle badgeImageLocation = new Rectangle(290, 850, 620, 560);
         b.drawStretchedImage(staff.getBadgeImage(), badgeImageLocation);
     }
 }

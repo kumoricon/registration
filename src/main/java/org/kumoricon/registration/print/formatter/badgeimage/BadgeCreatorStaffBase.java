@@ -44,7 +44,7 @@ class BadgeCreatorStaffBase {
             // there's 2 staff members who have over 3 positions, both work with variable positioning
             final int y = staff.getPositions().length > 3 ? 585 : 605;
             final int height = staff.getPositions().length > 4 ? 200 : 220;
-            textBounds = new Rectangle(80, y, 1040, height);
+            textBounds = new Rectangle(100, y, 1040, height);
 
             float maxFontSize = 72f;
             boolean yAxisCentering = true;

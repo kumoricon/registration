@@ -98,7 +98,7 @@ public class BadgeImage {
             // since I couldn't figure out what was shrinking them by 25% with the amount of time I had
             new_width = (new_height * original_width * 125 / 100) / original_height;
         }
-    
+
         return new Dimension(new_width, new_height);
     }
 
