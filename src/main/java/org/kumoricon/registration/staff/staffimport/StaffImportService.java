@@ -74,7 +74,8 @@ public class StaffImportService extends ImportService {
 
         List<String> positions = new ArrayList<>();
         for (StaffImportFile.Position p : person.getPositions()) {
-            if (p.title.contains("Director"))
+            // positions that we don't want to prepend team name to
+            if (p.title.startsWith("Director") || p.title.equals(p.team) || p.title.equals("Treasurer"))
                 positions.add(p.title);
             else
                 positions.add(p.team + ", " + p.title);

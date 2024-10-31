@@ -33,8 +33,11 @@ class BadgeCreatorStaffBase {
         Color fgColor = positionForeground(staff.getDepartmentBackgroundColor());
         Color bgColor = positionBackground(staff.getDepartmentBackgroundColor());
 
-        Rectangle positionsBackground = new Rectangle(0, 615, 1200, 220);
-        b.fillRect(positionsBackground, bgColor);
+        // don't draw positions stripe on Guest badges for 2024, they are drawn on the actual badge PDFs
+        if (!staff.getDepartmentBackgroundColor().isEmpty()) {
+            Rectangle positionsBackground = new Rectangle(0, 615, 1200, 220);
+            b.fillRect(positionsBackground, bgColor);
+        }
 
         String[] staffPositions = staff.getPositions();
 
@@ -46,7 +49,7 @@ class BadgeCreatorStaffBase {
             final int height = staff.getPositions().length > 4 ? 200 : 220;
             textBounds = new Rectangle(100, y, 1040, height);
 
-            float maxFontSize = 72f;
+            float maxFontSize = 108f;
             boolean yAxisCentering = true;
             b.drawCenteredStrings(staffPositions, textBounds, boldFont, fgColor, getTextOutlineColor(staff), 1, maxFontSize, yAxisCentering);
         }
