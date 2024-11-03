@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 public class Voucher {
     private Integer id;
     private Integer staffId;
+    private VoucherType voucherType;
     private LocalDate voucherDate;
     private String voucherBy;
     private OffsetDateTime voucherAt;
@@ -24,6 +25,14 @@ public class Voucher {
 
     public void setStaffId(final Integer staffId) {
         this.staffId = staffId;
+    }
+
+    public VoucherType getVoucherType() {
+        return voucherType;
+    }
+
+    public void setVoucherType(final VoucherType voucherType) {
+        this.voucherType = voucherType;
     }
 
     public LocalDate getVoucherDate() {

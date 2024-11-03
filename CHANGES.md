@@ -10,6 +10,7 @@ Version 2.1.5 (Pending)
 - Add user creation for Ops volunteers during staff import
 - Change Staff positions from just role title to team + role title
 - Differentiate between guest and staff for badge text outline
+- Add VoucherType for vouchers (OCC/Hyatt voucher types)
 - 2024 Staff/Guest badges
 
 Version 2.1.4 (11/17/2023)

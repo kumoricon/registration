@@ -75,11 +75,13 @@ public class VoucherCheckInController {
     @PreAuthorize("hasAuthority('voucher_check_in')")
     public String checkInVoucher(Model model,
                           @RequestParam(required = false, name = "q", defaultValue = "") String search,
+                          @RequestParam String voucherType,
                           @PathVariable(name = "uuid") String uuid,
                           @AuthenticationPrincipal User principal) {
         final Staff staff = staffRepository.findByUuid(uuid);
         final Voucher voucher = new Voucher();
         voucher.setStaffId(staff.getId());
+        voucher.setVoucherType(VoucherType.valueOf(voucherType.toUpperCase()));
         voucher.setVoucherDate(LocalDate.now(timezone));
         voucher.setVoucherBy(principal.getUsername());
         voucher.setVoucherAt(OffsetDateTime.now());
@@ -92,9 +94,7 @@ public class VoucherCheckInController {
 
     @RequestMapping(value = "/voucher/revoke/{uuid}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('voucher_check_in')")
-    public String revokeVoucher(Model model,
-                         @PathVariable(name = "uuid") String uuid,
-                         @AuthenticationPrincipal User principal) {
+    public String revokeVoucher(Model model, @PathVariable(name = "uuid") String uuid) {
         final Staff staff = staffRepository.findByUuid(uuid);
         final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), LocalDate.now(timezone));
 
@@ -106,9 +106,7 @@ public class VoucherCheckInController {
 
     @RequestMapping(value = "/voucher/revoke/{uuid}", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('voucher_check_in')")
-    public String revokeVoucherPost(Model model,
-                         @PathVariable(name = "uuid") String uuid,
-                         @AuthenticationPrincipal User principal) {
+    public String revokeVoucherPost(Model model, @PathVariable(name = "uuid") String uuid) {
         final Staff staff = staffRepository.findByUuid(uuid);
         final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), LocalDate.now(timezone));
         voucherRepository.delete(voucher);
