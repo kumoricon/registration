@@ -375,6 +375,7 @@ create table if not exists voucher
 (
     id serial not null primary key,
     staff_id int references staff(id),
+    voucher_type integer not null,
     voucher_date date not null,
     voucher_by varchar(200) references users(username),
     voucher_at timestamp with time zone

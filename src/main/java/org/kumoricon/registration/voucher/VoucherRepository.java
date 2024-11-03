@@ -67,13 +67,14 @@ public class VoucherRepository {
     public void save(final Voucher voucher) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("staff_id", voucher.getStaffId())
+                .addValue("voucher_type", voucher.getVoucherType().ordinal())
                 .addValue("voucher_date", voucher.getVoucherDate())
                 .addValue("voucher_by", voucher.getVoucherBy())
                 .addValue("voucher_at", voucher.getVoucherAt());
 
         final String SQL = """
-                INSERT INTO voucher(staff_id, voucher_date, voucher_by, voucher_at)
-                VALUES(:staff_id, :voucher_date, :voucher_by, :voucher_at)""";
+                INSERT INTO voucher(staff_id, voucher_type, voucher_date, voucher_by, voucher_at)
+                VALUES(:staff_id, :voucher_type, :voucher_date, :voucher_by, :voucher_at)""";
         jdbcTemplate.update(SQL, params);
     }
 
@@ -92,6 +93,7 @@ public class VoucherRepository {
             final Voucher voucher = new Voucher();
             voucher.setId(rs.getInt("id"));
             voucher.setStaffId(rs.getInt("staff_id"));
+            voucher.setVoucherType(VoucherType.of(rs.getInt("voucher_type")));
             final Date date = rs.getDate("voucher_date");
             voucher.setVoucherDate(date.toLocalDate());
             voucher.setVoucherBy(rs.getString("voucher_by"));
