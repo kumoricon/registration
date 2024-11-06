@@ -337,6 +337,7 @@ create table if not exists staff
 	deleted boolean,
 	department varchar(255) not null,
 	department_color_code varchar(255),
+	years_of_service integer default 0 not null,
 	first_name varchar(255) not null,
 	has_badge_image boolean not null,
 	last_name varchar(255) not null,

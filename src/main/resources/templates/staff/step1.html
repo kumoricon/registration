@@ -3,6 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org">
 <head>
     <title>Step 1: Verify Information</title>
+    <script src="/js/staff/staffCheckIn.js"></script>
 </head>
 <body>
 
@@ -40,6 +41,14 @@
                         <span th:text="${p}">Coordinator of Awesome</span><br>
                     </span>
                     </td>
+                </tr>
+                <tr>
+                    <td>Years of Service</td>
+                    <td th:text="${staff.yearsOfService}">5</td>
+                </tr>
+                <tr th:if="${staff.yearsOfService != 0 && staff.yearsOfService > 5}">
+                    <td>Received Service Pin?</td>
+                    <td><input id="servicePinCheckbox" type="checkbox"></td>
                 </tr>
                 <tr>
                     <td>T-Shirt Size</td>

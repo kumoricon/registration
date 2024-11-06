@@ -183,6 +183,7 @@ public class StaffRepository {
                 .addValue("deleted", staff.getDeleted())
                 .addValue("department", staff.getDepartment())
                 .addValue("department_color_code", staff.getDepartmentColorCode())
+                .addValue("years_of_service", staff.getYearsOfService())
                 .addValue("first_name", staff.getFirstName())
                 .addValue("has_badge_image", staff.getHasBadgeImage())
                 .addValue("last_name", staff.getLastName())
@@ -203,13 +204,13 @@ public class StaffRepository {
             final String SQL = """
                     INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, 
                       badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, 
-                      first_name, has_badge_image, last_name, legal_first_name, legal_last_name, 
+                      years_of_service, first_name, has_badge_image, last_name, legal_first_name, legal_last_name, 
                       privacy_name_first, privacy_name_last,
                       preferred_pronoun, shirt_size, uuid, information_verified, 
                       picture_saved, badge_number, phone_number, accessibility_sticker, last_modified) 
                     VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed,
                       :birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, 
-                      :first_name, :has_badge_image, :last_name, :legal_first_name, :legal_last_name, 
+                      :years_of_service, :first_name, :has_badge_image, :last_name, :legal_first_name, :legal_last_name, 
                       :privacy_name_first, :privacy_name_last,
                       :preferred_pronoun, :shirt_size, :uuid, :information_verified, 
                       :picture_saved, :badge_number, :phone_number, :accessibility_sticker, now()) RETURNING id""";
@@ -221,8 +222,8 @@ public class StaffRepository {
                       badge_image_file_type = :badge_image_file_type, badge_print_count = :badge_print_count, 
                       badge_printed = :badge_printed, birth_date = :birth_date, checked_in = :checked_in, 
                       checked_in_at = :checked_in_at, deleted = :deleted, department = :department, 
-                      department_color_code = :department_color_code, first_name = :first_name, 
-                      has_badge_image = :has_badge_image,
+                      department_color_code = :department_color_code, years_of_service = :years_of_service, 
+                      first_name = :first_name, has_badge_image = :has_badge_image,
                       last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, 
                       privacy_name_first = :privacy_name_first, privacy_name_last = :privacy_name_last,
                       preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, 
@@ -255,6 +256,7 @@ public class StaffRepository {
             s.setDeleted(rs.getBoolean("deleted"));
             s.setDepartment(rs.getString("department"));
             s.setDepartmentColorCode(rs.getString("department_color_code"));
+            s.setYearsOfService(rs.getInt("years_of_service"));
             s.setFirstName(rs.getString("first_name"));
             s.setHasBadgeImage(rs.getBoolean("has_badge_image"));
             s.setLastName(rs.getString("last_name"));
