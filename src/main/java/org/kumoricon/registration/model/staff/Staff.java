@@ -22,6 +22,7 @@ public class Staff {
     private String departmentColorCode;
 
     private List<String> positions;
+    private Integer yearsOfService;
     private Boolean checkedIn;
     private LocalDate birthDate;
     private String ageCategoryAtCon;
@@ -139,6 +140,14 @@ public class Staff {
 
     public void setPositions(List<String> positions) {
         this.positions = positions;
+    }
+
+    public Integer getYearsOfService() {
+        return yearsOfService == null ? 0 : yearsOfService;
+    }
+
+    public void setYearsOfService(Integer yearsOfService) {
+        this.yearsOfService = yearsOfService;
     }
 
     public Boolean getCheckedIn() {
