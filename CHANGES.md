@@ -12,6 +12,7 @@ Version 2.1.5 (Pending)
 - Differentiate between guest and staff for badge text outline
 - Add VoucherType for vouchers (OCC/Hyatt voucher types)
 - Add Years of Service check to Staff check in
+- Add an import service for Staff Years of Service json
 - 2024 Staff/Guest badges
 
 Version 2.1.4 (11/17/2023)
