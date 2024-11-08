@@ -41,7 +41,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="s : ${staff}">
-                    <td th:text="|${s.firstName} ${s.lastName}|">Firstname Lastname</td>
+                    <td><a th:href="@{/voucher/history/{uuid}(uuid=${s.uuid})}" th:text="|${s.firstName} ${s.lastName}|">Firstname Lastname</a></td>
                     <td th:text="|${s.legalFirstName} ${s.legalLastName}|">Firstname Lastname</td>
                     <td th:text="${s.department}">Department</td>
                     <td th:text="${staffVouchers.get(s.getId()) == null ? null : staffVouchers.get(s.getId()).getVoucherType()}">Voucher Type</td>

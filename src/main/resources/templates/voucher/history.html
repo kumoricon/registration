@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/basenomenu}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Step 1: Verify Information</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <table class="table table-bordered table-sm table-fix-head">
+                <thead>
+                    <tr>
+                        <th colspan="4" th:text="|${staff.firstName} ${staff.lastName}|"></th>
+                    </tr>
+                    <tr style="!important;">
+                        <th>Voucher By</th>
+                        <th>Voucher At</th>
+                        <th>Voucher Date</th>
+                        <th>Is Revoked?</th>
+                    </tr>
+                </thead>
+                <tr th:each="voucher : ${vouchers}">
+                    <td th:text="${voucher.getVoucherBy()}"></td>
+                    <td th:text="${dts.format(voucher.getVoucherAt())}"></td>
+                    <td th:text="${voucher.getVoucherDate()}"></td>
+                    <td th:text="${voucher.isRevoked()}"></td>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <a th:href="@{/voucher/search}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
