@@ -10,6 +10,7 @@ public class Voucher {
     private LocalDate voucherDate;
     private String voucherBy;
     private OffsetDateTime voucherAt;
+    private Boolean isRevoked;
 
     public Integer getId() {
         return id;
@@ -57,6 +58,14 @@ public class Voucher {
 
     public void setVoucherAt(final OffsetDateTime voucherAt) {
         this.voucherAt = voucherAt;
+    }
+
+    public Boolean isRevoked() {
+        return isRevoked;
+    }
+
+    public void setIsRevoked(Boolean isRevoked) {
+        this.isRevoked = isRevoked;
     }
 
     @Override

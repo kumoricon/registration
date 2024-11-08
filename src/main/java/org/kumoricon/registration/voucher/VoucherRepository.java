@@ -33,9 +33,9 @@ public class VoucherRepository {
         final SqlParameterSource params = new MapSqlParameterSource("id", id)
                 .addValue("date", date);
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM voucher WHERE staff_id = :id AND voucher_date = :date", params, new VoucherRowMapper());
+            return jdbcTemplate.queryForObject("SELECT * FROM voucher WHERE staff_id = :id AND voucher_date = :date AND is_revoked is not true", params, new VoucherRowMapper());
         } catch (final EmptyResultDataAccessException e) {
-            log.info("Attempted to query voucher with staff id {}, but found nothing.", id);
+            log.warn("Attempted to query voucher with staff id {}, but found nothing.", id);
             return null;
         }
     }
@@ -51,31 +51,50 @@ public class VoucherRepository {
         final SqlParameterSource params = new MapSqlParameterSource("staffIds", staffIds)
                 .addValue("date", date);
         try {
-            return jdbcTemplate.query("SELECT * FROM voucher WHERE staff_id IN (:staffIds) AND voucher_date = :date", params, new VoucherRowMapper());
+            return jdbcTemplate.query("SELECT * FROM voucher WHERE staff_id IN (:staffIds) AND voucher_date = :date AND is_revoked is not true", params, new VoucherRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return List.of();
         }
     }
 
     @Transactional(readOnly = true)
+    public List<Voucher> findAllByStaffId(final Integer id) {
+        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+        try {
+            return jdbcTemplate.query("SELECT * FROM voucher WHERE staff_id = :id", params, new VoucherRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            log.warn("Attempted to query vouchers with staff id {}, but found nothing.", id);
+            return List.of();
+        }
+    }
+
+    @Transactional(readOnly = true)
     public Integer countOnDate(final LocalDate date) {
-        final String sql = "select count(*) from voucher WHERE voucher_date = :date";
+        final String sql = "select count(*) from voucher WHERE voucher_date = :date AND is_revoked is not true";
         return jdbcTemplate.queryForObject(sql, Map.of("date", date), Integer.class);
     }
 
     @Transactional
     public void save(final Voucher voucher) {
-        final SqlParameterSource params = new MapSqlParameterSource()
+        final SqlParameterSource params = new MapSqlParameterSource("id", voucher.getId())
                 .addValue("staff_id", voucher.getStaffId())
                 .addValue("voucher_type", voucher.getVoucherType().ordinal())
                 .addValue("voucher_date", voucher.getVoucherDate())
                 .addValue("voucher_by", voucher.getVoucherBy())
-                .addValue("voucher_at", voucher.getVoucherAt());
+                .addValue("voucher_at", voucher.getVoucherAt())
+                .addValue("is_revoked", voucher.isRevoked());
 
-        final String SQL = """
-                INSERT INTO voucher(staff_id, voucher_type, voucher_date, voucher_by, voucher_at)
-                VALUES(:staff_id, :voucher_type, :voucher_date, :voucher_by, :voucher_at)""";
-        jdbcTemplate.update(SQL, params);
+        if (voucher.getId() == null) {
+            final String SQL = """
+                INSERT INTO voucher(staff_id, voucher_type, voucher_date, voucher_by, voucher_at, is_revoked)
+                VALUES(:staff_id, :voucher_type, :voucher_date, :voucher_by, :voucher_at, :is_revoked)""";
+            jdbcTemplate.update(SQL, params);
+        } else {
+            final String SQL = """
+                UPDATE voucher SET staff_id = :staff_id, voucher_type = :voucher_type, voucher_by = :voucher_by,
+                voucher_at = :voucher_at, is_revoked = :is_revoked WHERE id = :id""";
+            jdbcTemplate.update(SQL, params);
+        }
     }
 
     @Transactional
@@ -98,6 +117,7 @@ public class VoucherRepository {
             voucher.setVoucherDate(date.toLocalDate());
             voucher.setVoucherBy(rs.getString("voucher_by"));
             voucher.setVoucherAt(rs.getObject("voucher_at", OffsetDateTime.class));
+            voucher.setIsRevoked(rs.getBoolean("is_revoked"));
             return voucher;
         }
     }

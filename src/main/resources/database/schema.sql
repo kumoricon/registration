@@ -379,7 +379,8 @@ create table if not exists voucher
     voucher_type integer not null,
     voucher_date date not null,
     voucher_by varchar(200) references users(username),
-    voucher_at timestamp with time zone
+    voucher_at timestamp with time zone,
+    is_revoked boolean default false not null,
 );
 
 create table if not exists inlineregistrations

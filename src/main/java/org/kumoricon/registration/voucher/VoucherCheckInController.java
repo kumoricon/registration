@@ -85,11 +85,24 @@ public class VoucherCheckInController {
         voucher.setVoucherDate(LocalDate.now(timezone));
         voucher.setVoucherBy(principal.getUsername());
         voucher.setVoucherAt(OffsetDateTime.now());
+        voucher.setIsRevoked(false);
         voucherRepository.save(voucher);
 
         model.addAttribute("search", search);
 
         return "redirect:/voucher/search?msg=Voucher+marked+received+for+" + staff.getFirstName() + "+" + staff.getLastName() + "&q=" + search;
+    }
+
+    @RequestMapping(value = "/voucher/history/{uuid}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('voucher_check_in')")
+    public String voucherHistoryForStaff(Model model, @PathVariable(name = "uuid") String uuid) {
+        final Staff staff = staffRepository.findByUuid(uuid);
+        final List<Voucher> vouchers = voucherRepository.findAllByStaffId(staff.getId());
+
+        model.addAttribute("staff", staff);
+        model.addAttribute("vouchers", vouchers);
+
+        return "voucher/history";
     }
 
     @RequestMapping(value = "/voucher/revoke/{uuid}", method = RequestMethod.GET)
@@ -109,8 +122,9 @@ public class VoucherCheckInController {
     public String revokeVoucherPost(Model model, @PathVariable(name = "uuid") String uuid) {
         final Staff staff = staffRepository.findByUuid(uuid);
         final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), LocalDate.now(timezone));
-        voucherRepository.delete(voucher);
-        log.info("Deleted voucher for {}", staff);
+        voucher.setIsRevoked(true);
+        voucherRepository.save(voucher);
+        log.info("Revoked voucher for {}", staff);
 
         model.addAttribute("staff", staff);
         model.addAttribute("voucher", voucher);
