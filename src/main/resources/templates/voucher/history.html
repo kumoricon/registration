@@ -8,23 +8,25 @@
 
 <div layout:fragment="content" class="container">
     <div class="row">
-        <div class="col-sm-6">
-            <table class="table table-bordered table-sm table-fix-head">
+        <div class="mt-2">
+            <table class="table table-bordered table-sm table-fix-head" style="width:1000px;">
                 <thead>
                     <tr>
-                        <th colspan="4" th:text="|${staff.firstName} ${staff.lastName}|"></th>
+                        <th colspan="5" th:text="|${staff.firstName} ${staff.lastName}|"></th>
                     </tr>
                     <tr style="!important;">
-                        <th>Voucher By</th>
-                        <th>Voucher At</th>
-                        <th>Voucher Date</th>
-                        <th>Is Revoked?</th>
+                        <th style="width: 200px;">Voucher Type</th>
+                        <th style="width: 200px;">Voucher Day</th>
+                        <th style="width: 100px;">Voucher By</th>
+                        <th style="width: 300px;">Voucher At</th>
+                        <th style="width: 200px;">Is Revoked?</th>
                     </tr>
                 </thead>
                 <tr th:each="voucher : ${vouchers}">
-                    <td th:text="${voucher.getVoucherBy()}"></td>
-                    <td th:text="${dts.format(voucher.getVoucherAt())}"></td>
-                    <td th:text="${voucher.getVoucherDate()}"></td>
+                    <td th:text="${voucher.voucherType}"></td>
+                    <td th:text="${voucher.voucherDate.dayOfWeek}"></td>
+                    <td th:text="${voucher.voucherBy}"></td>
+                    <td th:text="${dts.format(voucher.voucherAt)}"></td>
                     <td th:text="${voucher.isRevoked()}"></td>
             </table>
         </div>
