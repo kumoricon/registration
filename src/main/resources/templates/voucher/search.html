@@ -51,7 +51,7 @@
                         <form th:action="@{/voucher/trade/{uuid}(uuid=${s.uuid})}" method="post" th:if="${staffVouchers.get(s.id) != null}">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <input type="hidden" name="q" th:value="${search}" />
-                            <input type="hidden" name="date" th:value="${staffVouchers.get(s.id).voucherDate}" />
+                            <input type="hidden" name="voucherAt" th:value="${staffVouchers.get(s.id).voucherAt}" />
                             <input type="submit" value="Trade In" name="tradeIn" class="btn btn-sm btn-success" >
                         </form>
                     </td>
