@@ -12,11 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -82,7 +78,7 @@ public class VoucherCheckInController {
                           @AuthenticationPrincipal User principal) {
         final Staff staff = staffRepository.findByUuid(uuid);
         final VoucherType type = VoucherType.valueOf(voucherType.toUpperCase());
-        voucherService.saveNewVoucher(staff, type, principal.getUsername());
+        voucherService.saveNewVoucher(staff, type, LocalDate.now(timezone), principal.getUsername());
 
         model.addAttribute("search", search);
 
@@ -105,15 +101,16 @@ public class VoucherCheckInController {
     public String tradeVoucher(Model model,
                                @PathVariable(name = "uuid") String uuid,
                                @RequestParam(required = false, name = "q", defaultValue = "") String search,
+                               @RequestParam LocalDate date,
                                @AuthenticationPrincipal User principal) {
         final Staff staff = staffRepository.findByUuid(uuid);
-        final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), LocalDate.now(timezone));
+        final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), date);
         voucher.setIsRevoked(true);
         voucherRepository.save(voucher);
 
         switch (voucher.getVoucherType()) {
-            case OCC -> voucherService.saveNewVoucher(staff, VoucherType.HYATT, principal.getUsername());
-            case HYATT -> voucherService.saveNewVoucher(staff, VoucherType.OCC, principal.getUsername());
+            case OCC -> voucherService.saveNewVoucher(staff, VoucherType.HYATT, voucher.getVoucherDate(), principal.getUsername());
+            case HYATT -> voucherService.saveNewVoucher(staff, VoucherType.OCC, voucher.getVoucherDate(), principal.getUsername());
             default -> log.error("Unrecognized voucher type {}, not trading voucher...", voucher.getVoucherType());
         }
 

@@ -12,7 +12,7 @@
             <table class="table table-bordered table-sm table-fix-head" style="width:1000px;">
                 <thead>
                     <tr>
-                        <th colspan="5" th:text="|${staff.firstName} ${staff.lastName}|"></th>
+                        <th colspan="6" th:text="|${staff.firstName} ${staff.lastName}|"></th>
                     </tr>
                     <tr style="!important;">
                         <th style="width: 200px;">Voucher Type</th>
@@ -20,6 +20,7 @@
                         <th style="width: 100px;">Voucher By</th>
                         <th style="width: 300px;">Voucher At</th>
                         <th style="width: 200px;">Is Revoked?</th>
+                        <th style="width: 200px;">Trade In</th>
                     </tr>
                 </thead>
                 <tr th:each="voucher : ${vouchers}">
@@ -28,6 +29,14 @@
                     <td th:text="${voucher.voucherBy}"></td>
                     <td th:text="${dts.format(voucher.voucherAt)}"></td>
                     <td th:text="${voucher.isRevoked()}"></td>
+                    <td> <!-- Trade In -->
+                        <form th:action="@{/voucher/trade/{uuid}(uuid=${staff.uuid})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input type="hidden" name="q" th:value="${search}" />
+                            <input type="hidden" name="date" th:value="${voucher.voucherDate}" />
+                            <input type="submit" value="Trade In" name="tradeIn" class="btn btn-sm btn-success" >
+                        </form>
+                    </td>
             </table>
         </div>
     </div>
