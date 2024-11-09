@@ -14,6 +14,7 @@ Version 2.1.5 (Pending)
 - Add Years of Service check to Staff check in
 - Add an import service for Staff Years of Service json
 - Add voucher history page for staff members
+- Add voucher trade in feature
 - 2024 Staff/Guest badges
 
 Version 2.1.4 (11/17/2023)

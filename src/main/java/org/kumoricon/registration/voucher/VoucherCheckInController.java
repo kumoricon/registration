@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +31,17 @@ public class VoucherCheckInController {
     private final StaffAutoSuggestRepository staffAutoSuggestRepository;
     private final StaffRepository staffRepository;
     private final VoucherRepository voucherRepository;
+    private final VoucherService voucherService;
     private final ZoneId timezone;
 
     public VoucherCheckInController(StaffAutoSuggestRepository staffAutoSuggestRepository,
                                     StaffRepository staffRepository,
-                                    VoucherRepository voucherRepository) {
+                                    VoucherRepository voucherRepository,
+                                    VoucherService voucherService) {
         this.staffAutoSuggestRepository = staffAutoSuggestRepository;
         this.staffRepository = staffRepository;
         this.voucherRepository = voucherRepository;
+        this.voucherService = voucherService;
         this.timezone = ZoneId.of("America/Los_Angeles");
     }
 
@@ -79,14 +81,8 @@ public class VoucherCheckInController {
                           @PathVariable(name = "uuid") String uuid,
                           @AuthenticationPrincipal User principal) {
         final Staff staff = staffRepository.findByUuid(uuid);
-        final Voucher voucher = new Voucher();
-        voucher.setStaffId(staff.getId());
-        voucher.setVoucherType(VoucherType.valueOf(voucherType.toUpperCase()));
-        voucher.setVoucherDate(LocalDate.now(timezone));
-        voucher.setVoucherBy(principal.getUsername());
-        voucher.setVoucherAt(OffsetDateTime.now());
-        voucher.setIsRevoked(false);
-        voucherRepository.save(voucher);
+        final VoucherType type = VoucherType.valueOf(voucherType.toUpperCase());
+        voucherService.saveNewVoucher(staff, type, principal.getUsername());
 
         model.addAttribute("search", search);
 
@@ -103,6 +99,27 @@ public class VoucherCheckInController {
         model.addAttribute("vouchers", vouchers);
 
         return "voucher/history";
+    }
+
+    @RequestMapping(value = "/voucher/trade/{uuid}", method = RequestMethod.POST)
+    public String tradeVoucher(Model model,
+                               @PathVariable(name = "uuid") String uuid,
+                               @RequestParam(required = false, name = "q", defaultValue = "") String search,
+                               @AuthenticationPrincipal User principal) {
+        final Staff staff = staffRepository.findByUuid(uuid);
+        final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), LocalDate.now(timezone));
+        voucher.setIsRevoked(true);
+        voucherRepository.save(voucher);
+
+        switch (voucher.getVoucherType()) {
+            case OCC -> voucherService.saveNewVoucher(staff, VoucherType.HYATT, principal.getUsername());
+            case HYATT -> voucherService.saveNewVoucher(staff, VoucherType.OCC, principal.getUsername());
+            default -> log.error("Unrecognized voucher type {}, not trading voucher...", voucher.getVoucherType());
+        }
+
+        model.addAttribute("search", search);
+
+        return "redirect:/voucher/search?msg=Traded+voucher+for+" + staff.getFirstName() + "+" + staff.getLastName() + "&q=" + search;
     }
 
     @RequestMapping(value = "/voucher/revoke/{uuid}", method = RequestMethod.GET)
