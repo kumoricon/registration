@@ -41,6 +41,18 @@ public class VoucherRepository {
     }
 
     @Transactional(readOnly = true)
+    public Voucher findByStaffIdOnVoucherAt(final Integer id, final OffsetDateTime voucherAt) {
+        final SqlParameterSource params = new MapSqlParameterSource("id", id)
+                .addValue("voucherAt", voucherAt);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM voucher WHERE staff_id = :id AND voucher_at = :voucherAt AND is_revoked is not true", params, new VoucherRowMapper());
+        } catch (final EmptyResultDataAccessException e) {
+            log.warn("Attempted to query voucher with staff id {}, but found nothing.", id);
+            return null;
+        }
+    }
+
+    @Transactional(readOnly = true)
     public List<Voucher> findByAllStaffOnDate(final List<Staff> staff, final LocalDate date) {
         if (staff.isEmpty())
             return List.of();

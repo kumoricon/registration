@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
@@ -101,10 +102,13 @@ public class VoucherCheckInController {
     public String tradeVoucher(Model model,
                                @PathVariable(name = "uuid") String uuid,
                                @RequestParam(required = false, name = "q", defaultValue = "") String search,
-                               @RequestParam LocalDate date,
+                               @RequestParam String voucherAt,
                                @AuthenticationPrincipal User principal) {
         final Staff staff = staffRepository.findByUuid(uuid);
-        final Voucher voucher = voucherRepository.findByStaffIdOnDate(staff.getId(), date);
+        final Voucher voucher = voucherRepository.findByStaffIdOnVoucherAt(staff.getId(), OffsetDateTime.parse(voucherAt));
+        if (voucher == null) {
+            return "redirect:/voucher/search?err=Unable+to+find+voucher.+Make+sure+voucher+is+not+revoked.";
+        }
         voucher.setIsRevoked(true);
         voucherRepository.save(voucher);
 
