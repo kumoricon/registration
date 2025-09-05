@@ -1,5 +1,6 @@
 package org.kumoricon.registration.staff.staffimport;
 
+import org.kumoricon.registration.model.staff.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,14 +86,14 @@ public class StaffImportUserCreateService {
      * If present, returns roleId associated with the role title
      * @return roleId or -1 for position that does not need user account created
      */
-    private Integer getStaffRoleId(List<StaffImportFile.Position> positions) {
-        for(StaffImportFile.Position p : positions) {
+    private Integer getStaffRoleId(List<Position> positions) {
+        for(Position p : positions) {
             // only make users for Membership & Ops volunteers
-            if (!"Membership".equalsIgnoreCase(p.department) && !"Operations".equalsIgnoreCase(p.department))
+            if (!"Membership".equalsIgnoreCase(p.getDepartment()) && !"Operations".equalsIgnoreCase(p.getDepartment()))
                 continue;
 
-            if(this.regRoleMapping.get(p.title) != null) {
-                return this.roleRepository.findByNameIgnoreCase(this.regRoleMapping.get(p.title)).getId();
+            if(this.regRoleMapping.get(p.getTitle()) != null) {
+                return this.roleRepository.findByNameIgnoreCase(this.regRoleMapping.get(p.getTitle())).getId();
             }
         }
 
