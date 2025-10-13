@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,8 +72,9 @@ public class StaffImportService extends ImportService {
             existing.setAccessibilitySticker(false);
         }
 
-        if (staffRecordIsDifferent(existing, person, person.getPositions())) {
-            updateStaffFromPerson(existing, person, person.getPositions());
+        final List<Position> positions = person.getPositions().stream().map(this::positionImportToPosition).toList();
+        if (staffRecordIsDifferent(existing, person, positions)) {
+            updateStaffFromPerson(existing, person, positions);
             staffRepository.save(existing);
         }
     }
@@ -125,6 +124,17 @@ public class StaffImportService extends ImportService {
                 !Objects.equals(staff.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
                 !Objects.equals(staff.getHasBadgeImage(), person.getHasBadgeImage()) ||
                 !Objects.equals(staff.getBadgeImageFileType(), person.getBadgeImageFileType());
+    }
+
+    private Position positionImportToPosition(final PositionImportFile positionImport) {
+        final Position position = new Position();
+        position.setTerm(positionImport.getTerm());
+        position.setDepartment(positionImport.getDepartment());
+        position.setTeam(positionImport.getTeam());
+        position.setTitle(positionImport.getTitle());
+        position.setLevel(positionImport.getLevel());
+        position.setIsElected(positionImport.isElected());
+        return position;
     }
 
     /**

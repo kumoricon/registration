@@ -86,8 +86,8 @@ public class StaffImportUserCreateService {
      * If present, returns roleId associated with the role title
      * @return roleId or -1 for position that does not need user account created
      */
-    private Integer getStaffRoleId(List<Position> positions) {
-        for(Position p : positions) {
+    private Integer getStaffRoleId(List<PositionImportFile> positions) {
+        for(PositionImportFile p : positions) {
             // only make users for Membership & Ops volunteers
             if (!"Membership".equalsIgnoreCase(p.getDepartment()) && !"Operations".equalsIgnoreCase(p.getDepartment()))
                 continue;

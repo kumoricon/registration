@@ -55,7 +55,7 @@ public class PositionRepository {
                     INSERT INTO
                         staff_position(term, department, team, title, position_level, is_elected)
                     VALUES
-                        (:term, :department, :team, :title, :level, :isElected)
+                        (:term, :department, :team, :title, :positionLevel, :isElected)
                     RETURNING
                         id, term, department, team, title, position_level, is_elected
                 """;
@@ -67,7 +67,7 @@ public class PositionRepository {
                     .addValue("department", position.getDepartment())
                     .addValue("team", position.getTeam())
                     .addValue("title", position.getTitle())
-                    .addValue("level", position.getLevel())
+                    .addValue("positionLevel", position.getLevel())
                     .addValue("isElected", position.isElected());
             return param;
         }).toArray(SqlParameterSource[]::new);
@@ -103,7 +103,7 @@ public class PositionRepository {
                     UPDATE
                         staff_position
                     SET
-                        term = :term, department = :department, team = :team, title = :title, level = :level,
+                        term = :term, department = :department, team = :team, title = :title, position_level = :positionLevel,
                         is_elected = :isElected
                     WHERE
                         id = :id
@@ -116,7 +116,7 @@ public class PositionRepository {
                     .addValue("department", position.getDepartment())
                     .addValue("team", position.getTeam())
                     .addValue("title", position.getTitle())
-                    .addValue("level", position.getLevel())
+                    .addValue("positionLevel", position.getLevel())
                     .addValue("isElected", position.isElected());
             return param;
         }).toArray(SqlParameterSource[]::new);

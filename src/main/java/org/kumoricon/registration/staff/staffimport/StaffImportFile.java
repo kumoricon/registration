@@ -3,7 +3,6 @@ package org.kumoricon.registration.staff.staffimport;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.kumoricon.registration.model.staff.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class StaffImportFile {
         private final String preferredPronoun;
         private final String tShirtSize;
         private final String badgeImpactingLastModified;
-        private final List<Position> positions;
+        private final List<PositionImportFile> positions;
         private final String birthdate;
         private final String ageCategoryConCurrentTerm;
         private final Boolean hasBadgeImage;
@@ -83,7 +82,7 @@ public class StaffImportFile {
                 @JsonProperty(value = "pronouns") String preferredPronoun,
                 @JsonProperty(value = "tShirtSize") String tShirtSize,
                 @JsonProperty(value = "badgeImpactingLastModified") String badgeImpactingLastModified,
-                @JsonProperty(value = "positions") List<Position> positions,
+                @JsonProperty(value = "positions") List<PositionImportFile> positions,
                 @JsonProperty(value = "birthdate") String birthdate,
                 @JsonProperty(value = "ageCategoryConCurrentTerm") String ageCategoryConCurrentTerm,
                 @JsonProperty(value = "hasBadgeImage") Boolean hasBadgeImage,
@@ -144,7 +143,7 @@ public class StaffImportFile {
             return badgeImpactingLastModified;
         }
 
-        public List<Position> getPositions() {
+        public List<PositionImportFile> getPositions() {
             return positions;
         }
 
