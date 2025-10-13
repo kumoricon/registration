@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Departments</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row col-sm-4">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-nowrap">Department</th>
+                <th class="text-nowrap">Completed?</th>
+                <th class="text-nowrap">Staff Members</th>
+            </tr>
+            </thead>
+
+            <tr th:if="${departments.empty}">
+                <td colspan="6"> No Departments Found </td>
+            </tr>
+            <tr th:each="department : ${departments}">
+                <td th:text="${department}">Name</td>
+                <td th:text="${departmentStatusMap[__${department}__]}">Yes</td>
+                <td class="text-center"><a th:href="@{/eventeny/department/{department}(department=${department.toLowerCase()})}" href="#" class="btn btn-primary">View</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Departments</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row col-sm-4" style="float:left;">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-nowrap">Staff Member</th>
+                <th class="text-nowrap">Eventeny Complete?</th>
+                <th class="text-nowrap">Add to Eventeny</th>
+            </tr>
+            </thead>
+
+            <tr th:if="${staffList.isEmpty()}">
+                <td colspan="3"> No Staff Found </td>
+            </tr>
+            <tr th:each="s : ${staffList}">
+                <td th:text="${s.getPrivacyNameFirst()} + ' ' + ${s.getPrivacyNameLast()}">Name</td>
+                <td th:text="${s.eventenyCheckedIn() ? 'Yes' : 'No'}">Eventeny Checked-In</td>
+                <td class="text-center">
+                    <a th:href="@{/eventeny/department/{department}/{uuid}(department=${department.toLowerCase()},uuid=${s.uuid})}"
+                       th:text="${s.eventenyCheckedIn ? 'View' : 'Check In'}" class="btn btn-sm btn-primary">Check In</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row col-6" style="float:right;">
+        <table class="table table-bordered table-striped table-md">
+            <tbody>
+            <tr>
+                <td>Email</td>
+                <td th:text="${staff.email}">email@gmail.com</td>
+            </tr>
+            <tr>
+                <td>Preferred first and last name</td>
+                <td th:text="|${staff.firstName} ${staff.lastName}|">Firstname Lastname</td>
+            </tr>
+            <tr>
+                <td>First and last name on ID</td>
+                <td th:text="|${staff.legalFirstName} ${staff.legalLastName}|">Legal Name</td>
+            </tr>
+            <tr>
+                <td>Preferred Pronouns</td>
+                <td th:text="${staff.preferredPronoun}">Pronoun</td>
+            </tr>
+            <tr>
+                <td>Staff Department</td>
+                <td>
+                        <span th:each="p : ${staff.positions}">
+                            <span th:text="${p}">Coordinator of Awesome</span><br>
+                        </span>
+                </td>
+            </tr>
+            <tr>
+                <td>Nickname/Privacy Name</td>
+                <td th:text="|${staff.privacyNameFirst} ${staff.privacyNameLast}|">Firstname Lastname</td>
+            </tr>
+            <tr>
+                <td>Staff T-Shirt Size</td>
+                <td th:text="${staff.shirtSize}">L</td>
+            </tr>
+            <tr th:if="${staff.yearsOfService % 5 == 0 and staff.yearsOfService != 0}">
+                <td>Years of Service Pin</td>
+                <td th:text="${staff.yearsOfService}">5 Years</td>
+            </tr>
+            <tr>
+                <td>Confirmation Email Resent?</td>
+                <td>
+                    <form method="post" th:action="@{/eventeny/department/{department}/{uuid}(department=${department.toLowerCase()},uuid=${staff.uuid})}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="submit" value="Complete" class="btn mb-2 btn-secondary" th:disabled="${staff.eventenyCheckedIn}" />
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

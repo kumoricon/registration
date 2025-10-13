@@ -26,9 +26,18 @@ public class PositionRepository {
     }
 
     public List<Position> findAllByStaff(final Staff staff) {
-        final String sql = "select sp.* from staff_position sp left join staff_positions_map spm on spm.staff_id = :id";
+        final String sql = "select sp.* from staff_position sp left join staff_positions_map spm on spm.position_id = sp.id where spm.staff_id = :id";
         try {
             return jdbcTemplate.query(sql, Map.of("id", staff.getId()), new PositionRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<String> findDistinctDepartments() {
+        final String sql = "select distinct department from staff_position";
+        try {
+            return jdbcTemplate.queryForList(sql, Map.of(), String.class);
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }

@@ -36,6 +36,16 @@ public class StaffRepository {
     }
 
     @Transactional(readOnly = true)
+    public List<Staff> findAllByDepartment(String department) {
+        final String sql = "SELECT * FROM staff WHERE LOWER(department) = :department";
+        try {
+            return jdbcTemplate.query(sql, Map.of("department", department), new StaffRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional(readOnly = true)
     public List<Staff> findCheckedIn(OffsetDateTime since) {
         final String sql = """
             SELECT * FROM staff WHERE deleted = FALSE and checked_in is true AND last_modified >= :since
@@ -183,6 +193,7 @@ public class StaffRepository {
                 .addValue("badge_printed", staff.getBadgePrinted())
                 .addValue("birth_date", staff.getBirthDate())
                 .addValue("checked_in", staff.getCheckedIn())
+                .addValue("eventeny_checked_in", staff.eventenyCheckedIn())
                 .addValue("checked_in_at", staff.getCheckedInAt())
                 .addValue("deleted", staff.getDeleted())
                 .addValue("department", staff.getDepartment())
@@ -196,6 +207,7 @@ public class StaffRepository {
                 .addValue("privacy_name_first", staff.getPrivacyNameFirst())
                 .addValue("privacy_name_last", staff.getPrivacyNameLast())
                 .addValue("phone_number", staff.getPhoneNumber())
+                .addValue("email", staff.getEmail())
                 .addValue("preferred_pronoun", staff.getPreferredPronoun())
                 .addValue("shirt_size", staff.getShirtSize())
                 .addValue("uuid", staff.getUuid())
@@ -207,17 +219,17 @@ public class StaffRepository {
         if (staff.getId() == null) {
             final String SQL = """
                     INSERT INTO staff(age_category_at_con, badge_image_file_type, badge_print_count, 
-                      badge_printed, birth_date, checked_in, checked_in_at, deleted, department, department_color_code, 
+                      badge_printed, birth_date, checked_in, eventeny_checked_in, checked_in_at, deleted, department, department_color_code, 
                       years_of_service, first_name, has_badge_image, last_name, legal_first_name, legal_last_name, 
                       privacy_name_first, privacy_name_last,
                       preferred_pronoun, shirt_size, uuid, information_verified, 
-                      picture_saved, badge_number, phone_number, accessibility_sticker, last_modified) 
+                      picture_saved, badge_number, phone_number, email, accessibility_sticker, last_modified) 
                     VALUES(:age_category_at_con, :badge_image_file_type, :badge_print_count, :badge_printed,
-                      :birth_date, :checked_in,:checked_in_at, :deleted, :department, :department_color_code, 
+                      :birth_date, :checked_in, :eventeny_checked_in, :checked_in_at, :deleted, :department, :department_color_code, 
                       :years_of_service, :first_name, :has_badge_image, :last_name, :legal_first_name, :legal_last_name, 
                       :privacy_name_first, :privacy_name_last,
                       :preferred_pronoun, :shirt_size, :uuid, :information_verified, 
-                      :picture_saved, :badge_number, :phone_number, :accessibility_sticker, now()) RETURNING id""";
+                      :picture_saved, :badge_number, :phone_number, :email, :accessibility_sticker, now()) RETURNING id""";
             Integer id = jdbcTemplate.queryForObject(SQL, namedParameters, Integer.class);
             staff.setId(id);
         } else {
@@ -225,14 +237,14 @@ public class StaffRepository {
                     UPDATE staff SET age_category_at_con = :age_category_at_con, 
                       badge_image_file_type = :badge_image_file_type, badge_print_count = :badge_print_count, 
                       badge_printed = :badge_printed, birth_date = :birth_date, checked_in = :checked_in, 
-                      checked_in_at = :checked_in_at, deleted = :deleted, department = :department, 
+                      eventeny_checked_in = :eventeny_checked_in, checked_in_at = :checked_in_at, deleted = :deleted, department = :department, 
                       department_color_code = :department_color_code, years_of_service = :years_of_service, 
                       first_name = :first_name, has_badge_image = :has_badge_image,
                       last_name = :last_name, legal_first_name = :legal_first_name, legal_last_name = :legal_last_name, 
                       privacy_name_first = :privacy_name_first, privacy_name_last = :privacy_name_last,
                       preferred_pronoun = :preferred_pronoun, shirt_size = :shirt_size, 
                       uuid = :uuid, information_verified = :information_verified, picture_saved = :picture_saved,
-                      badge_number = :badge_number, phone_number = :phone_number, 
+                      badge_number = :badge_number, phone_number = :phone_number, email = :email,
                       accessibility_sticker = :accessibility_sticker, last_modified = now()
                     WHERE id = :id""";
             jdbcTemplate.update(SQL, namedParameters);
@@ -257,6 +269,7 @@ public class StaffRepository {
                 s.setBirthDate(null);
             }
             s.setCheckedIn(rs.getBoolean("checked_in"));
+            s.setEventenyCheckedIn(rs.getBoolean("eventeny_checked_in"));
             s.setCheckedInAt(rs.getObject("checked_in_at", OffsetDateTime.class));
             s.setDeleted(rs.getBoolean("deleted"));
             s.setDepartment(rs.getString("department"));
@@ -270,6 +283,7 @@ public class StaffRepository {
             s.setPrivacyNameFirst(rs.getString("privacy_name_first"));
             s.setPrivacyNameLast(rs.getString("privacy_name_last"));
             s.setPhoneNumber(rs.getString("phone_number"));
+            s.setEmail(rs.getString("email"));
             s.setPreferredPronoun(rs.getString("preferred_pronoun"));
             s.setShirtSize(rs.getString("shirt_size"));
             s.setUuid(rs.getString("uuid"));

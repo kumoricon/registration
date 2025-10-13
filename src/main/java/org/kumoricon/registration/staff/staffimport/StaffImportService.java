@@ -63,6 +63,7 @@ public class StaffImportService extends ImportService {
         } catch (NotFoundException ex) {
             existing = new Staff();
             existing.setCheckedIn(false);
+            existing.setEventenyCheckedIn(false);
             existing.setDeleted(false);
             existing.setBadgePrinted(false);
             existing.setBadgePrintCount(0);
@@ -90,6 +91,7 @@ public class StaffImportService extends ImportService {
         staff.setPrivacyNameFirst(person.getNamePrivacyFirst());
         staff.setPrivacyNameLast(person.getNamePrivacyLast());
         staff.setPhoneNumber(person.getPhoneNumber());
+        staff.setEmail(person.getEmail());
         staff.setPreferredPronoun(person.getPreferredPronoun());
         staff.setBirthDate(LocalDate.parse(person.getBirthdate()));
         staff.setShirtSize(person.gettShirtSize());
@@ -117,6 +119,7 @@ public class StaffImportService extends ImportService {
                 !Objects.equals(staff.getPrivacyNameFirst(), person.getNamePrivacyFirst()) ||
                 !Objects.equals(staff.getPrivacyNameLast(), person.getNamePrivacyLast()) ||
                 !Objects.equals(staff.getPhoneNumber(), person.getPhoneNumber()) ||
+                !Objects.equals(staff.getEmail(), person.getEmail()) ||
                 !Objects.equals(staff.getPreferredPronoun(), person.getPreferredPronoun()) ||
                 !Objects.equals(staff.getBirthDate().toString(), person.getBirthdate()) ||
                 !Objects.equals(staff.getShirtSize(), person.gettShirtSize()) ||

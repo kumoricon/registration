@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <title>Departments</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row col-sm-4">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-nowrap">Staff Member</th>
+                <th class="text-nowrap">Completed?</th>
+                <th class="text-nowrap">Add to Eventeny</th>
+            </tr>
+            </thead>
+
+            <tr th:if="${staffList.isEmpty()}">
+                <td colspan="3"> No Staff Found </td>
+            </tr>
+            <tr th:each="s : ${staffList}">
+                <td th:text="${s.getPrivacyNameFirst()} + ' ' + ${s.getPrivacyNameLast()}">Name</td>
+                <td th:text="${s.eventenyCheckedIn() ? 'Yes' : 'No'}">Eventeny Checked-In</td>
+                <td class="text-center">
+                    <a th:href="@{/eventeny/department/{department}/{uuid}(department=${department.toLowerCase()},uuid=${s.uuid})}"
+                       th:text="${s.eventenyCheckedIn ? 'View' : 'Check In'}" class="btn btn-sm btn-primary">Check In</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

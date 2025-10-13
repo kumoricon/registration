@@ -16,6 +16,7 @@ public class Staff {
     private String privacyNameFirst;
     private String privacyNameLast;
     private String phoneNumber;
+    private String email;
     private String preferredPronoun;
     private String shirtSize;
     private String department;
@@ -24,6 +25,7 @@ public class Staff {
     private List<Position> positions;
     private Integer yearsOfService;
     private Boolean checkedIn;
+    private Boolean eventenyCheckedIn;
     private LocalDate birthDate;
     private String ageCategoryAtCon;
     private Boolean deleted;
@@ -106,6 +108,10 @@ public class Staff {
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
     public String getPreferredPronoun() { return preferredPronoun; }
 
     public void setPreferredPronoun(String preferredPronoun) { this.preferredPronoun = preferredPronoun; }
@@ -156,6 +162,14 @@ public class Staff {
 
     public void setCheckedIn(Boolean checkedIn) {
         this.checkedIn = checkedIn;
+    }
+
+    public Boolean eventenyCheckedIn() {
+        return eventenyCheckedIn;
+    }
+
+    public void setEventenyCheckedIn(Boolean eventenyCheckedIn) {
+        this.eventenyCheckedIn = eventenyCheckedIn;
     }
 
     public LocalDate getBirthDate() {

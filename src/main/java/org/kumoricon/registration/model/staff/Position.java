@@ -64,4 +64,9 @@ public class Position {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s/%s %s", department, team, title);
+    }
 }
