@@ -21,7 +21,7 @@ public class Staff {
     private String department;
     private String departmentColorCode;
 
-    private List<String> positions;
+    private List<Position> positions;
     private Integer yearsOfService;
     private Boolean checkedIn;
     private LocalDate birthDate;
@@ -134,11 +134,11 @@ public class Staff {
         this.departmentColorCode = departmentColorCode;
     }
 
-    public List<String> getPositions() {
+    public List<Position> getPositions() {
         return positions;
     }
 
-    public void setPositions(List<String> positions) {
+    public void setPositions(List<Position> positions) {
         this.positions = positions;
     }
 

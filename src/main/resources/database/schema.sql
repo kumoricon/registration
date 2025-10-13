@@ -364,12 +364,23 @@ create index if not exists staff_last_modified_index
     on staff (last_modified desc);
 
 
-create table if not exists staff_positions
+create table if not exists staff_positions_map
 (
-	id int not null
+	staff_id int not null
 		constraint fk2stj1bd4u7fx9l7mswhfqa78t
 			references staff,
-	position varchar(255) not null
+	position_id int references staff_position(id)
+);
+
+create table if not exists staff_position
+(
+    id serial not null primary key,
+    term varchar(255) not null,
+    department varchar(255) not null,
+    team varchar(255) not null,
+    title varchar(255) not null,
+    position_level varchar(255) not null,
+    is_elected boolean default false not null
 );
 
 create table if not exists voucher

@@ -17,9 +17,12 @@ import java.util.*;
 @Repository
 public class StaffRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final PositionRepository positionRepository;
 
-    public StaffRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    public StaffRepository(NamedParameterJdbcTemplate jdbcTemplate, PositionRepository positionRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.positionRepository = positionRepository;
+
     }
 
     @Transactional(readOnly = true)
@@ -90,7 +93,7 @@ public class StaffRepository {
                 staffList = jdbcTemplate.query(multiSQL, params, new StaffRowMapper());
             }
             for (Staff s : staffList) {
-                s.setPositions(findPositions(s.getId()));
+                s.setPositions(positionRepository.findAllByStaff(s));
             }
             return staffList;
         } catch (EmptyResultDataAccessException e) {
@@ -109,7 +112,7 @@ public class StaffRepository {
         try {
             List<Staff> staffList = jdbcTemplate.query(sql, Map.of("offset", start), new StaffRowMapper());
             for (Staff s : staffList) {
-                s.setPositions(findPositions(s.getId()));
+                s.setPositions(positionRepository.findAllByStaff(s));
             }
             return staffList;
         } catch (EmptyResultDataAccessException e) {
@@ -124,7 +127,7 @@ public class StaffRepository {
         try {
             Staff s = jdbcTemplate.queryForObject(sql, Map.of("uuid", uuid), new StaffRowMapper());
             if (s != null) {
-                s.setPositions(findPositions(s.getId()));
+                s.setPositions(positionRepository.findAllByStaff(s));
             }
             return s;
         } catch (EmptyResultDataAccessException e) {
@@ -134,7 +137,8 @@ public class StaffRepository {
 
     @Transactional(readOnly = true)
     public List<String> findPositions(Integer id) {
-        final String sql = "select position from staff_positions where id = :id";
+        final String sql = "select sp.* from staff_position sp left join staff_positions_map spm on spm.staff_id = :id";
+        //final String sql = "select position from staff_positions_map where id = :id";
         try {
             return jdbcTemplate.queryForList(sql, Map.of("id", id), String.class);
         } catch (EmptyResultDataAccessException e) {
@@ -155,15 +159,15 @@ public class StaffRepository {
     }
 
     @Transactional
-    public void savePositions(Integer id, List<String> positions) {
-        final String clearSql = "DELETE FROM staff_positions where id = :id";
-        final String insertSql = "INSERT INTO staff_positions (id, position) VALUES (:id, :position)";
+    public void savePositionsMapping(Integer id, List<Position> positions) {
+        final String clearSql = "DELETE FROM staff_positions_map where staff_id = :id";
+        final String insertSql = "INSERT INTO staff_positions_map (staff_id, position_id) VALUES (:id, :positionId)";
 
         jdbcTemplate.update(clearSql, Map.of("id", id));
-        if (positions != null && positions.size() > 0) {
+        if (!positions.isEmpty()) {
             SqlParameterSource[] params = new SqlParameterSource[positions.size()];
             for (int i = 0; i < positions.size(); i++) {
-                params[i] = new MapSqlParameterSource("id", id).addValue("position", positions.get(i));
+                params[i] = new MapSqlParameterSource("id", id).addValue("positionId", positions.get(i).getId());
             }
             jdbcTemplate.batchUpdate(insertSql, params);
         }
@@ -233,7 +237,8 @@ public class StaffRepository {
                     WHERE id = :id""";
             jdbcTemplate.update(SQL, namedParameters);
         }
-        savePositions(staff.getId(), staff.getPositions());
+        final List<Position> positions = positionRepository.saveAll(staff.getPositions());
+        savePositionsMapping(staff.getId(), positions);
     }
 
     private static class StaffRowMapper implements RowMapper<Staff> {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kumoricon.registration.exceptions.NotFoundException;
 import org.kumoricon.registration.model.ImportService;
 import org.kumoricon.registration.model.badgenumber.BadgeNumberService;
+import org.kumoricon.registration.model.staff.Position;
 import org.kumoricon.registration.model.staff.Staff;
 import org.kumoricon.registration.model.staff.StaffRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,21 +72,14 @@ public class StaffImportService extends ImportService {
             existing.setAccessibilitySticker(false);
         }
 
-        List<String> positions = new ArrayList<>();
-        for (StaffImportFile.Position p : person.getPositions()) {
-            // positions that we don't want to prepend team name to
-            if (p.title.startsWith("Director") || p.title.equals(p.team) || p.title.equals("Treasurer"))
-                positions.add(p.title);
-            else
-                positions.add(p.team + ", " + p.title);
-        }
+        final List<Position> positions = person.getPositions().stream().map(this::positionImportToPosition).toList();
         if (staffRecordIsDifferent(existing, person, positions)) {
             updateStaffFromPerson(existing, person, positions);
             staffRepository.save(existing);
         }
     }
 
-    private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person, List<String> positions) {
+    private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person, List<Position> positions) {
         // TODO: Corner cases here!
 
         staff.setUuid(person.getId());
@@ -107,15 +100,15 @@ public class StaffImportService extends ImportService {
 
         staffUserCreate.createUserFromStaff(person);
 
-        if (person.getPositions().size() >0) {
-            staff.setDepartment(person.getPositions().get(0).department);
+        if (!person.getPositions().isEmpty()) {
+            staff.setDepartment(person.getPositions().get(0).getDepartment());
             staff.setDepartmentColorCode(findDepartmentColorCode(staff.getDepartment()));
         } else {
             log.warn("{} has no positions!", staff);
         }
     }
 
-    private boolean staffRecordIsDifferent(Staff staff, StaffImportFile.Person person, List<String> positions) {
+    private boolean staffRecordIsDifferent(Staff staff, StaffImportFile.Person person, List<Position> positions) {
         return !Objects.equals(staff.getUuid(), person.getId()) ||
                 !Objects.equals(staff.getFirstName(), person.getNamePreferredFirst()) ||
                 !Objects.equals(staff.getLastName(), person.getNamePreferredLast()) ||
@@ -131,6 +124,17 @@ public class StaffImportService extends ImportService {
                 !Objects.equals(staff.getAgeCategoryAtCon(), person.getAgeCategoryConCurrentTerm()) ||
                 !Objects.equals(staff.getHasBadgeImage(), person.getHasBadgeImage()) ||
                 !Objects.equals(staff.getBadgeImageFileType(), person.getBadgeImageFileType());
+    }
+
+    private Position positionImportToPosition(final PositionImportFile positionImport) {
+        final Position position = new Position();
+        position.setTerm(positionImport.getTerm());
+        position.setDepartment(positionImport.getDepartment());
+        position.setTeam(positionImport.getTeam());
+        position.setTitle(positionImport.getTitle());
+        position.setLevel(positionImport.getLevel());
+        position.setIsElected(positionImport.isElected());
+        return position;
     }
 
     /**
