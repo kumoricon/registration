@@ -17,7 +17,8 @@ public class PositionImportFile {
     private static final Map<String, List<String>> DEPARTMENT_TEAMS = Map.of(
             "Membership", List.of("Registration", "Staff Registration", "Registration Hall", "Registration Software",
                     "Specialty Registration", "Attendee Registration", "Membership"),
-            "Infrastructure", List.of("IT", "KumoriMarket", "Hotels", "Infrastructure", "Facilities", "Infrastructure Office", "Convention Center"),
+            "Infrastructure", List.of("IT", "KumoriMarket", "Hotels", "Infrastructure", "Facilities", "Infrastructure Office",
+                    "Convention Center", "Infrastructure Amenities"),
             "Programming", List.of("Panels", "Fan Art", "Auditorium Tech", "Cosplay Contest",
                     "Online Content", "Tabletop Library", "Lip Sync", "Special Events", "Karaoke", "Chibi Room",
                     "Console Gaming", "Cabinet and Rhythm Gaming", "Manga Library", "Maid Cafe", "Cosplay Chess",
@@ -25,19 +26,22 @@ public class PositionImportFile {
                     "RPG", "Idol Festival", "LARP", "PC Gaming", "Live Events", "Tabletop Gaming", "Escape Room",
                     "Video Gaming", "Fan Fiction", "Play and Win", "Gunpla Lounge", "Pokémon Gaming Assistant Coordinator",
                     "Programming", "Programming Office", "TCG", "Lighting Equipment", "Video Equipment", "Programming Booth",
-                    "Pokémon Gaming", "Umbrella Lounge", "Cosplay Cabaret", "Viewing Rooms", "Fashion", "Sound Equipment"),
+                    "Pokémon Gaming", "Umbrella Lounge", "Cosplay Cabaret", "Viewing Rooms", "Fashion", "Sound Equipment", "Vtuber Tech",
+                    "Cosplay Meetup"),
             "Publicity", List.of("Hall Cosplay", "Info Booth", "Software", "Merchandise", "Press", "Social Media",
-                    "Website", "Marketing", "Newsletter", "Multimedia", "Graphics", "Publicity", "Moderation", "Lore", "Groupware", "Branding", "Signs", "Copy Editing", "Advertising"),
+                    "Website", "Marketing", "Newsletter", "Multimedia", "Graphics", "Publicity", "Moderation", "Lore", "Groupware",
+                    "Branding", "Signs", "Copy Editing", "Advertising", "Product"),
             "Relations", List.of("Relations", "Autographs", "Relations Logistics", "Hospitality", "Industry and Sponsorship",
-                    "Guests"),
+                    "Guests", "Guest Acquisitions", "Guest Liaisons"),
             "Operations", List.of("Operations", "Hotel Attendee Services", "Attendee Services", "Operations Office", "Accessibility",
                     "Cosplay Repair", "Staff Station", "Public Discord", "Floor Support", "Administration", "Food and Beverage", "Incidents Response",
-                    "Amenities and Learning", "Knowledge and Documentation", "Peace-Bonding", "Crowd Control", "Risk Management", "Patrol"),
+                    "Amenities and Learning", "Knowledge and Documentation", "Peace-Bonding", "Crowd Control", "Risk Management", "Patrol",
+                    "Staff Retention and Education"),
             "Treasury", List.of("Treasury", "Supply and Logistics"),
             "Secretarial", List.of("Secretary"),
             "Chair", List.of("Chair", "EDI", "Staff Retention", "Internal Support", "Outreach", "Staff Events",
                     "Training and Development", "Charity", "External Support", "Art Show", "Photobooth", "Nonprofit Grants",
-                    "Recruitment", "Staff Relations")
+                    "Recruitment", "Staff Relations", "AFK Room", "Auction", "Accessibility Info Booth", "Staff Resources")
     );
 
     @JsonCreator
