@@ -19,18 +19,19 @@ import java.util.Map;
 @Controller
 public class DepartmentsController {
     private static final Logger log = LogManager.getLogger();
-    private final List<String> departments;
+    private final PositionRepository positionRepository;
     private final StaffRepository staffRepository;
 
     public DepartmentsController(PositionRepository positionRepository, StaffRepository staffRepository) {
+        this.positionRepository = positionRepository;
         this.staffRepository = staffRepository;
-        this.departments = positionRepository.findDistinctDepartments();
-        this.departments.sort(String::compareTo);
     }
 
     @RequestMapping(value = "/eventeny/departments")
     @PreAuthorize("hasAuthority('manage_users')")
     public String eventenyDepartments(Model model) {
+        final List<String> departments = positionRepository.findDistinctDepartments();
+        departments.sort(String::compareTo);
         model.addAttribute("departments", departments);
         model.addAttribute("departmentStatusMap", mapDepartmentToStatus(departments));
 
